@@ -1,0 +1,321 @@
+{
+ "key": "au-federal-r5239",
+ "title": "Tax Laws Amendment (Temporary Budget Repair Levy) Bill 2014",
+ "short_title": "Tax Laws Amendment (Temporary Budget Repair Levy) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2014-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5239_ems_35baadaf-7f19-4b2b-9501-27e99f46a530%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5239%22",
+   "document_date": "2014-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00048",
+   "document_date": "2014-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-13",
+  "sentences": [
+   "This bill is one of a package that introduces a temporary budget repair levy for three years, starting in the 2014-15 financial year, as extra income tax on individuals.",
+   "The levy would be added to tax rates that are tied to the top personal marginal rate and to the Medicare levy, to keep the system fair and reduce avoidance.",
+   "The levy rate is two per cent of taxable income above $180,000, with no levy for income at or below that amount unless integrity rules apply."
+  ],
+  "changes": [
+   "Introduces a three-year temporary budget repair levy on individuals.",
+   "Aligns certain tax rates with the new levy to preserve fairness and prevent avoidance.",
+   "Ensures higher-income earners contribute more to budget repair."
+  ],
+  "affected": "Australian resident and foreign resident individuals with taxable income over $180,000.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3220",
+   "date": "2014-06-16",
+   "house": "senate",
+   "question": "Christine Milne I move: _At the end of the motion, add:_ _but the Senate calls on the government to:_ _(a) extend the provisions of the levy beyond the 2016-17 financial year, making the levy permanent; and_ _(b) guarantee that no tax cuts will be made, or promised, for the top income tax bracket, prior to the 2016 election._ In other words, no tax cut, or promise of one, is permitted before the 2016 election. That would test the mettle of this. If you are serious about a permanent change for those who earn more than $180,000, you would have no concerns at all about supporting this amendment. I call on both the government and the Labor Party to support this amendment. We are not going to let the government off the hook with their temporary levy. We are not going to stand by and watch what is going to happen-that is, everybody else suffers while the rich get ready to organise themselves to not pay it, to minimise their income, and get ready for the tax cut in 2016. At a recent Senate hearing Senator Cormann said: _We are very conscious of the fact that high-income earners already do a lot of the heavy lifting when it comes to contributing to Commonwealth revenue. But in the context of this budget we decided and judged that it was necessary to ask everyone across the community to make a contribution, including asking high-income earners to make an additional effort on top of the significant effort that they are already making._ But the Grattan Institute made it clear that 'it does not share the pain very effectively as it will only have a short-term impact on high-income earners; and, by contrast, the spending cuts will have a disproportionately large effect on lower income earners and they are permanent'. And Saul Eslake made the point that 'it will encourage at least some higher income households to take more active steps to engage in tax minimisation or avoidance activities, including by making greater use of the myriad provisions in the income tax system which off",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 58,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 61,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-16/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-289086",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289092",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289094",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289098",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289099",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289147",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289164",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289168",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289169",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289174",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289181",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289190",
+   "speaker": "Ross Vasta",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289192",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Temporary Budget Repair Levy) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00048",
+   "assent_date": "2014-06-25"
+  }
+ ]
+}

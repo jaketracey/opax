@@ -1,0 +1,731 @@
+{
+ "key": "au-federal-s1106",
+ "title": "Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017",
+ "short_title": "Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2018-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1106_ems_c14603d8-d7d8-4a74-b270-e934898b5a0d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1106%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00028",
+   "document_date": "2018-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "This bill would create a framework to restrict gambling promotions on online content services during live sports.",
+   "The Australian Communications and Media Authority could make rules to ban gambling promotions from five minutes before a sporting event starts until five minutes after it ends, for events between 5:00am and 8:30pm.",
+   "The rules would not apply to exempt online simulcast services, which broadcast identical content to a listed broadcasting service."
+  ],
+  "changes": [
+   "Creates a regulatory framework for online content service provider rules to restrict gambling promotions.",
+   "Gives the Australian Communications and Media Authority power to make rules about gambling promotional content on online content services.",
+   "Allows the Minister to direct the authority to determine program standards for broadcasters and subscription providers."
+  ],
+  "affected": "Online content service providers, broadcasters, and subscription providers are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:31:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5176",
+   "date": "2018-03-26",
+   "house": "senate",
+   "question": "Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017 - Second Reading - Reinstate SBS revenue shortfall",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 17,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-26/2"
+  },
+  {
+   "key": "federal-senate-5177",
+   "date": "2018-03-26",
+   "house": "senate",
+   "question": "Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017 - Second Reading - Prohibit betting on lottery outcome",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 34,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-26/3"
+  },
+  {
+   "key": "federal-senate-5180",
+   "date": "2018-03-27",
+   "house": "senate",
+   "question": "Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017 - in Committee - Gambling ads",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 25,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-27/1"
+  },
+  {
+   "key": "federal-senate-5181",
+   "date": "2018-03-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (8) and (10) to (15)](https://www.openaustralia.org.au/senate/?gid=2018-03-27.10.1), which were introduced by SA Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens). ### What do the amendments do? Senator Hanson-Young [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-27.10.1): > *These amendments relate to issues I've spoken about—as did Senator Whish-Wilson in his speech, and as was in much of the debate last night—in relation to the exemption given in this current legislation that still allows Foxtel subscription services to show gambling ads on their channels, based on audience numbers. We find this ridiculous. If we agree that gambling ads should not be shown during live sporting events, they shouldn't, full stop. That's it. It should be the end of the story. There should be no exemptions just because some of those shows or some of those events are shown on a pay TV subscription channel.* > > *The other part of the amendments deals with the issue of the cut-off time. This legislation provides for gambling ads not to be shown for five minutes before and after play starts. We believe that that is not sufficient to ensure that we protect children and minimise the harm done by these insidious gambling adverts ...* > > *So, in order to deal with that, we think that at the very least gambling ads should not be played within the period 30 minutes before the start of the actual match. That captures the pre-match programming, whether it's entertainment or commentary, as the kids are gathering around the television and families are getting together in the lounge room or wherever it is they're watching and getting ready for the game to start. Children should be protected from these gambling ads once and for all.* ### Amendment text > *(1) Schedule 1, item 7, page 4 (line 16), at the end of subsection 4(3AB), add:* > >> *and; (e) does not take into account",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 7,
+    "member": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-27/2"
+  },
+  {
+   "key": "federal-senate-5182",
+   "date": "2018-03-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments (9) and (16)](https://www.openaustralia.org.au/senate/?gid=2018-03-27.10.1), which were introduced by SA Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens). ### What do the amendments do? Senator Hanson-Young [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-27.10.1) the amendments deal with: > *the issue of the cut-off time. This legislation provides for gambling ads not to be shown for five minutes before and after play starts. We believe that that is not sufficient to ensure that we protect children and minimise the harm done by these insidious gambling adverts ...* > > *So, in order to deal with that, we think that at the very least gambling ads should not be played within the period 30 minutes before the start of the actual match. That captures the pre-match programming, whether it's entertainment or commentary, as the kids are gathering around the television and families are getting together in the lounge room or wherever it is they're watching and getting ready for the game to start. Children should be protected from these gambling ads once and for all.* ### Amendment text > *(9) Schedule 1, item 13, page 8 (line 23), omit \"5 minutes\", substitute \"30 minutes\".* > > *(16) Schedule 1, item 22, page 29 (line 5), omit \"5 minutes\", substitute \"30 minutes\".*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 7,
+    "member": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-27/3"
+  },
+  {
+   "key": "federal-senate-5183",
+   "date": "2018-03-27",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-03-27.16.1) introduced by NSW Senator [Deborah O'Neill](https://theyvoteforyou.org.au/people/senate/nsw/deborah_o'neill) (Labor), which means it failed. ### What does this amendment do? Senator O'Neill [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-27.16.1): > *What Labor's amendment does is preserve parliament's intent with respect to the SBS being a broadcaster that's independent of the government, and it maintains the status quo, whereby SBS services on television, radio and online are regulated by the SBS Codes of Practice 2014 (revised 2016). It's really very simple. Labor's amendment means that the SBS will be subject to additional restrictions on gambling promotions during live sport, just like everybody else. But, instead of being regulated by ACMA rules under this bill, SBS will be regulated by the SBS Codes of Practice.* > > *Labor's amendment simply corrects the wrong-headed approach in this bill, which would include SBS in a regulatory regime that would, quite improperly, make the regulation of SBS content a matter of discretion for the Australian Communications and Media Authority. With all due respect to the ACMA, that is simply not the intent of parliament when it comes to the SBS.* ### Amendment text > *(1) Schedule 1, item 22, page 18 (after line 25), after paragraph 3(1)(q), insert:* > >> *(qa) a service provided by the Special Broadcasting Service Corporation; or*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-27/4"
+  },
+  {
+   "key": "federal-senate-5184",
+   "date": "2018-03-27",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-03-27.16.1) introduced by NSW Senator [Deborah O'Neill](https://theyvoteforyou.org.au/people/senate/nsw/deborah_o'neill) (Labor), which means it failed. This was the second time this vote was taken. It was repeated at the request of WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens). ### What does this amendment do? Senator O'Neill [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-27.16.1): > *What Labor's amendment does is preserve parliament's intent with respect to the SBS being a broadcaster that's independent of the government, and it maintains the status quo, whereby SBS services on television, radio and online are regulated by the SBS Codes of Practice 2014 (revised 2016). It's really very simple. Labor's amendment means that the SBS will be subject to additional restrictions on gambling promotions during live sport, just like everybody else. But, instead of being regulated by ACMA rules under this bill, SBS will be regulated by the SBS Codes of Practice.* > > *Labor's amendment simply corrects the wrong-headed approach in this bill, which would include SBS in a regulatory regime that would, quite improperly, make the regulation of SBS content a matter of discretion for the Australian Communications and Media Authority. With all due respect to the ACMA, that is simply not the intent of parliament when it comes to the SBS.* ### Amendment text > *(1) Schedule 1, item 22, page 18 (after line 25), after paragraph 3(1)(q), insert:* > >> *(qa) a service provided by the Special Broadcasting Service Corporation; or*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 33,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-27/5"
+  },
+  {
+   "key": "federal-senate-5185",
+   "date": "2018-03-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2018-03-27.35.1) introduced by South Australian Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens), which means it failed. Senator Hanson-Young [explained that](https://www.openaustralia.org.au/senate/?gid=2018-03-27.35.1): > *All this amendment does is reinstate parliamentary oversight. It doesn't say what quota is right or wrong. It's got nothing to do with that. It simply says that the parliament has a right to act as a check and a balance on the decisions and directions being made by the minister.* ### Amendment text > *(1) Clause 3, page 2 (after line 11), at the end of the clause, add:* > >> *Note: The provisions of the Legislation (Exemptions and Other Matters) Regulation 2015 amended or inserted by this Act, and any other provisions of those regulations, may be amended or repealed by regulations made under section 62 of the Legislation Act 2003 (see subsection 13(5) of that Act).* > > *(2) Schedule 1, page 5 (after line 7), after item 12, insert:* > >> *12A Subsection 122(7) (note)* >> >> *Repeal the note.* > > *(3) Page 34 (after line 26), at the end of the bill, add:* > >> *Schedule 2—Program standards* >> >> *Legislation (Exemptions and Other Matters) Regulation 2015* >> >> *1 Section 10 (table item 8)* >> >> *Repeal the item, substitute:* >> >>> *8 An amendment made under section 128 of the Broadcasting Services Act 1992 to a standard under Part 9 of that Act*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 25,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-03-27/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-361567",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The bill introduces a new regulatory framework to restrict gambling promotions on online content services, with a mechanism to extend those restrictions to broadcasting services if necessary."
+  },
+  {
+   "slug": "speech-361683",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The bill amends the Broadcasting Services Act to restrict gambling promotions on online content services during live sports, with restrictions applying from 5am to 8:30pm and from five minutes before to five minutes after play (extended to 30 minutes for commentator odds and gambling firm representatives), to be in effect across all platforms by 30 March 2018."
+  },
+  {
+   "slug": "speech-361684",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017 as a step toward restricting gambling promotions during live sport, including on online platforms. It criticised the government's delay, the bill's broad exemptions and regulatory uncertainty, and the inclusion of SBS under ACMA rules, arguing SBS should remain under its own codes of practice."
+  },
+  {
+   "slug": "speech-361685",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "Labor argued the government's bill restricting gambling ads during live sport is a step forward but insufficient, noting 61% of Australians oppose such ads and research showing 90% of children recall sports betting ads. The speaker also criticised the gambling lobby's $10 million campaign against Labor's Tasmanian pokies policy."
+  },
+  {
+   "slug": "speech-361686",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Communications Legislation Amendment Bill 2017, which restricts gambling advertising during live sports between 5am and 8:30pm and extends to online broadcasts, appropriately balances commercial models and community expectations, building on the 2013 co-regulation code developed with then-Prime Minister Julia Gillard and Communications Minister Steven Conroy."
+  },
+  {
+   "slug": "speech-361699",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Communications Legislation Amendment (Online Content Services and Other Measures) Bill 2017 as a step toward reducing gambling promotions during live sport, citing concerns about the impact on children and families and the hidden harms of problem gambling, though the party argued the bill may not go far enough."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Communications Legislation Amendment (Online Content Services and Other Measures) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00028",
+   "assent_date": "2018-04-11"
+  }
+ ]
+}

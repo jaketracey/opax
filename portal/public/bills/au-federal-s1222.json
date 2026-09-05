@@ -1,0 +1,287 @@
+{
+ "key": "au-federal-s1222",
+ "title": "Counter-Terrorism Legislation Amendment (2019 Measures No. 1) Bill 2019",
+ "short_title": "Counter-Terrorism Legislation Amendment (2019 Measures No. 1) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-08-01",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2019-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1222_ems_562e0c1f-dd8e-41b3-9742-eab2a555159d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1222_ems_19371e27-2450-4f06-a37b-489a3a26b32f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1222_ems_a52341b8-b708-4692-9d4a-e4e199d54fdb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1222%22",
+   "document_date": "2019-08-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00119",
+   "document_date": "2019-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2019-08-01",
+  "sentences": [
+   "This bill would clarify how public interest immunity applies to continuing detention order applications for terrorist offenders.",
+   "The AFP minister would have to notify a terrorist offender in writing when information is excluded from a CDO application due to public interest immunity, and the offender could then seek access to that information.",
+   "The bill states that a terrorist offender who seeks access to such information would not be required to prove to the court that the immunity claim should not be upheld."
+  ],
+  "changes": [
+   "Clarifies the operation of public interest immunity in relation to continuing detention order applications.",
+   "Requires the AFP minister to give written notice to a terrorist offender when information is excluded on the basis of public interest immunity.",
+   "Specifies that a terrorist offender seeking access to excluded information does not have to satisfy the court that the immunity claim should not be upheld."
+  ],
+  "affected": "Terrorist offenders subject to continuing detention order applications, the AFP minister, and relevant operational agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6133",
+   "date": "2019-12-04",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2019-12-04.39.2) to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) \"*that the bill be read a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. It had been introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) (Greens). ### Motion text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes that:* > >> *(i) the explanatory memorandum to the Anti-Money Laundering and Counter-Terrorism Financing Bill 2006 forecast a 'second tranche' of legislation that would include real estate agents, accountants and lawyers as designated services under the Act,* >> >> *(ii) in April 2016, the Government released the statutory review of the Anti-Money Laundering and Counter-Terrorism Financing Act 2006 which contained a recommendation that the Government develop options to regulate real estate agents, accountants and lawyers under the Act,* >> >> *(iii) the Government undertook consultation on the regulation of real estate agents, accountants and lawyers under the Act, which closed in January 2017,* >> >> *(iv) the Financial Action Task Force's April 2015 Mutual Evaluation Report on Australia's progress in combatting money laundering and terrorist financing stated that Australia is an attractive destination for foreign proceeds of crime, particularly corruption-related proceeds flowing into real estate,* >> >> *(v) the December 2017 OECD Phase 4 Report on Australia's implementation of the OECD Anti-Bribery Convention recommended that Australia address the risk that the real estate sector could be used to launder the proceeds of foreign bribery,* >> >> *(vi) Australia is one of only six countries in the world not to have included real estate agents, accountants and",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 23,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-04/10"
+  },
+  {
+   "key": "federal-senate-6134",
+   "date": "2019-12-04",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (2019 Measures No. 1) Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 23,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-04/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-386364",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The bill introduces a presumption against bail and parole for individuals who have supported or been linked to terrorist activities, and makes two amendments to improve the continuing detention order scheme for high-risk terrorist offenders. The measures follow a COAG agreement and recommendations from the Independent National Security Legislation Monitor, with the Parliamentary Joint Committee on Intelligence and Security unanimously recommending passage."
+  },
+  {
+   "slug": "speech-386365",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "Labor supported the Counter-Terrorism Legislation Amendment (2019 Measures No. 1) Bill 2019, which aligns with Council of Australian Governments principles from 5 October 2017 on bail and parole for terror-linked offenders and addresses a gap in continuing detention orders. The government accepted a Parliamentary Joint Committee on Intelligence and Security recommendation, but Labor and Liberal members disagreed on one issue relating to Australia's obligations under the Convention on the Rights of the Child."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment (2019 Measures No. 1) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00119",
+   "assent_date": "2019-12-11"
+  }
+ ]
+}

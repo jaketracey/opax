@@ -1,0 +1,920 @@
+{
+ "key": "au-federal-r5867",
+ "title": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017",
+ "short_title": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2018-08-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5867_ems_a64c431a-42a4-4481-baf8-9d014fba127a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5867_ems_a3380d2d-f5e1-4563-a4d6-219ab5f67932%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5867%22",
+   "document_date": "2017-05-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4682",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debates/?id=2017-05-11.6.2) that would have delayed debate on this bill until 19 August 2019. The motion had been introduced by Labor MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) because > *it is the view of the opposition that the next stage of these tax cuts are not affordable. The budget has made that clear. Therefore, it should be considered at a later date, rather than at the next sitting.* ### About the bill The purpose of the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5867) is to: > *progressively extend the lower 27.5 per cent corporate tax rate to all corporate tax entities by the 2023-24 financial year; and further reduce the corporate tax rate in stages so that by the 2026 27 financial year, the corporate tax rate for all entities will be 25 per cent*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-05-11/1"
+  },
+  {
+   "key": "federal-representatives-5101",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 - Second Reading - Don't read for a second time",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-08/1"
+  },
+  {
+   "key": "federal-representatives-5102",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-08/2"
+  },
+  {
+   "key": "federal-representatives-5103",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 - Third Reading - Suspend standing orders",
+   "stage": "Third reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-08/3"
+  },
+  {
+   "key": "federal-representatives-5104",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-08/4"
+  },
+  {
+   "key": "federal-representatives-5105",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-08/5"
+  },
+  {
+   "key": "federal-senate-5365",
+   "date": "2018-08-21",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 38,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-21/1"
+  },
+  {
+   "key": "federal-senate-5368",
+   "date": "2018-08-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr5867_amend_0166d8d6-6259-4564-9cf4-3367aa3dd5a6%22;rec=0) moved by West Australian Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal), which means they failed. The [purpose](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr5867_ems_a3380d2d-f5e1-4563-a4d6-219ab5f67932%22;rec=0) of the amendments was to ensure that the corporate tax rate for large authorised deposit-taking institutions' (ADIs) will continue at 30%.",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 40,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-22/1"
+  },
+  {
+   "key": "federal-senate-5369",
+   "date": "2018-08-22",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 - in Committee - Keep bill unchanged",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 36,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-22/2"
+  },
+  {
+   "key": "federal-senate-5370",
+   "date": "2018-08-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [reporting the bill](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). In light of the [previous vote](https://theyvoteforyou.org.au/divisions/senate/2018-08-22/2), the bill is in an unusual situation meaning that after this vote it will effectively fail. An [interaction](https://www.openaustralia.org.au/senate/?gid=2018-08-22.16.3) between South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor) and the Chair explains. Senator Wong: > *The Senate has just voted against a motion that the bill stand as printed. Given that was somewhat unusual, although I think it has occurred before, it might be useful for the chair to advise the Senate what the status of the next vote signifies so senators can be clear what they're voting on and whether there will, in fact, be a third reading.* The Chair: > *Thank you, Senator Wong. The next part that we would vote on is that the bill be reported. We do need to report out of committee that the bill standing as printed has been rejected. That would then mean that, subsequently, there would be no third reading. So I'm going to put that. The question is that the bill be reported.* ### What is the bill's main idea? The purpose of [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5867) is to: > *progressively extend the lower 27.5 per cent corporate tax rate to all corporate tax entities by the 2023-24 financial year; and further reduce the corporate tax rate in stages so that by the 2026 27 financial year, the corporate tax rate for all entities will be 25 per cent* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd022).",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 36,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-22/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-353563",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 and opposed the amendment, arguing corporate tax cuts are needed for competitiveness and job creation. He criticised the Shadow Treasurer for abandoning his past support for lower company tax rates, citing the UK’s cuts to 23 per cent in April 2013 and 21 per cent in April 2014, and accused Labor of waging a war on business with no job-creating policies."
+  },
+  {
+   "slug": "speech-353575",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-11",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Enterprise Tax Plan No. 2 Bill 2017, stating it would give large multinational corporations and the big four banks a multibillion-dollar tax cut while making life harder for pensioners, families, workers and small businesses. They cited Treasury modelling showing only 0.1% economic growth and no jobs benefit, and called for a banking royal commission instead of tax cuts."
+  },
+  {
+   "slug": "speech-354121",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Enterprise Tax Plan No. 2 Bill, which would progressively cut the corporate tax rate to 25% by 2026-27 for all companies, citing international competitiveness and citing 250,000 new jobs created in the past year. He also criticised Labor for abandoning prior bipartisan support for corporate tax cuts, calling their opposition \"politics of envy.\""
+  },
+  {
+   "slug": "speech-354122",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The member opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing it would not create jobs or growth, cost over $36 billion over a decade, and primarily benefit foreign shareholders while the government simultaneously cut penalty rates, increased the Medicare levy, and raised university fees."
+  },
+  {
+   "slug": "speech-354206",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-14",
+   "stage_hint": null,
+   "brief": "The government's Enterprise Tax Plan No. 2 would extend company tax cuts to all businesses, reducing the rate to 25% by 2026-27, the lowest since the 1960s, to boost investment, jobs, and wages. The first part already cut taxes for 3.2 million small and medium businesses employing over 6.5 million Australians."
+  },
+  {
+   "slug": "speech-354209",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, while arguing that trickle-down economics has failed and that the government proposes higher taxes for those earning up to $87,000, tax cuts for those over $180,000, and $50 billion in corporate tax cuts over ten years."
+  },
+  {
+   "slug": "speech-354213",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing it would give $65 billion to multinational corporations and the big four banks while cutting funding for universities, schools, healthcare, pensions, infrastructure, Indigenous affairs, and other services, and claimed the bill would not deliver meaningful economic growth."
+  },
+  {
+   "slug": "speech-354214",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that reducing company tax promotes investment and jobs, citing past support from the shadow Treasurer and opposition leader, and criticized the opposition for opposing tax relief for companies with over $2 million in revenue, noting large companies employ about 4 million Australians."
+  },
+  {
+   "slug": "speech-354241",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing it would deliver $600 million in tax cuts over forward estimates and $36.5 billion over the medium term to large companies while cutting university funding by $4 billion, harming Western Sydney University and low‑socioeconomic students."
+  },
+  {
+   "slug": "speech-354246",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-14",
+   "stage_hint": null,
+   "brief": "The coalition government announced 54,200 new jobs created in the last month, well above the predicted 20,000, with the participation rate rising from 65.1 to 65.3 per cent. The speaker argued the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 is needed to lower corporate tax for international competitiveness, criticising Labor's proposed 49.5 per cent top marginal tax rate as a disincentive."
+  },
+  {
+   "slug": "speech-355134",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-355316",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the $65 billion corporate tax cut, arguing it would increase debt, cut services, and give $7.4 billion to banks with 40% flowing offshore; they cited the Kansas tax cut failure and proposed alternative measures including limiting negative gearing, capital gains concessions, trust income splitting, and requiring tax disclosure for companies earning over $100 million."
+  },
+  {
+   "slug": "speech-355318",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal government's enterprise tax plan will worsen inequality by boosting company profits without raising wages or investment, citing record-high profits, low reinvestment, and record-low wages growth. They opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, referencing Treasury modelling showing negligible growth, an IMF warning on rising inequality, and a $62 billion annual welfare loss from income disparity."
+  },
+  {
+   "slug": "speech-355320",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, which would cut the company tax rate to 25% for businesses with a turnover above $50 million, costing $36.5 billion over the medium term. They argued the government’s priorities are wrong, citing negative impacts from penalty rate cuts, a $15 million cut to schools in Cunningham, reductions in vocational education funding, rising housing costs in Wollongong, and problems with the NBN rollout."
+  },
+  {
+   "slug": "speech-355322",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017 was criticised as a $65 billion unfunded corporate tax cut that would not boost jobs or growth, based on failed trickle-down economics. BHP was singled out as a major tax avoider, with a $1.1 billion dispute with the ATO and a CEO bonus awarded for aggressive tax minimisation."
+  },
+  {
+   "slug": "speech-355323",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing it would worsen inequality by giving a $65 billion unfunded tax cut to big businesses and high-income earners while raising taxes on workers earning over $21,000. The speaker presented data showing the bill disproportionately benefits capital cities—such as 20,500 businesses in Greater Sydney versus 6,000 in rest of New South Wales—and claimed it would have negligible effects on growth, wages and jobs, citing the Reserve Bank and US Congressional Budget Office."
+  },
+  {
+   "slug": "speech-355324",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, which gives a 25% tax cut to companies with turnover above $50 million costing $36.5 billion over the medium term, is fiscally irresponsible and morally bankrupt. Labor opposes the bill, citing negligible wage and GDP growth, the government's $209 billion gross debt blowout, and its targeting of vulnerable Australians through Centrelink robo-debt while favoring big business."
+  },
+  {
+   "slug": "speech-355325",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's \"jobs and growth\" mantra has not translated into real action, citing the Treasury Laws Amendment Bill as a costly and ineffective measure. They criticized the bill's projected cost of $24–$65 billion for minimal economic benefits (1% growth and $2/day wage increase in 20 years) and noted that no businesses in their electorate reported benefits, while wages stagnate, inequality rises, and the deficit has surpassed half a trillion dollars."
+  },
+  {
+   "slug": "speech-355331",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing that the $65.4 billion in corporate tax cuts would deliver minimal economic benefit (1% growth in 20 years and $2 per day wage increase) while the government cut $22 billion from schools, $600 million from TAFE, and increased student fees by 7.5%, harming workers, students, and families."
+  },
+  {
+   "slug": "speech-355333",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "Labor opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing it would forgo massive revenue for only 1% economic growth and a $2-a-day wage increase in 20 years, while giving tax cuts to big business as low-paid workers face a $60 billion pay cut."
+  },
+  {
+   "slug": "speech-355339",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "Opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing the Turnbull government's claim that Australia's corporate tax rate is uncompetitive is false—citing US Congressional Budget Office data showing Australia ranks 10th on statutory rate, 15th on average rate, and 11th on effective rate among G20 nations. Also argued that dividend imputation makes the system more investor-friendly, and that the $65.4 billion tax cut for big business would worsen the budget without broadening the tax base."
+  },
+  {
+   "slug": "speech-355342",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing it would increase inequity and harm Australian families, particularly in their multicultural electorate where the average household income is under $60,000 a year."
+  },
+  {
+   "slug": "speech-355345",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing that company profits are at record highs while wages stagnate, and that $36.5 billion in tax cuts for businesses turning over $50 million or more would primarily benefit overseas shareholders and large corporations, many of which already pay little or no tax. The speaker cited figures including a 20% profit jump in late 2016, a 0.5% wage fall, $15.6 billion in first-half bank profits, and 1,904 large companies not paying tax, and contrasted the cuts with unmet needs for flood-affected growers in South Australia and the closure of Holden."
+  },
+  {
+   "slug": "speech-355346",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Enterprise Tax Plan No. 2) Bill 2017, arguing it provides a $65 billion unfunded tax cut for big business and multinationals while low-income workers face tax increases and penalty rate cuts. They highlighted the government's shifting cost estimates for the plan, from $24 billion to $65.4 billion, and criticised the impact on workers in Adelaide's northern suburbs affected by car industry closures."
+  }
+ ],
+ "acts": []
+}

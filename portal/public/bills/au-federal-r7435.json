@@ -1,0 +1,391 @@
+{
+ "key": "au-federal-r7435",
+ "title": "Superannuation (Building a Stronger and Fairer Super System) Imposition Bill 2026",
+ "short_title": "Superannuation (Building a Stronger and Fairer Super System) Imposition Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-03-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7437_ems_ca5dcd95-fbcc-4d6e-8e70-378c07a75670%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7435%22",
+   "document_date": "2026-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00009",
+   "document_date": "2026-03-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-11",
+  "sentences": [
+   "This bill is part of a package that would reduce tax concessions for people with large superannuation balances.",
+   "Individuals with total superannuation balances over $3 million in the 2026-27 income year would face reduced concessions, with a further reduction for balances over $10 million.",
+   "The changes would apply to income years starting on 1 July 2026."
+  ],
+  "changes": [
+   "Reduce tax concessions for individuals with total superannuation balances exceeding $3 million.",
+   "Apply a further reduction for balances exceeding $10 million.",
+   "Apply to income years starting on 1 July 2026."
+  ],
+  "affected": "Individuals with large superannuation balances.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10008",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "question": "Superannuation (Building a Stronger and Fairer Super System) Imposition Bill 2026 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 95,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 85,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-05/4"
+  },
+  {
+   "key": "federal-senate-10038",
+   "date": "2026-03-10",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to the order agreed to earlier today, the time allotted for debate on the bills has expired. I will now put the question before the chair and then put the questions on the remaining stages of the bills. I will begin with the second reading amendment circulated by One Nation. _One Nation's circulated amendment_ At the end of the motion, add \", but the Senate: (a) notes that: (i) Australians have been incentivised to accumulate large balances in superannuation because of extremely punitive income tax rates, (ii) the Government's spending crisis has led them to raid Australians' retirement savings, (iii) the debate on these bills has been guillotined and fast-tracked in a dirty deal between Labor and the Greens, (iv) One Nation agrees with the low income super tax offset threshold being raised to help low income earners and One Nation's vote against these bills is not in opposition to this measure, (v) superannuation belongs to Australians, it's their money and they should be able to direct it where they see fit, (vi) One Nation policy calls on Australians to be able to invest their superannuation in a person's primary residence, (vii) the Government is attempting to tax its way out of its own economic mismanagement instead of tackling spending blowouts and productivity, (viii) superannuation was brought in to incentivise retirement and changes create uncertainty for long-term planning, (ix) fees charged by union aligned superannuation funds that donate to Labor are exorbitant and decrease Australians' superannuation investments, and (x) raising punitive taxes incentivises wealth leaving Australia; and (b) calls on the Government to: (i) implement comprehensive tax reform and reduce income tax paid by all Australians, (ii) ensure any revenue raised from new taxes under these bills is directed to reducing income tax paid by Australians, and (iii) get its spending under control, instead of raiding Australians' retirement savings\". Claire Chandler I ask",
+   "stage": "Limitation of debate",
+   "ayes": 4,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-10/16"
+  },
+  {
+   "key": "federal-senate-10039",
+   "date": "2026-03-10",
+   "house": "senate",
+   "question": "Sue Lines The question is that the remainder of the second reading amendment circulated by One Nation be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 20,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-10/17"
+  },
+  {
+   "key": "federal-senate-10040",
+   "date": "2026-03-10",
+   "house": "senate",
+   "question": "Sue Lines The question is that these bills be now read a second time.",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-10/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1200100",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200517",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200518",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201003",
+   "speaker": "Madonna Jarrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201101",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-10",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation (Building a Stronger and Fairer Super System) Imposition Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00009",
+   "assent_date": "2026-03-13"
+  }
+ ]
+}

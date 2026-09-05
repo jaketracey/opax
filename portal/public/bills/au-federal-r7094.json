@@ -1,0 +1,667 @@
+{
+ "key": "au-federal-r7094",
+ "title": "Economic Inclusion Advisory Committee Bill 2023",
+ "short_title": "Economic Inclusion Advisory Committee Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2023-12-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7094_ems_600f94d7-a8fb-4acd-8962-cc1545cd2724%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7094%22",
+   "document_date": "2023-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00112",
+   "document_date": "2023-12-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-10-19",
+  "sentences": [
+   "This bill would create a new expert body to advise the government on tackling long-term disadvantage and improving economic inclusion.",
+   "The committee, with up to 13 part-time members including economists and community advocates, would report annually before each federal budget.",
+   "The social services minister and treasurer would choose the members together, and the committee's operation would be reviewed within five years."
+  ],
+  "changes": [
+   "Establishes the Economic Inclusion Advisory Committee as a statutory body.",
+   "Requires the committee to provide annual advice on income support adequacy and barriers to participation.",
+   "Allows the minister and treasurer to jointly direct the committee to examine specific issues.",
+   "Requires an independent review of the committee's operation within five years."
+  ],
+  "affected": "Australians facing disadvantage, the government, and experts in economics, academia, business, unions and community advocacy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:46Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8528",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-11-28.83.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. This means they can now discuss it in more detail. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7094), the bill: > *Establishes the Economic Inclusion Advisory Committee to provide advice related to the Commonwealth Government’s policies, programs and responsibilities for enhancing economic inclusion and participation.*",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-28/1"
+  },
+  {
+   "key": "federal-representatives-8542",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "question": "The majority voted against an amendment introduced by Clark MP [Andrew Wilkie](https://theyvoteforyou.org.au/people/representatives/clark/andrew_wilkie) (Independent), which means it failed. ### What do these amendments do? Mr Wilkie explained that: > *These amendments insert poverty reduction into each of the listed matters for consideration by the committee as they formulate any report. This seeks to ensure that, no matter which of the one or more matters that the committee chooses to include in their report, poverty reduction will need to be considered.* ### Amendment text > *(1) Clause 3, page 2 (line 19), after \"and participation\", insert \", and for reducing poverty\".* > > *(2) Clause 6, page 4 (line 9), after \"and participation\", insert \", and for reducing poverty\".* > > *(3) Clause 8, page 5 (line 13), after \"economic inclusion\", insert \"and poverty reduction\".* > > *(4) Clause 8, page 5 (line 20), omit \"and tackle disadvantage\", substitute \", tackle disadvantage and reduce poverty\".* > > *(5) Clause 8, page 5 (lines 24 and 25), omit \"(d) options for tailored responses to address barriers to economic inclusion for\", substitute:* > >> *(d) options for tailored responses to address:* >> >>> *(i) barriers to economic inclusion; and* >>> >>> *(ii) barriers to reducing poverty;* > > *(6) Clause 8, page 5 (line 29), after \"economic inclusion policies\", insert \", and poverty reduction policies,\".* > > *(7) Clause 8, page 6 (line 3), after \"economic inclusion policies\", insert \", and poverty reduction policies,\".* > > *(8) Clause 8, page 6 (line 4), after \"inequality markers\", insert \", and poverty markers,\".*",
+   "stage": "Consideration in detail",
+   "ayes": 14,
+   "noes": 64,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-30/2"
+  },
+  {
+   "key": "federal-representatives-8543",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2023-11-30.21.1) introduced by North Sydney [Kylea Tink](https://theyvoteforyou.org.au/people/representatives/north_sydney/kylea_tink) (Independent), which means they failed. ### What did the amendments do? Ms Tink [explained that](https://www.openaustralia.org.au/debate/?id=2023-11-30.21.1): > *the first amendment I am moving will require the committee to report on defined national poverty reduction targets. If the purpose of this committee is to help our government and this parliament shift the dial then we must know not just what we are currently dealing with but where we are trying to get to. Improving policy to eradicate poverty for all people in this country should be a central part of the committee's remit. As we are already seeing, growing inequality undermines social cohesion and is detrimental to economic growth. It is pivotal, therefore, that the very committee tasked with providing independent advice to the government on economic inclusion and how to tackle disadvantage put poverty reduction front and centre. My amendments task the committee with setting out the process and time line for the development of national poverty targets and measures and reporting on the progress made to achieve those targets.* > > *Secondly, these amendments require the committee's report to be released to the public at least two weeks before the budget. As we know, the interim Economic Inclusion Advisory Committee was established earlier this year pending this legislation being passed. Yet its primary recommendation—that 'the government, as a first priority, commit to a substantial increase in the base rates of the JobSeeker payment and related working age payments'—was not implemented in the most recent federal budget. Similarly, the interim committee's call for the scrapping of the activity test for child care subsidies went unheeded. This shows us there is a real risk that the Economic Incl",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 64
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-30/3"
+  },
+  {
+   "key": "federal-senate-8590",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-12-05.276.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means it failed. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to ensure that membership of the permanent Economic Inclusion Advisory Committee must include people with direct contemporary experience of poverty and sufficient representation of people most impacted by economic disadvantage including First Nations people, disabled people, women, and carers\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/19"
+  },
+  {
+   "key": "federal-senate-8591",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-12-05.278.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. This means they can now discuss it in more detail. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7094), the bill: > *Establishes the Economic Inclusion Advisory Committee to provide advice related to the Commonwealth Government’s policies, programs and responsibilities for enhancing economic inclusion and participation.*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/20"
+  },
+  {
+   "key": "federal-senate-8592",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-12-05.280.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) and Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means it failed. ### Amendment text > *(1) Clause 6, page 4 (line 14), omit \"and an economist\", substitute \", an economist and a person with direct contemporary experience of living with a low income and economic exclusion\".* > > *(2) Clause 11, page 8 (line 27), at the end of subclause (2), add:* > >> *; (g) a person who has direct contemporary experience of living with a low income and economic exclusion.* > > *(3) Clause 11, page 8 (after line 30), after paragraph (3)(a), insert:* > >> *(aa) ensure that at least one of those members is a person with disability; and* >> >> *(ab) have regard to the desirability of the membership of the Committee being persons who are actively involved in policy, advocacy and peer support work related to economic exclusion; and*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/21"
+  },
+  {
+   "key": "federal-senate-8593",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-12-05.282.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) and Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means it failed. ### Amendment text > *(1) Clause 3, page 2 (line 15), omit \"function is to\", substitute \"functions are to develop national poverty measures and targets and\".* > > *(2) Clause 6, page 4 (line 5), omit \"function is to\", substitute \"functions are to develop national poverty measures and targets and\".* > > *(3) Clause 6, page 4 (line 21), omit \"function\", substitute \"functions\".* > > *(4) Heading to Division 2, page 5 (line 1), omit \"function\", substitute \"functions\".* > > *(5) Heading to clause 8, page 5 (lines 5 and 6), omit \"function—reports ahead of Commonwealth Government budgets\", substitute \"functions\".* > > *(6) Clause 8, page 5 (lines 7 and 8), omit subclause (1), insert:* > >> *(1) The Committee's functions are to:* >> >>> *(a) develop national poverty measures and national poverty targets; and* >>> >>> *(b) report to the Joint Ministers ahead of each Commonwealth Government budget.* > > *(7) Clause 8, page 6 (after line 14), after subclause (4), insert:* > >> *(4A) Without limiting subsection (2), the report must include advice about the national poverty measures and national poverty targets developed by the Committee under paragraph (1)(a).* > > *(8) Clause 9, page 7 (line 8), omit \"function\", substitute \"functions\".* > > *(9) Clause 11, page 8 (line 21), omit \"function\", substitute \"functions\".* > > *(10) Clause 21, page 12 (line 4), omit \"function\", substitute \"functions\".* > > *(11) Clause 24, page 13 (line 9), omit \"function\", substitute \"functions\".* > > *(12) Clause 28, page 15 (line 2), omit \"function\", substitute \"functions\".*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/22"
+  },
+  {
+   "key": "federal-senate-8594",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted against [Australian Greens amendments](https://www.openaustralia.org.au/senate/?gid=2023-12-05.287.3), which means they failed. ### Amendment text *SHEET 2162* > *(1) Clause 4, page 3 (after line 5), after the definition of Committee , insert:* > >> *Community Affairs References Committee means the Senate Community Affairs References Committee, or such other committee constituted under a resolution of the Senate.* > > *(2) Clause 11, page 8 (after line 11), after subclause (1), insert:* > >> *(1A) Before the Minister appoints the Chair and other members of the Committee:* >> >>> *(a) the Minister must have referred the proposed appointment to the Community Affairs References Committee under section 26A; and* >>> >>> *(b) one of the following must have occurred:* >>> >>>> *(i) the Community Affairs References Committee was taken to have approved the proposed appointment under subsection (4) of that section;* >>>> >>>> *(ii) the Community Affairs References Committee has notified the Minister that it has decided to approve the proposed appointment.* > > *(3) Page 14 (after line 13), after clause 26, insert:* > >> *26A Community Affairs References Committee—approval or rejection of proposed appointment* >> >> *(1) The Community Affairs References Committee must approve or reject a proposed appointment for the Chair and other members of the Committee referred to the Community Affairs References Committee by the Minister.* >> >> *(2) The Community Affairs References Committee must make the decision on a proposed appointment within :* >> >>> *(a) 14 days after the referral; or* >>> >>> *(b) if, within the first 14 days after the referral, the Community Affairs References Committee notifies the Minister that it requires additional time to consider the referral—44 days after the referral.* >> >> *(3) As soon as practicable after making the decision, the Community Affairs References Committee must:* >> >>> *(a) give the Minister written notice of the decis",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/23"
+  },
+  {
+   "key": "federal-senate-8595",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted against an Australian Greens [amendment](https://www.openaustralia.org.au/senate/?gid=2023-12-05.289.3), which means it failed. ### Amendment text > *(1) Clause 14, page 10 (after line 6), after subclause (2), insert:* > > *(2A) If a member of the Committee is a person who has direct contemporary experience of living with a low income and economic exclusion, that member is to be paid allowances appropriate to the circumstances of the member and having regard to the time and expertise the member contributes to the work of the Committee, including:* > >> *(a) any preparation undertaken by the member for a meeting of the Committee; and* >> >> *(b) any other activity undertaken by the member relevant to the Committee's function.*",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/24"
+  },
+  {
+   "key": "federal-representatives-10320",
+   "date": "2023-12-06",
+   "house": "representatives",
+   "question": "Justine Elliot I move: That the amendments be agreed to. Milton Dick The question is that the amendments be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 78,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 125,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-12-06/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Economic Inclusion Advisory Committee Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00112",
+   "assent_date": "2023-12-08"
+  }
+ ]
+}

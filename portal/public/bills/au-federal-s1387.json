@@ -1,0 +1,135 @@
+{
+ "key": "au-federal-s1387",
+ "title": "Public Governance, Performance and Accountability Amendment (Vaccine Indemnity) Bill 2023",
+ "short_title": "Public Governance, Performance and Accountability Amendment (Vaccine Indemnity) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-03",
+ "originating_house": "senate",
+ "sponsor": "BABET, Sen Ralph",
+ "sponsor_party": "United Australia Party (Clive Palmer",
+ "sponsor_person_id": "11003",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1387%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1387%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1387%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1387_ems_21d880aa-a43c-4521-bb7e-f7085388a973%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1387%22",
+   "document_date": "2023-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-03",
+  "sentences": [
+   "The bill would stop the Commonwealth from granting future indemnities to vaccine manufacturers.",
+   "It would add a new section to the Public Governance, Performance and Accountability Act 2013 to ban the Finance Minister and corporate Commonwealth entities from giving such indemnities.",
+   "The ban would apply to vaccines for human use and would not affect any existing indemnities."
+  ],
+  "changes": [
+   "Prevents the Commonwealth from granting future indemnities to vaccine manufacturers.",
+   "Bans the Finance Minister and corporate Commonwealth entities from giving indemnities related to the use of a vaccine.",
+   "Defines manufacturer to include sponsors under the Therapeutic Goods Act 1989 and vaccine as a vaccine for immunising persons."
+  ],
+  "affected": "Pharmaceutical companies and vaccine manufacturers that would no longer receive indemnities from the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8293",
+   "date": "2023-08-10",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-10.26.1) introduced by Victorian Senator [Ralph Babet](https://theyvoteforyou.org.au/people/senate/victoria/ralph_babet) (United Australia Party), which means it will be included in the original motion. ### Amendment text > *At the end of the motion, add:* > > *\"and, in respect of the Public Governance, Performance and Accountability Amendment (Vaccine Indemnity) Bill 2023, the bill be referred immediately to the Finance and Public Administration Legislation Committee for [inquiry and report by 18 March 2024](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Finance_and_Public_Administration/VaccineIndemnity47)\"*",
+   "stage": "Committee motion",
+   "ayes": 39,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-10/3"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

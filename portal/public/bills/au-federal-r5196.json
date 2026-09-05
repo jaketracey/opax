@@ -1,0 +1,331 @@
+{
+ "key": "au-federal-r5196",
+ "title": "Agricultural and Veterinary Chemicals Legislation Amendment (Removing Re-approval and Re-registration) Bill 2014",
+ "short_title": "Agricultural and Veterinary Chemicals Legislation Amendment (Removing Re-approval and Re-registration) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2014-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5196_ems_52391619-eead-4ff9-93fd-d7e7df921b90%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5196%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00091",
+   "document_date": "2014-07-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would remove the need to re-approve and re-register agricultural and veterinary chemicals under the Agvet Code.",
+   "It would delete end dates for approvals and allow registrations to be renewed without a final renewal, while also cutting red tape and improving regulator access to safety information.",
+   "The bill also amends the Agricultural and Veterinary Chemicals Legislation Amendment Act 2013, the Food Standards Australia New Zealand Act 1991, and the Collection Act, with no start date specified in the outline."
+  ],
+  "changes": [
+   "Removes requirements for re-approval and re-registration of agvet chemicals.",
+   "Reduces red tape by allowing less frequent registration renewals.",
+   "Improves the APVMA's ability to obtain safety information on marketed chemicals.",
+   "Obliges the APVMA to give eligible persons access to approval and registration information."
+  ],
+  "affected": "Manufacturers, importers, and users of agricultural and veterinary chemicals, as well as the Australian Pesticides and Veterinary Medicines Authority (APVMA).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3276",
+   "date": "2014-06-25",
+   "house": "senate",
+   "question": "Agricultural and Veterinary Chemicals Legislation Amendment (Removing Re-approval and Re-registration) Bill 2014 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-288688",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288689",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288690",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288691",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288692",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288694",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288695",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288697",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288700",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-288701",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289076",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289077",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289079",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289081",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Agricultural and Veterinary Chemicals Legislation Amendment (Removing Re-approval and Re-registration) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00091",
+   "assent_date": "2014-07-21"
+  }
+ ]
+}

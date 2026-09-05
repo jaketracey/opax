@@ -1,0 +1,328 @@
+{
+ "key": "au-federal-r6593",
+ "title": "Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2021",
+ "short_title": "Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-09-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2021-12-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6593_ems_e9a7f0c6-ef21-48fb-a6d3-33cfd4b97546%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6593_ems_51fcdda3-90c0-4eff-bd5d-8aa95f699c07%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6593_ems_1f71f081-c76b-4fee-a8ac-67c6dc914db1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6593%22",
+   "document_date": "2020-09-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00131",
+   "document_date": "2021-12-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-09-03",
+  "sentences": [
+   "This bill would add a new type of court order for managing convicted terrorists after their prison terms end, alongside the existing continuing detention order (CDO) scheme.",
+   "Under the proposed extended supervision order (ESO) scheme, a State or Territory Supreme Court could impose conditions on an offender when it is not satisfied that continued imprisonment is needed, using the lower evidence standard of 'the balance of probabilities'.",
+   "The bill would also let ESOs and control orders start while a person is held in non-prison custody, such as immigration detention, and would make these orders the only alternatives a Supreme Court may consider when deciding if a less restrictive measure than a CDO would work."
+  ],
+  "changes": [
+   "It creates the ESO scheme in Division 105A of the Criminal Code.",
+   "It allows Supreme Courts to impose ESOs as a less restrictive alternative to CDOs.",
+   "It makes ESOs and control orders available to people in non-prison custody, including immigration detention.",
+   "It restricts Supreme Courts to considering only ESOs and control orders as less restrictive measures to a CDO.",
+   "It amends several related laws, including the Criminal Code and the National Security Information (Criminal and Civil Proceedings) Act 2004."
+  ],
+  "affected": "Convicted terrorist offenders who may still pose a risk when their prison sentence ends, and the State and Territory Supreme Courts that would decide on these orders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7509",
+   "date": "2021-11-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-11-22.164.1) to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which would have added the words below to the usual second reading motion \"*that [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6593) be read for a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens). ### Error in Hansard There appears to be a mix up in the Hansard record between this division and [the division](https://theyvoteforyou.org.au/divisions/senate/2021-11-22/4) on the [Security Legislation Amendment (Critical Infrastructure) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6657). This amendment was about critical infrastructure, which is part of that other bill. ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) this bill is not supported by key stakeholders in the logistics, technology, and education sectors, among others;* > > *(b) in the review of this bill undertaken by the Parliamentary Joint Committee on Intelligence and Security, numerous stakeholders reported insufficient consultation by the Government with their respective sector or industry and many reported that this bill would result in the imposition of an excessive regulatory burden on their business, including the potential duplication of regulatory systems;* > > *(c) this bill imposes very serious obligations on entities deemed to be providing critical infrastructure, including:* > >> *(i) the potential for the takeover of business or operations by Government security agencies, and* >> >> *(ii) the ab",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 14,
+    "dated": 17,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-22/5"
+  },
+  {
+   "key": "federal-senate-7510",
+   "date": "2021-11-22",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2021 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 14,
+    "dated": 17,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-22/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-394979",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The government introduced the Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2020 to create an extended supervision order scheme for high-risk terrorist offenders released after custodial sentences, allowing state and territory Supreme Courts to impose tailored conditions for up to three years, with annual review and breach offences. The bill also amends surveillance, monitoring warrant, and national security information laws to support the scheme, responds to reviews by the Independent National Security Legislation Monitor and Parliamentary Joint Committee on Intelligence and Security, and cites the 2019 London Bridge and 2020 Streatham attacks as evidence of post-sentence risk."
+  },
+  {
+   "slug": "speech-413311",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The Australian government tabled its response to the Parliamentary Joint Committee on Intelligence and Security's advisory report on the Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2020."
+  },
+  {
+   "slug": "speech-413322",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "Labor supported the Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2020 to create a federal extended supervision order regime for high-risk terrorist offenders, with a lower standard of proof than continuing detention orders, and noted bipartisan committee recommendations including review requirements, though the government rejected a recommendation on interim supervision order conditions."
+  },
+  {
+   "slug": "speech-413323",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2020, which creates extended supervision orders for high-risk terrorist offenders after they complete their custodial sentences, and argued that confidential evidence for such orders is necessary to avoid compromising Australian Federal Police operations."
+  },
+  {
+   "slug": "speech-413449",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2020 is essential for community safety by allowing courts to impose up to three-year extended supervision orders on high-risk terrorist offenders after release. The speaker welcomed the Government's acceptance of the PJCIS recommendation for an independent review of risk assessment tools, citing the 2020 Vienna attacker’s release after eight months despite high risk ratings, and noted concerns about the Government departing from Dr James Renwick’s 2017 recommendation to use a \"high degree of probability\" standard of proof rather than \"balance of probabilities.\""
+  },
+  {
+   "slug": "speech-413450",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The bill establishes a federal extended supervision order regime for high-risk terrorist offenders to address a gap in the courts' ability to issue post-sentence orders, implementing a 2017 recommendation from the Independent National Security Legislation Monitor. The speaker criticised the Morrison government for taking four years to act and stated that Labor would support the bill but would commit to implementing all 11 unanimous bipartisan recommendations from the PJCIS if the government fails to do so."
+  },
+  {
+   "slug": "speech-413451",
+   "speaker": "Pat Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2020 is necessary to introduce Extended Supervision Orders (ESOs) for up to three years, citing a \"probable\" national terrorism threat level since 2014, 110 individuals charged in 51 counterterrorism investigations, seven domestic attacks, and 13 convicted terrorist offenders due for release by 2025."
+  },
+  {
+   "slug": "speech-413452",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2020 creates extended supervision orders for high-risk terrorist offenders after their custodial sentences, citing the 2019 London Bridge and 2020 Streatham attacks, and the government accepted 10 of 11 recommendations from the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-413453",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The government argued the Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Bill 2020 is needed to manage convicted terrorists due for release, introducing extended supervision orders, monitoring warrants, and protections for national security information."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment (High Risk Terrorist Offenders) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00131",
+   "assent_date": "2021-12-08"
+  }
+ ]
+}

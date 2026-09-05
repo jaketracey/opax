@@ -1,0 +1,164 @@
+{
+ "key": "au-federal-r7324",
+ "title": "Supply Bill (No. 1) 2025-2026",
+ "short_title": "Supply Bill (No. 1) 2025-2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2025-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7324_ems_45a6989e-eb5b-4048-992f-0041f1e3958a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7324%22",
+   "document_date": "2025-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00019",
+   "document_date": "2025-03-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-25",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the ordinary annual services of the government.",
+   "It would provide about 5/12ths of the estimated 2025-26 annual appropriations for those services, with a larger share for entities like the National Emergency Management Agency that have high early-year spending.",
+   "The remaining 7/12ths plus 2025-26 Budget measures would be covered by a separate bill, the Appropriation Bill (No. 1) 2025-2026."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "Sets the appropriation amount at broadly 5/12ths of estimated 2025-26 annual appropriations.",
+   "Allows a greater proportion for certain entities with high early-year expenditure or service delivery needs."
+  ],
+  "affected": "The government and its entities, particularly those with high early-year spending such as the National Emergency Management Agency.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194705",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194764",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194835",
+   "speaker": "Jenny McAllister",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194932",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply Act (No. 1) 2025-2026",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00019",
+   "assent_date": "2025-03-27"
+  }
+ ]
+}

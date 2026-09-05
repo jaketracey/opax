@@ -1,0 +1,709 @@
+{
+ "key": "au-federal-r5602",
+ "title": "Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2]",
+ "short_title": "Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2016-04-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5602_ems_eaf0c94e-5c93-464c-8f7f-0fc935507d80%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5602%22",
+   "document_date": "2016-02-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-02",
+  "sentences": [
+   "This bill is part of a package that would bring back the Australian Building and Construction Commission (ABCC).",
+   "The package would replace the current industry regulator with a new body that has stronger powers and higher penalties for unlawful conduct in the building sector.",
+   "The explanatory memorandum says the package builds on two earlier Acts, but does not specify a start date for the changes."
+  ],
+  "changes": [
+   "Re-establishes the Australian Building and Construction Commission as the industry regulator.",
+   "Restores higher penalties for building industry participants who break industrial laws.",
+   "Introduces specific provisions on unlawful action and coercion in the building industry."
+  ],
+  "affected": "Participants in the building and construction industry, including employers, workers, and unions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:31:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4054",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "question": "Rob Mitchell If it suits the House, I will state the question in the form that the amendment be agreed to. The question now is that the amendment be agreed to. Russell Matheson The building and construction industry employs more than a million people, representing approximately nine per cent of the Australian workforce. It is a critical part of the fabric that makes this country productive, prosperous and internationally competitive. The people of Macarthur understand the importance of the building and construction sector to the economy. They know that cost blowouts and project delays as a result of industrial bullying cost time and money, which ultimately costs us all. I stand here today, proud to be part of a coalition government which recognises the importance of an industry that is vital to job creation and essential to Australia's economy. I believe the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] is a positive step forward. It encourages productivity and high levels of employment in the building and construction industry. It will ensure that the government's policy to deliver the infrastructure of the 21st century is delivered. In my electorate alone, this bill will protect jobs and investment by ensuring thousands of employers and workers in the industry can get on with the job without fear of intimidation. One of the most crucial parts of this bill is the regulation to uphold and promote respect for the law to ensure respect for the rights of everyone in the building industry. It contains provisions to ensure that unlawful actions, including unlawful industrial actions, are dealt with appropriately. It also ensures the ability for the courts to impose significant penalties for individuals and organisations that participate in this unlawful action. The Australian Building and Construction Commission was a strong and productive watchdog. It was established by the coalition in 2005 following the 2002 Royal Commission into the Bu",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-04/1"
+  },
+  {
+   "key": "federal-representatives-4055",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "question": "Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] and another - Second Reading - Agree with the bills' main idea",
+   "stage": "Second reading",
+   "ayes": 86,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-04/2"
+  },
+  {
+   "key": "federal-representatives-4056",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "question": "The majority voted to speed up the passage of the bills so that they could immediately vote on whether to pass it. In parliamentary jargon, they voted to suspend the [standing and sessional orders](http://www.peo.gov.au/learning/fact-sheets/standing-orders.html) that would have stopped the bills from being passed immediately (ordinarily, they couldn't be passed until the next sitting day). ### What were the bills about? The bills re-institute a workplace relations framework that was first put in place back in 2005. Among other things, they re-establish the [Australian Building and Construction Commissioner](https://en.wikipedia.org/wiki/Office_of_the_Australian_Building_and_Construction_Commissioner) and re-introduce provisions dealing with unlawful [industrial action](https://en.wikipedia.org/wiki/Industrial_action) and coercion that are specific to the building industry. Read more in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd034).",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-04/3"
+  },
+  {
+   "key": "federal-representatives-4057",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That the bill be now read a third time. Clare O'Neil Could I just start by expressing my absolute disgust at those on the other side trying to gag my contribution to this bill. Deputy Speaker, I represent 100,000 people in this chamber. Christopher Pyne I move: That the question be put.",
+   "stage": "Third reading",
+   "ayes": 83,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-04/4"
+  },
+  {
+   "key": "federal-representatives-4058",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "question": "Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] and another - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 84,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-04/5"
+  },
+  {
+   "key": "federal-representatives-4190",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Christopher Pyne I ask leave of the House to move a motion requesting that the Senate resume consideration of the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2], and the Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013 [No. 2]. Tony Smith Is leave granted? Tony Burke We have made it clear that we are ready to debate this in the Senate so, on that basis, leave is granted. Leave granted. Christopher Pyne I thank the House, and I move: That: (1) the House requests the Senate to resume consideration of the bills entitled a Bill for an Act to re-establish the Australian Building and Construction Commissioner, and for related purposes, and a Bill for an Act to deal with consequential and transitional matters arising from the enactment of the Building and Construction Industry (Improving Productivity) Act 2013, and for related purposes, which were transmitted to the Senate for its concurrence during the last session of the Parliament; and (2) the House's requests be conveyed to the Senate in a separate message for each bill. Adam Bandt Mr Speaker, I move that— Christopher Pyne I move: That the question be now put. Tony Smith The question is that the motion be put.",
+   "stage": "Bill",
+   "ayes": 85,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/6"
+  },
+  {
+   "key": "federal-representatives-4191",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the motion moved by the Leader of the House be agreed to.",
+   "stage": "Bill",
+   "ayes": 85,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/7"
+  },
+  {
+   "key": "federal-senate-4203",
+   "date": "2016-04-18",
+   "house": "senate",
+   "question": "Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] and one other - Second Reading - Agree with the bills' main idea",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 49,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-04-18/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-325723",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The speaker presented the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] and its explanatory memorandum, expressing gratitude to the Manager of Opposition Business."
+  },
+  {
+   "slug": "speech-325792",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The government reintroduced the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] to re-establish the Australian Building and Construction Commission, arguing the construction sector—which directly employs over a million Australians—needs regulation to prevent intimidation and job-destroying conflict. The speech cited the Heydon royal commission as incontrovertible evidence of a massive cultural problem in the industry."
+  },
+  {
+   "slug": "speech-326141",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill to re-establish the Australian Building and Construction Commission, arguing it unfairly targets construction workers and that the government's $80 million royal commission produced no criminal convictions. They announced Labor's alternative reforms to protect workers' rights, including increased penalties for underpayment and sham contracting."
+  },
+  {
+   "slug": "speech-326151",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for re-establishing the Australian Building and Construction Commission (ABCC) to address lawlessness and corruption in the construction industry, citing the Royal Commission into Trade Union Governance and Corruption and noting that CFMEU-related unions and officials have been fined over $6 million since 2005. The speaker also stated that the ABCC previously led to 9% productivity growth and $7.5 billion in annual consumer savings, and criticised Labor and the Greens for opposing the bill despite a perceived electoral mandate."
+  },
+  {
+   "slug": "speech-326152",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] to re-establish the Australian Building and Construction Commission, arguing its coercive powers are excessive and undemocratic, and announced Labor’s alternative plan to increase penalties for employer exploitation, strengthen protections against sham contracting, and give the Fair Work Ombudsman more powers."
+  },
+  {
+   "slug": "speech-326153",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for re-establishing the Australian Building and Construction Commission (ABCC) to reverse Labor's 2012 abolition, citing a 2013 election commitment and citing threats to contractors in the Macquarie electorate and CFMEU actions in Adelaide. The bill introduces a new building code, prevents contractors breaching safety or migration laws from Commonwealth-funded work, and imposes penalties for unlawful industrial action."
+  },
+  {
+   "slug": "speech-326155",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] was argued to re-establish the Australian Building and Construction Commission, citing a 9% productivity increase and $7.5 billion annual savings during its previous operation, which was abolished by Labor in 2012."
+  },
+  {
+   "slug": "speech-326156",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The bill was opposed for granting the Australian Building and Construction Commission coercive powers without judicial oversight, removing protections against self-incrimination and natural justice. Labor’s alternative plan proposes increased penalties for employer exploitation, stronger Fair Work Ombudsman powers, and support for unions to reduce inequality."
+  },
+  {
+   "slug": "speech-326157",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Building and Construction Industry (Improving Productivity) Bill 2013 [No.2], claiming the Australian Building and Construction Commission saved $6.3 billion annually before its 2012 abolition, and accused Labor of being puppets of union bosses. He cited Dyson Heydon's royal commission finding of \"widespread and deep-seated\" corruption in unions and stated the bill would restore rule of law, reduce violence and productivity losses in the construction industry."
+  },
+  {
+   "slug": "speech-326158",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] is an ideological attack on construction workers and the CFMEU, claiming it would increase workplace injuries and deaths while ignoring exploitation of temporary visa workers. They opposed the bill, citing the CFMEU’s role in safety support and community activities, and called for its withdrawal."
+  },
+  {
+   "slug": "speech-326159",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Building and Construction Industry (Improving Productivity) Bill 2013 [No.2], arguing it re‑establishes the Australian Building and Construction Commission with oppressive, coercive powers that target construction workers, and called it the start of a return to Work Choices."
+  },
+  {
+   "slug": "speech-326165",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the original Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] and argued the Australian Building and Construction Commission (ABCC) is necessary to reduce lawlessness, intimidation, and lost productivity in the construction sector, citing 12,300 days lost to industrial action in Queensland in 2014 and a $40,000–$50,000 cost difference per unit between CFMEU and non-union construction. He also criticised the federal safety office’s accreditation costs ($200,000–$400,000 initial, $100,000–$200,000 annually) as a barrier for regional small-to-medium enterprises."
+  },
+  {
+   "slug": "speech-326166",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2], arguing it removes the right to silence and limits union entry, threatening civil liberties and worker safety; they noted 25 construction deaths in 2015 and criticised the opposition for focusing on royal commission smears rather than the bill's substance, adding that the previous royal commission resulted in no criminal convictions."
+  },
+  {
+   "slug": "speech-326168",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2], supporting the restoration of the Australian Building and Construction Commission to address lawlessness, intimidation and corruption in the construction sector, and cited a 9% productivity gain and $7.5 billion annual consumer benefit under the previous ABCC."
+  },
+  {
+   "slug": "speech-326169",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Building and Construction Industry (Improving Productivity) Bill 2013, arguing it provides unprecedented coercive powers, is based on discredited productivity evidence (Econtech modelling), and would increase workplace fatalities—citing 36 deaths in 2007-08, double the rate before the ABCC, and noting the Cole royal commission referred 31 individuals with no prosecutions."
+  },
+  {
+   "slug": "speech-326170",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] must be passed to re-establish the Australian Building and Construction Commission, citing productivity gains of $3.1 billion per year within two years of its original creation, rising to $6.3–7.5 billion annually, and noting 93 referrals for civil and criminal proceedings from the Heydon royal commission as evidence of ongoing corruption."
+  },
+  {
+   "slug": "speech-326172",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-326321",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for re-establishing the Australian Building and Construction Commission (ABCC) to improve productivity and deter unlawful industrial action, citing the Stella Maris commission of inquiry where the Northern Territory Labor government improperly gifted a site to Unions NT, and Labor ministers Delia Lawrie and Gerry McCarthy were found to have acted unaccountably."
+  },
+  {
+   "slug": "speech-326324",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for the re-establishment of the Australian Building and Construction Commission (ABCC) via the Building and Construction Industry (Improving Productivity) Bill 2013, citing corruption, lawlessness and productivity losses in the construction industry. They highlighted the CFMEU’s black-ban on Boral costing over $20 million and a $4 million settlement, and claimed the previous ABCC brought nine per cent productivity growth and $7.5 billion in consumer savings."
+  },
+  {
+   "slug": "speech-326330",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2], arguing it is based on ideology rather than evidence and represents an attack on workers' rights, while Labor's alternative agenda focuses on cracking down on illegal underpayment, sham contracts, and protecting temporary overseas workers."
+  },
+  {
+   "slug": "speech-326336",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Building and Construction Industry (Improving Productivity) Bill 2013 and its reintroduction of the ABCC, arguing it would undermine workers' safety and civil liberties by removing rights to silence, legal representation, and protection against self-incrimination. Labor proposed alternative reforms including $4.5 million for increased monitoring of registered organisations, higher penalties for underpayment, and stronger whistleblower protections."
+  },
+  {
+   "slug": "speech-326337",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2], criticised the opposition for opposing stronger workplace laws, and noted being forced into a union with no choice."
+  },
+  {
+   "slug": "speech-326342",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Building and Construction Industry (Improving Productivity) Bill 2013 [No.2], arguing it infringes human rights and is based on a false premise, and noted that the $60 million Cole royal commission produced no criminal prosecutions while 11,000 workers needed $22.3 million in back pay recovered by the Fair Work Ombudsman."
+  },
+  {
+   "slug": "speech-326347",
+   "speaker": "Russell Matheson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for re‑establishing the Australian Building and Construction Commission (ABCC) through the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2], contending that Labor’s 2012 abolition had led to increased industrial unlawfulness and that the new watchdog would improve productivity and protect workers and employers in the construction sector."
+  }
+ ],
+ "acts": []
+}

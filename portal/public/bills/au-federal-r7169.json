@@ -1,0 +1,496 @@
+{
+ "key": "au-federal-r7169",
+ "title": "Therapeutic Goods and Other Legislation Amendment (Vaping Reforms) Bill 2024",
+ "short_title": "Therapeutic Goods and Other Legislation Amendment (Vaping Reforms) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2024-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7169_ems_b4c58082-ae7d-4f8d-b2f0-2c45358a49d6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7169_ems_e1e31037-a8bd-4c93-8be3-87477cd464bb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7169_ems_4eca18cf-e1e1-49c5-a67f-6cfe8d6b840e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7169%22",
+   "document_date": "2024-03-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00050",
+   "document_date": "2024-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-03-21",
+  "sentences": [
+   "This bill would ban bringing into the country, making within Australia, selling, holding for sale, and promoting non-medical and single-use vapes.",
+   "The Therapeutic Goods Act would be changed to create a national set of rules for all vapes, giving the Secretary and Minister powers to decide what is covered.",
+   "New penalties and criminal offences would apply to people who break the ban, with some exceptions allowed for vapes used to help people quit smoking or manage nicotine addiction."
+  ],
+  "changes": [
+   "Creates new offences and civil penalties for importing, making, supplying, holding for sale, and advertising vapes.",
+   "Allows state and territory officials to enforce the new rules, including seizing, forfeiting, and destroying illegal vapes.",
+   "Lets the government share information with states and territories and other enforcement bodies.",
+   "Extends the Therapeutic Goods Act to cover all vapes, regardless of nicotine content or health claims.",
+   "Adds powers for court registrars and other court officers to issue warrants related to vape enforcement."
+  ],
+  "affected": "Importers, manufacturers, suppliers, retailers, and advertisers of vaping goods, as well as state and territory enforcement agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:46Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8875",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7169_amend_199fa7f2-506f-4f01-a290-d8c6baad5cea%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain unchanged. The amendment was introduced by Cowper MP [Pat Conaghan](https://theyvoteforyou.org.au/people/representatives/cowper/pat_conaghan) (Nationals). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) criticises the Government for failing to control the illicit vaping market and failing to protect children against the proliferation of vaping products that have exploded in availability through a black market driven by organised crime;* > > *(2) expresses its alarm that the current prescription-only model is failing, with only approximately 10 per cent of vapers purchasing their product legally through prescriptions;* > > *(3) acknowledges the existence and strength of the $1 billion black market vape trade in Australia, which is fuelled by the importation of more than 100 million illicit disposable devices each year;* > > *(4) recognises that resourcing of enforcement measures at the borders and the point of sale has been grossly insufficient and that policy measures such as prohibition have historically not worked;* > > *(5) calls on the Government to consider all policies to prevent children from accessing and becoming addicted to vaping products; and* > > *(6) further criticises the Government for failing to establish or fund its promised illicit tobacco and vaping commissioner\".*",
+   "stage": "Second reading",
+   "ayes": 56,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 76
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-15/2"
+  },
+  {
+   "key": "federal-senate-8986",
+   "date": "2024-06-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7169_amend_e2e00f59-509b-47fa-a9d0-dd30fc9b26cd%22;rec=0) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it failed. It would have added the words below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add “, but the Senate calls on the Government to:* > > *(a) provide definitive and objective measures on what it considers constitutes the success or failure of this bill; and* > > *(b) if these measures are not met, move to alternative regulatory models such as allowing vaping products to be sold in general retail”.*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-26/6"
+  },
+  {
+   "key": "federal-senate-8987",
+   "date": "2024-06-26",
+   "house": "senate",
+   "question": "The majority voted against an [opposition amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7169_amend_141f7b4b-4aca-4718-9372-1a4ec04b42a3%22;rec=0) to [government amendment (5)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7169_amend_09ef1a0c-d7eb-4ff5-8783-d0373cc55d8f%22;rec=0), which means it failed. The amendment would have brought forward the proposed review of the amendments by two years. ### Text of opposition amendment > *(1) Amendment (5), subclause 4(2), omit “1 July 2027”, substitute “1 July 2025”.* ### Text of government amendment (5) > *4 Review of operation of amendments* > > *(1) The Minister must cause an independent review to be conducted of the operation of the amendments made by Schedules 1, 3 and 4 to this Act and any regulations or other legislative instruments made for the purposes of those amendments.* > > *(2) The review must commence no later than 1 July 2027.* > > *(3) The persons who conduct the review must give the Minister a written report of the review within 6 months after the commencement of the review.* > > *(4) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.*",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 5,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-26/7"
+  },
+  {
+   "key": "federal-senate-8988",
+   "date": "2024-06-26",
+   "house": "senate",
+   "question": "Therapeutic Goods and Other Legislation Amendment (Vaping Reforms) Bill 2024 - in Committee - Government amendments",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 5,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-26/8"
+  },
+  {
+   "key": "federal-senate-8989",
+   "date": "2024-06-26",
+   "house": "senate",
+   "question": "The majority voted against [Opposition amendments](https://www.openaustralia.org.au/senate/?gid=2024-06-26.118.1) on sheets 2586 and 2587, which means they failed. ### Amendment text *SHEET 2586* > *(1) Schedule 1, item 11, page 21 (line 13), omit \"or subsection (9)\".* > > *(2) Schedule 1, item 11, page 21 (after line 14), after subsection 41QD(6), insert:* > >> *Evidential burden of proof* >> >> *(6A) Despite subsection 13.3(3) of the Criminal Code and section 41QE of this Act a person does not bear an evidential burden in relation to the matters in subsection (9).* *SHEET 2587* > *(1) Schedule 1, item 11, page 26 (after line 17), insert:* > >> *Division 3 — Periodic reporting by Minister* >> >> *41RE Periodic report on smoking and vaping rates* >> >> *(1) As soon as practicable after the end of each reporting period, the Minister must cause a report to be prepared on smoking and vaping rates in Australia.* >> >> *(2) As soon as practicable after the completion of a report, the persons who prepared the report must give the report to the Minister.* >> >> *(3) The Minister must cause each report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.* >> >> *(4) The Minister must be satisfied that each report was prepared in collaboration with such Commonwealth, State and Territory agencies as the Minister considers appropriate.* >> >> *(5) In this section:* >> >>> *reporting period means:* >>> >>> *(a) the period of 6 months beginning on the day this section commences; or* >>> >>> *(b) each subsequent 6-month period.* >>> >>> *Note: The Illicit Tobacco and E-cigarette Commissioner must prepare reports on enforcement statistics, and analysis of those statistics, relating to the illicit tobacco and e-cigarette trade in Australia, including detections and seizures of illicit tobacco and e-cigarette products, and associated arrests. Reports must be prepared every 12 months and tabled in both Houses of",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 5,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-26/9"
+  },
+  {
+   "key": "federal-representatives-8992",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "question": "Therapeutic Goods and Other Legislation Amendment (Vaping Reforms) Bill 2024 - Consideration of Senate Message - Agree with the Senate's amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 67,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 76,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-27/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Therapeutic Goods and Other Legislation Amendment (Vaping Reforms) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00050",
+   "assent_date": "2024-06-27"
+  }
+ ]
+}

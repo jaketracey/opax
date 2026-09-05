@@ -1,0 +1,149 @@
+{
+ "key": "au-federal-r5843",
+ "title": "ASIC Supervisory Cost Recovery Levy (Consequential Amendments) Bill 2017",
+ "short_title": "ASIC Supervisory Cost Recovery Levy (Consequential Amendments) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5843_ems_a4fb1af8-e5a3-4a9b-9461-c19302d7f48c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5843%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00045",
+   "document_date": "2017-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "This bill is part of a three-bill package that would introduce an industry funding model for ASIC from 1 July 2017.",
+   "Under the model, ASIC would have to explain its regulatory priorities annually and improve how it collects and uses data from financial entities.",
+   "The explanatory memorandum says the package would add $308.7 million to the underlying cash balance over four years and increase compliance costs by $21.1 million each year."
+  ],
+  "changes": [
+   "Introduces an industry funding model for ASIC.",
+   "Requires ASIC to annually explain its regulatory priorities and resource allocation.",
+   "Requires ASIC to improve its collection and use of data from financial entities."
+  ],
+  "affected": "ASIC, financial entities and consumers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345194",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The ASIC Supervisory Cost Recovery Levy (Consequential Amendments) Bill 2017 introduces an industry funding model for ASIC, requiring annual publication of regulatory costs and empowering ASIC to take administrative action against entities that fail to pay levies or penalties within a year. The bill also abolishes the existing market supervision cost recovery regime from 1 July 2017."
+  }
+ ],
+ "acts": [
+  {
+   "title": "ASIC Supervisory Cost Recovery Levy (Consequential Amendments) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00045",
+   "assent_date": "2017-06-19"
+  }
+ ]
+}

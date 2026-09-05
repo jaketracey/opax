@@ -1,0 +1,158 @@
+{
+ "key": "au-federal-r5685",
+ "title": "Tax and Superannuation Laws Amendment (2016 Measures No. 2) Bill 2016",
+ "short_title": "Tax and Superannuation Laws Amendment (2016 Measures No. 2) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-02-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5685_ems_173c95c4-5e89-4fdc-9607-960a129c6a70%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5685%22",
+   "document_date": "2016-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00015",
+   "document_date": "2017-02-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-14",
+  "sentences": [
+   "This bill is part of a package that would give the Commissioner of Taxation a Remedial Power to fix unforeseen or unintended outcomes in tax and superannuation laws more quickly.",
+   "The Commissioner could modify a taxation law by making a disallowable legislative instrument, but only if the modification aligns with the law's purpose, is reasonable, and has negligible budget impact according to Treasury or Finance.",
+   "Before using the power, the Commissioner must consult appropriately and practicably, consistent with how primary legislation amendments are handled."
+  ],
+  "changes": [
+   "Establishes a Remedial Power for the Commissioner of Taxation.",
+   "Allows the Commissioner to modify taxation laws by disallowable legislative instrument.",
+   "Requires consultation before exercising the power."
+  ],
+  "affected": "Entities, individuals, businesses, and community organisations affected by taxation and superannuation laws.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-340135",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "Labor supported the Tax and Superannuation Laws Amendment Bill 2016, which gives the tax commissioner remedial powers to fix unintended tax law outcomes and includes measures on primary producer income averaging, luxury car tax exemptions for cultural institutions, and minor amendments. The speaker also criticised the government for cutting 3,000 ATO jobs, called for closing negative gearing and capital gains tax loopholes, and argued Labor’s policies on multinational tax avoidance and housing affordability are superior."
+  },
+  {
+   "slug": "speech-340137",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The bill increases flexibility of income tax averaging for primary producers, allowing them to re-access the scheme 10 years after opting out; this change was announced in the Agricultural Competitiveness White Paper and affects an estimated 12,000 farmers who opt out annually."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2016 Measures No. 2) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00015",
+   "assent_date": "2017-02-28"
+  }
+ ]
+}

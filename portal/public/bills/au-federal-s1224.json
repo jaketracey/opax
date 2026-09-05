@@ -1,0 +1,377 @@
+{
+ "key": "au-federal-s1224",
+ "title": "Inspector-General of Live Animal Exports Bill 2019",
+ "short_title": "Inspector-General of Live Animal Exports Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-31",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2019-10-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1224_ems_bf08acc0-74ce-4331-8dcb-40bfc181f866%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1224_ems_b926e288-a696-40d5-b720-eef0b873b911%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1224_ems_1509062e-7075-46f9-bb53-1cdd77fab407%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1224%22",
+   "document_date": "2019-07-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00081",
+   "document_date": "2019-10-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2019-07-31",
+  "sentences": [
+   "The bill creates an independent watchdog to monitor how the Department of Agriculture regulates the export of live animals.",
+   "The watchdog can demand information and documents from anyone in Australia for its reviews, and its reports go to the minister and are released publicly.",
+   "The watchdog cannot examine single actions by officials, government export policies, trade deals or market access."
+  ],
+  "changes": [
+   "Establishes an independent Inspector-General of Live Animal Exports.",
+   "Gives the Inspector-General power to compel information and documents for reviews.",
+   "Requires the Inspector-General to prepare reports and make them public."
+  ],
+  "affected": "The Department of Agriculture, live-stock exporters, trading partners and the Australian community.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5863",
+   "date": "2019-09-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-09-10.19.1) to leave subclause 10(2) unchanged. In parliamentary jargon, they voted to let the subclause \"*stand as printed*\". ### What was subclause 10(2)? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd023): > *Subclause 10(2) states that the Inspector-General is not permitted to review ‘only a single performance of a function, or a single exercise of a power, by a single live-stock export official’. The Explanatory Memorandum states that this limitation:* > >> *… is to ensure that the scope of the review is focussed on the effectiveness of the regulation of the live-stock export regulatory system as a whole, not the performance of an individual. It is intended that reviews will be high-level and may concern either the whole or specific parts of the live-stock export regulatory system.*",
+   "stage": "In committee",
+   "ayes": 42,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 21,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-10/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381550",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The Inspector-General of Live Animal Exports Bill 2019 was moved, establishing an independent statutory Inspector-General to oversee the Department of Agriculture’s regulation of livestock exports, a response to the Moss review and the 2018 MV Awassi Express incident. The bill grants the Inspector-General powers to compel information and review official actions, while the government rejected export bans or suspensions, citing the trade’s $1.7 billion value in 2017-18 and the impacts of the 2011 Indonesia suspension, alongside measures such as the new Animal Welfare Branch and an interim Inspector-General appointed in March 2019."
+  },
+  {
+   "slug": "speech-381551",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's support for the Inspector-General of Live Animal Exports Bill is a complete capitulation after years of opposition, and criticised the Coalition for using the 2011 live cattle trade suspension to attack Labor while ignoring their own inaction under John Howard and the subsequent Awassi Express scandal. He noted the absence of National Party speakers on the bill, accused the government of regulating the live sheep trade to death despite claiming to stand by exporters, and referenced the Moss review and Labor's 2016 six-point animal welfare plan."
+  },
+  {
+   "slug": "speech-381554",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Inspector-General of Live Animal Exports Bill 2019, arguing it provides an independent umpire for the industry. He claimed Animals Australia paid whistleblowers up to $178,000 to produce footage of animal suffering, and cited a 0.16% mortality rate on a recent voyage as evidence the trade can be humane."
+  },
+  {
+   "slug": "speech-381555",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor established the Inspector-General of Live Animal Exports in 2013 for independent oversight, which the current government is now reviving after the Coalition under Minister for New England scrapped it, calling it unnecessary red tape. Labor maintains its position to end the northern summer live sheep export trade due to unachievable animal welfare standards, whereas the government's prior abolition led to subsequent exposés of welfare failings."
+  },
+  {
+   "slug": "speech-381560",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker defended the live animal export trade, arguing it is worth $250 million to the Australian economy and that no one condones animal cruelty, but markets will turn to other jurisdictions with lower standards if Australia withdraws. He also criticised Labor’s 2011 ban on cattle exports to Indonesia, claimed footage of animal cruelty may have been orchestrated by activists, and supported the Inspector-General of Live Animal Exports Bill 2019 as an integrity measure."
+  },
+  {
+   "slug": "speech-381563",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's 2013 decision to abolish the interim inspector-general of animal welfare was a catastrophic mistake, citing repeated animal welfare failures in live sheep exports—including 4,000 sheep deaths in 2014, 3,000 in 2016, and 2,500 on the Awassi Express in 2017—and supported re‑establishing an independent Inspector‑General of Live Animal Exports to provide proper oversight."
+  },
+  {
+   "slug": "speech-381565",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "Opposed the amendment to the Inspector-General of Live Animal Exports Bill 2019, defending the government's post-2013 reforms including ESCAS, increased shipping space, and elimination of northern summer voyages, and citing a 0.61% mortality rate as the lowest in a decade."
+  },
+  {
+   "slug": "speech-381658",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government delayed restoring the Inspector-General of Live Animal Exports, a role originally created by Labor and abolished by the Abbott government in 2013, only acting after a 2018 60 Minutes expose revealed animal cruelty and the Moss review found systemic departmental failures. They confirmed Labor's support for the bill, criticized the removal of \"animal welfare\" from the title, and renewed calls for a staged phase-out of the live sheep trade."
+  },
+  {
+   "slug": "speech-381659",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Inspector-General of Live Animal Exports Bill 2019, stating it would add independent oversight to improve regulatory practice and protect the live export industry, which contributes over $1.7 billion to the Australian economy."
+  },
+  {
+   "slug": "speech-381661",
+   "speaker": "Ken O'Dowd",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Inspector-General of Live Animal Exports Bill 2019, arguing it would improve animal welfare and regulatory culture while maintaining livestock exports; he cited the 2011 ban’s economic harm to producers and jobs, and described trade with Indonesia and Kuwait, including practices such as night slaughtering of 10–12 cattle without refrigeration and the need for smaller, faster boats and qualified stockmen."
+  },
+  {
+   "slug": "speech-381668",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Inspector-General of Live Animal Exports Bill 2019, noting that Labor had previously introduced a similar bill that was abolished by the member for New England. They advocated for independent oversight of animal exports, cited the loss of 2,500 abattoir jobs at Gepps Cross and 1,500 jobs at Thomas Foods, and suggested value-adding by slaughtering animals onshore in Australia."
+  },
+  {
+   "slug": "speech-381669",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Inspector-General of Live Animal Exports Bill 2019, praising Minister Littleproud's efforts to regulate the industry, and claimed that those who obtained footage of animal cruelty were paid and may have committed crimes. They opposed a ban on live sheep exports, stating that Labor's past ban on live cattle had a detrimental effect, and noted that Australian abattoirs operate at 60–70% capacity due to a lack of workers, not export volumes."
+  },
+  {
+   "slug": "speech-381670",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speech backed the bill establishing an Inspector-General of Live Animal Exports, but argued it was insufficient and that live sheep exports should be phased out in favour of processing in Australia, citing the sheep flock's fall from 110 million in 2001 to 65 million and that only 1.1 million sheep were exported live versus 29 million processed."
+  },
+  {
+   "slug": "speech-381671",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Inspector-General of Live Animal Exports Bill 2019 will permanently establish a regulator to maintain high animal welfare standards and reassure Australians and trading partners, noting the $1.7 billion industry's importance (including $300 million in on-farm income for WA sheepmeat) and alleging that $38,000 was paid to a worker to sabotage footage of animal treatment."
+  },
+  {
+   "slug": "speech-381672",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The coalition scrapped Labor's Inspector-General of Animal Welfare in 2013, leading to animal welfare failures, and the current bill requires full implementation of the Moss review recommendations. Labor committed to ending live sheep exports and supporting a total ban on the northern summer live sheep trade."
+  },
+  {
+   "slug": "speech-381673",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Inspector-General of Live Animal Exports Bill 2019 is ineffective and fails to address animal suffering, citing the MV Ganado Express incident where cattle required six captive bolt applications, and called for phasing out live exports in favour of chilled meat."
+  },
+  {
+   "slug": "speech-381809",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The member congratulated the member for Fenner on his Sydney Marathon time and announced the passage of the Inspector-General of Live Animal Exports Bill 2019, which creates an independent oversight role to improve regulation of livestock exports, with two amendments adding specific animal welfare references."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Inspector-General of Animal Welfare and Live Animal Exports Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00081",
+   "assent_date": "2019-10-02"
+  }
+ ]
+}

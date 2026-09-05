@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-s1489",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Domestic Reserve) Bill 2026",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Domestic Reserve) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-10",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1489%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1489%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1489_ems_1350f6c8-2ae7-4755-bf2f-675a8a300d0b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1489%22",
+   "document_date": "2026-03-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-10",
+  "sentences": [
+   "The bill would require gas and petroleum companies operating in Commonwealth waters to set aside a portion of their exports for domestic use.",
+   "Companies would have 12 months to sign a domestic reserve agreement with the Commonwealth, reserving 15% of their exported petroleum for the Commonwealth's exclusive use.",
+   "The agreement would last at least 10 years, and the Commonwealth could transfer its rights to a state or territory."
+  ],
+  "changes": [
+   "Imposes a new obligation on gas and petroleum companies to enter into domestic reserve agreements.",
+   "Requires licensees to reserve 15% of their exported petroleum for the Commonwealth.",
+   "Allows the Commonwealth to pass on its rights to a state or territory.",
+   "Sets a minimum agreement term of 10 years.",
+   "Requires new agreements if the licence remains in force after the first contract ends."
+  ],
+  "affected": "Gas and petroleum companies operating in Commonwealth waters, and state and territory governments that may receive rights to the reserved petroleum.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

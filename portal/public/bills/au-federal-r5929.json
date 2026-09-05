@@ -1,0 +1,282 @@
+{
+ "key": "au-federal-r5929",
+ "title": "Competition and Consumer Amendment (Abolition of Limited Merits Review) Bill 2017",
+ "short_title": "Competition and Consumer Amendment (Abolition of Limited Merits Review) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2017-10-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5929_ems_9d9bd1f3-efc3-47fe-8067-e928464a6202%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5929%22",
+   "document_date": "2017-08-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00116",
+   "document_date": "2017-10-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-10",
+  "sentences": [
+   "This bill would stop the Australian Competition Tribunal from reviewing most decisions under national energy laws.",
+   "It would also ensure the Australian Energy Regulator's decisions cannot be reviewed on their merits by any state or territory body.",
+   "The changes follow a 2016 review that found the merits review regime was failing and increasing energy prices."
+  ],
+  "changes": [
+   "The bill removes the Australian Competition Tribunal's power to review decisions under the National Electricity Law, the National Gas Law and the National Energy Retail Law, except for decisions about disclosing confidential or protected information.",
+   "The bill prevents state or territory bodies from conducting merits reviews of Australian Energy Regulator decisions.",
+   "The bill responds to a COAG Energy Council agreement that the merits review regime has failed and raised energy prices."
+  ],
+  "affected": "The Australian Competition Tribunal, the Australian Energy Regulator, and businesses and consumers affected by energy network pricing decisions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4888",
+   "date": "2017-09-07",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-09-07.18.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it passed and will be added to the [original motion](https://www.openaustralia.org.au/senate/?id=2017-09-07.17.2). ### Amendment text > *At the end of the motion, add, “but in respect of the [Competition and Consumer Amendment (Abolition of Limited Merits Review) Bill 2017](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:%22legislation/billhome/r5929%22), the bill be referred immediately to the Environment and Communications Legislation Committee report by 16 October 2017.”*",
+   "stage": "Committee motion",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-07/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-352433",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The opposition supported the bill to abolish limited merits review (LMR) of Australian Energy Regulator decisions, noting that post-2013 reforms failed to protect consumers, with network companies gaining $7.3 billion through LMR. The speaker also moved a second reading amendment criticising the government's lack of a national energy policy, which has caused wholesale power prices to double and household bills to rise 20% in New South Wales."
+  },
+  {
+   "slug": "speech-352435",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Abolition of Limited Merits Review) Bill 2017 will help reduce power bills by limiting appeals from energy grid operators seeking higher returns. He also proposed redirecting the $2.6 billion annual renewable energy subsidy to grid infrastructure, advocated for an eight-year \"set and lock\" energy policy to create investment certainty, and called for a capacity market to support renewable uptake."
+  },
+  {
+   "slug": "speech-352440",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Abolition of Limited Merits Review) Bill 2017, arguing the limited merits review process allowed network businesses to inflate electricity prices by successfully challenging regulator decisions, costing consumers $6.5 billion since 2013. He specifically accused the New South Wales Liberal government of using the process to add $100 per year to consumer bills and inflate asset values before privatising Ausgrid and Endeavour Energy, while criticising the Turnbull government for failing to decide on a clean energy target, which he said doubled wholesale electricity prices."
+  },
+  {
+   "slug": "speech-352441",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Abolition of Limited Merits Review) Bill 2017 is part of the Turnbull government's package to address electricity prices by prioritising reliability and affordability over emissions cuts, noting that $6.5 billion in costs were passed to consumers under previous policy. The speaker also mentioned a petition from constituents Dr Joan Corbet and Gillian King about climate change concerns, and criticised the opposition for ideological approaches."
+  },
+  {
+   "slug": "speech-352442",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's failure to provide clear energy and climate policy has doubled wholesale electricity prices in four years, costing consumers the equivalent of a $50 carbon price, and that renewable energy is now cheaper than coal—citing wind at $55/MWh and solar at $75–80/MWh versus coal at $150/MWh—while supporting the abolition of limited merits review but criticising network investment rules that favour capital expenditure."
+  },
+  {
+   "slug": "speech-352443",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Abolition of Limited Merits Review) Bill 2017 should be passed to remove electricity and gas networks' ability to appeal Australian Energy Regulator decisions, noting that 32 of 51 regulator decisions have been challenged since 2008, adding $6.5 billion in consumer costs. The bill also provides $67.4 million in additional funding for the Australian Energy Regulator and was recommended by the Finkel review."
+  },
+  {
+   "slug": "speech-352577",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Renewable Energy Target and related government schemes have caused Australia's high electricity costs, citing a $60 billion federal cost by 2030, a $2,500 per person burden, and a $14 billion \"reverse Robin Hood\" subsidy from low-income households to solar panel owners. He claimed the target forces intermittent power onto the grid, reduces dispatchable generation, and disincentivizes investment, while blaming state Labor governments for closing coal-fired plants."
+  },
+  {
+   "slug": "speech-352578",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Abolition of Limited Merits Review) Bill 2017 will abolish the limited merits review regime, except for certain energy regulator information disclosure decisions, to prevent network businesses from using appeals to increase regulated revenue and consumer costs. The limited merits review has enabled around $6.5 billion in additional costs to consumers since 2008, and the government will provide an extra $67.4 million to the Australian Energy Regulator to reduce energy prices."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Abolition of Limited Merits Review) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00116",
+   "assent_date": "2017-10-30"
+  }
+ ]
+}

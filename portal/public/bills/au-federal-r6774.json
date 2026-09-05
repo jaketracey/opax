@@ -1,0 +1,371 @@
+{
+ "key": "au-federal-r6774",
+ "title": "Offshore Electricity Infrastructure Bill 2021",
+ "short_title": "Offshore Electricity Infrastructure Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-09-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science, Energy and Resources",
+ "status": "passed",
+ "status_as_of": "2021-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6774_ems_cc98aab2-2ad3-4a63-a200-e17e715e7da5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6774%22",
+   "document_date": "2021-09-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00120",
+   "document_date": "2021-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-09-02",
+  "sentences": [
+   "This bill would create a licensing system for building, running and removing offshore electricity equipment in Australian waters.",
+   "The minister would decide which areas are open for projects and grant permits, while new statutory bodies would oversee the scheme.",
+   "Work health and safety rules under the Work Health and Safety Act 2011 would apply to these offshore activities, with modifications."
+  ],
+  "changes": [
+   "Makes it illegal to carry out offshore electricity activities without a licence.",
+   "Lets the minister declare zones where offshore electricity work can happen.",
+   "Gives the minister power to issue licences for projects in those zones.",
+   "Protects offshore electricity infrastructure in Commonwealth waters.",
+   "Sets up official bodies to run and enforce the new framework.",
+   "Applies modified workplace safety laws to offshore electricity operations."
+  ],
+  "affected": "Companies and investors wanting to build offshore electricity projects in Commonwealth waters, plus existing marine users who must be consulted.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412838",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-02",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the Offshore Electricity Infrastructure Bill to establish a regulatory framework for offshore electricity projects, citing specific proposals like Marinus Link, Star of the South, and Sun Cable, which are estimated to be worth over $10 billion and create over 10,000 jobs during construction."
+  },
+  {
+   "slug": "speech-412839",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-02",
+   "stage_hint": null,
+   "brief": "The Offshore Electricity Infrastructure (Regulatory Levies) Bill 2021 was introduced to ensure full cost recovery for the Offshore Infrastructure Registrar and Regulator, with NOPTA and NOPSEMA appointed to administer and regulate the framework, supporting the development of offshore electricity projects."
+  },
+  {
+   "slug": "speech-414570",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Offshore Electricity Infrastructure Bill 2021 as overdue, citing offshore wind's potential for jobs and energy export, but criticised the government for ignoring bipartisan recommendations on work health and safety harmonisation and local community benefits, moving a second reading amendment to address these issues."
+  },
+  {
+   "slug": "speech-414572",
+   "speaker": "Trent Zimmerman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The Offshore Electricity Infrastructure Bill 2021 was argued to enable offshore renewable energy, with the three most advanced projects—Star of the South, Marinus Link, and Sun Cable—potentially delivering $10 billion in investment and over 10,000 jobs during construction."
+  },
+  {
+   "slug": "speech-414574",
+   "speaker": "Katie Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The Offshore Electricity Infrastructure Bill 2021 was argued to be essential for enabling major renewable projects like Marinus Link, Star of the South, and Sun Cable, while protecting maritime stakeholders and the environment. The speech also reaffirmed the Morrison government's net zero emissions by 2050 target and its technology-focused plan to reduce emissions."
+  },
+  {
+   "slug": "speech-414575",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Offshore Electricity Infrastructure Bill 2021 is urgently needed to unlock over 10 offshore wind proposals, including one off Newcastle, which could create tens of thousands of jobs and billions in investment, but criticised the government for delaying the legislation for five years and failing to adopt harmonised workplace health and safety laws or ensure local community benefits."
+  },
+  {
+   "slug": "speech-414578",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The Offshore Electricity Infrastructure Bill 2021 was argued as essential for enabling Australia’s offshore wind potential and grid-stabilising projects like Marinus Link, Star of the South and Sun Cable, while the government announced a net zero by 2050 target backed by a Long Term Emissions Reduction Plan, noting Australia’s 20.8% emissions reduction since 2005."
+  },
+  {
+   "slug": "speech-414579",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Offshore Electricity Infrastructure Bill 2021 is long overdue but necessary to unlock Australia's offshore wind potential, citing 2,223 gigawatts of feasible wind capacity and the Star of the South project off Gippsland, and criticised the government for lacking a credible climate plan with legislated targets."
+  },
+  {
+   "slug": "speech-414582",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The Offshore Electricity Infrastructure Bill 2021 requires improvements in work health and safety harmonisation, a clear process for declaring offshore areas, and legislated merit criteria for local and environmental benefits. The Morrison government was criticised for delaying offshore renewables and failing to commit to net zero by 2050."
+  },
+  {
+   "slug": "speech-414583",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Offshore Electricity Infrastructure (Consequential Amendments) Bill 2021, which establishes a regulatory framework for offshore wind projects in Commonwealth waters. They noted a proposed 600-megawatt wind project off Kingston, South Australia, in their electorate of Barker, and urged the proponent Australis Energy to engage the local community and ensure the project falls under Commonwealth rather than state jurisdiction."
+  },
+  {
+   "slug": "speech-414704",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that international climate commitments like net zero by 2050 are made through formal communication to treaty bodies, not by passing domestic legislation, and criticised the opposition's push for a legislated target as a stunt. They noted that a bipartisan parliamentary committee recommended against legislating the target, and that the government's approach involves enabling legislation and technology investment to achieve net zero."
+  },
+  {
+   "slug": "speech-414715",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "Labor will support the Offshore Electricity Infrastructure Bill 2021 and related bills, citing the potential for offshore wind to create tens of thousands of jobs and billions in investment. The government was criticised for delaying the legislation and for its record on climate action, with global offshore wind capacity expected to reach 2,000 GW by 2050."
+  },
+  {
+   "slug": "speech-414716",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Offshore Electricity Infrastructure Bill 2021 will finally allow offshore wind development in Australia, citing a feasible resource of 2,233 gigawatts and the Star of the South project’s potential to power 20% of Victoria, while criticising the government for delays and calling for harmonised work health and safety laws and local benefit requirements in licensing."
+  },
+  {
+   "slug": "speech-414717",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The Offshore Electricity Infrastructure Bill 2021 is years overdue, and while Labor supports it, it needs amendments to cover electricity transmission and exports, harmonised work health and safety, and benefits for onshore communities. Labor also announced a $10 million new-energy skills program with 10,000 apprenticeships over four years."
+  },
+  {
+   "slug": "speech-414718",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the second reading amendment to the Offshore Electricity Infrastructure Bill 2021, arguing the government's net zero by 2050 plan lacks detail and new spending in the forward estimates, with insufficient investment for developing, adopting and scaling renewable technologies like offshore wind."
+  },
+  {
+   "slug": "speech-414720",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The Offshore Electricity Infrastructure Bill 2021 should be passed with sensible amendments to establish an offshore wind industry, citing 12 proposed projects including Star of the South ($6 billion, 3,000 jobs). Stronger environmental safeguards are needed, and the government should scrap the Kurri Kurri gas plant ($660 million) and its gas-fired recovery plans."
+  },
+  {
+   "slug": "speech-414721",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Offshore Electricity Infrastructure Bill 2021 should have been introduced years earlier, criticising the government for inaction on climate change and missing job opportunities. They highlighted that renewable energy is cheaper than fossil fuels and nuclear, cited AEMO projections of over 90% renewables by the 2040s, and promoted Labor's $20 billion Rewiring the Nation policy to connect new renewable projects to the grid."
+  },
+  {
+   "slug": "speech-414722",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Offshore Electricity Infrastructure Bill 2021, subject to an amendment, and criticised the Morrison government for delaying offshore wind development, noting Australia has 2,233 gigawatts of feasible wind resources but no projects, while the UK targets 40 gigawatts by 2030. They argued the bill establishes a necessary regulatory framework but called for stronger commitments to achieve net zero by 2050."
+  },
+  {
+   "slug": "speech-414728",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Offshore Electricity Infrastructure Bill 2021 is overdue, criticising the Morrison government for delaying renewable energy development, and highlighted Australia's potential for offshore wind and solar exports. They supported the bill but raised concerns about the lack of harmonised work health and safety laws, and outlined Labor's commitments to net zero by 2050, a $20 billion grid upgrade, a $15 billion national reconstruction fund, and support for 10,000 apprentices in clean energy."
+  },
+  {
+   "slug": "speech-414732",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Offshore Electricity Infrastructure Bill 2021, arguing it is long overdue but necessary to establish regulatory frameworks for offshore wind energy, and noted that proposed offshore wind farms could have greater combined capacity than all of Australia's coal‑fired power plants."
+  },
+  {
+   "slug": "speech-414813",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Offshore Electricity Infrastructure Bill 2021 and criticised the Prime Minister for past opposition to renewable energy, including calling renewable energy targets \"nuts\" and electric vehicles and batteries useless. They also highlighted a community solar farm in the ACT powering 260 homes and proposed a $20 billion fund to fix the electricity grid."
+  },
+  {
+   "slug": "speech-414814",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The member for Bass supported the Offshore Electricity Infrastructure Bill 2021 and related bills, arguing they will create jobs, lower emissions, and attract investment in offshore wind and renewable energy. The member noted the Bass Strait has strong offshore wind potential and that the bills establish a regulatory framework for offshore electricity projects."
+  },
+  {
+   "slug": "speech-414816",
+   "speaker": "Amanda Louise Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Offshore Electricity Infrastructure Bill 2021 to establish a regulatory framework for offshore wind, but criticised the government for delaying action and for past comments on electric cars and the South Australia battery. They raised concerns about the bill's lack of harmonised work health and safety laws and the absence of local benefit requirements for licences, and called for amendments recommended by the Senate committee."
+  },
+  {
+   "slug": "speech-414817",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-10-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Offshore Electricity Infrastructure Bill 2021 debate lacked cost-benefit analysis, claiming net zero by 2050 would cost Australian families of four $60,000 per year while only reducing global temperatures by 0.5°C by 2100. He cited a Wall Street Journal study and economist Terry McCrann, opposed the policy as damaging to national sovereignty and competitive advantage against China, and warned of energy crises in Europe."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Electricity Infrastructure Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00120",
+   "assent_date": "2021-12-02"
+  }
+ ]
+}

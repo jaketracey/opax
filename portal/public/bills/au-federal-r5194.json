@@ -1,0 +1,236 @@
+{
+ "key": "au-federal-r5194",
+ "title": "Clean Energy Finance Corporation (Abolition) Bill 2013 [No. 2]",
+ "short_title": "Clean Energy Finance Corporation (Abolition) Bill 2013 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2014-06-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5194_ems_ede00fb6-8c9a-4c69-afec-10e30e6c35e3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5194%22",
+   "document_date": "2014-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3194",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "question": "Clean Energy Finance Corporation (Abolition) Bill 2013 [No. 2] - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 82,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-27/3"
+  },
+  {
+   "key": "federal-senate-3239",
+   "date": "2014-06-18",
+   "house": "senate",
+   "question": "Clean Energy Finance Corporation (Abolition) Bill 2013 [No. 2] - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "earliest": 1,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-18/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-287413",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287427",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287437",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287438",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287445",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287449",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,210 @@
+{
+ "key": "au-federal-s986",
+ "title": "Family Tax Benefit (Tighter Income Test) Bill 2014",
+ "short_title": "Family Tax Benefit (Tighter Income Test) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-11-27",
+ "originating_house": "senate",
+ "sponsor": "LEYONHJELM, Sen David",
+ "sponsor_party": "Liberal Democratic Party",
+ "sponsor_person_id": "10832",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2014-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s986%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s986%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s986%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s986%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s986_ems_d6816788-c455-4698-9db5-b8b0c844b5d1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s986%22",
+   "document_date": "2014-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-27",
+  "sentences": [
+   "The bill would reduce government spending and compliance costs while keeping Family Tax Benefit Part A payments for the lowest-income families.",
+   "It would change the income test from 1 July 2015 by removing the cap on payment reductions for families not receiving certain income support payments, so their payment could fall to zero.",
+   "The Parliamentary Budget Office estimates that 247,600 families would be adversely affected, including 89,700 who would receive no payment at all."
+  ],
+  "changes": [
+   "Remove the cap on payment reductions for families not on certain income support payments.",
+   "Continue the 20 per cent reduction of payment for income above the income free area until the payment reaches zero for those families.",
+   "Preserve the maximum rate for families with income below the income free area."
+  ],
+  "affected": "Families receiving Family Tax Benefit Part A, particularly those with incomes over $50,000 and those receiving child maintenance payments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3647",
+   "date": "2014-12-04",
+   "house": "senate",
+   "question": "David Leyonhjelm The Family Tax Benefit (Tighter Income Test) Bill 2014 cuts government spending by more than $270 million a year by means-testing family tax benefit part A more rigorously. Both the coalition and Labor recognise that welfare payments should be means tested. This may seem an uncontroversial idea, but we should remember that some countries have welfare payments that are not means-tested, like universal age pensions, and we should remember that Labor have a troubled relationship with means-testing. They are proud of their changes in recent years to more rigorously means-test family payments and the private health insurance rebate, but they do not want to means-test access to Medicare, and they defend concessional loans for high-income beneficiaries of higher education. The coalition too have a troubled relationship with means-testing. They have loosened means-testing for the age pension and want the private health insurance rebate to be universal. And both sides have continued tied funding to the states that bans state owned hospitals and schools from imposing fees, even on high-income users of these services. Thanks to this inconsistency on means-testing, I have no great hope of support from either the coalition or Labor. But let me go through the process of making the case for the bill. Family tax benefit part A is a welfare payment. Do not be fooled by the mention of tax in the name. It goes to families regardless of whether or not they pay tax. Current and previous governments have decided that families with the least income need this welfare payment of up to $6,723 per child but that a family's need for it reduces when family income exceeds around $50,000. For each dollar earned over that amount, the welfare payment is reduced by 20c. This arrangement is unremarkable and is unaffected by my bill. However, in what is a bizarre and completely unwarranted quirk, when the welfare payment reaches $2,204.60, further rises in income do not prompt further",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "earliest": 5,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-12-04/1"
+  },
+  {
+   "key": "federal-senate-3648",
+   "date": "2014-12-04",
+   "house": "senate",
+   "question": "Family Tax Benefit (Tighter Income Test) Bill 2014 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 1,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-12-04/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

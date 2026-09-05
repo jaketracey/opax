@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-s1443",
+ "title": "Tertiary Education Legislation Amendment (There For Education, Not Profit) Bill 2025",
+ "short_title": "Tertiary Education Legislation Amendment (There For Education, Not Profit) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-02-05",
+ "originating_house": "senate",
+ "sponsor": "LAMBIE, Sen Jacqui",
+ "sponsor_party": "Jacqui Lambie Network",
+ "sponsor_person_id": "10830",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1443%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1443%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1443%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1443%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1443_ems_feee0b9e-d803-47d7-a741-7dadd879f914%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1443%22",
+   "document_date": "2025-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-05",
+  "sentences": [
+   "The bill would cap the pay of Australian university vice-chancellors at $430,000 a year.",
+   "It would amend the Australian National University Act 1991 to apply the cap to the Australian National University and the Tertiary Education Quality and Standards Agency Act 2011 to require other public universities to comply.",
+   "The Tertiary Education Quality and Standards Agency (TEQSA) could obtain information from universities about vice-chancellor pay, and the minister could prescribe a different amount by legislative instrument subject to parliamentary disallowance."
+  ],
+  "changes": [
+   "Sets a statutory limit of $430,000 on vice-chancellor remuneration.",
+   "Empowers TEQSA to obtain information from universities about vice-chancellor pay.",
+   "Allows the minister to prescribe a different amount by legislative instrument, which must be made before 1 July of the preceding year to take effect."
+  ],
+  "affected": "Australian public universities and their vice-chancellors, particularly the Australian National University.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195254",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

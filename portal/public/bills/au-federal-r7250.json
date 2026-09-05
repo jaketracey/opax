@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r7250",
+ "title": "Cyber Security Bill 2024",
+ "short_title": "Cyber Security Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-10-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2024-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7250_ems_2474a1f7-f1f0-4895-9113-3b8532da3377%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7250_ems_9f430b79-7f4e-43ec-b29c-17fcb9559818%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7250_ems_7f839b8b-29e2-438b-80c7-913f20df8d5b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7250_ems_3d1731d9-90d9-474c-9c60-9fbc1627230d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7250%22",
+   "document_date": "2024-10-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00098",
+   "document_date": "2024-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-10-09",
+  "sentences": [
+   "The Cyber Security Bill 2024 would create a legal framework to help the Australian Government respond to cyber security threats across the economy.",
+   "It would give the Minister power to set mandatory security standards for internet-connected smart devices, require entities to report ransomware payments, restrict how cyber incident information is shared, and set up a Cyber Incident Review Board.",
+   "The Bill defines smart devices as 'relevant connectable products', matching the United Kingdom's definition, and the Secretary of Home Affairs could issue compliance, stop or recall notices to enforce standards."
+  ],
+  "changes": [
+   "Establishes the Minister's power to mandate security standards for smart devices.",
+   "Introduces a mandatory reporting obligation for entities that receive a ransomware demand and choose to pay.",
+   "Creates a 'limited use' obligation on how the National Cyber Security Coordinator can share cyber incident information.",
+   "Sets up a Cyber Incident Review Board to review significant cyber incidents.",
+   "Requires responsible entities to provide a statement of compliance for smart devices they supply.",
+   "Gives the Secretary of Home Affairs power to issue enforcement notices for non-compliance."
+  ],
+  "affected": "Australian people and businesses, smart device manufacturers and suppliers, and entities affected by cyber incidents.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Cyber Security Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00098",
+   "assent_date": "2024-11-29"
+  }
+ ]
+}

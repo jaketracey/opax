@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-s1470",
+ "title": "Superannuation Legislation Amendment (Tackling the Gender Super Gap) Bill 2025",
+ "short_title": "Superannuation Legislation Amendment (Tackling the Gender Super Gap) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-04",
+ "originating_house": "senate",
+ "sponsor": "HUME, Sen Jane",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10853",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2026-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1470%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1470%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1470_ems_9549cfc6-40bf-4298-aa79-f7cc72746d27%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1470%22",
+   "document_date": "2025-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-04",
+  "sentences": [
+   "The bill would let spouses voluntarily split their superannuation balances each year to reduce the gender super gap.",
+   "A partner with a higher balance could roll over an amount to their spouse, up to a limit that brings the smaller balance to no more than the general transfer balance cap.",
+   "The mechanism would not apply to defined benefit schemes or to people in pension phase, and would be available only to those with a single superannuation account."
+  ],
+  "changes": [
+   "Amends the Superannuation Industry (Supervision) Act 1993, the Superannuation Industry (Supervision) Regulations 1994 and the Income Tax Assessment Act 1997.",
+   "Creates a voluntary annual mechanism for couples to evenly split superannuation balances.",
+   "Limits roll overs to the spousal redistribution limit, which is the amount that would bring the smaller balance to the general transfer balance cap.",
+   "Requires that the split amount retains its original contribution characteristics and taxed or untaxed proportions.",
+   "Treats the amount received as a roll over superannuation benefit, not a new contribution, so it does not attract new taxes."
+  ],
+  "affected": "Spouses with superannuation accounts, particularly those with unequal balances, and those who have only one superannuation account.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10327",
+   "date": "2026-06-24",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2026-06-24.4.2) to agree with the bill's main idea. In parliamentary jargon, they voted against reading it a second time, which means it will no longer be considered by parliament. This bill was a private members bill that was introduced by Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal). ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1470), the bill: > *Amends the Superannuation Industry (Supervision) Act 1993, Superannuation Industry (Supervision) Regulations 1994 and Income Tax Assessment Act 1997 to enable spouses to split their collective superannuation balances between them on an ongoing annual basis.*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-24/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1198387",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202726",
+   "speaker": "Wendy Askew",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203929",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

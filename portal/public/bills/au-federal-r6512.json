@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6512",
+ "title": "Green New Deal (Quit Coal and Renew Australia) Bill 2020",
+ "short_title": "Green New Deal (Quit Coal and Renew Australia) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-10",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-12-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6512%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6512%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6512%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6512_ems_27426e24-d1f0-4abd-ab1d-7fbed178b3f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6512%22",
+   "document_date": "2020-06-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-10",
+  "sentences": [
+   "The bill would create a public authority called Renew Australia to lead the country's shift to clean energy and tackle the climate emergency.",
+   "Renew Australia would propose electricity law reforms to reach 100% renewable electricity by 2030, phase out fossil fuel generation and thermal coal exports, and reduce energy costs.",
+   "The bill would prohibit new coal mines or coal-fired power stations from the date of Royal Assent and ban mining or burning coal after 1 January 2030, with penalties including up to 7 years imprisonment."
+  ],
+  "changes": [
+   "Establishes Renew Australia as a public authority to lead the transition.",
+   "Prohibits new coal mines and coal-fired power stations from Royal Assent.",
+   "Phases out thermal coal exports by 2030.",
+   "Bans mining or burning coal after 1 January 2030.",
+   "Prohibits importing thermal coal except for research or heritage purposes.",
+   "Sets penalties including up to 7 years imprisonment for breaches."
+  ],
+  "affected": "Communities, energy companies, governments, households, businesses, and workers affected by coal-fired power station closures.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391475",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-10",
+   "stage_hint": null,
+   "brief": "Adam Bandt introduced the Green New Deal (Quit Coal and Renew Australia) Bill 2020 to establish Renew Australia and restrict thermal coal activities. Andrew Wilkie introduced the Interactive Gambling Amendment (Banning Social Casinos and Other Measures) Bill 2020 to amend the Interactive Gambling Act 2001."
+  }
+ ],
+ "acts": []
+}

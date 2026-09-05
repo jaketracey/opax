@@ -1,0 +1,325 @@
+{
+ "key": "au-federal-r5683",
+ "title": "Treasury Laws Amendment (Income Tax Relief) Bill 2016",
+ "short_title": "Treasury Laws Amendment (Income Tax Relief) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5683_ems_d4e6bdaa-8135-4538-971c-0f1eb7bf92d2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5683%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00068",
+   "document_date": "2016-10-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4333",
+   "date": "2016-10-11",
+   "house": "senate",
+   "question": "Katy Gallagher I rise to speak in support of this bill. This bill amends the thresholds so that the rate of tax payable on taxable incomes from $80,001 to $87,000 for individuals is 32.5 per cent. The government announced this measure in the 2016-17 budget and Labor supported it. It means that individuals with taxable incomes from $80,001 and up to $87,000 will now be subject to the lower rate of tax of 32.5 per cent rather than the rate of tax of 37 per cent which currently applies to taxable income over $80,000. It will provide a maximum tax cut of $315 per annum on incomes of $87,000 and above. With this bill, Labor is pleased to be supporting modest, sustainable tax relief for up to 3.1 million Australians and their families. However, despite bipartisan agreement, the Turnbull government has still managed to make a mess of its implementation. As David Crowe reported in _The Australian_ on 2 September, millions of workers will have to wait until the middle of next year to receive all of the benefits. This is despite the government's assurances in May that workers would receive the gains far earlier. Mr Crowe reported that: Workers will not see the lower rates applied to their salaries for at least another month, which means they will not collect the cut due to them for the first quarter of the financial year until they lodge their tax returns after July 2017. Yet, on budget night, Mr Morrison proudly boasted he would deliver income tax cuts from 1 July this year. He said: From 1 July this year, we will increase the upper limit for the middle income tax bracket from $80,000 to $87,000 per year. Yet the government did not introduce legislation to ensure that the tax cuts would start from 1 July this year before the election. When asked on ABC Radio how the how the tax cuts would be introduced by 1 July, given that the government was unlikely to be able to legislate them before prior to the election, the Prime Minister said that: That is really up to the Labor Party",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-10-11/1"
+  },
+  {
+   "key": "federal-senate-4334",
+   "date": "2016-10-11",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Income Tax Relief) Bill 2016 - Second Reading - Agree with the main idea of the bill",
+   "stage": "Second reading",
+   "ayes": 48,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 16,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-10-11/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-334075",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-334273",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Income Tax Relief) Bill 2016 and an amendment, arguing it provides modest tax relief for middle-income Australians by increasing the 32.5% threshold from $80,001 to $87,000, benefiting around 3.1 million taxpayers with a maximum cut of $315. They criticised the government for delaying the cuts by three months, offering tax cuts to the top 3% while the bottom 75% miss out, and for policy failures on superannuation and a proposed $50 billion corporate tax gift."
+  },
+  {
+   "slug": "speech-334277",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for failing to pass legislation to increase the personal income tax threshold to 32.5% for incomes between $80,001 and $87,000 before the election, causing a 12-month delay in tax relief, and contrasted this with Labor’s alternative economic plan saving $8.1 billion over the forward estimates."
+  },
+  {
+   "slug": "speech-334278",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The bill provides income tax cuts from 1 July 2016, with 3.1 million taxpayers receiving up to $315 annually and 500,000 kept out of the 37% bracket. The speaker also highlighted tariff reductions under free trade agreements with China, Japan and Korea, citing examples such as mango exports to China doubling and macadamia exports to Korea tripling."
+  },
+  {
+   "slug": "speech-334280",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The member for Hinkler argued that the government's income tax relief plan would benefit low- and middle-income earners, citing a specific example of a single mother earning $55,000 who would receive a $1,080 tax cut."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Income Tax Relief) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00068",
+   "assent_date": "2016-10-20"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7228",
+ "title": "Broadcasting Services Amendment (Prohibition of Gambling Advertisements) Bill 2024",
+ "short_title": "Broadcasting Services Amendment (Prohibition of Gambling Advertisements) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-19",
+ "originating_house": "representatives",
+ "sponsor": "DANIEL, Zoe, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10979",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7228%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7228%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7228%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7228_ems_8aadb656-866a-4d0a-b274-ed200acd3758%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7228%22",
+   "document_date": "2024-08-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-19",
+  "sentences": [
+   "This bill is part of a package that would prohibit gambling advertisements on certain TV, radio and their streaming services.",
+   "The ban would apply to broadcasts covered by the Broadcasting Services Act 1992 and be enforced by the Australian Communications and Media Authority.",
+   "The explanatory memorandum says current restrictions have loopholes and that surveys show three quarters of Australians support a ban."
+  ],
+  "changes": [
+   "The bill would ban gambling ads on certain television and radio services.",
+   "It would also ban gambling ads on the streaming outlets of those services.",
+   "The ban aims to end the use of sporting broadcasts to promote gambling."
+  ],
+  "affected": "Broadcasters, streaming outlets, and viewers of television and radio services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

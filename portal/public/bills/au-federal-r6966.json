@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r6966",
+ "title": "Electoral Legislation Amendment (Lowering the Voting Age) Bill 2023",
+ "short_title": "Electoral Legislation Amendment (Lowering the Voting Age) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-06",
+ "originating_house": "representatives",
+ "sponsor": "BATES, Stephen, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10970",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-08-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6966%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6966%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6966%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6966_ems_bfd014b0-ed63-4013-b08a-dfbb3321cef5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6966%22",
+   "document_date": "2023-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 13,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-06",
+  "sentences": [
+   "This bill would allow 16 and 17 year olds to vote in federal elections and referendums.",
+   "It would change the Commonwealth Electoral Act 1918 and the Referendum (Machinery Provisions) Act 1984 to lower the minimum voting age and keep compulsory voting for those aged 16 and 17.",
+   "The bill would let the Deputy Returning Officer cancel a fine for not voting if the person is 16 or 17 years old."
+  ],
+  "changes": [
+   "Lowers the minimum voting age to 16 years.",
+   "Adds being 16 or 17 years old as a valid excuse for not voting, allowing the fine to be waived.",
+   "Requires the Electoral Commissioner to include 16 and 17 year olds on the certified list of voters.",
+   "Allows eligible Australians not on the roll or at the wrong address to enrol or update their address at a polling place on election day and cast a provisional vote."
+  ],
+  "affected": "Australians aged 16 and 17, and the Australian Electoral Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:10:42Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-826886",
+   "speaker": "Stephen Bates",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2023-02-06",
+   "stage_hint": null,
+   "brief": "The Electoral Legislation Amendment (Lowering the Voting Age) Bill 2023 was introduced to lower the voting age to 16, arguing that young people are politically engaged on issues such as climate change and housing affordability, and that examples from Scotland and Germany show increased participation with a lower voting age. The last federal election saw voter turnout fall below 90% for the first time since compulsory voting was introduced."
+  }
+ ],
+ "acts": []
+}

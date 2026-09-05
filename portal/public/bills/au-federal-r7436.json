@@ -1,0 +1,540 @@
+{
+ "key": "au-federal-r7436",
+ "title": "Treasury Laws Amendment (Financial Reporting System Reform) Bill 2026",
+ "short_title": "Treasury Laws Amendment (Financial Reporting System Reform) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-07-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-07-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7436_ems_b04ef6ff-1ee9-4bb5-8e6d-8c32250cd115%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7436%22",
+   "document_date": "2026-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00061",
+   "document_date": "2026-07-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-10009",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Bill",
+   "ayes": 95,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 85,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-05/5"
+  },
+  {
+   "key": "federal-senate-10636",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Treasury Laws Amendment (Financial Reporting System Reform) Bill 2026. I will first deal with the second reading amendment moved by Senator Barbara Pocock. The question is that the amendment on sheet 3784 be agreed to. Question agreed to. The question is that the bill be now read a second time. I will now deal with the Committee of the Whole amendments, starting with the amendments circulated by the Australian Greens. The question is that the amendments on sheet 3781, 3782 and 3899 be agreed to. _The Australian Greens' circulated amendments—_ SHEET 3781 (1) Schedule 1, item 13, page 11 (before line 23), before paragraph 227A(4)(a), insert: (aa) ethics; (2) Schedule 1, item 13, page 29 (before line 23), before paragraph 231(4)(a), insert: (aa) ethics; SHEET 3782 (1) Schedule 1, item 13, page 8 (lines 1 to 6), omit paragraph 225A(5)(b), substitute: (b) in a manner that promotes the continued adoption of international best practice accounting standards, auditing standards and sustainability standards in the Australian standard-setting processes, if doing so would be: (i) in the best interests of both the private and public sectors in the Australian economy; and (ii) in the public interest more broadly; and SHEET 3899 (1) Schedule 1, item 3, page 3 (after line 24), after the definition of _Council member_, insert: _External Reporting Australia eligible representative_ means an individual who is not any of the following: (a) a partner in a partnership that is a prescribed auditing firm; (b) a director, secretary or senior manager of a company that is a prescribed auditing firm; (c) a former partner in a partnership that is currently a prescribed auditing firm, if the individual is receiving regular and ongoing benefits, or has within the last 6 months received a material benefit, from the partnership; (d) a former director, secretary or senior manager of a company that is currently a prescribed auditing firm, if either of the following",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/13"
+  },
+  {
+   "key": "federal-senate-10637",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "No motion text available",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/14"
+  },
+  {
+   "key": "federal-senate-10638",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the amendments circulated by One Nation. The question is that the amendments on sheet 3908 be agreed to. _One Nation's circulated amendments—_ (1) Schedule 1, item 13, page 11 (line 30), omit paragraph 227A(4)(h). (2) Schedule 1, item 13, page 29 (line 29), omit paragraph 231(4)(g). The question is that the amendments on sheet 3908 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 5,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/15"
+  },
+  {
+   "key": "federal-senate-10639",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines The question is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/16"
+  },
+  {
+   "key": "federal-representatives-10508",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "question": "Daniel Mulino I move: That the amendments be agreed to. The bill establishes External Reporting Australia, or ERA, Australia's new body responsible for the development and maintenance of accounting auditing and assurance standards. In recent years, we've seen behaviour from large accounting, auditing and consulting firms in Australia that is not fair or honest. This bill represents a major development in the setting and maintenance of standards. The amendments on which we seek the House's concurrence are all consistent with the policy intent of the bill. I commend the bill to the House. Tony Burke I move that the question be put. Milton Dick The question is that the question be put.",
+   "stage": "Consideration of Senate message",
+   "ayes": 91,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-30/5"
+  },
+  {
+   "key": "federal-representatives-10509",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendments be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 98,
+   "noes": 40,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-30/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1200461",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200463",
+   "speaker": "Pat Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200732",
+   "speaker": "Ali France",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201270",
+   "speaker": "Marielle Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204251",
+   "speaker": "Matthew Canavan",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204291",
+   "speaker": "Kerrynne Liddle",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204295",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Financial Reporting System Reform) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00061",
+   "assent_date": "2026-07-06"
+  }
+ ]
+}

@@ -1,0 +1,257 @@
+{
+ "key": "au-federal-r6372",
+ "title": "Future Drought Fund (Consequential Amendments) Bill 2019",
+ "short_title": "Future Drought Fund (Consequential Amendments) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2019-07-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6372_ems_fb4c4377-2b78-46db-a81f-0d03db118115%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6372%22",
+   "document_date": "2019-07-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00056",
+   "document_date": "2019-07-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-22",
+  "sentences": [
+   "This bill changes other laws so the Future Drought Fund can operate when it starts.",
+   "The Future Fund Board would be given extra duties to run the new fund and to shift money between it and several other funds for shared costs.",
+   "The bill closes the Building Australia Fund by removing those parts of the Nation-building Funds Act, and the new fund starts with the same balance that the closed fund had just before."
+  ],
+  "changes": [
+   "Extends the Future Fund Board's role to manage the Future Drought Fund.",
+   "Allows money to move between the Future Drought Fund and several other funds to fairly split common expenses.",
+   "Closes the Building Australia Fund by repealing sections of the Nation-building Funds Act."
+  ],
+  "affected": "The Future Fund Board and the agencies that manage the affected funds.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:40:27Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5785",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-07-24.79.1) to pass the bill. In parliamentary jargon, they voted in favour of the question: > *that the [Future Drought Fund Bill 2019](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6371), as amended, and the [Future Drought Fund (Consequential Amendments) Bill 2019](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6372) be [read a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html).* ### What do these bills do? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6371) use: > *uncommitted funds from the Building Australia Fund to establish the Future Drought Fund (comprised of the Future Drought Fund Special Account and the investments of the Future Drought Fund) as a dedicated investment vehicle to provide a secure revenue stream to be used for drought resilience, preparedness and response. Also establishes the Future Drought Fund Consultative Committee.*",
+   "stage": "Third reading",
+   "ayes": 44,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 21,
+    "dated": 22,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377726",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The government is rushing the Future Drought Fund bills through the House in a single day without proper consideration, even though the funding does not take effect until 1 July 2020; the speaker called for debate to be adjourned until the following day to allow members time to review the legislation."
+  },
+  {
+   "slug": "speech-377760",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The Future Drought Fund (Consequential Amendments) Bill 2019 was moved to establish the Future Drought Fund through amendments to related legislation, including the abolition of the Building Australia Fund."
+  },
+  {
+   "slug": "speech-377763",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-377807",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The Manager of Opposition Business moved to suspend standing orders to force an adjournment of the House, arguing the government was cynically blocking scrutiny of the Future Drought Fund Bill and Future Drought Fund (Consequential Amendments) Bill, noting no funds would be available until July 2020 anyway, and called on the government to adjourn so debate could resume the next day."
+  },
+  {
+   "slug": "speech-377823",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The government announced a $3.9 billion upfront investment for the Future Drought Fund, expected to grow to around $5 billion over a decade, with annual distributions of $100 million from 2020–2021 for drought-resilience projects managed by the Future Drought Board of Guardians. The bill transfers uncommitted funds from the Building Australia Fund without affecting National Disability Insurance Scheme funding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Future Drought Fund (Consequential Amendments) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00056",
+   "assent_date": "2019-07-30"
+  }
+ ]
+}

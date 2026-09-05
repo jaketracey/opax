@@ -1,0 +1,132 @@
+{
+ "key": "au-federal-alrc-4178",
+ "title": "Primary Industries (Excise) Levies Amendment (Australian Grape and Wine Authority) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "lapsed",
+ "status_as_of": "2013-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-25",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-277123",
+   "speaker": "Sid Sidebottom",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824827",
+   "speaker": "Sid Sidebottom",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277536",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277537",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277539",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277540",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

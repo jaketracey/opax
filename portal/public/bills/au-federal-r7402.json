@@ -1,0 +1,327 @@
+{
+ "key": "au-federal-r7402",
+ "title": "Copyright Amendment Bill 2026",
+ "short_title": "Copyright Amendment Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7402_ems_c96fb95d-3b03-4050-928d-0785eb956e47%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7402_ems_d091aaf2-fd0d-4350-85c1-c06bf10a030b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7402_ems_4f1f4948-69c0-4d2f-900f-edb36bae86ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7402%22",
+   "document_date": "2025-11-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00029",
+   "document_date": "2026-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2025-11-05",
+  "sentences": [
+   "The bill would create a scheme for using orphan works, whose copyright owners cannot be found, and clarify that copyright rules for educational instruction apply equally online.",
+   "Users would need to conduct a reasonably diligent search, keep a record, and give notice; if the owner later appears, they could seek reasonable payment or negotiate terms.",
+   "The bill would also simplify appointments for the Copyright Tribunal, update references to archives, and clarify Crown copyright duration."
+  ],
+  "changes": [
+   "Introduces an Australian orphan works scheme that limits relief against users who meet search and notice conditions.",
+   "Amends section 28 of the Copyright Act to confirm it covers online and hybrid educational instruction.",
+   "Makes minor amendments to simplify Copyright Tribunal appointments, update archive references, and clarify Crown copyright duration."
+  ],
+  "affected": "Users of orphan works, including cultural and educational institutions, researchers, educators, students, and family historians, as well as copyright owners whose works may be orphaned.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10167",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted against an amendment introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it failed. Had it succeeded, the amendment would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that the Copyright Amendment Bill 2026 permits teachers to use copyright material in online lessons delivered via platforms such as Zoom;* > > *(b) calls on the Government to ensure that copyright law delivers genuine clarity for educational institutions operating in a modern learning environment by progressing amendments to section 28 of the Copyright Act 1968 to allow lessons to be recorded for a limited period, with appropriate access controls and destruction requirements in place, so that students who cannot attend lessons due to illness, disability, or other reasons are able to catch up; and* > > *(c) notes that ensuring educational institutions are able to operate in rapidly changing digital environments will be critical going forward\".*",
+   "stage": "Second reading",
+   "ayes": 16,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/14"
+  },
+  {
+   "key": "federal-senate-10168",
+   "date": "2026-03-31",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-03-31.184.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it failed. Had it succeeded, the amendment would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) reaffirms its support for creators and rightsholders and the fundamental principle that they should control, and be fairly paid for, the use of their works; and* > > *(b) rejects any proposal to introduce text and data mining exceptions or any other provisions that would allow Big Tech to use copyrighted material without authorisation or payment\".*",
+   "stage": "Second reading",
+   "ayes": 16,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-31/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1198291",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199365",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199368",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199465",
+   "speaker": "Renee Coffey",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199466",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199880",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202289",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202338",
+   "speaker": "David Shoebridge",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-03-31",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Copyright Amendment Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00029",
+   "assent_date": "2026-04-01"
+  }
+ ]
+}

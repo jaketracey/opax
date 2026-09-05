@@ -1,0 +1,346 @@
+{
+ "key": "au-federal-r6429",
+ "title": "Native Title Legislation Amendment Bill 2020",
+ "short_title": "Native Title Legislation Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2021-02-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6429_ems_63b0465f-e5f0-4a72-8c29-455594bc01dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6429_ems_a43040a9-93f1-4226-88c1-061ecbcd1814%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6429_ems_84de5e05-9d53-44fa-bc45-c52ca1e8d70d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6429_ems_08329a72-24b7-48ff-b143-0f32bb055aed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6429_ems_73d83ff4-7da3-4491-8460-97ffdaf0ad43%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7623093%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6429%22",
+   "document_date": "2019-10-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00006",
+   "document_date": "2021-02-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-6896",
+   "date": "2021-02-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-02-02.174.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). The Senate can now discuss the bill in greater detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd021): > *The Bill ... contains nine schedules.* > > * *Schedule 1 creates options for a native title applicant and group to change their internal decision making structures including allowing the group to place conditions on the applicant, allowing applicants to act by majority decision-making rather than unanimously as the default position, enabling removal of deceased or unable-to-act applicant members and creating succession planning.* > * *Schedule 2 enables Indigenous Land Use Agreements (ILUAs) to encompass areas where native title has been extinguished, increases flexibility of the processes to notify, register, and make minor amendments to ILUAs (including potentially more wide-ranging amendments permitted by a legislative instrument), and validates actions taken under ILUAs removed from the Register of ILUAs.* > * *Schedule 3 allows historical extinguishment of native title on land by national, state or territory parks, and pastoral leases owned/controlled by native title corporations to be disregarded. In the case of parks this is subject to agreement by the relevant government parties.* > * *Schedule 4 allows registered native title bodies corporate (RNTBCs) to be the claimant for compensation from extinguishment in most circumstances, instead of individual claimants undertaking a separate compensation process.* > * *Schedules 5 and 6 change the ways in which the Commonwealth Minister or government party can be a party t",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 21,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-02/7"
+  },
+  {
+   "key": "federal-senate-6898",
+   "date": "2021-02-03",
+   "house": "senate",
+   "question": "The majority voted in favour of the following [sections of the bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fbills%2Fr6429_first-reps%2F0000%22;rec=0) remaining as they are: schedules 1 and 2 and 4 to 9 and division 2 of schedule 3. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd021): > *The Bill ... contains nine schedules.* > > * *Schedule 1 creates options for a native title applicant and group to change their internal decision making structures including allowing the group to place conditions on the applicant, allowing applicants to act by majority decision-making rather than unanimously as the default position, enabling removal of deceased or unable-to-act applicant members and creating succession planning.* > * *Schedule 2 enables Indigenous Land Use Agreements (ILUAs) to encompass areas where native title has been extinguished, increases flexibility of the processes to notify, register, and make minor amendments to ILUAs (including potentially more wide-ranging amendments permitted by a legislative instrument), and validates actions taken under ILUAs removed from the Register of ILUAs.* > * *Schedule 3 allows historical extinguishment of native title on land by national, state or territory parks, and pastoral leases owned/controlled by native title corporations to be disregarded. In the case of parks this is subject to agreement by the relevant government parties.* > * *Schedule 4 allows registered native title bodies corporate (RNTBCs) to be the claimant for compensation from extinguishment in most circumstances, instead of individual claimants undertaking a separate compensation process.* > * *Schedules 5 and 6 change the ways in which the Commonwealth Minister or government party can be a party to, or intervene in, native title proceedings. Schedule 6 also clarifies p",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 19,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-03/1"
+  },
+  {
+   "key": "federal-senate-6899",
+   "date": "2021-02-03",
+   "house": "senate",
+   "question": "The majority voted against amendments (1) to (3) and (5) to (11) on [sheet 1185](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6429_amend_20e4725c-c422-4d88-9437-4c2a62905b5b%22;rec=0) be agreed to, which means those amendments failed. They were introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens). ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd021): > *The Bill ... contains nine schedules.* > > * *Schedule 1 creates options for a native title applicant and group to change their internal decision making structures including allowing the group to place conditions on the applicant, allowing applicants to act by majority decision-making rather than unanimously as the default position, enabling removal of deceased or unable-to-act applicant members and creating succession planning.* > * *Schedule 2 enables Indigenous Land Use Agreements (ILUAs) to encompass areas where native title has been extinguished, increases flexibility of the processes to notify, register, and make minor amendments to ILUAs (including potentially more wide-ranging amendments permitted by a legislative instrument), and validates actions taken under ILUAs removed from the Register of ILUAs.* > * *Schedule 3 allows historical extinguishment of native title on land by national, state or territory parks, and pastoral leases owned/controlled by native title corporations to be disregarded. In the case of parks this is subject to agreement by the relevant government parties.* > * *Schedule 4 allows registered native title bodies corporate (RNTBCs) to be the claimant for compensation from extinguishment in most circumstances, instead of individual claimants undertaking a separate compensation process.* > * *Schedules 5 and 6 change the ways in w",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 19,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-03/2"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Native Title Legislation Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00006",
+   "assent_date": "2021-02-16"
+  }
+ ]
+}

@@ -1,0 +1,617 @@
+{
+ "key": "au-federal-r6148",
+ "title": "Modern Slavery Bill 2018",
+ "short_title": "Modern Slavery Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6148_ems_9cbeaef3-b581-47cd-a162-2a8441547a3d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6148_ems_8bfaaf1b-81a4-47b2-bd20-320685a3100f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6148%22",
+   "document_date": "2018-06-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00153",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5417",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "question": "The majority voted against a motion, which was to amend the usual second reading motion \"that the bill be read a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html)\" with the following: > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House calls on the Government to establish an Office of an Independent Anti-Slavery Commissioner to help victims of modern slavery and stamp out this sickening crime.\"* Voting to read a bill for a second time means that the Members of Parliament (MPs) agree with the main idea of the bill. After this stage, the MPs can discuss the bill in more detail. ### What is this bill all about? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd012): > *The Bill will require around 3,000 entities based or operating in Australia to prepare annual statements on potential modern slavery risks in their operations and supply chains, and the steps they have taken to address those risks.*",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-09-17/2"
+  },
+  {
+   "key": "federal-representatives-5418",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2018-09-17.114.2) introduced by Labor MP [Clare O'Neil](https://theyvoteforyou.org.au/people/representatives/hotham/clare_o'neil), which means they failed. O'Neil MP explained her amendments: > *Amendments (1) and (2) circulated in my name relate to forced marriage, which, as it currently stands, is a definition of slavery to which this modern slavery act would eventually be subject. Whether we should include forced marriage in the legislation before us is a complicated question. Under Australia's Criminal Code, forced marriage is considered one of the types of slavery that is outlawed under Australian law, but that doesn't really help us to answer the question as to whether it should in fact be subject to a modern slavery bill.* > *[...]* > *The question, though, is how broadly we define slavery under this act, and, specifically, whether we want to put an obligation on big companies in this country that they investigate forced marriage, as a form of slavery, which would then subject to the reporting requirements that we are discussing? It may come to pass in the future that we will consider that this is an important part of the act, but Labor believes that under this first go at the Australian Parliament legislating on this matter it is not appropriate to include forced marriage.* ### What is this bill all about? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd012): > *The Bill will require around 3,000 entities based or operating in Australia to prepare annual statements on potential modern slavery risks in their operations and supply chains, and the steps they have taken to address those risks.*",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-09-17/3"
+  },
+  {
+   "key": "federal-representatives-5419",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2018-09-17.117.1) introduced by Labor MP [Clare O'Neil](https://theyvoteforyou.org.au/people/representatives/hotham/clare_o'neil), which means they failed. O'Neil MP explained her amendment: > *there is something crucially important missing from the bill that's before us. That is the issue of penalties. So Labor is moving amendments to this bill to introduce immediate penalties for companies that fail to submit a modern slavery statement and penalties for companies that submit inadequate modern slavery statements with a two-year delayed start.* ### What is this bill all about? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd012): > *The Bill will require around 3,000 entities based or operating in Australia to prepare annual statements on potential modern slavery risks in their operations and supply chains, and the steps they have taken to address those risks.*",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-09-17/4"
+  },
+  {
+   "key": "federal-senate-5562",
+   "date": "2018-11-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2018-11-28.199.1) introduced by Senator [Don Farrell](https://theyvoteforyou.org.au/people/senate/sa/don_farrell) (SA), which means they failed. ### What were the amendments about? [According to Senator Farrell](https://www.openaustralia.org.au/senate/?gid=2018-11-28.199.1): > *These amendments would remove forced marriage from the reporting requirements which would be established by this bill. The reason we are doing this is that Labor is very concerned that the inclusion of forced marriage in this bill will have unintended consequences, including driving forced marriage further underground. The Salvation Army, in its submission to the Legal and Constitutional Affairs Committee inquiry into this bill, said:* >> *There is risk that requiring entities to assess risk of this practice may lead to unintended negative consequences, including racial and/or religious profiling of some staff.* ### What is this bill all about? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd012): > *The Bill will require around 3,000 entities based or operating in Australia to prepare annual statements on potential modern slavery risks in their operations and supply chains, and the steps they have taken to address those risks.*",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 29,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-28/8"
+  },
+  {
+   "key": "federal-senate-5563",
+   "date": "2018-11-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2018-11-28.204.1) moved by Senator [Don Farrell](https://theyvoteforyou.org.au/people/senate/sa/don_farrell) (SA), which means they failed. ### What were the amendments? [According to Senator Farrell](https://www.openaustralia.org.au/senate/?gid=2018-11-28.204.1): > \"*These Labor amendments will introduce penalties for failing to comply with any modern slavery act. As we've said over and over again, big business cannot be trusted to police themselves on modern slavery. The experience overseas makes the need for penalties crystal clear. Anti-Slavery Australia provided evidence to the Legal and Constitutional Affairs Legislation Committee inquiry into the bill to show that, in the United Kingdom, in the three years since the UK Modern Slavery Act's enactment, only about half of the 9,000 to 11,000 organisations that the UK government estimates are required to report have produced a slavery and human trafficking statement. That's simply not good enough. Labor does not want to see only half of the companies complying with the requirements of this bill.*\" ### What is this bill all about? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd012): > *The Bill will require around 3,000 entities based or operating in Australia to prepare annual statements on potential modern slavery risks in their operations and supply chains, and the steps they have taken to address those risks.*",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 29,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-28/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-368872",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Modern Slavery Bill 2018 must include penalties for non-compliant companies and an independent anti-slavery commissioner, citing that 48 million people are enslaved globally, 4,300 in Australia, and only seven convictions in five years. Labor will move amendments to introduce penalties, require annual ministerial reports, and remove forced marriage from reporting requirements, while also committing to establish an anti-slavery commissioner in government."
+  },
+  {
+   "slug": "speech-368875",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Modern Slavery Bill 2018 will require entities with revenue above $100 million to report on supply chain risks, with a central repository and government inclusion as a world-first measure, and noted that no penalties are included initially but a three-year review is planned."
+  },
+  {
+   "slug": "speech-368876",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "Labor supported the Modern Slavery Bill 2018 but argued it required penalties for non‑compliance and an independent antislavery commissioner, noting that 48.5 million people are enslaved globally, including 4,300 in Australia."
+  },
+  {
+   "slug": "speech-368877",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Modern Slavery Bill 2018, which introduces a reporting requirement for large corporations and entities with over $100 million in annual consolidated revenue to disclose actions addressing modern slavery risks in their supply chains. The bill includes a $3.6 million commitment for a business engagement unit, public sector reporting on Commonwealth procurement, and a statutory review every three years, with market pressure as the primary enforcement mechanism."
+  },
+  {
+   "slug": "speech-368879",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The Modern Slavery Bill 2018 was supported, citing 40 million global victims and Australia’s support for 375 victims and 21 convictions. A separate commissioner was opposed, with the Australian Human Rights Commission considered sufficient for the role."
+  },
+  {
+   "slug": "speech-368882",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Modern Slavery Bill 2018 is a worthy start but must be strengthened with penalties for noncompliance and an antislavery commissioner, noting over 40 million victims worldwide and thousands in Australia, and criticised the government for being half-hearted and too soft on big business."
+  },
+  {
+   "slug": "speech-368883",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that modern slavery persists in global supply chains, citing cobalt mining in the Democratic Republic of the Congo, soccer ball manufacturing in China, and cotton fields in Uzbekistan, and announced that the Modern Slavery Bill 2018 requires companies with over $100 million in consolidated revenue to annually report on modern slavery risks, with statements made publicly available. The speaker also thanked constituents Judith Newton and Steven Peirce for their advocacy."
+  },
+  {
+   "slug": "speech-368884",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker supported Labor's amendments to the Modern Slavery Bill 2018, arguing the legislation lacks penalties for noncompliance and an independent antislavery commissioner, citing 45.8 million people in slavery globally, 15,000 in Australia, and the UK's 50% compliance rate without penalties."
+  },
+  {
+   "slug": "speech-368885",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Modern Slavery Bill 2018, highlighting exploitation of foreign workers in horticulture through the case of Emmanuel Bani, who left 22 Vanuatu workers unpaid and stranded. They also criticised Coles and Woolworths' purchasing practices, noted the establishment of Taskforce Cadena and an additional $20 million for Fair Work."
+  },
+  {
+   "slug": "speech-369026",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The Modern Slavery Bill 2018 is welcome but missing penalties for noncompliance and an independent antislavery commissioner; Labor's amendments would add these, citing 40.3 million victims worldwide and only seven Australian slavery convictions in five years."
+  },
+  {
+   "slug": "speech-369027",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "Labor supported the Modern Slavery Bill 2018 but argued it was toothless without penalties for non-compliance, proposing amendments for civil penalties of 1,000 penalty units and an independent anti-slavery commissioner, while criticising the government for conflating forced marriage with modern slavery and for lacking enforcement."
+  },
+  {
+   "slug": "speech-369029",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "Labor supported the Modern Slavery Bill 2018 but argued it needed amendments to include penalties for non-compliance, remove forced marriage from reporting requirements, and establish an independent antislavery commissioner. The bill requires entities earning over $100 million annually to report on modern slavery risks in their operations and supply chains, with the speech citing an estimated 40 million victims worldwide and only seven slavery convictions in Australia in five years."
+  },
+  {
+   "slug": "speech-369030",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued the Modern Slavery Bill 2018 is a weak, toothless \"carrot-only\" approach because it lacks penalties and replaces an independent antislavery commissioner with a business engagement unit, and announced Labor will move amendments to introduce penalties and establish an independent commissioner. Labor also committed to introducing forced marriage protection orders for victims over 18, citing an estimated 4,300 people trapped in slavery in Australia and a thousand young Australians at risk of forced marriage annually."
+  },
+  {
+   "slug": "speech-369031",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Modern Slavery Bill 2018 should include penalties for noncompliance and an independent antislavery commissioner, which Labor will move to amend, and urged the Department of Foreign Affairs and Trade to better address the mistreatment of domestic workers employed by foreign diplomats, citing an estimated 40 million victims of modern slavery worldwide and 619 Australian Federal Police referrals for trafficking between 2004 and 2015."
+  },
+  {
+   "slug": "speech-369032",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Modern Slavery Bill 2018 must include penalties for noncompliance and an independent antislavery commissioner, not a business engagement unit. They called on the Morrison government to match Labor’s commitments, citing 40.3 million victims worldwide and 4,300 in Australia, and criticised the government’s approach as weak."
+  },
+  {
+   "slug": "speech-369035",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The Modern Slavery Bill 2018 was commended as a practical, historic step to combat modern slavery in supply chains, requiring over 3,000 entities above a $100 million reporting threshold to publish annual statements addressing mandatory criteria on slavery risks and actions. The speaker also acknowledged the member for Dunkley's work on the bill and noted the UN estimate of 25 million modern slavery victims globally."
+  },
+  {
+   "slug": "speech-369036",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "Supported the Modern Slavery Bill 2018 and an amendment by the shadow minister for justice, but criticised the bill for lacking penalties for non-compliance, failing to create an independent anti-slavery commissioner, and setting a $100 million reporting threshold that is too high compared to the committee's recommended $50 million."
+  },
+  {
+   "slug": "speech-369037",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued the Modern Slavery Bill 2018 has two key purposes: requiring companies to examine their supply chains for modern slavery and addressing domestic slavery, citing an estimated 4,300 to 15,000 victims in Australia. They called for penalties for non-compliance and an independent antislavery commissioner, urging the government to adopt Labor's amendments."
+  },
+  {
+   "slug": "speech-369038",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Modern Slavery Bill 2018 is inadequate and tokenistic, failing to address the global slavery problem affecting 40–70 million people. They called for real penalties, an independent monitoring agency, a lower $100 million turnover threshold, and stronger enforcement to prevent exploitation."
+  },
+  {
+   "slug": "speech-369039",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Modern Slavery Bill 2018 but argued that the Morrison-McCormack government’s version is a \"much watered down\" version of Labor’s original policy, which included penalties for non-compliance and an independent anti-slavery commissioner. Labor plans to move amendments to strengthen the bill, noting that around 48.5 million people are in slavery globally, 4,300 in Australia, and citing Fortescue Metals and Wesfarmers as Australian companies that found forced labour in their supply chains."
+  },
+  {
+   "slug": "speech-369511",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-17",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Modern Slavery Bill 2018 but criticized its deficiencies, particularly the lack of penalties for non-compliance, and supported Labor amendments to add penalties and establish an independent antislavery commissioner. They also argued for stronger trade relationships, citing the need to prevent modern slavery in supply chains, and criticized the government for waiving labour market testing in trade agreements."
+  },
+  {
+   "slug": "speech-369512",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-17",
+   "stage_hint": null,
+   "brief": "The speaker supported an amendment to the Modern Slavery Bill 2018, arguing the government's proposal lacks adequate penalties and an independent anti-slavery commissioner, and noted that up to 15,000 people in Australia are victims of modern slavery."
+  },
+  {
+   "slug": "speech-369515",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-17",
+   "stage_hint": null,
+   "brief": "The government argued the Modern Slavery Bill 2018 is appropriate in its current form and does not require amendment, noting extensive consultations with over 170 business and civil society experts and 16 roundtable meetings; it is considering five recommendations from the Senate committee."
+  },
+  {
+   "slug": "speech-369517",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-17",
+   "stage_hint": null,
+   "brief": "The speaker moved amendments to exclude forced marriage offences from the Modern Slavery Bill, arguing that inclusion could drive forced marriage underground and lead to unintended consequences such as racial profiling."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Modern Slavery Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00153",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

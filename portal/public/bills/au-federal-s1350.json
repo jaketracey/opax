@@ -1,0 +1,166 @@
+{
+ "key": "au-federal-s1350",
+ "title": "Biosecurity Amendment (Strengthening Biosecurity) Bill 2022",
+ "short_title": "Biosecurity Amendment (Strengthening Biosecurity) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-28",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2022-12-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1350_ems_e3b694f1-d583-4b6d-b2d7-214a5c25287d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1350_ems_100f3367-ea7f-4a2b-95e5-84658ecd3e81%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1350_ems_4c39405f-a787-40e8-a595-58231ce5acd0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1350_ems_3ad76d5c-7c69-4775-92b0-1ee34b6a4dd8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1350%22",
+   "document_date": "2022-09-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00076",
+   "document_date": "2022-12-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-09-28",
+  "sentences": [
+   "The bill would strengthen Australia's ability to manage pests and diseases that could harm health, the environment and the economy.",
+   "It would increase penalties, tighten rules for travellers and goods, and improve information sharing and transparency.",
+   "Most changes start the day after royal assent, but stronger pratique and pre-arrival requirements start later by proclamation or after six months."
+  ],
+  "changes": [
+   "The bill would increase civil and criminal penalties to deter non-compliance.",
+   "It would expand pre-arrival reporting for aircraft and vessels and strengthen penalties for failing to comply with pratique rules.",
+   "It would allow the Agriculture Minister and Health Minister to authorise biosecurity spending directly.",
+   "It would create a new civil penalty for hiding conditionally non-prohibited goods.",
+   "It would improve how approved arrangements and compensation work.",
+   "It would make the process for risk assessments and import permits more transparent."
+  ],
+  "affected": "Travellers, shipping and aviation operators, biosecurity industry participants, and the Agriculture and Health Ministers are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Biosecurity Amendment (Strengthening Biosecurity) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00076",
+   "assent_date": "2022-12-05"
+  }
+ ]
+}

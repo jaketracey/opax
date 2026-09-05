@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r6469",
+ "title": "Commonwealth Registers Bill 2019",
+ "short_title": "Commonwealth Registers Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6469_ems_e063b7ca-d61d-4993-a078-292990b204fc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6469%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00065",
+   "document_date": "2020-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "This bill is part of a package that would modernise Commonwealth business registers and introduce a director identification number requirement.",
+   "The minister would appoint an existing Commonwealth body as registrar, with powers and functions set out in existing laws and data standards it makes.",
+   "Directors would have 28 days to apply for a DIN during the first 12 months of the requirement, with civil and criminal penalties for non-compliance."
+  ],
+  "changes": [
+   "The package would modernise Commonwealth business registers.",
+   "It would introduce a director identification number requirement.",
+   "The registrar would be appointed by the minister and make data standards.",
+   "Directors must apply for a DIN before appointment unless exempted.",
+   "The registrar would have powers to issue, cancel and reissue DINs.",
+   "Penalties apply for failing to apply or providing false information."
+  ],
+  "affected": "Directors of bodies registered under the Corporations Act or CATSI Act, and the registrar appointed by the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-388051",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment congratulating the government for finally implementing a Director Identification Number to combat illegal phoenixing, but called for faster modernisation of business registers, citing the case of Tara Teo who lost $150,000 due to phoenixing by JUMP! Swim Schools, and questioned whether $60 million in funding is sufficient for the required IT upgrades."
+  },
+  {
+   "slug": "speech-388055",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The Commonwealth Registers Bill 2019 introduces a director identification number to hold directors accountable for phoenixing and integrates 32 business registers into a single platform administered by the Australian Business Registrar."
+  },
+  {
+   "slug": "speech-388064",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Commonwealth Registers Bill 2019 and related bills will cut red tape and simplify business registration by integrating 32 existing registers into one platform administered by the Australian Business Register. The speaker also highlighted the Morrison government’s $540 million Australian Business Growth Fund and noted that Longman has 13,146 small to medium businesses."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Commonwealth Registers Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00065",
+   "assent_date": "2020-06-22"
+  }
+ ]
+}

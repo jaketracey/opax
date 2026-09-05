@@ -1,0 +1,816 @@
+{
+ "key": "au-federal-r7199",
+ "title": "Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024",
+ "short_title": "Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7199_ems_68bf69be-dca1-4eb1-be21-83f568e443af%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7199_ems_4ec169ac-ec04-4d86-ae3f-7cdcadf71eb2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7199_ems_96e60beb-6b05-4cee-9388-7a8986628cbe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7199%22",
+   "document_date": "2024-06-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00138",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8993",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024 - Report from Federation Chamber - Criticism of Government",
+   "stage": "Report from Federation Chamber",
+   "ayes": 5,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 78,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-27/2"
+  },
+  {
+   "key": "federal-representatives-8994",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024 - Report from Federation Chamber - Criticism of Government",
+   "stage": "Report from Federation Chamber",
+   "ayes": 56,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-27/3"
+  },
+  {
+   "key": "federal-representatives-8996",
+   "date": "2024-06-27",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024 - Consideration in Detail - Delete Schedule 1",
+   "stage": "Consideration in detail",
+   "ayes": 52,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-27/5"
+  },
+  {
+   "key": "federal-senate-9000",
+   "date": "2024-06-27",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-06-27.37.2) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it passed. ### Motion text > *That—* > > *(a) following the introduction and first reading of the Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024, the bill be divided into two bills and amended in accordance with the amendments on sheet 2683, to create two bills as follows:* > >> *(i) Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024—containing Schedules 2 to 7, and* >> >> *(ii) Treasury Laws Amendment (Build to Rent) Bill 2024—containing Schedule 1;* > > *(b) the bills be printed;* > > *(c) the Treasury Laws Amendment (Build to Rent) Bill 2024 be referred to the Economics Legislation Committee for inquiry and report by 4 September 2024;* > > *(d) the following reporting dates apply to the Economics Legislation Committee's inquiries into the:* > >> *(i) Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024, as amended—2 August 2024,* >> >> *(ii) Treasury Laws Amendment (Build to Rent) Bill 2024—4 September 2024, and* >> >> *(iii) Capital Works (Build to Rent Misuse Tax) Bill 2024—4 September 2024; and* > > *(e) further consideration of each bill be an order of the day for the corresponding date listed in paragraph (d).*",
+   "stage": "Business motion",
+   "ayes": 40,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-27/4"
+  },
+  {
+   "key": "federal-senate-10465",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024 and the Capital Works (Build to Rent Misuse Tax) Bill 2024. Anne Ruston President, I ask for the bills to be voted on separately. Sue Lines I'm advised that, because of the order we agreed to earlier, the minister needs to move the second reading. Katy Gallagher I move: That these bills be now read a second time. Sue Lines The question is that the opposition amendment on sheet 2756 be agreed to. _Opposition's circulated_ _amendment_ At the end of the motion, add \", but the Senate calls on the Government to: (a) align Australia's non-aggregated country by country reporting jurisdictions list with the European Union list of non-cooperative jurisdictions; and (b) provide further detail on: (i) how jurisdictions will be listed or delisted from the non-aggregated country by country reporting jurisdictions list, and (ii) how the Commissioner of Taxation's discretionary power to exempt entities from the country by country reporting regime will operate\".",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/27"
+  },
+  {
+   "key": "federal-senate-10466",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the second reading amendment circulated by the Australian Greens. Nick McKim I can confirm that the Greens will be proceeding with the amendment on sheet 3223, which is the Greens second reading amendment. Sue Lines The question is that the second reading amendment in the name of Senator McKim, circulated by the Australian Greens, be agreed to. _Australian Greens_ _'_ _circulated amendment—_ At the end of the motion, add \", but the Senate: (a) notes that: (i) rents have skyrocketed by 53% since 2020, (ii) housing prices have increased by 46% since 2020, (iii) the shortage of social and affordable housing is projected to increase under this Government from an already unacceptable high of 750,000 homes, (iv) over the next 10 years the Federal Government will give $176 billion in tax handouts to property investors through negative gearing and the capital gains tax discount, and (v) by comparison, this Labor Government has committed to zero dollars of new ongoing direct spending on public housing, and just $500 million a year for social housing through the Housing Australia Future Fund; and (b) calls on the Government to (i) implement a phase-out of negative gearing and the capital gains tax discount, (ii) coordinate through National Cabinet the introduction of a 2-year freeze on rent increases, followed by an ongoing cap on rent increases, (iii) establish a government developer to directly build hundreds of thousands of good quality homes over the next 5 years to be rented and sold for low cost, (iv) invest in a mass build of public housing to clear the waitlists, and (v) ensure that no new tax concessions go to property developers unless 100% of the homes they build are genuinely affordable, based on tenant income\".",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/28"
+  },
+  {
+   "key": "federal-senate-10467",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Katy Gallagher I table two supplementary explanatory memoranda relating to the government amendments to be moved to the Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024. Sue Lines The question is that schedule 1 and schedule 7 of the Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024 stand as printed. _The government opposed schedule 1 and schedule 7__of the Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024__in the following terms—_ SHEET UD108 (2) Schedule 7, items 1 to 4, page 83 (lines 1 to 13), to be opposed. \\_\\_\\_\\_\\_ SHEET PC122 (15) Schedule 1, items 14 and 15, page 21 (line 15) to page 22 (line 17), to be opposed.",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 5,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/29"
+  },
+  {
+   "key": "federal-senate-10468",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines The question is that the remaining government amendment on sheet UD108 and the amendments on sheet PC122 be agreed to. _Government's circulated amendments__to the_ _Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024_ SHEET UD108 (1) Clause 2, page 3 (table item 10), omit the table item. \\_\\_\\_\\_\\_ SHEET PC122 (1) Schedule 1, item 9, page 9 (line 18), omit \"3 years\", substitute \"5 years\". (2) Schedule 1, item 9, page 9 (line 18), after \"or more\", insert \"in accordance with any requirements determined under subsection (1A)\". (3) Schedule 1, item 9, page 9 (line 21), omit \"3 years\", substitute \"5 years\". (4) Schedule 1, item 9, page 9 (line 21), after \"or more\", insert \"in accordance with any requirements determined under subsection (1A)\". (5) Schedule 1, item 9, page 10 (line 2), omit \"3 years\", substitute \"5 years\". (6) Schedule 1, item 9, page 10 (after line 3), after subsection 43-153(1), insert: (1A) For the purposes of subparagraphs (1)(a)(i) and (ii), the Minister may, by legislative instrument, determine requirements relating to the terms of the lease. (1B) For the purposes of subparagraphs (1)(a)(i) and (ii), disregard a requirement determined under subsection (1A) if complying with that requirement would contravene a law of a State or Territory. (7) Schedule 1, item 9, page 10 (lines 5 to 12), omit subsections 43-153(2) and (3), substitute: (2) A \\*dwelling is an _affordable dwelling_ if the requirements determined under subsection (3) in relation to the dwelling are met. (3) For the purposes of subsection (2), the Minister must, by legislative instrument, determine requirements relating to a dwelling. Without limiting this subsection, the requirements may include requirements relating to: (a) the rent payable under the lease for the dwelling; or (b) the income of the tenant or prospective tenant. (8) Schedule 1, item 9, page 12 (line 25), at the end of subsection 43-154(3), add: ; (c) if the event is the event ment",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 5,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/30"
+  },
+  {
+   "key": "federal-senate-10469",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines Senators, with the concurrence of the Senate I shall incorporate in the _Hansard_ a statement from the Chair of Committees, Senator McLachlan, on the framing of government amendments to the bill. If there is no objection, it is so ordered. The Chair of Committees has ruled the government amendments be dealt with as amendments rather than requests. _The statement read as follows_ According to the statement of reasons for the government amendments on sheet PC122, amendments (13) and (14) are covered by section 53 of the Constitution because the amendments \"will increase some entities' liability to build to rent development misuse tax\". A number of other amendments are noted to be consequential on amendments (13) and (14) and it is suggested that they too be framed as requests. The statement of reasons reflects the advice to the government from Parliamentary Counsel but the Clerk's view is that this does not accord with the precedents of the Senate. The effect of section 53 of the Constitution is that any change proposed to a bill that imposes tax must be framed as a request. This requirement does not automatically extend to other bills dealing with taxation. In this regard, Odgers' Australian Senate Practice notes: _In relation to amendments which might increase tax payable, the constitutional provision refers to an amendment which would increase any proposed charge or burden, and the view taken in the Senate since 1903 is that a bill dealing with taxation does not contain a proposed charge or burden unless it is a bill imposing taxation. Amendments of this kind are therefore directed by the chair to be moved as amendments._ [14th edition, p. 419] I have considered the views of Parliamentary Counsel and the Clerk and consider that the Clerk's view is consistent with the precedents of the Senate. I therefore rule that amendments (13) and (14), and their consequential amendments, should be framed as amendments, not requests. I will now deal with Committee of t",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/31"
+  },
+  {
+   "key": "federal-senate-10470",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "David Pocock by leave—I'd like to note my support for the amendment on sheet 2753. Matthew Canavan by leave—I move the opposition's amendment on sheet 3233: (1) Schedule 4, item 2, page 71 (lines 26 to 29), omit the item. Sue Lines The question is that the amendment be agreed to..",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/32"
+  },
+  {
+   "key": "federal-senate-10471",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Nick McKim by leave—I withdraw Australian Greens amendments on sheet 2727, 2730 revised and 2732 revised. Sue Lines I will now deal with Committee of the Whole amendments circulated by Pauline Hanson's One Nation. As these amendments were not circulated in the required timeframe, they can only be considered by leave. Malcolm Roberts I seek leave to have the Pauline Hanson's One Nation amendments on sheet 2836 revised considered. Leave granted. Sue Lines The question is that the amendments on sheet 2836 revised be agreed to. _Pauline Hanson's One Nation's circulated amendments to the_ _Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024_ (1) Clause 2, page 3 (at the end of the table), add: (2) Page 83 (after line 13), at the end of the Bill, add: Schedule 8 — Small amount credit contracts and consumer leases for household goods _National Consumer Credit Protection Act 2009_ 1 Section 133CC (heading) Omit \"the prescribed requirements\", substitute \"certain requirements\". 2 Subsection 133CC(1) Repeal the subsection (including the note), substitute: _Requirement_ (1) A licensee must not enter into, or offer to enter into, a small amount credit contract with a consumer who will be the debtor under the contract if the repayments that would be required under the contract would not meet the requirement in subsection (1A). Civil penalty: 5,000 penalty units. (1A) The requirement for a repayment that would be required during a contract repayment period under such a contract with a consumer is that the sum of: (a) the amount of the repayment; and (b) any other amounts the consumer is required to pay under: (i) any other small amount credit contract during the contract repayment period; and (ii) any consumer lease for household goods during the contract repayment period; would be equal to or less than 20% of the available income the consumer is reasonably expected to receive during the contract repayment period. 3 At the end of section 133CC Add:",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/33"
+  },
+  {
+   "key": "federal-senate-10472",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines The opposition asked a while ago for the bills to be split. The question is that the remaining stages of the Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Bill 2024 be agreed to and the bill be now passed. Question agreed to. Bill read a third time. The question now is that the remaining stages of the Capital Works (Build to Rent Misuse Tax) Bill 2024 be agreed to and the bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/34"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Responsible Buy Now Pay Later and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00138",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

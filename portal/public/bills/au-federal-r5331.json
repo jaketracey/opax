@@ -1,0 +1,257 @@
+{
+ "key": "au-federal-r5331",
+ "title": "Fair Entitlements Guarantee Amendment Bill 2014",
+ "short_title": "Fair Entitlements Guarantee Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5331_ems_7b98b2fd-2293-4062-ba4e-dd9a1cb4fb04%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5331%22",
+   "document_date": "2014-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-04",
+  "sentences": [
+   "This bill would change the Fair Entitlements Guarantee Act 2012, which helps eligible workers get unpaid wages and other entitlements when their employer goes bankrupt or into liquidation.",
+   "It would align the maximum redundancy pay under the scheme with the cap set by the National Employment Standards in the Fair Work Act, and make several technical clarifications to how the scheme operates.",
+   "The changes would start on 1 January 2015 or the day after Royal Assent, whichever is later, except for the funding arrangement for legal costs, which would apply from 1 July 2015."
+  ],
+  "changes": [
+   "It would align the maximum redundancy pay entitlement with the National Employment Standards cap.",
+   "It would clarify that a claimant's initial entitlement is calculated without amounts withheld by law, such as tax.",
+   "It would establish a funding source for certain legal costs for Administrative Appeals Tribunal reviews.",
+   "It would clarify that a person's death does not stop eligibility, allowing next of kin or estate to claim.",
+   "It would allow debts owed by a claimant to be offset proportionally against other entitlements.",
+   "It would remove the requirement to take reasonable steps to recover pre-insolvency debts, letting the Secretary reduce entitlements instead."
+  ],
+  "affected": "Eligible employees who lose their job due to employer liquidation or bankruptcy, their next of kin or estates, and the Department handling claims.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:24Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3448",
+   "date": "2014-09-30",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 83,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-30/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-296978",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298415",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298416",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298417",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298592",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298596",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298598",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298599",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298600",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298605",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298606",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298613",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

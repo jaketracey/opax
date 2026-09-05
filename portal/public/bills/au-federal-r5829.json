@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r5829",
+ "title": "National Land Transport Amendment (Best Practice Rail Investment) Bill 2017",
+ "short_title": "National Land Transport Amendment (Best Practice Rail Investment) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-20",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "&#34;Independent Members&#34;",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-10-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5829%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5829%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5829%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5829_ems_55794ac3-23b8-4973-86ff-af24e27f70a8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5829%22",
+   "document_date": "2017-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-20",
+  "sentences": [
+   "The bill would require the Minister to consider social and community benefits when approving rail investment projects.",
+   "It would add mandatory factors for the Minister to assess, such as prioritising passenger rail services and maximising community benefits.",
+   "A summary of evidence supporting project approval must be published on the department’s website and tabled in Parliament."
+  ],
+  "changes": [
+   "The bill adds criteria the Minister must consider for rail projects, including passenger service priority and best practice investment.",
+   "The bill requires publication of approval evidence online and in Parliament.",
+   "The bill mandates consideration of rural and regional economic and social development benefits."
+  ],
+  "affected": "Rural and regional communities, rail users, and the Minister administering the National Land Transport Act 2014.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:42Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-343174",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-03-20",
+   "stage_hint": null,
+   "brief": "The member introduced the National Land Transport Amendment (Best Practice Rail Investment) Bill 2017, which would require the minister to consider social and community benefits—including passenger rail prioritisation, rural and regional benefits, and user needs—when approving rail projects, and to publish evidence summaries. The member criticised the Inland Rail project for neglecting passenger services, highlighted poor service on the north-east Victoria line with 23 speed restrictions, and called on the federal government to change its terms with the Australian Rail Track Corporation and on the Victorian government to upgrade rolling stock and renegotiate contracts for premium service."
+  }
+ ],
+ "acts": []
+}

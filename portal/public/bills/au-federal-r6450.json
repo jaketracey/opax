@@ -1,0 +1,186 @@
+{
+ "key": "au-federal-r6450",
+ "title": "Interactive Gambling Amendment (National Self-exclusion Register) Bill 2019",
+ "short_title": "Interactive Gambling Amendment (National Self-exclusion Register) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2019-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6450_ems_23e3d7b7-79a7-4b71-9edc-53d2281269ea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6450%22",
+   "document_date": "2019-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00127",
+   "document_date": "2019-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-27",
+  "sentences": [
+   "This bill would set up a national register that lets people block themselves from online wagering services across all licensed Australian providers and cuts how much marketing they receive.",
+   "The Australian Communications and Media Authority would arrange for a company to run the register, while the authority itself would oversee that company and enforce the rules.",
+   "Providers licensed in Australia would be barred from offering wagering or marketing to anyone on the register, and the bill includes a levy so the authority can recover its costs."
+  ],
+  "changes": [
+   "Establishes the National Self-exclusion Register under the Interactive Gambling Act 2001.",
+   "Requires licensed interactive wagering service providers to refuse services and direct marketing to registered individuals.",
+   "Arranges for ACMA to contract a company to manage the register, with ACMA handling compliance and enforcement.",
+   "Introduces a cost-recovery levy for ACMA's register-related expenses."
+  ],
+  "affected": "Individuals at risk of or experiencing gambling-related harm from online wagering, and all licensed interactive wagering service providers in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-384953",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The bill enables the Australian Communications and Media Authority to recover costs for the National Self-exclusion Register from licensed interactive wagering providers through a levy, with details to be set later and costs apportioned based on regulatory effort."
+  },
+  {
+   "slug": "speech-386067",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Interactive Gambling Amendment (National Self-exclusion Register) Bill 2019 and its associated cost recovery levy, which would establish a national register allowing individuals to self‑exclude from all online wagering services for periods from three months to permanent, but criticised the government for taking four years since the Review of Illegal Offshore Wagering and one year after the National Consumer Protection Framework, and raised concerns about outsourcing the register given the government’s poor IT procurement record, citing robodebt and the Medicare card data breach."
+  },
+  {
+   "slug": "speech-386068",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Interactive Gambling Amendment (National Self-exclusion Register) Bill and the National Self-exclusion Register (Cost Recovery Levy) Bill, which establish a single national register for individuals to self-exclude from all licensed online wagering services, but criticised the government for taking a year to introduce the legislation, delaying implementation until at least mid-2021."
+  },
+  {
+   "slug": "speech-386069",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for passing the Interactive Gambling Amendment (National Self-exclusion Register) Bill 2019, citing over 500,000 high-risk and moderate-risk gamblers, $24 billion in annual losses, and the bill’s provisions for self-exclusion periods, account blocking, and support person notifications. They also proposed extending gambling advertising bans on live sport to pre-match coverage and beyond 8:30 pm, with a longer-term goal of prohibiting ads between 7 am and 10 pm."
+  },
+  {
+   "slug": "speech-386071",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The Interactive Gambling Amendment (National Self-Exclusion Register) Bill 2019 and the National Self-Exclusion Register (Cost Recovery Levy) Bill 2019 will establish a national register allowing Australians to self-exclude from all licensed online wagering services through a single process, with costs recovered from providers via a levy, targeting approximately 240,000 Australians already experiencing harm from online wagering."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Interactive Gambling Amendment (National Self-exclusion Register) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00127",
+   "assent_date": "2019-12-12"
+  }
+ ]
+}

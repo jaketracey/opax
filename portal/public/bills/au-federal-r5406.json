@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r5406",
+ "title": "Limitation of Liability for Maritime Claims Amendment Bill 2015",
+ "short_title": "Limitation of Liability for Maritime Claims Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-02-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2015-05-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5406_ems_835e843b-9751-4eb0-9994-c98064473169%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5406%22",
+   "document_date": "2015-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00044",
+   "document_date": "2015-05-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-308256",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-19",
+   "stage_hint": null,
+   "brief": "The Limitation of Liability for Maritime Claims Amendment Bill 2015 aims to keep international shipping economically viable by increasing liability limits for shipowners and salvors. The speaker highlighted $203 million in federal funding for an enhanced Tasmanian Freight Equalisation Scheme from 2016, including $700 per container and a 15% loading for King Island and Furneaux Group shippers, and argued that Labor’s 2012 Coastal Trading Act caused a 63% freight rate increase at Bell Bay Aluminium, threatening its viability and jobs."
+  },
+  {
+   "slug": "speech-308262",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-19",
+   "stage_hint": null,
+   "brief": "The speaker defended the claim that Labor's 2012 Coastal Shipping Act caused a 63% increase in freight rates for Bell Bay Aluminium, citing the company's own submissions to the Productivity Commission."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Limitation of Liability for Maritime Claims Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00044",
+   "assent_date": "2015-05-20"
+  }
+ ]
+}

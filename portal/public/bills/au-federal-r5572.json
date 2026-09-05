@@ -1,0 +1,331 @@
+{
+ "key": "au-federal-r5572",
+ "title": "Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Bill 2015",
+ "short_title": "Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "passed",
+ "status_as_of": "2016-02-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5572_ems_95831936-8a6c-4d51-ab70-443f5d03b405%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5572_ems_1fa095b2-47f9-453a-95ba-bb91924b69c7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4335611%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5572%22",
+   "document_date": "2015-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00015",
+   "document_date": "2016-02-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4089",
+   "date": "2016-02-23",
+   "house": "senate",
+   "question": "Gavin Marshall The question is that the bill stand as printed. Nick McKim When we were debating the Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Bill 2015 yesterday we had just had confirmation from the minister who yesterday had carriage of this legislation that in fact a court, even if it formed the view that it was in the interests of justice to stay Proceeds of Crime Act proceedings on one of the grounds that are proposed to be inserted into the legislation in proposed new section 319(2), it was not able to do that solely on those grounds. So let us be very clear about this. The Australian Greens absolutely share concerns raised by the Victorian Bar and Criminal Bar Association, by the Law Council of Australia and by the Australian Human Rights Commission about these provisions. We do not support this parliament seeking to intervene in judicial processes in this country to the extent that, even if a court believes that it is in the interests of justice to stay Proceeds of Crime Act proceedings, it will not be able to do that if the grounds on which it forms that belief are contained in the proposed new section 319(2) of the Proceeds of Crime Act. On that basis the Greens oppose schedule 1 in the following terms: (1) Schedule 1, item 4, page 4 (lines 1 to 31), subsections 319(2), (3), (4) and (5) to be opposed. In support of this proposition I will very briefly read into the record the view of various organisations about proposed new section 319. Before I do that I want to be clear that I have a further amendment. If it were taken together, proposed section 319 not forming part of this legislation— Jacinta Collins Move them together. Nick McKim I will not move it now—thank you, Senator Collins—because amendment (2) is consequential on the first proposition being accepted by the chamber. I make the point that if this proposition is not supported then I will not move amendment (2). It is our very firm policy position that proposed section 319",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 9,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-02-23/1"
+  },
+  {
+   "key": "federal-senate-4090",
+   "date": "2016-02-23",
+   "house": "senate",
+   "question": "Sean Edwards Senator McKim, do you intend to proceed with amendment (2)? Nick McKim That amendment would be consequential to the first amendment succeeding, which, obviously, did not happen. On that basis, it will not be proceeded with. Peter Whish-Wilson ) ( ): by leave—I move Greens amendments (1) and (2) on sheet 7845 together: (1) Page 2, clause 2 (table item 2), omit the table item, substitute: (2) Page 12 (after line 22), after Schedule 2, insert: Schedule 2A—Amendments relating to the Corporations Act 2001 _Corporations Act 2001_ 1 Section 9 (after paragraph (a) of the definition of _financial records_ ) Insert: (ab) books, records or accounts needed to explain details of transactions that deal with assets; and 2 After section 190B Insert: 190C Internal accounting controls (1) A director of a corporation must ensure that the corporation has a system of internal accounting controls. (2) To comply with subsection (1), the system must ensure that: (a) transactions are executed in accordance with appropriate authorisation; and (b) transactions are recorded; and (c) assets of the corporation are regularly accounted for and reconciled; and (d) appropriate authorisations are in place in relation to dealing with assets of the corporation. 3 Paragraph 286(1)(a) Repeal the paragraph, substitute: (a) correctly record and explain its financial position and performance; and (ab) correctly record and explain its transactions in sufficient detail so that the record accurately reflects the transactions; and 4 Application provisions The amendments made by items 1 and 3 of this Schedule apply to transactions that occur on or after the commencement of this Schedule. I will not take very long, but I want to spend a few minutes going through why we have put up some amendments to schedule 2, which deals with false-accounting offences. The Greens are supportive of the intention of schedule 2 as it exists. Schedule 2 purports to strengthen the law in relation to the falsification of",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-02-23/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-324296",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker moved the Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Bill 2015, which clarifies non-conviction based confiscation rules, creates two new false accounting offences to meet OECD anti-bribery standards, clarifies serious drug offence definitions, expands anti-money laundering information sharing to include INTERPOL and Europol and adds South Australia's ICAC as a designated agency, and broadens AusCheck information sharing with state, territory and other Commonwealth authorities for law enforcement and national security."
+  },
+  {
+   "slug": "speech-325321",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The bill amends the Proceeds of Crime Act 2002, Criminal Code, Anti-Money Laundering and Counter-Terrorism Financing Act 2006, and AusCheck Act 2007 to clarify non-conviction based confiscation, create new false accounting offences with penalties up to 10 years imprisonment, refine drug analogue and manufacture definitions, expand AUSTRAC information access to South Australia’s ICAC, and broaden AusCheck information sharing with law enforcement and national security agencies. Labor supports the bill and will refer it to the Senate Legal and Constitutional Affairs Legislation Committee for scrutiny."
+  },
+  {
+   "slug": "speech-325322",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The bill amends the Proceeds of Crime Act 2002, Criminal Code Act 1995, Anti-Money Laundering and Counter-Terrorism Financing Act 2006, and AusCheck Act 2007 to enhance Commonwealth investigative and prosecutorial powers, including non-conviction based confiscation, new false accounting offences under the OECD anti-bribery convention, clarified drug analogue definitions, and expanded information sharing with Interpol, Europol, and state/territory agencies."
+  },
+  {
+   "slug": "speech-325323",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "Stephen Jones supported the Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Bill 2015 and called for a Senate inquiry to avoid unintended consequences, while criticising the Abbott-Turnbull government for using confiscated assets funds on pork-barrelling instead of drug treatment and rehabilitation, noting that Labor spent $5.8 million on such programs and that over $800 million had been cut from alcohol and drug treatment services."
+  },
+  {
+   "slug": "speech-325324",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Bill 2015, arguing it deters criminal wealth creation while protecting legitimate economic activity, and warned that anti-money laundering laws are inadvertently closing legitimate home remittance businesses, driving money underground and reducing transparency."
+  },
+  {
+   "slug": "speech-325325",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The coalition welcomed the Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Bill 2015 to enable faster sharing of financial intelligence with INTERPOL and Europol, and announced that proceeds of crime funds are being redirected to specific anti-crime initiatives, including $780,000 for Brisbane Safer Streets, $890,000 for airport CCTV upgrades, $650,000 for OzCare drug rehabilitation, $150,000 for a graffiti project, and $9.8 million, $5 million, and $3.4 million for various measures to combat the ice trade."
+  },
+  {
+   "slug": "speech-325326",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Bill 2015 clarifies non-conviction based confiscation, creates new offences for false accounting, expands drug offence definitions, and strengthens information sharing by enabling AUSTRAC data access for the Independent Commissioner Against Corruption of South Australia, Interpol and Europol."
+  },
+  {
+   "slug": "speech-325387",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-03",
+   "stage_hint": null,
+   "brief": "The bill clarifies that proceeds of crime confiscation can proceed alongside related criminal trials, introduces two new false accounting offences under the OECD anti-bribery convention, expands serious drug offences to cover structurally similar substances and all manufacturing processes, and enables faster information sharing with agencies including Interpol, Europol and South Australia's Independent Commission Against Corruption. The speaker also accused the former Labor government of locking up over $112 million in the proceeds of crime account instead of spending it on law enforcement."
+  },
+  {
+   "slug": "speech-328522",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Proceeds of Crime and Other Measures) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00015",
+   "assent_date": "2016-02-29"
+  }
+ ]
+}

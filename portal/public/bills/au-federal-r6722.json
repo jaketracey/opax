@@ -1,0 +1,234 @@
+{
+ "key": "au-federal-r6722",
+ "title": "Social Services Legislation Amendment (Portability Extensions) Bill 2021",
+ "short_title": "Social Services Legislation Amendment (Portability Extensions) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2021-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6722_ems_4f40c52e-45ea-4a8d-80e7-5b2c100b1cbe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6722%22",
+   "document_date": "2021-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00053",
+   "document_date": "2021-06-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7640",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Portability Extensions) Bill 2021 - Second Reading - Age pension and pensioners stranded overseas",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-408790",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Portability Extensions) Bill 2021 but moved an amendment calling on the government to accelerate the vaccine rollout and establish specialist quarantine facilities to bring stranded Australian pensioners home, and not to cut the pension. The speech also criticised the government's record of pension cuts, citing specific attempts from 2014 to 2016, including cuts to indexation, concessions, the seniors supplement, deeming thresholds, and the assets test."
+  },
+  {
+   "slug": "speech-408793",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to extend portability of social security payments for Australians stranded overseas, but argued the government failed them by not providing vaccines or repatriation. The speaker also criticised the government's record of pension cuts, citing specific reductions from 2014 to 2016—including $80 from indexation, $900 from the seniors supplement, $1 billion in concessions, $12,000 a year for 370,000 people via assets test changes, travel limits for 190,000 pensioners, and scrapping the energy supplement for 1.5 million—and voiced concern about expanding the cashless debit card to pensioners."
+  },
+  {
+   "slug": "speech-408801",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The member supported the bill's administrative changes to pension portability but criticised the government for stranding 35,000 Australians overseas and for repeated attempts to cut pensions, citing past cuts such as the 2015 assets test change affecting 370,000 pensioners. He called for more bilateral social security agreements, particularly with France, and noted the $18 million budget allocation for agreements with Serbia and Bosnia-Herzegovina."
+  },
+  {
+   "slug": "speech-408802",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the age pension is not welfare but a payment for hardworking Australians, criticised the Morrison government for its pandemic response and pension freeze, and supported the Social Services Legislation Amendment (Portability Extensions) Bill 2021. They also opposed extending the cashless welfare card to pensioners, promised a future Labor government would scrap it, and raised concerns about Irish-Australian pensioners losing income due to Brexit-related bank charges."
+  },
+  {
+   "slug": "speech-408803",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Portability Extensions) Bill 2021 with amendments regarding stranded Australian pensioners and against pension cuts, and announced Labor will scrap the cashless welfare card, citing the Morrison government's pension freeze, deeming rates, and reported plans to put 80% of pensions on the card."
+  },
+  {
+   "slug": "speech-408805",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The member for Oxley argued in favour of the Social Services Legislation Amendment (Portability Extensions) Bill 2021 and a second reading amendment, opposing any government plan to force pensioners onto a cashless debit card. He noted that about 67% of people aged over 65 in his electorate are on the age pension, and criticised Minister Anne Ruston for suggesting a broader conversation about the card."
+  },
+  {
+   "slug": "speech-408810",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-17",
+   "stage_hint": null,
+   "brief": "The bill amends the Social Security Act 1991 to give permanent discretion to extend portability for pensioners unable to return home due to unforeseeable events such as accidents, death of a family member, natural disasters or public health crises. The speaker also denied Labor’s claims that the government plans to force pensioners onto the cashless debit card, stating it is only for working-age payments."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Portability Extensions) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00053",
+   "assent_date": "2021-06-24"
+  }
+ ]
+}

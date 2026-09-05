@@ -1,0 +1,505 @@
+{
+ "key": "au-federal-r6195",
+ "title": "Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018",
+ "short_title": "Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2018-12-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6195_ems_1139bfde-17f3-4538-b2b2-5875f5881239%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6195_ems_504ca495-f6b2-46bb-a4a2-9ce169ba2616%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6195_ems_b832c54b-6091-41ca-baf4-35bb94a856e8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6195%22",
+   "document_date": "2018-09-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00148",
+   "document_date": "2018-12-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "This bill updates several laws to help authorities handle the challenges of widespread encryption.",
+   "It would create new oversight and review processes, including a legislative review within 18 months of the changes starting.",
+   "The bill would limit industry assistance measures to serious offences punishable by at least three years in prison."
+  ],
+  "changes": [
+   "The bill would enhance oversight arrangements and provide review mechanisms.",
+   "It would add reporting requirements on the use of certain powers.",
+   "It would define 'systemic weakness' and 'systemic vulnerability' for technical reporting.",
+   "It would require the Attorney-General and the Minister for Communications to jointly approve technical capability notices.",
+   "It would impose 12-month time limits on technical assistance and capability notices.",
+   "It would limit the application of industry assistance measures to serious offences."
+  ],
+  "affected": "Telecommunications providers, law enforcement agencies, intelligence agencies, oversight bodies, and the Attorney-General are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5646",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-12-06.173.1) introduced by Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann), which means it succeeded. ### Motion text > *At the end of the motion, add:* > *\"and the Parliamentary Joint Committee on Intelligence and Security conduct a review of the operation of the amendments made by this bill and report on that review by 3 April 2019.\"*",
+   "stage": "Second reading",
+   "ayes": 46,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 18,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/29"
+  },
+  {
+   "key": "federal-senate-5647",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 18,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/30"
+  },
+  {
+   "key": "federal-senate-5648",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018 - Third Reading - Speeding things along",
+   "stage": "Third reading",
+   "ayes": 44,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 17,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/31"
+  },
+  {
+   "key": "federal-senate-5649",
+   "date": "2018-12-06",
+   "house": "senate",
+   "question": "Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 44,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 17,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-12-06/32"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-370135",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018 was introduced to address the erosion of law enforcement and security agencies' investigative capacity due to encryption, creating new industry assistance powers (technical assistance and technical capability notices) without mandating backdoors, expanding computer access warrants, and increasing penalties for failing to assist device access—citing that encryption affected 9 in 10 ASIO priority cases and 200 AFP operations, and encrypted intercepts rose from 3% in June 2013 to over 55% by July 2017."
+  },
+  {
+   "slug": "speech-374276",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "Labor supported the Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018 after negotiating amendments to define “systemic weakness,” strengthen oversight by the Inspector-General of Intelligence and Security and the Commonwealth Ombudsman, and require further review, in order to address risks to national security, US security cooperation, and Australian technology businesses."
+  },
+  {
+   "slug": "speech-374278",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill creates a systemic weakness in encrypted communications, threatening privacy, the tech industry, and civil liberties. They opposed rushed passage of the bill and the 50 pages of last-minute amendments, citing past failures like metadata laws that saw 350,000 requests per year, and warned that Australia would become a place where tech developers would avoid working."
+  },
+  {
+   "slug": "speech-374279",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-374280",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018 risks weakening encryption without adequate judicial oversight, warning that 350,000 metadata requests—including from local councils—demonstrate how security powers can be misused."
+  },
+  {
+   "slug": "speech-374283",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "The speaker argued the government rushed and politicised the encryption bill, refused judicial oversight for technical assistance and capability notices, and failed to define 'systemic weakness'. Labor reached a compromise to pass the bill before Christmas but maintained concerns."
+  },
+  {
+   "slug": "speech-374287",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "Opposed the Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018, arguing it would build a known vulnerability into encryption software that could be exploited by wrongdoers, and criticised the excessive extension of state power through security reforms including mandatory metadata retention. Also defended the member for Eden-Monaro’s comments and described the member for Hume’s comment as deeply offensive."
+  },
+  {
+   "slug": "speech-374288",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "The MP criticised the government for rushing the encryption bill without proper consultation, arguing Labor secured amendments to clarify systemic weakness, add oversight by the Inspector-General of Intelligence and Security and the Ombudsman, and require Attorney-General and communications minister approval for technical capability notices. Labor remains concerned about the lack of judicial oversight for interception-related notices and will monitor the legislation, with the committee inquiry continuing into 2019 and a separate review by the Independent National Security Legislation Monitor within 18 months."
+  },
+  {
+   "slug": "speech-374289",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018 requires balancing national security with individual privacy, noting that the government rushed the bill through the Parliamentary Joint Committee on Intelligence and Security despite bipartisan efforts and 300 amendments on 15 previous national security bills. The speaker criticized Prime Minister Morrison and the Minister for Home Affairs for politicizing the process and ignoring submissions from Australian tech companies, while Labor proposed substantive amendments to address concerns from industry and civil society."
+  },
+  {
+   "slug": "speech-374290",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018 is urgently needed to help law enforcement and national security agencies access encrypted communications used by criminals and terrorists, citing that 95% of ASIO’s top counterterrorism targets use encryption and referencing recent fatal attacks in Melbourne. The bill introduces new computer access warrants and industry assistance frameworks, prohibits systemic backdoors, and includes safeguards against mass surveillance, with the speaker urging parliamentary support for the bill and agreed amendments."
+  },
+  {
+   "slug": "speech-374296",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-06",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's handling of the Telecommunications and Other Legislation Amendment (Assistance and Access) Bill 2018, arguing that the process was rushed and interfered with despite a consensus report from the Parliamentary Joint Committee on Intelligence and Security. They noted the bill is 175 pages, amends 10 acts, and introduces new compulsory powers against innocent third parties, and that the government tabled 173 amendments (covering 50 pages) informally at 6:30 am on the day of debate, with no formal response to the committee's 17 recommendations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications and Other Legislation Amendment (Assistance and Access) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00148",
+   "assent_date": "2018-12-08"
+  }
+ ]
+}

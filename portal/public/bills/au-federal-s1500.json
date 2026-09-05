@@ -1,0 +1,93 @@
+{
+ "key": "au-federal-s1500",
+ "title": "Sex Discrimination Amendment (Restoring Common Sense and Recognising Biological Sex) Bill 2026",
+ "short_title": "Sex Discrimination Amendment (Restoring Common Sense and Recognising Biological Sex) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-01",
+ "originating_house": "senate",
+ "sponsor": "CASH, Sen Michaelia",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10707",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2026-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1500%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1500%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1500%22",
+   "document_date": "2026-07-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10568",
+   "date": "2026-07-01",
+   "house": "senate",
+   "question": "A small majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2026-07-01.175.2) moved introduced by Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal Party), which means it was unsuccessful.",
+   "stage": "Bill",
+   "ayes": 21,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-01/16"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

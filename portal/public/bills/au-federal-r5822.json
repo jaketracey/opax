@@ -1,0 +1,906 @@
+{
+ "key": "au-federal-r5822",
+ "title": "Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017",
+ "short_title": "Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2018-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5822_ems_d01b0c6b-2e36-4d96-aefe-34396a35a240%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5822_ems_2004edfd-32f9-484c-9722-e679509dca77%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5822_ems_7f3055aa-0921-40ab-a87f-618242d1937c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5822_ems_3d5e7134-0c56-41ee-a5e1-b4a005d23e87%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5822%22",
+   "document_date": "2017-03-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00170",
+   "document_date": "2018-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-03-01",
+  "sentences": [
+   "This bill would change the Fair Work Act to act on two recommendations from the Productivity Commission's workplace relations report and two from a separate inquiry into a Fair Work Commission member.",
+   "It would remove the requirement for the Fair Work Commission to conduct four-yearly reviews of modern awards, and allow the commission to ignore minor procedural or technical mistakes when approving enterprise agreements if those mistakes did not disadvantage employees.",
+   "The bill would also extend the complaint-handling powers of the Employment Minister and the Fair Work Commission President to former members of the Australian Industrial Relations Commission, and apply the Judicial Misbehaviour and Incapacity (Parliamentary Commissions) Act 2012 to current Fair Work Commission members."
+  ],
+  "changes": [
+   "Repeal the requirement for four-yearly reviews of modern awards from 1 January 2018.",
+   "Enable the Fair Work Commission to overlook minor procedural or technical errors in enterprise agreement approvals.",
+   "Extend complaint-handling powers to former AIRC members now serving on the Fair Work Commission.",
+   "Apply the Judicial Misbehaviour and Incapacity (Parliamentary Commissions) Act 2012 to Fair Work Commission members."
+  ],
+  "affected": "The Fair Work Commission, its members, employers, employees, and the Minister for Employment would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:14:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4583",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "question": "Tony Burke Mr Speaker, that was odd on a bill that we just heard was apparently supported by employers and unions. I move: That so much of the standing orders be suspended as would prevent the debate on the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017 proceeding immediately, the bill being given priority over all other business for passage through all stages without interruption, and if consideration of the bill has not concluded by 12 pm on Wednesday, 1 March 2017, any detailed amendments that have been circulated prior to 12 pm being deemed to have been moved and any necessary questions to complete consideration of the bill being put without delay. I never thought I would see a moment where we had a minister in this government describe proceeding with the passage of their own legislation as a 'union Labor stunt'. But that is the argument that has just been put by the minister. Peter Dutton I move: That the member be no longer heard. Tony Smith The question is that the Manager of Opposition Business be no further heard.",
+   "stage": "Bill",
+   "ayes": 74,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-01/1"
+  },
+  {
+   "key": "federal-representatives-4584",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "question": "Tony Smith Is the motion seconded? The member for Grayndler. The member for Grayndler will resume his seat. Peter Dutton I move that he be no longer heard. He has said enough already! Tony Smith The minister will resume his seat. I called for the motion to be seconded. Anthony Albanese I second the motion. The fact is: they will do anything to avoid talking about— Peter Dutton I move: That the Member be no longer heard. Tony Smith The question is that the member for Grayndler be no further heard.",
+   "stage": "Bill",
+   "ayes": 74,
+   "noes": 66,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-01/2"
+  },
+  {
+   "key": "federal-representatives-4585",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the motion moved by the Manager of Opposition Business to suspend standing orders be agreed to. The debate must now be adjourned.",
+   "stage": "Bill",
+   "ayes": 65,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-01/3"
+  },
+  {
+   "key": "federal-representatives-4733",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "question": "Steven Ciobo I present a supplementary explanatory memorandum to the bill and seek leave to move government amendments (1) to (3) on sheet MB113 and the amendment (1) on sheet MB123 as circulated together. Leave granted. I move government amendments (1) to (3) of sheet MB113 and (1) of sheet MB123 together as circulated: (1) Schedule 4, item 1, page 16 (after line 20), after the definition of _Schedule__1 commencement day_ in clause 25 of Schedule 1, insert: _Schedule__2 commencement day_ means the day on which Schedule 2 to the amending Act commences. (2) Schedule 4, item 1, page 17 (after line 27), at the end of clause 26 of Schedule 1, add: _Common issues_ (3) Schedule 4, item 1, page 18 (lines 12 to 17), omit clause 28 of Schedule 1, substitute: 28 Application of amendments—when employees have genuinely agreed to an enterprise agreement (1) The amendments of section 188 of this Act made by Schedule 2 to the amending Act apply in relation to an application made under section 185 of this Act for approval of an enterprise agreement if the application is made: (a) on or after the Schedule 2 commencement day; or (b) before the Schedule 2 commencement day, if circumstances covered by subclause (2) apply. (2) The circumstances covered by this subclause are: (a) on or before the Schedule 2 commencement day, the FWC had neither approved, nor refused to approve, the enterprise agreement; or (b) before the Schedule 2 commencement day: (i) the FWC approved, or refused to approve, the enterprise agreement; and (ii) an application was made under section 604 for an appeal against the decision to approve, or refuse to approve, the enterprise agreement; and (iii) the FWC had not yet made a final decision on the appeal; or (c) all of the following apply: (i) within 21 days before the Schedule 2 commencement day, the FWC approved, or refused to approve, the enterprise agreement; (ii) immediately before the Schedule 2 commencement day, an application had not been made under section",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-20/1"
+  },
+  {
+   "key": "federal-representatives-4734",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/debate/?id=2017-06-20.117.1) introduced by Labor MP [Brendan O'Connor](https://theyvoteforyou.org.au/people/representatives/gorton/brendan_o'connor) (Gorton), which means it was unsuccessful. [According to MP O'Connor](http://www.openaustralia.org.au/debates/?id=2017-06-20.106.1), the amendments would have ensured that *\"workers will not lose real income on 1 July or, indeed, the day following—the Sunday\"*. There was one [rebel voter](http://www.peo.gov.au/learning/fact-sheets/crossing-the-floor.html), with Liberal Senator [George Christensen](https://theyvoteforyou.org.au/people/representatives/dawson/george_christensen) (Dawson) crossing the floor to vote 'yes' against the rest of his party. ### Motion text See the motion text on [OpenAustralia.org.au](http://www.openaustralia.org.au/debate/?id=2017-06-20.117.1).",
+   "stage": "Consideration in detail",
+   "ayes": 72,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-20/2"
+  },
+  {
+   "key": "federal-representatives-4735",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "question": "Adam Bandt By leave—I move amendments (2), (4) and (6) together as circulated in my name: (2) Clause 2, page 2 (table item 3, column headed \"Provisions\"), omit \"2,\", substitute\"2, 2A,\". (4) Page 6 (after line 18), after Schedule 2, insert: Schedule 2A—Pay protection _Fair Work Act 2009_ 1 Subsection 16(3) (note) Omit \"base rate of pay\", substitute \"rate of pay\". 2 At the end of section 18 Add: (3) The regulations may prescribe, or provide for the determination of, the full rate of pay, for the purpose of section 206, of an employee who is a pieceworker. If the regulations do so, the employee's _full rate of pay_, for the purpose of that section, is as prescribed by, or determined in accordance with, the regulations. Note: Section 206 deals with an employee's rate of pay under an enterprise agreement. 3 Section 169 (paragraph relating to Division 6) Omit \"base\". 4 Division 6 of Part 2 -4 (heading) Repeal the heading, substitute: Division 6—Rates of pay under enterprise agreements 5 Section 206 (heading) Repeal the heading, substitute: 206 Rates of pay under an enterprise agreement must not be less than the modern award rate or the national minimum wage order rate etc. 6 Subsection 206(1) Omit \"the base rate of pay\" (wherever occurring), substitute \"the full rate of pay\". 7 Subsections 206(3) and (4) Repeal the subsections, substitute: _If an employer is required to pay an employee the national minimum wage etc._ (3) If: (a) an enterprise agreement applies to an employee; and (b) the employee is not covered by a modern award that is in operation; and (c) a national minimum wage order would, but for the agreement applying to the employee, require the employee's employer to pay the employee: (i) a base rate of pay that at least equals the national minimum wage; or (ii) a base rate of pay that at least equals the special national minimum wage; or (iii) a casual loading that at least equals the casual loading for award/agreement free employees (as applied to the employee'",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-20/3"
+  },
+  {
+   "key": "federal-senate-5016",
+   "date": "2017-11-30",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-11-30.113.1) introduced by South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Labor) to a motion moved by Queensland Senator [George Brandis](https://theyvoteforyou.org.au/people/senate/queensland/george_brandis) (Liberal). This means the amendment succeeded. ### Amendment text > *That the motion be amended by—* > > *(1) adding in paragraph (1) after the words \"proceeded with\":* > >> *\"Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017\"* > > *(2) at the end of paragraph (1), add:* > >> *\"(1A) That the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017 shall be considered before the other bills listed in paragraph (1).\"* ### Original motion text > *(1) That in the week commencing Monday, 4 December 2017, the following bills shall have precedence over all government and general business until proceedings on the bills are concluded, and proposals under standing order 75 not be proceeded with:* > >> *Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 1) Bill 2017* >> >> *Superannuation Laws Amendment (Strengthening Trustee Arrangements) Bill 2017* >> >> *Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 2) Bill 2017* >> >> *Treasury Laws Amendment (Reducing Pressure on Housing Affordability Measures No. 1) Bill 2017* >> >> *First Home Super Saver Tax Bill 2017* >> >> *Treasury Laws Amendment (Putting Consumers First—Establishment of the Australian Financial Complaints Authority) Bill 2017* >> >> *Regional Investment Corporation Bill 2017* >> >> *Migration Amendment (Family Violence and Other Measures) Bill 2016* >> >> *Social Services Legislation Amendment (Welfare Reform) Bill 2017* >> >> *Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017* >> >>",
+   "stage": "Business motion",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 39,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-11-30/3"
+  },
+  {
+   "key": "federal-representatives-5025",
+   "date": "2017-12-04",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debates/?id=2017-12-04.119.2) introduced by Labor MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke), which called for the amendments to the bill to be considered immediately. He moved this motion after Liberal MP [Christopher Pyne](https://theyvoteforyou.org.au/people/representatives/sturt/christopher_pyne) moved \"*That the amendments be considered at the next sitting.*\"",
+   "stage": "Consideration of Senate message",
+   "ayes": 73,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-12-04/7"
+  },
+  {
+   "key": "federal-senate-5026",
+   "date": "2017-12-04",
+   "house": "senate",
+   "question": "Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017 - in Committee - Penalty rates",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 36,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-12-04/1"
+  },
+  {
+   "key": "federal-senate-5027",
+   "date": "2017-12-04",
+   "house": "senate",
+   "question": "The majority voted to agree with the bill as amended, which means they now have to vote on [whether to pass it in its new form](https://theyvoteforyou.org.au/divisions/senate/2017-12-04/3). There was one rebel in this division with One Nation Senator [Fraser Anning](https://theyvoteforyou.org.au/people/senate/queensland/fraser_anning) (Qld) [crossing the floor](https://www.peo.gov.au/learning/fact-sheets/crossing-the-floor.html) to vote against the rest of his party. ### What does the bill do? The main purpose of the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5822) it to \"*repeal the requirement for the [Fair Work Commission](https://en.wikipedia.org/wiki/Fair_Work_Commission) (FWC) to conduct four-yearly reviews of modern awards from the beginning of 1 January 2018*\", though it makes other changes as well. Read more about the bill and the reasons it was introduced in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd115).",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 35,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-12-04/2"
+  },
+  {
+   "key": "federal-senate-5028",
+   "date": "2017-12-04",
+   "house": "senate",
+   "question": "The majority voted to pass the bill. In parliamentary jargon, they voted to read it for a [third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). The bill will now go back to the House of Representatives, where our Members of Parliament (MPs) will decide whether or not they agree with the amendments that the Senate made. If they do agree, the bill will become law. ### What does the bill do? The main purpose of the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5822) it to \"*repeal the requirement for the [Fair Work Commission](https://en.wikipedia.org/wiki/Fair_Work_Commission) (FWC) to conduct four-yearly reviews of modern awards from the beginning of 1 January 2018*\", though it makes other changes as well. Read more about the bill and the reasons it was introduced in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd115).",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-12-04/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-342637",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The government introduced the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017, proposing to repeal mandatory four-yearly reviews of modern awards (saving $87 million over 10 years), allow the Fair Work Commission to overlook minor procedural errors in enterprise bargaining, and strengthen accountability for Commission members following the Heerey inquiry into former Vice-President Michael Lawler."
+  },
+  {
+   "slug": "speech-342639",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker moved a motion to suspend standing orders to allow the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017 to be debated and passed immediately, with deadlines for amendments and finalisation set for 12 pm on 1 March 2017."
+  },
+  {
+   "slug": "speech-342641",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The member moved to suspend standing orders to force immediate debate and passage of the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017, criticising the minister for calling the government's own legislative procedure a \"union Labor stunt.\""
+  },
+  {
+   "slug": "speech-349657",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued the government was slow to respond to the 2015 Productivity Commission report and only acted due to pressure from unions and employer groups. They moved a second reading amendment calling on the government to abandon support for cutting penalty rates, which would reduce pay for nearly 700,000 Australians by up to $77 a week, and to legislate to prevent that decision."
+  },
+  {
+   "slug": "speech-349660",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for delaying the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017, noting that unions and employer groups supported scrapping mandatory four-year reviews, and argued that the government has not acted to prevent the upcoming cut to penalty rates affecting 700,000 workers, with some losing up to $6,000 annually."
+  },
+  {
+   "slug": "speech-349784",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017 with amendments, and argued that the government's failure to stop penalty rate cuts from 2 July will reduce pay for up to 700,000 workers by up to $77 a week, while also criticising delays in implementing Productivity Commission recommendations."
+  },
+  {
+   "slug": "speech-349786",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017 fails to address major issues such as penalty rate cuts affecting young people and women, underpayment of workers at Coles, Woolworths, Hungry Jack's, McDonald's and KFC, insecure work and casualisation, stagnant wages, and employers terminating enterprise agreements to force workers onto lower award conditions."
+  },
+  {
+   "slug": "speech-349791",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The government argued the bill would repeal the requirement for four-yearly reviews of modern awards, saving $87 million, allow the Fair Work Commission to overlook minor procedural errors in enterprise agreements if employees were not disadvantaged, and establish a formal mechanism for parliament to handle allegations of misbehaviour against Fair Work Commission members."
+  },
+  {
+   "slug": "speech-349797",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the opposition's amendments on penalty rates are not relevant to the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017 and should be ruled out of order, calling the move an attempt to insert a separate private members' bill into unrelated legislation."
+  },
+  {
+   "slug": "speech-349800",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that opposition amendments to the Fair Work Amendment Bill were a repeat of private members’ bills and a tactic to bypass the requirement for an absolute majority of 76 votes under standing orders."
+  },
+  {
+   "slug": "speech-349801",
+   "speaker": "The SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-349804",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed amendments to the Fair Work Amendment Bill, arguing that reducing Sunday penalty rates from double time to time-and-a-half supports jobs and small businesses like coffee shops. The speaker stated the government would oppose the amendments because they were only just seen and the government supports the bill."
+  },
+  {
+   "slug": "speech-349807",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "The speaker rejected amendments to the Fair Work Amendment Bill, arguing that award wage and penalty rate decisions should remain with the independent Fair Work Commission rather than politicians, citing his experience as former CEO of the National Retail Association and the Commission's evidence-based reduction of penalty rates in four key awards to boost employment."
+  },
+  {
+   "slug": "speech-374145",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The member moved to disagree with the amendments, arguing they are inconsistent with the bill's objective to repeal four-yearly reviews and other measures. The House of Representatives does not accept the amendments."
+  },
+  {
+   "slug": "speech-374146",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The opposition will not insist on its amendments to restore penalty rates, allowing the Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Bill 2017 to pass, but will pursue other avenues to restore penalty rates. The bill is supported by both the government and opposition, as well as employers and unions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Repeal of 4 Yearly Reviews and Other Measures) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00170",
+   "assent_date": "2018-12-11"
+  }
+ ]
+}

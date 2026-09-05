@@ -1,0 +1,438 @@
+{
+ "key": "au-federal-r6768",
+ "title": "Social Security Legislation Amendment (Remote Engagement Program) Bill 2021",
+ "short_title": "Social Security Legislation Amendment (Remote Engagement Program) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Australians",
+ "status": "passed",
+ "status_as_of": "2021-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6768_ems_c1c107a2-4104-4d3e-8005-cce1868611ba%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6768_ems_def7ebab-799d-4f6e-8620-46031c22cf40%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6768%22",
+   "document_date": "2021-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00123",
+   "document_date": "2021-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-09-01",
+  "sentences": [
+   "The bill would create a new payment for job seekers who volunteer to take part in a remote engagement placement.",
+   "It would set the payment at between $100 and $190 per fortnight for up to 104 weeks, and let the Minister make rules about who qualifies and how much they get.",
+   "The bill would also remove outdated rules about the former Community Development Employment Projects scheme from the social security law."
+  ],
+  "changes": [
+   "Establishes a new payment called the remote engagement program payment.",
+   "Sets the payment rate at $100 to $190 per fortnight for a maximum of 104 weeks.",
+   "Makes participation in the placement voluntary and lets a person leave if they choose.",
+   "Allows the Minister to make legislative instruments on qualification criteria, non-payment circumstances, and the payment rate.",
+   "Repeals or omits sections of the Social Security Act that relate to the former Community Development Employment Projects scheme."
+  ],
+  "affected": "Job seekers in remote communities who volunteer for a placement, and Indigenous people living in those communities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7488",
+   "date": "2021-10-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an amendment, which would have added the text below to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). A second reading motion is \"*that the bill be read a second time,*\" and is parliamentary jargon for agreeing with the main idea of [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6768). Because this vote passed, the amendment failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the proposed pilot remote engagement program is intended to replace the current remote employment program, the Community Development Program (CDP);* >> >> *(b) the Government are the architects of the current failed CDP and the bill again delays long-overdue changes to this program;* >> >> *(c) concerns this bill could entrench a welfare model, rather than job creation, economic development and self-determination; and* >> >> *(d) this bill does not address fundamental issues in remote Australia such as housing and essential services; and* > > *(2) calls on the Government to adopt Labor's policy of a remote employment program with real jobs, proper wages with full conditions, and meaningful community control\".*",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 106
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-10-26/5"
+  },
+  {
+   "key": "federal-senate-7668",
+   "date": "2021-11-29",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*That this bill be now read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill. This means that the amendment failed. It was introduced by NSW Senator [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (Labor). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes:* > >> *(i) that the proposed pilot remote engagement program is intended to replace the current remote employment program, the Community Development Program (CDP),* >> >> *(ii) that the Government is the architect of the current failed CDP and the bill again delays long-overdue changes to this program,* >> >> *(iii) concerns that this bill could entrench a welfare model, rather than job creation, economic development and self-determination, and* >> >> *(iv) that this bill does not address fundamental issues in remote Australia such as housing and essential services; and* > > *(b) calls on the Government to adopt Labor's policy of a remote employment program with real jobs, proper wages with full conditions, and meaningful community control\".*",
+   "stage": "Second reading",
+   "ayes": 22,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "earliest": 19,
+    "dated": 18,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-29/4"
+  },
+  {
+   "key": "federal-senate-7669",
+   "date": "2021-11-29",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-11-29.31.1) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*That this bill be now read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill. This means that the amendment failed. It was introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) this bill replaces the Community Development Program with a new framework piloting how employment services are delivered in remote communities, particularly communities with a high number of First Nations people;* > > *(b) these pilot programs dishonour the Federal Government's commitment to formal partnerships and shared decision-making in the National Agreement on Closing the Gap as it is not clear how communities have been chosen to participate in the pilots or if the principles of free, prior, and informed consent were followed when working with these communities;* > > *(c) people in these pilot programs will not be paid a living wage for work they are required to perform and they will not be given the industrial protections available to all working people;* > > *(d) this bill is opposed by human rights organisations, Aboriginal community controlled organisations, and Aboriginal and Torres Strait Islander health services; and* > > *(e) this bill does not address the underlying issue causing under-employment or unemployment in regional, remote, and very remote areas of the country; namely, the lack of economic and job opportunities\".*",
+   "stage": "Second reading",
+   "ayes": 21,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "earliest": 18,
+    "dated": 18,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-29/5"
+  },
+  {
+   "key": "federal-senate-7670",
+   "date": "2021-11-29",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-11-29.33.1) to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that they voted to agree with the main idea of the bill and will now discuss it in greater detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd023), the purpose of the bill is to: > * *establish a new remote engagement program payment to be paid to job seekers who participate in a remote engagement placement and* > * *remove provisions that establish or refer to the now non-operational Community Development Employment Projects (CDEP) Scheme and related CDEP Scheme Participant Supplement.*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 15,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-29/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-412640",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The government introduced the Social Security Legislation Amendment (Remote Engagement Program) Bill 2021 to create a new supplementary payment of $100–$190 per fortnight for jobseekers in remote pilot communities who volunteer for 15–18 hours per week in work-like placements, aiming to co-design a replacement for the Community Development Program (CDP) by 2023. The bill also repeals obsolete provisions from the former Community Development Employment Projects (CDEP) Scheme."
+  },
+  {
+   "slug": "speech-414178",
+   "speaker": "Linda Jean Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The bill delays long-overdue changes to the failed Community Development Program, fails to address housing and essential services in remote Australia, and should be replaced with Labor's policy of a remote employment program offering real jobs, proper wages, and community control."
+  },
+  {
+   "slug": "speech-414182",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition government's Community Development Program (CDP) and its replacement, the Regional Engagement Program (REP), have failed remote Indigenous communities, increasing poverty and stunting job creation. They committed a future Labor government to replacing these with a program supporting sustainable, community-controlled employment, and noted that one in three children in the Northern Territory live in poverty under the current government."
+  },
+  {
+   "slug": "speech-414184",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government misled Parliament about Medicare privatisation plans, citing a 2016 statement by Malcolm Turnbull, and that the Remote Engagement Program bill fails to address key flaws of the Community Development Program. Labor will support the bill for its $5,200 supplementary payment over two years to 200 trial participants, but stated it does not create real jobs or adequately support remote and Indigenous communities."
+  },
+  {
+   "slug": "speech-414185",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Security Legislation Amendment (Remote Engagement Program) Bill 2021 addresses the lack of employment opportunities in remote Australia, citing research that work improves health, wellbeing, and reduces poverty and social exclusion. They noted that less than two per cent of actively trading businesses are located in remote areas, which disproportionately affects Indigenous Australians."
+  },
+  {
+   "slug": "speech-414321",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "Introduced the Social Security Legislation Amendment (Remote Engagement Program) Bill 2021, which creates a pilot program for a new supplementary payment to eligible jobseekers in remote communities who volunteer for at least 15 hours per week in skill-building placements, aiming to address the decline in Indigenous employment from 54% to 49% between 2007-08 and 2018-19. The pilot will replace the Community Development Program (CDP) in 2023 and is part of the National Agreement on Closing the Gap."
+  },
+  {
+   "slug": "speech-414322",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Security Legislation Amendment (Remote Engagement Program) Bill 2021 fails to create real, long-term jobs and continues the failed Community Development Program, which pays below minimum wage ($11.20 per hour), penalises participants at 25 times the rate of urban jobactive, and costs $360 million per year for only 2,682 jobs with 26-week outcomes—an amount that could directly employ 19,700 people. The speaker called for scrapping the CDP and replacing it with a program offering proper wages and real jobs, and criticised the government's co-design approach and expansion of cashless debit cards."
+  },
+  {
+   "slug": "speech-414327",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Remote Engagement Program Bill 2021, which creates a supplementary payment for jobseekers in remote pilot sites such as the Ngaanyatjarra lands, and opposed Labor's bill to scrap the cashless debit card trial, arguing it would end the Job Ready Pilot Program in Goldfields shires like Laverton, Leonora, Menzies and Coolgardie."
+  },
+  {
+   "slug": "speech-414332",
+   "speaker": "Warren Edward Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill and amendment, arguing that the government's Community Development Program (CDP) has failed and should be replaced with a locally controlled employment program that provides award wages, superannuation, and entitlements, similar to the old Community Development Employment Program (CDEP) which was abolished by the Howard government."
+  },
+  {
+   "slug": "speech-414479",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The bill establishes a pilot program for remote employment services, creating a new supplementary payment for eligible jobseekers to participate in work-like placements that build skills and benefit their communities, ahead of replacing the Community Development Program in 2023."
+  },
+  {
+   "slug": "speech-414480",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-26",
+   "stage_hint": null,
+   "brief": "The Social Security Legislation Amendment (Remote Engagement Program) Bill 2021 enables a new payment for a co-designed remote employment program, replacing the Community Development Program (CDP) in 2023 as part of the Morrison government's reform to support economic recovery and close the gap for Indigenous Australians. The program sunsets in 2023."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security Legislation Amendment (Remote Engagement Program) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00123",
+   "assent_date": "2021-12-02"
+  }
+ ]
+}

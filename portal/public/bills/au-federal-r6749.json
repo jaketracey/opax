@@ -1,0 +1,308 @@
+{
+ "key": "au-federal-r6749",
+ "title": "Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Bill 2021",
+ "short_title": "Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2021-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6749_ems_ae38eb00-cc3b-4d74-b5b6-ec665e0d14af%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6749%22",
+   "document_date": "2021-08-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00114",
+   "document_date": "2021-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7442",
+   "date": "2021-10-18",
+   "house": "senate",
+   "question": "Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Bill 2021 - in Committee - Fossil fuels",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "earliest": 19,
+    "dated": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-18/2"
+  },
+  {
+   "key": "federal-senate-7443",
+   "date": "2021-10-18",
+   "house": "senate",
+   "question": "Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Bill 2021 - in Committee - Freedom of Information",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "earliest": 17,
+    "dated": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-18/3"
+  },
+  {
+   "key": "federal-senate-7444",
+   "date": "2021-10-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-10-18.185.1) to keep [the bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr6749%22) as it is. In parliamentary jargon, they voted \"*that the bill stand as printed*\". ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd016): > *The purpose of the [Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Bill 2021](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr6749%22) (the Bill) is to give legislative effect to the Government’s decision to broaden the range of transactions that [Export Finance Australia](https://en.wikipedia.org/wiki/Export_Finance_Australia) (EFA) can finance.* > > *Specifically, the Bill will amend the Export Finance and Insurance Corporation Act 1991 (the EFIC Act) to:* > > * *permit EFA to make equity investments and* > * *permit EFA Australia to offer standalone guarantees for overseas infrastructure transactions.*",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "earliest": 17,
+    "dated": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-18/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-410389",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Bill gives Export Finance Australia new equity investment powers and standalone overseas infrastructure guarantees, aiming to support infrastructure in the Indo-Pacific and export-linked projects like critical minerals. In 2019–20, the agency supported 136 Australian businesses with $1.1 billion in finance, enabling $2.45 billion in export contracts and sustaining nearly 10,000 jobs."
+  },
+  {
+   "slug": "speech-412076",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "Labor supported the Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Bill 2021, which expands Export Finance Australia’s ability to make equity investments, and criticised the government’s Pacific infrastructure financing as falling short of its $2 billion announcement, with less than $90 million delivered in 2½ years."
+  },
+  {
+   "slug": "speech-412077",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill granting Export Finance Australia new equity investment powers and standalone infrastructure guarantees, with constraints including minority interests and a $20 million minimum, and argued the Morrison government should increase Indo-Pacific aid, better support Afghan allies, and address 17,000 job losses in the international education sector, citing $12 billion in aid cuts."
+  },
+  {
+   "slug": "speech-412078",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Bill 2021 was opposed for expanding Export Finance Australia's risk exposure and fossil fuel financing before the Stephen Sedgwick review is completed, with amendments proposed to prohibit EFA fossil fuel financing and remove its Freedom of Information exemption. Figures cited included EFA providing over $1.5 billion in fossil fuel financing versus $20 million for renewables between 2009 and 2020, including a $254 million loan for Gladstone LNG and a $124 million loan for the Wiggins Island coal export terminal."
+  },
+  {
+   "slug": "speech-412079",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The bill amends the Export Finance and Insurance Corporation Act to support infrastructure development in the Indo-Pacific and the Pacific Step-up, adding equity investment powers for national interest cases while retaining debt as the main tool and maintaining existing commercial, risk, and environmental assessment processes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Finance and Insurance Corporation Amendment (Equity Investments and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00114",
+   "assent_date": "2021-10-28"
+  }
+ ]
+}

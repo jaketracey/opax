@@ -1,0 +1,466 @@
+{
+ "key": "au-federal-r6081",
+ "title": "Private Health Insurance Legislation Amendment Bill 2018",
+ "short_title": "Private Health Insurance Legislation Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6081_ems_c61892cf-b3b6-4472-b0a2-07200230af52%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6081_ems_bcca87c9-6e9b-4625-9f5b-2a579504b1aa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6081_ems_11b236ea-132c-4c39-acb6-0227e9adbc43%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6081%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00101",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "This bill is one of three that would put into effect government health insurance changes announced in October 2017.",
+   "It would amend the Private Health Insurance Act 2007 to let insurers offer lower premiums to younger people, increase the maximum voluntary excess, and pay for travel and accommodation for rural patients.",
+   "The bill would also give the Private Health Insurance Ombudsman new powers to inspect insurers' premises and conduct audits."
+  ],
+  "changes": [
+   "The bill would allow age-based discounts on hospital insurance premiums.",
+   "It would raise the maximum voluntary excess that policyholders can choose to pay.",
+   "Insurers could cover travel and accommodation costs for people in regional areas as part of hospital treatment.",
+   "The bill would let insurers end products and move affected policyholders to new ones.",
+   "Consumer information requirements would be improved.",
+   "The Ombudsman's powers would be strengthened to include inspections and audits at insurers' premises."
+  ],
+  "affected": "Private health insurers, policyholders (including regional Australians), and the Private Health Insurance Ombudsman.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:19Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5216",
+   "date": "2018-05-31",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2018-05-31.5.1) introduced by Labor MP [Catherine King](https://theyvoteforyou.org.au/people/representatives/ballarat/catherine_king), which means it failed. ### What was the motion? The motion would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) *\"that the bill be read a second time\"* (reading a bill a second time means that the majority agrees with the main idea of the bill): > *That all words after “That” be omitted with a view to substituting the following words:* > *“whilst not declining to give [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6081) a second reading, the House expresses its concern that this bill may allow insurers to cancel cover unilaterally, and that higher excesses may make it even harder for Australians to afford care”.*",
+   "stage": "Second reading",
+   "ayes": 61,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-05-31/1"
+  },
+  {
+   "key": "federal-senate-5225",
+   "date": "2018-06-19",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-06-19.208.2): > *That the following bills be referred to the [Community Affairs Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Community_Affairs) for inquiry and report by 13 August 2018:* > >> *(a) [Private Health Insurance Legislation Amendment Bill 2018](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6081);* >> >> *(b) [A New Tax System (Medicare Levy Surcharge-Fringe Benefits) Amendment (Excess Levels for Private Health Insurance Policies) Bill 2018](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6072); and* >> >> *(c) [Medicare Levy Amendment (Excess Levels for Private Health Insurance Policies) Bill 2018](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6073).*",
+   "stage": "Reference to Committee",
+   "ayes": 37,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 37,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-19/1"
+  },
+  {
+   "key": "federal-senate-5397",
+   "date": "2018-09-10",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2018-09-10.27.2) introduced by Labor Senator [Helen Polley](https://theyvoteforyou.org.au/people/senate/tasmania/helen_polley) (Tas), which means it failed. This motion would have changed the [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is \"*that the bills be read for a second time*\" or, in other words, \"*that the majority agree with the main idea of the bills*\". ### Motion text > *At the end of the motion, add:* > *\", but the Senate condemns the Government for putting insurer profits before patients, forcing Australians to either drop their private health insurance, or pay more and more for less and less.\"*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 32,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-10/6"
+  },
+  {
+   "key": "federal-senate-5398",
+   "date": "2018-09-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-09-10.35.1) introduced by Greens Senator [Richard Di Natalie](https://theyvoteforyou.org.au/people/senate/victoria/richard_di_natale) (Vic), which means it succeeded. This motion will change the [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is \"*that the bills be read for a second time*\" or, in other words, \"*that the majority agree with the main idea of the bills*\". ### Motion text > *At the end of the motion, add:* > *\", but the Senate calls on the government, as a matter of urgency, to refer to the Productivity Commission the matter of whether the private health insurance rebate promotes the economically efficient operation of the health system.\"*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 33,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-10/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-361522",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The government introduced a package of private health insurance reforms, including discounts of up to 10% for Australians under 30 on hospital cover, a premium increase of 3.95% from 1 April 2018 (the lowest in 17 years), and measures to strengthen the Ombudsman's powers, allow insurers to cover travel and accommodation costs, and improve consumer transparency."
+  },
+  {
+   "slug": "speech-361523",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The Medicare Levy Amendment (Excess Levels for Private Health Insurance Policies) Bill 2018 increases maximum excess amounts for private hospital cover to $750 for singles and $1,500 for couples and families, allowing insurers to offer lower premiums. The bill also removes grandfathering provisions that exempted certain pre-2007 policies from the Medicare levy surcharge."
+  },
+  {
+   "slug": "speech-361524",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The bill increases maximum excess levels for private hospital cover to $750 for singles and $1,500 for couples and families, allowing insurers to offer lower premiums. It also removes grandfathering provisions that provided Medicare levy surcharge exemptions for certain pre-2007 policies."
+  },
+  {
+   "slug": "speech-364011",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance Legislation Amendment Bill 2018 was argued to make private health insurance more affordable and transparent, including discounted premiums of up to 10% for 18- to 29-year-olds, new product categories (gold, silver, bronze, basic), and measures to reduce out-of-pocket costs and strengthen the Private Health Insurance Ombudsman. The bill also allows insurers to offer travel and accommodation benefits for rural patients and one-off upgrades to mental health cover without waiting periods."
+  },
+  {
+   "slug": "speech-364012",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "The Labor MP argued that private health insurance is in crisis due to 27% premium increases since 2014 and rising exclusions, and announced Labor's plan to cap premium increases at 2% for two years and conduct a Productivity Commission review. The MP indicated Labor would not oppose the bill but sought a Senate inquiry into concerns about higher excesses ($750 singles, $1,500 families), age-based discounts, and insurers' power to terminate products."
+  },
+  {
+   "slug": "speech-364015",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that private health insurance coverage has fallen from 47.2% to 46.1% since 2014, with nine consecutive quarterly declines, and announced the bill would allow insurers to offer discounts of up to 10% for under-25s, increase maximum excess levels, and introduce other reforms to reverse the trend and reduce pressure on public hospitals."
+  },
+  {
+   "slug": "speech-364016",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-31",
+   "stage_hint": null,
+   "brief": "The speaker announced a package of private health insurance reforms including increased maximum excess levels (the first increase since 2001), age-based premium discounts for young Australians, strengthened powers for the Private Health Insurance Ombudsman, coverage of travel and accommodation for rural patients, a simplified consumer statement, and removal of benefit limitation periods, along with two tax bills to maintain Medicare levy surcharge exemptions."
+  },
+  {
+   "slug": "speech-368610",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for needing to amend its own private health insurance legislation, arguing it shows disarray and distraction. Labor will support amendments requiring the Ombudsman to give 48 hours’ notice to insurers and delegate functions only to appropriate experts, but will monitor how these rules work in practice."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance Legislation Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00101",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

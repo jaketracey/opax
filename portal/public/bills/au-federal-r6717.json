@@ -1,0 +1,306 @@
+{
+ "key": "au-federal-r6717",
+ "title": "Fuel Security (Consequential and Transitional Provisions) Bill 2021",
+ "short_title": "Fuel Security (Consequential and Transitional Provisions) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science, Energy and Resources",
+ "status": "passed",
+ "status_as_of": "2021-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6717_ems_588cdd6e-4e47-4282-9f36-e4feb678aab3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6717%22",
+   "document_date": "2021-05-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00066",
+   "document_date": "2021-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-26",
+  "sentences": [
+   "This bill would make minor changes to existing laws to back up the fuel stockholding obligation and fuel security payment created by a related bill.",
+   "Government agencies would be allowed to share fuel data with the department, and the department could verify the information reported by regulated firms.",
+   "The amendments would also prepare for a planned merger of the Federal Court and the Family Court, expected before early September 2021."
+  ],
+  "changes": [
+   "Allows government agencies to share fuel information with the department.",
+   "Lets the department check the accuracy of reported data.",
+   "Prepares for merging the Federal Court and Family Court of Australia."
+  ],
+  "affected": "Government agencies, the department, and regulated entities in the fuel sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7269",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bills be read for a second time*\" (parliamentary jargon for agreeing with the main idea of the bills). This means the amendment was unsuccessful. ### Amendment text > *Omit all words after \"That\", substitute \"the bill be withdrawn and the Senate calls on the Government to divert the full funding amount to a national electric vehicle strategy that includes:* > > *(a) clear consumer incentives to ensure rapid electric vehicle uptake; and* > > *(b) public investment in a national fast charging infrastructure network.*",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 19,
+    "dated": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/1"
+  },
+  {
+   "key": "federal-senate-7270",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted in favour of reading the bills for [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is parliamentary jargon for agreeing with the main idea of the bills. The Senate can now discuss it in more detail. ### What is the bills' main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6716), the bills were introduced in order to: * *establish a minimum stockholding obligation for corporate entities that undertake certain activities (broadly, importing and refining) in relation to certain transport fuels to hold a minimum quantity of those fuels nationally; and* * *enable a production payment for refinery operators (referred to as a fuel security services payment) to provide an adjustable cent per litre payment to refineries in return for a commitment to continue refining until at least 30 June 2027.*",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 19,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-406891",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the Fuel Security Bill 2021 to secure Australia's refining capability and fuel security, including agreements with Ampol and Viva refineries to operate until at least mid-2027, a fuel security service payment, and a minimum stockholding obligation that will increase diesel stocks by 40%."
+  },
+  {
+   "slug": "speech-406892",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Fuel Security (Consequential and Transitional Provisions) Bill 2021 amends four existing acts to reduce regulatory burdens and ensure efficient implementation of the fuel security scheme, with the minimum stockholding obligation commencing 1 July 2022."
+  },
+  {
+   "slug": "speech-408344",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "The Fuel Security Bill 2021 and its consequential provisions were supported, creating a fuel security services payment with a collar of $10.20 per barrel and a cap of 1.8 cents per litre, and mandating minimum onshore fuel stockholdings from 1 July 2022, rising to a 40% increase in diesel holdings by 2024. The speech noted only two refineries remain—Ampol in Queensland and Viva in Geelong—and backed future fuels like hydrogen and biofuels."
+  },
+  {
+   "slug": "speech-408461",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's fuel security bills are insufficient due to ongoing failures, including the closure of half of Australia's refineries and non-compliance with International Energy Agency obligations for 90 days of oil reserves. They urged urgent approval of the Stolthaven fuel storage expansion in Newcastle, noting the government has not responded to applications submitted in March, and criticised the lack of an Australian-owned strategic fleet."
+  },
+  {
+   "slug": "speech-408462",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The Morrison government's fuel security package, supported by the Fuel Security Bill 2021 and related bill, will secure 1,250 jobs at the Ampol refinery in Brisbane and the Viva refinery in Geelong, with $250 million for infrastructure upgrades and a minimum stockholding obligation to meet International Energy Agency requirements, including a fuel security services payment capped at 1.8 cents per litre."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fuel Security (Consequential and Transitional Provisions) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00066",
+   "assent_date": "2021-06-29"
+  }
+ ]
+}

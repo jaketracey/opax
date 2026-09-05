@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-r5345",
+ "title": "Migration Amendment (Character and General Visa Cancellation) Bill 2014",
+ "short_title": "Migration Amendment (Character and General Visa Cancellation) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2014-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5345_ems_afd76f6e-75a7-427b-81ac-d4adb963a996%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5345%22",
+   "document_date": "2014-09-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00129",
+   "document_date": "2014-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-24",
+  "sentences": [
+   "The bill would tighten the rules for refusing or cancelling visas on character grounds.",
+   "It would add new reasons for failing the character test, including suspected links to criminal groups, certain serious crimes, and Interpol notices.",
+   "A person serving a prison sentence of 12 months or more would face mandatory visa cancellation without notice, but the minister could revoke it if the person passes the character test."
+  ],
+  "changes": [
+   "New grounds for failing the character test are inserted, covering membership in criminal organisations, people-smuggling, war crimes, child sex offences, and security risks.",
+   "The threshold for a substantial criminal record is lowered from 2 years to 12 months total imprisonment for multiple sentences.",
+   "A mandatory visa cancellation power is created for prisoners serving 12 months or more, with limited review rights.",
+   "The minister may require state or territory agencies to disclose personal information about a person whose visa could be cancelled.",
+   "Decisions by a delegate not to revoke a cancellation for a person in prison become reviewable by the Administrative Appeals Tribunal.",
+   "The minister may personally set aside a revocation and cancel a visa if it is in the national interest."
+  ],
+  "affected": "Non-citizens in Australia, particularly those convicted of crimes or serving prison sentences, and visa applicants with criminal backgrounds.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:51:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-299877",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-22",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Character and General Visa Cancellation) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00129",
+   "assent_date": "2014-12-10"
+  }
+ ]
+}

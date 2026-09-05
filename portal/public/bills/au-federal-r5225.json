@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r5225",
+ "title": "Health Insurance Amendment (Extended Medicare Safety Net) Bill 2014",
+ "short_title": "Health Insurance Amendment (Extended Medicare Safety Net) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2014-07-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5225_ems_7849ce8e-44fb-43d9-8d25-30faa6798cf6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5225%22",
+   "document_date": "2014-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00078",
+   "document_date": "2014-07-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-26",
+  "sentences": [
+   "The bill would raise the general threshold of the Extended Medicare Safety Net to $2,000 from 1 January 2015.",
+   "It would also let the Chief Executive of Medicare decide how to contact families to confirm their composition, instead of requiring written requests.",
+   "The government says the measure would save $105.6 million over four years and not affect families receiving Family Tax Benefits Part A or concession card holders."
+  ],
+  "changes": [
+   "Increase the general EMSN threshold to $2,000.",
+   "Remove the requirement that family composition confirmation requests be in writing.",
+   "Save $105.6 million over four years."
+  ],
+  "affected": "Individuals and families eligible for the Extended Medicare Safety Net, except those receiving Family Tax Benefits Part A or holding Commonwealth concession cards.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-292724",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292917",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293070",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293071",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293072",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293074",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293079",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Extended Medicare Safety Net) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00078",
+   "assent_date": "2014-07-17"
+  }
+ ]
+}

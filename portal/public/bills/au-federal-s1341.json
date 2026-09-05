@@ -1,0 +1,127 @@
+{
+ "key": "au-federal-s1341",
+ "title": "United Nations Declaration on the Rights of Indigenous Peoples Bill 2022",
+ "short_title": "United Nations Declaration on the Rights of Indigenous Peoples Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-03-29",
+ "originating_house": "senate",
+ "sponsor": "THORPE, Sen Lidia",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10961",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-12-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1341_ems_1aceeb9a-83ea-47b7-b5c2-7a451687b0fa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1341%22",
+   "document_date": "2022-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-8598",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2023-12-06.4.2) to agree with the main idea of the bill. In other words, they voted against reading it for a second time. This means that the bill has been rejected in the Senate and so will not be considered any further. ### What is the bill's main idea? The bill was introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (then Greens, now Independent). According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fs1341_ems_1aceeb9a-83ea-47b7-b5c2-7a451687b0fa%22;rec=0) (which is a political document, prepared by the senator or party introducing the bill): > *This Bill provides for measures to enact the [United Nations Declaration on the Rights of Indigenous Peoples](https://en.wikipedia.org/wiki/Declaration_on_the_Rights_of_Indigenous_Peoples) (UNDRIP) in Australian law.* > > *The Bill is in recognition of Australia’s endorsement of the UNDRIP in 2009 and its verbal commitment to take actions to implement the UNDRIP.* > > *The intention of the Bill is to address Australia’s lack of UNDRIP’s implementation into law, policy and practice, the lack of a National Action Plan to implement the UNDRIP, negotiated with indigenous peoples, and the lack of auditing of existing laws, policies and practice for compliance with the UNDRIP.* > > *The purpose of the Bill is to recognise and ensure that Indigenous people are entitled without discrimination to all human rights recognised in international law, and that Indigenous peoples possess collective rights which are indispensable for their existence, well-being and integral development as peoples.*",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

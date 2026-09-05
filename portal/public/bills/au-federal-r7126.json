@@ -1,0 +1,456 @@
+{
+ "key": "au-federal-r7126",
+ "title": "Treasury Laws Amendment (Reserve Bank Reforms) Bill 2023",
+ "short_title": "Treasury Laws Amendment (Reserve Bank Reforms) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7126_ems_4b18f450-31cd-410a-8f06-40969822a396%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7126%22",
+   "document_date": "2023-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00096",
+   "document_date": "2024-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9125",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-09-12.26.2) \"*that the bill be read a second time.*\" In other words, they voted to agree with the main idea of the bill. They can now discuss the bill in greater detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd45) (which is a document prepared by the parliamentary library): > *The Treasury Laws Amendment (Reserve Bank Reforms) Bill 2023 (the Bill) amends the Reserve Bank Act 1959 to improve the governance of the Reserve Bank of Australia (RBA) by establishing a new Governance Board and a new Monetary Policy Board. The amendments are part of the Government’s response to the recommendations of the Review of the Reserve Bank entitled: An RBA fit for the future.* > > *The functions of the Governance Board are, amongst other things:* > > * *to oversee, and determine policies for, the management and organisational affairs of the RBA* > > * *to determine the policies of the RBA for the performance of the RBA’s functions in relation to delivering banking services to the Commonwealth and the issuing, re-issuing and cancelling Australian notes* > > * *to determine the policies of the RBA in relation to any matter not covered by the functions of the Monetary Policy Board or the Payments System Board.* > > *The role of the Monetary Policy Board is to determine the monetary policy of the RBA in a way that, in the Board’s opinion, best contributes to price stability and the maintenance of full employment in Australia.* > > *The functions of the existing Payments System Board are updated so that they are expressed in similar terms to those of the Governance Board and the Monetary Policy Board.* > > *The Bill has been referred to the Senate Economics Legislation Committee for inquiry and report by 21 March 2024.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 83,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-12/3"
+  },
+  {
+   "key": "federal-representatives-9126",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2024-09-12.28.1) introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens), which means they failed. ### What does this amendment do? Mr Bandt [explained that](https://www.openaustralia.org.au/debates/?id=2024-09-12.28.1): > *It is not an accident that the Reserve Bank is raising interest rates to the point that it is smashing people and starting to smash the economy. It is Labor's strategy for tackling inflation when there is an alternative right before it. This suggestion that there's somehow nothing the government can do about it—the lie is given to that by this very legislation. What this legislation shows and what this amendment seeks to fix is that existing within current legislation is the power for the government to step in right now and stop interest rates from going up. The government has the power under this legislation to stop it happening right now and to do all of those other things that would tackle inflation and stop inflation without hurting everyday people. Yes, it would hurt the big corporations and their profits a bit, but it would help everyday people. That's an alternative way. But, to do that, you have to step in and pull the levers that you've got and stop pretending that you've got no power to fix problems.* ### Amendment texts > *(1) Schedule 1, item 2, page 3 (lines 20 to 23), omit the item.* > > *(2) Schedule 1, items 4 to 6, page 4 (lines 1 to 9), omit the items.* > > *(3) Schedule 1, Part 2, page 5 (lines 1 to 8), omit the Part.*",
+   "stage": "Consideration in detail",
+   "ayes": 6,
+   "noes": 69,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 5
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 74,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-12/4"
+  },
+  {
+   "key": "federal-representatives-9127",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-09-12.28.1) \"*that the bill be agreed to.*\" This means that the bill has passed in the House of Representatives and will now be sent to the Senate for their consideration. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd45) (which is a document prepared by the parliamentary library): > *The Treasury Laws Amendment (Reserve Bank Reforms) Bill 2023 (the Bill) amends the Reserve Bank Act 1959 to improve the governance of the Reserve Bank of Australia (RBA) by establishing a new Governance Board and a new Monetary Policy Board. The amendments are part of the Government’s response to the recommendations of the Review of the Reserve Bank entitled: An RBA fit for the future.* > > *The functions of the Governance Board are, amongst other things:* > > * *to oversee, and determine policies for, the management and organisational affairs of the RBA* > > * *to determine the policies of the RBA for the performance of the RBA’s functions in relation to delivering banking services to the Commonwealth and the issuing, re-issuing and cancelling Australian notes* > > * *to determine the policies of the RBA in relation to any matter not covered by the functions of the Monetary Policy Board or the Payments System Board.* > > *The role of the Monetary Policy Board is to determine the monetary policy of the RBA in a way that, in the Board’s opinion, best contributes to price stability and the maintenance of full employment in Australia.* > > *The functions of the existing Payments System Board are updated so that they are expressed in similar terms to those of the Governance Board and the Monetary Policy Board.* > > *The Bill has been referred to the Senate Economics Legislation Committee for inquiry and report by 21 March 2024.*",
+   "stage": "Consideration in detail",
+   "ayes": 82,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-12/5"
+  },
+  {
+   "key": "federal-senate-10481",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines PRESIDENT (): I will now deal with the Treasury Laws Amendment (Reserve Bank Reforms) Bill 2023. The question is that the bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/43"
+  },
+  {
+   "key": "federal-senate-10482",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Committee of the Whole amendments circulated by the Greens. The question is that, in schedule 1, items 2 and 4 to 6 and part 2 stand as printed. _The_ _Australian Greens_ _opposed_ _items 2 and 4 to 6 and part 2 of schedule 1 in the following terms_ (1) Schedule 1, item 2, page 3 (lines 20 to 23), to be opposed. (2) Schedule 1, items 4 to 6, page 4 (lines 1 to 9), to be opposed. (3) Schedule 1, Part 2, page 5 (lines 1 to 8), to be opposed.",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 6,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/44"
+  },
+  {
+   "key": "federal-senate-10483",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/45"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Reserve Bank Reforms) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00096",
+   "assent_date": "2024-11-29"
+  }
+ ]
+}

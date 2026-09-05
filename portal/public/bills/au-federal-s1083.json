@@ -1,0 +1,93 @@
+{
+ "key": "au-federal-s1083",
+ "title": "Regional Forest Agreements Legislation (Repeal) Bill 2017",
+ "short_title": "Regional Forest Agreements Legislation (Repeal) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2017-09-07",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1083%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1083%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1083%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1083%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1083%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1083_ems_1c560bad-ad44-486a-a1c9-7d4bff2ce235%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1083%22",
+   "document_date": "2017-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-07",
+  "sentences": [
+   "This bill would repeal the Regional Forest Agreements Act 2002, which has allowed logging in native forests to bypass national environmental protections.",
+   "The repeal would bring forestry operations under the Environment Protection and Biodiversity Conservation Act 1999, requiring the same environmental approvals as other extractive industries.",
+   "Existing forestry operations under certain agreements would keep their current exemptions until the earlier of the agreement's initial period ending or its termination."
+  ],
+  "changes": [
+   "Repeals the Regional Forest Agreements Act 2002.",
+   "Applies the EPBC Act to forestry operations.",
+   "Maintains existing EPBC exemptions for operations under certain agreements.",
+   "Ends the Commonwealth's compensation liability under section 8 of the RFA Act.",
+   "Applies export control laws to RFA wood."
+  ],
+  "affected": "Forestry operations and the timber industry in states with Regional Forest Agreements, including Victoria, Tasmania, Western Australia, and New South Wales.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:54Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

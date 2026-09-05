@@ -1,0 +1,184 @@
+{
+ "key": "au-federal-r5492",
+ "title": "Aboriginal Land Rights (Northern Territory) Amendment Bill 2015",
+ "short_title": "Aboriginal Land Rights (Northern Territory) Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5492_ems_3fd1c91a-8902-4997-b253-df51437bc1d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5492_ems_828986bc-5f71-420a-b679-681e03046595%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5492_ems_5dfda238-e24c-409b-9636-4dded959b45f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5492%22",
+   "document_date": "2015-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00175",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-323921",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The opposition supported the Aboriginal Land Rights (Northern Territory) Amendment Bill 2015, which expands township leasing, allows transfer of subleases to Aboriginal corporations, and repeals the ministerial override of land council decisions. The speaker also announced Labor commitments to justice reinvestment with three new launch sites and to addressing Indigenous incarceration of women."
+  },
+  {
+   "slug": "speech-323922",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment Bill 2015, arguing it would allow long-term leases on community-owned land to empower Indigenous individuals for economic development and home ownership by removing barriers to tenure and local decision-making, citing the Mutitjulu community near Uluru as an example of potential economic opportunities."
+  },
+  {
+   "slug": "speech-323923",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment Bill 2015, highlighting that section 19 leases already enable economic activity and homeownership, and that the amendments improve delegation of land council powers and add two new land parcels—Wickham River/Simpson Desert and Uleperte."
+  },
+  {
+   "slug": "speech-323924",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aboriginal Land Rights (Northern Territory) Amendment Bill, which expands the Executive Director of Township Leasing's functions to hold subleases of Aboriginal land and resolves tenure issues at Mutitjulu. The speaker noted that over 80% of mineral value in the Northern Territory comes from Aboriginal-owned land, generating more than $1 billion annually."
+  },
+  {
+   "slug": "speech-323925",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-24",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment Bill 2015 was summed up, arguing it will empower Indigenous landowners through localised decision-making, resolve tenure issues, and streamline land council operations. Key measures include enabling a sublease at Mutitjulu community near Uluru, improving delegation of land council functions, varying administrative boundaries, and scheduling three parcels of land for return in the Simpson Desert, Wickham River area, and Vernon Islands."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aboriginal Land Rights (Northern Territory) Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00175",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

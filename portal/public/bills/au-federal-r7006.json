@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7006",
+ "title": "Criminal Code Amendment (Prohibition of Nazi Symbols) Bill 2023 [No. 2]",
+ "short_title": "Criminal Code Amendment (Prohibition of Nazi Symbols) Bill 2023 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-22",
+ "originating_house": "representatives",
+ "sponsor": "LEESER, Julian, MP",
+ "sponsor_party": "monarchist",
+ "sponsor_person_id": "10888",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7006%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7006%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7006%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7006_ems_0cd6fe64-b54d-4580-8028-14f9d6b53ff8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7006%22",
+   "document_date": "2023-05-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-22",
+  "sentences": [
+   "This bill is part of a package that would make it a criminal offence to knowingly display a Nazi symbol without a reasonable excuse.",
+   "The offence would apply in Commonwealth places, the seat of government, Defence land and the territories, but not outside those areas.",
+   "Exceptions cover displays connected with Buddhism, Hinduism or Jainism, and displays made in good faith for scientific, educational, artistic, journalistic or public interest purposes."
+  ],
+  "changes": [
+   "Create a new criminal offence for knowingly displaying a Nazi symbol.",
+   "Limit the offence to specific Commonwealth jurisdictions.",
+   "Provide exceptions for religious and legitimate public interest displays."
+  ],
+  "affected": "Anyone who displays a Nazi symbol in certain Commonwealth-controlled areas.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

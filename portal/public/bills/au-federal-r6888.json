@@ -1,0 +1,101 @@
+{
+ "key": "au-federal-r6888",
+ "title": "Ending Indefinite and Arbitrary Immigration Detention Bill 2022",
+ "short_title": "Ending Indefinite and Arbitrary Immigration Detention Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-08-01",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6888%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6888%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6888%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6888_ems_1cab27c2-a881-4ce0-9822-ca18fff6e207%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6888%22",
+   "document_date": "2022-08-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-08-01",
+  "sentences": [
+   "The bill would make immigration detention the last resort for non-citizens and refugees, requiring it to be lawful, necessary, proportionate and as short as possible.",
+   "It would end mandatory detention, dismantle offshore detention policies, and require independent monitoring of detention conditions and independent oversight of all decisions.",
+   "The bill would implement several international human rights treaties into Australian domestic law, including the Refugee Convention and the International Covenant on Civil and Political Rights."
+  ],
+  "changes": [
+   "Make alternatives to detention the preferred option in almost all cases.",
+   "Require immigration detention to meet standards of lawfulness, necessity and proportionality.",
+   "End mandatory detention and dismantle offshore detention policies."
+  ],
+  "affected": "Non-citizens and refugees in immigration detention or under Australia's custodial responsibility.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-420589",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-420591",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "The member moved the Ending Indefinite and Arbitrary Immigration Detention Bill 2022, which would abolish mandatory detention of asylum seekers and refugees, require community alternatives, set time limits, and ensure independent oversight. He cited 1,512 people in immigration detention as of March 2022, average 700 days held, costs of $362,000 per person per year in detention vs $4,500 on a bridging visa, and over $10 billion spent on offshore processing since 2013."
+  },
+  {
+   "slug": "speech-420592",
+   "speaker": "Kylea Tink",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-08-01",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Ending Indefinite and Arbitrary Immigration Detention Bill 2022, arguing that Australia’s immigration detention system is uniquely cruel and costly, with over 1,500 people held onshore for an average of 700 days and more than 200 still offshore in Nauru or Papua New Guinea."
+  }
+ ],
+ "acts": []
+}

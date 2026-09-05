@@ -1,0 +1,1183 @@
+{
+ "key": "au-federal-r7422",
+ "title": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026",
+ "short_title": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-01-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2026-01-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-01-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7422_ems_615500f2-9cd2-4827-988c-a40c32fe6398%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7422_ems_d1a9f356-5204-4fbe-abdf-49b985a6a046%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7422_ems_28695e6d-e1d8-43b6-a6d0-bd5599f8ce9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7422_ems_b424e5f1-cc34-4aef-ad69-d7373a4298bc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7422%22",
+   "document_date": "2026-01-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00002",
+   "document_date": "2026-01-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9810",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "question": "Milton Dick The House will now consider the bill in detail, in accordance with the resolution agreed to on 19 January 2026. The bill will be now taken as a whole. The question is that the bill be agreed to. Phillip Thompson I move the amendment circulated in my name: (1) Schedule 1, page 45 (after line 10), at the end of the Schedule, add: Part 8 — Burning or desecrating the Australian flag _Criminal Code Act 1995_ 66 After Subdivision B of Division 80 of the _Criminal Code_ Insert: Subdivision BA — Burning or desecrating the Australian flag 80.1AD — Burning or desecrating the Australian flag A person commits an offence if the person burns or desecrates the Australian National Flag (within the meaning of the _Flags Act 1953_). Penalty: Imprisonment for 2 years. The Australian national flag is far more than stitched fabric fluttering in the wind. It is woven into the very fabric of our nation. It is a living symbol of who we are, the values we hold and the price that has been paid in blood, service and sacrifice to preserve our way of life. For generations of Australians, the flag has stood as a unifying emblem, raised in moments of triumph and lowered in moments of profound national grief. It is worn with pride on the shoulders of our Australian Defence Force, and it is draped with solemn honour over the coffins of those who never came home. I have buried friends, my brothers, beneath that flag—mates who were killed in combat, who died in training or who were taken by the battles that followed them home. I have stood at gravesites where the Australian flag was the final gesture of gratitude that a nation could offer. That flag does not represent an idea alone; it represents lives given, families broken and a debt that can never be repaid. That is why the growing scenes of flag burning and flag desecration on our streets strike such a raw national nerve. Over the past year, Australians have watched protesters deliberately desecrate and torch our national flag. For th",
+   "stage": "Consideration in detail",
+   "ayes": 45,
+   "noes": 94,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 89
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-01-20/4"
+  },
+  {
+   "key": "federal-representatives-9811",
+   "date": "2026-01-20",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2026-01-20.73.4) to agree with the amended form of the bill. This means they can now decide whether to pass it altogether. #### Rebellion The Coalition was split on this vote, with the Liberal Party and Liberal National Party (with one exception) voting \"yes\" and the National Party split with one MP voting \"no\" and another \"yes\". The one LNP exception was Flynn MP [Colin Boyce](https://theyvoteforyou.org.au/people/representatives/flynn/colin_boyce), who crossed the floor to vote \"no\" against the rest of the Liberal National Party. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd034), which is a document prepared by the parliamentary library: > *On 12 January 2026, the Prime Minister announced that the Parliament would be recalled to consider the Combatting Antisemitism, Hate and Extremism Bill 2026. While the Bill has yet to have been tabled in Parliament an Exposure Draft of the Bill was released on 13 January 2026. This Bills Digest has been prepared in relation to the Exposure Draft of the Bill (the Bill).* > > *The Bill aims to combat antisemitism, hate and extremism ... laws in Australia and includes a number of significant amendments, such as:* > > * *introducing a range of new offences including an aggravated offence for religious, spiritual or other leaders who advocate or threaten violence; and a racial vilification offence that makes it a crime to promote or incite racial, national or ethnic hatred or disseminate ideas of superiority based on such factors* > > * *newly defining ‘hate crime’ in Commonwealth law as certain crimes targeting persons based on race or national or ethnic origin* > > * *providing a new framework to allow organisations to be listed in regulations as ‘prohibited hate groups’, and introducing a range of offences connected to hate groups* > > * *amending",
+   "stage": "Consideration in detail",
+   "ayes": 116,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 85,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-01-20/5"
+  },
+  {
+   "key": "federal-senate-9819",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to the order agreed to yesterday, the time allotted for debate on this bill has expired. I will now put the questions before the chair and then put the questions on the remaining stages of the bill. I will deal first with the second reading amendments, starting with the amendment moved by Senator Payman and also on behalf of Senators David Pocock, Lambie, Thorpe and Tyrrell. Nick McKim On behalf of the Australian Greens, I request that part (a) be put separately to part (b). I confirm that we will be voting differently on those two parts. Sue Lines The question is that the amendment on sheet 3612 be agreed to. The Greens have requested the amendment be split. We are dealing with part (a).",
+   "stage": "Limitation of debate",
+   "ayes": 16,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/8"
+  },
+  {
+   "key": "federal-senate-9820",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Sue Lines The question is that part (b) of the amendment on sheet 3612 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 6,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/9"
+  },
+  {
+   "key": "federal-senate-9821",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted against [two identical amendments](https://www.openaustralia.org.au/senate/?gid=2026-01-20.130.1) introduced by the Nationals and by Pauline Hanson's One Nation, which means they were unsuccessful. There was one rebellion, with Liberal Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (SA) voting Yes against the rest of the Liberal Party, who voted No. ### Amendment text > *Omit all words after \"That\", substitute \"the bill be referred to the Legal and Constitutional Affairs Legislation Committee for inquiry and report by 2 March 2026\".*",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 49,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/10"
+  },
+  {
+   "key": "federal-senate-9822",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-01-20.132.1) to read the bill for a second time. In other words, they voted to agree with its main idea. This means they can now discuss it in more detail. #### Rebellion The Coalition was split on this vote, with the Liberal Party (with one exception) voting \"yes\" and the National Party voting \"no\". The one Liberal Party exception was SA Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (Liberal), who crossed the floor to vote \"no\" against the rest of the Liberal Party. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd034), which is a document prepared by the parliamentary library: > *On 12 January 2026, the Prime Minister announced that the Parliament would be recalled to consider the Combatting Antisemitism, Hate and Extremism Bill 2026. While the Bill has yet to have been tabled in Parliament an Exposure Draft of the Bill was released on 13 January 2026. This Bills Digest has been prepared in relation to the Exposure Draft of the Bill (the Bill).* > > *The Bill aims to combat antisemitism, hate and extremism ... laws in Australia and includes a number of significant amendments, such as:* > > * *introducing a range of new offences including an aggravated offence for religious, spiritual or other leaders who advocate or threaten violence; and a racial vilification offence that makes it a crime to promote or incite racial, national or ethnic hatred or disseminate ideas of superiority based on such factors* > > * *newly defining ‘hate crime’ in Commonwealth law as certain crimes targeting persons based on race or national or ethnic origin* > > * *providing a new framework to allow organisations to be listed in regulations as ‘prohibited hate groups’, and introducing a range of offences connected to hate groups* > > * *amending the reasonable person tes",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/11"
+  },
+  {
+   "key": "federal-senate-9823",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Committee of the Whole amendments, starting with the amendment circulated by the opposition. The question is that the amendment on sheet 3617 be agreed to. _Opposition's circulated amendment_ (1) Schedule 1, page 42 (after line 18), at the end of the Schedule, add: Part 8 — Burning or desecrating the Australian flag _Criminal Code Act 1995_ 67 After Subdivision B of Division 80 of the _Criminal Code_ Insert: Subdivision BA — Burning or desecrating the Australian flag 80.1AD Burning or desecrating the Australian flag A person commits an offence if the person burns or desecrates the Australian National Flag (within the meaning of the _Flags Act 1953_). Penalty: Imprisonment for 2 years.",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/12"
+  },
+  {
+   "key": "federal-senate-9824",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2026-01-20.136.4) introduced by the National Party of Australia, which means they were unsuccessful. There was one rebellion, with Liberal Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (SA) voting Yes against the rest of the Liberal Party, who voted No. ### Amendment text > *(1) Schedule 1, item 13, page 14 (after line 8), after subparagraph 114A.4(1)(a)(i), insert:* > >> *(ia) has glorified, morally supported or excused terrorism; or* > > *(2) Schedule 1, item 13, page 14 (after line 12), after paragraph 114A.4(1)(a), insert:* > >> *(ab) if the AFP Minister has given the organisation a notice under subsection (6) asking the organisation to disavow violence and terrorism—there is no disavowal undertaking (see subsections (6) to (9)) in effect for the organisation; and* > > *(3) Schedule 1, item 13, page 15 (after line 14), at the end of section 114A.4, add:* > >> *One-off disavowal undertaking process* >> >> *(6) Before the Governor-General makes a prohibited hate group regulation specifying an organisation, the AFP Minister may give the organisation a written notice asking the organisation to disavow violence and extremism.* >> >> *(7) The organisation may, before the end of 7 days after receiving the notice, give the AFP Minister a written undertaking (a disavowal undertaking) stating that the organisation:* >> >>> *(a) disavows violence and terrorism; and* >>> >>> *(b) will not engage in, prepare or plan to engage in, or assist the engagement in violence or terrorism.* >> >> *(8) For the purposes of paragraph 114A.4(1)(ab), a disavowal undertaking:* >> >>> *(a) takes effect for an organisation when it is received by the AFP Minister; and* >>> >>> *(b) if, at any time after the undertaking is given, the AFP Minister becomes satisfied that it is reasonably necessary for the organisation to be specified by a prohibited hate group regulation to prote",
+   "stage": "Limitation of debate",
+   "ayes": 9,
+   "noes": 49,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/13"
+  },
+  {
+   "key": "federal-senate-9825",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2026-01-20.138.1) introduced by the National Party of Australia, which means they were unsuccessful. There was one rebellion, with Liberal Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (SA) voting Yes against the rest of the Liberal Party, who voted No. ### Amendment text > *(1) Schedule 1, item 13, page 9 (lines 13 to 19), omit paragraph 114A.1(1)(a), substitute:* > >> *(a) protect the Australian community or part of the Australian community from politically motivated serious violence or the promotion of communal serious violence by prohibiting organisations that engage in, prepare or plan to engage in, or assist the engagement in, or advocate engaging in, conduct constituting a hate crime; and* > > *(2) Schedule 1, item 13, page 10 (lines 4 to 9), omit subsection 114A.1(2).* > > *(3) Schedule 1, item 13, page 12 (lines 28 to 31), omit paragraph 114A.3(2)(b), substitute:* > >> *(b) that would, in all the circumstances, cause a reasonable person who is the target, or a member of a target group, to fear violence.* > > *(4) Schedule 1, item 13, page 13 (line 12), omit subparagraph 114A.3(5)(a)(i), substitute:* > >> *(i) causing serious harm that is physical harm to a person (the targeted person);*",
+   "stage": "Limitation of debate",
+   "ayes": 21,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/14"
+  },
+  {
+   "key": "federal-senate-9826",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026 - Limitation of Debate - Repealing mandatory minimum sentences for hate crime offences",
+   "stage": "Limitation of debate",
+   "ayes": 14,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/15"
+  },
+  {
+   "key": "federal-senate-9827",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026 - Limitation of Debate - Review and lawful political expression",
+   "stage": "Limitation of debate",
+   "ayes": 17,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/16"
+  },
+  {
+   "key": "federal-senate-9828",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026 - Limitation of Debate - Expand protections to other groups (religion, LGBTQIA+ and disability)",
+   "stage": "Limitation of debate",
+   "ayes": 13,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/17"
+  },
+  {
+   "key": "federal-senate-9829",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026 - Limitation of Debate - Character concerns and right to refuse visas",
+   "stage": "Limitation of debate",
+   "ayes": 44,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/18"
+  },
+  {
+   "key": "federal-senate-9830",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-01-20.149.12) introduced by Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means it failed. #### Rebellion The Coalition was split on this vote, with the Liberal Party (with one exception) voting \"no\" and the National Party and LNP voting \"yes\". The one Liberal Party exception was SA Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (Liberal), who crossed the floor to vote \"yes\" against the rest of the Liberal Party. ### Amendment text > *(1) Schedule 1, item 13, page 14 (after 18), after subsection 114A.4(1), insert:* > >> *Parliamentary approval* >> >> *(1A) A prohibited hate group regulation does not come into effect until it has been approved by a resolution supported by an absolute majority of each House of the Parliament.*",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/19"
+  },
+  {
+   "key": "federal-senate-9831",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-01-20.151.1) introduced by Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means it failed. #### Rebellion The Coalition was split on this vote, with the Liberal Party (with one exception) voting \"no\" and the National Party and LNP voting \"yes\". The one Liberal Party exception was SA Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) (Liberal), who crossed the floor to vote \"yes\" against the rest of the Liberal Party. ### Amendment text > *(1) Schedule 1, item 13, page 25 (after line 24), at the end of Division 114C, add:* > >> *114C.3 Cessation of effect of Part* >> >> *This Part ceases to have effect at the end of 20 January 2029.*",
+   "stage": "Limitation of debate",
+   "ayes": 22,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/20"
+  },
+  {
+   "key": "federal-senate-9832",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026 - Limitation of Debate - Protected political speech and purpose and application of Act",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/21"
+  },
+  {
+   "key": "federal-senate-9833",
+   "date": "2026-01-20",
+   "house": "senate",
+   "question": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Bill 2026 - Limitation of Debate - Pass the bill",
+   "stage": "Limitation of debate",
+   "ayes": 38,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-01-20/22"
+  },
+  {
+   "key": "federal-senate-9974",
+   "date": "2026-03-04",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to the order agreed to earlier today, I will put the question on the government amendments to general notices of motion Nos 357, 358, 361 to 367, 371, 372, 374, 375 and 382, moved yesterday. The question is that the amendments be agreed to.",
+   "stage": "Documents",
+   "ayes": 23,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-04/8"
+  },
+  {
+   "key": "federal-senate-9976",
+   "date": "2026-03-04",
+   "house": "senate",
+   "question": "Sue Lines The question is that general business notice of motion No. 357 standing in the name of Senator Faruqi be agreed to.",
+   "stage": "Documents",
+   "ayes": 37,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-04/10"
+  },
+  {
+   "key": "federal-senate-10094",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Fatima Payman I move: That there be laid on the table by the Minister representing the Minister for Home Affairs, by no later than 5 pm on Thursday, 23 April 2026, copies of all ministerial submissions, records of conversation, letters, briefing notes, meeting agendas, file notes, meeting invitations, meeting notes, meeting minutes, emails and instant/electronic messages, created between 14 December 2025 and 20 January 2026 inclusive, between the Minister for Home Affairs and/or his office and the Department of Home Affairs in relation to the development of the: (a) Combatting Antisemitism, Hate and Extremism Bill 2026; (b) _Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Act 2026_; and (c) _Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Act 2026_. Slade Brockman The question is that motion 422 be agreed to.",
+   "stage": "Documents",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/12"
+  },
+  {
+   "key": "federal-senate-10095",
+   "date": "2026-03-23",
+   "house": "senate",
+   "question": "Fatima Payman I move: That there be laid on the table by the Minister representing the Attorney-General, by no later than 5 pm on Thursday, 23 April 2026, copies of all ministerial submissions, records of conversation, letters, briefing notes, meeting agendas, file notes, meeting invitations, meeting notes, meeting minutes, emails and instant/electronic messages, created between 14 December 2025 and 20 January 2026 inclusive, between the Attorney-General and/or her office and the Attorney-General's Department in relation to the development of the: (a) Combatting Antisemitism, Hate and Extremism Bill 2026; (b) _Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Act 2026_; and (c) _Combatting Antisemitism, Hate and Extremism (Firearms and Customs Laws) Act 2026_. Slade Brockman The question is that general business notice of motion No. 423 be agreed to.",
+   "stage": "Documents",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-23/13"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Combatting Antisemitism, Hate and Extremism (Criminal and Migration Laws) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00002",
+   "assent_date": "2026-01-21"
+  }
+ ]
+}

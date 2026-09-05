@@ -1,0 +1,157 @@
+{
+ "key": "au-federal-r6487",
+ "title": "Treasury Laws Amendment (2019-20 Bushfire Tax Assistance) Bill 2020",
+ "short_title": "Treasury Laws Amendment (2019-20 Bushfire Tax Assistance) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-02-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6487_ems_f9d91fda-d310-40bf-8db2-0f5c38416fcb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6487%22",
+   "document_date": "2020-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00001",
+   "document_date": "2020-02-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-386886",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "The opposition supported the Treasury Laws Amendment (2019-20 Bushfire Tax Assistance) Bill 2020, which makes disaster relief payments and volunteer firefighter compensation tax-free and grants deductible gift recipient status to two Business Council of Australia trusts. The speaker also argued the government should have convened COAG and met with fire chiefs sooner to address ongoing concerns."
+  },
+  {
+   "slug": "speech-386887",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (2019-20 Bushfire Tax Assistance) Bill 2020, which provides tax relief for individuals and businesses affected by the bushfires, and announced they will introduce a climate change bill on 23 March 2020 with a net zero emissions target by 2050, risk assessments, and adaptation plans, citing that 2019 was Australia’s hottest year on record and that fire danger days could increase by 15–70% by 2050."
+  },
+  {
+   "slug": "speech-386888",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "Centre Alliance supported the Treasury Laws Amendment (2019-20 Bushfire Tax Assistance) Bill 2020, but argued that bushfire grant guidelines are failing primary producers and small businesses, citing the $75,000 PIRSA grant’s $100,000 off-farm income threshold, insurance claim delays, and lack of support for loss of income; the party also welcomed DGR status for SAVEM and urged the government to review recovery guidelines."
+  },
+  {
+   "slug": "speech-386889",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "The MP supported the Bushfire Tax Assistance Bill but argued it is insufficient, citing specific businesses in Indi that have lost income and calling for increased disaster recovery payments ($3,000 adults, $1,000 children), a 26-week allowance, expansion of ATO deferral postcodes, and urgent support for the grape industry."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2019-20 Bushfire Tax Assistance) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00001",
+   "assent_date": "2020-02-13"
+  }
+ ]
+}

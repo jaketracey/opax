@@ -1,0 +1,534 @@
+{
+ "key": "au-federal-r6531",
+ "title": "Treasury Laws Amendment (2020 Measures No. 2) Bill 2020",
+ "short_title": "Treasury Laws Amendment (2020 Measures No. 2) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-09-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6531_ems_901c3b44-ac3b-4a76-a1c6-40f624ea031f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6531%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00079",
+   "document_date": "2020-09-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "This bill would amend Australia's hybrid mismatch rules to close tax avoidance loopholes involving trusts, partnerships and cross-border financing.",
+   "It would clarify how the rules apply to entities such as deducting hybrids, MEC groups and consolidated groups, and specify that foreign municipal or State taxes are generally not treated as foreign income tax.",
+   "The bill would also allow franking benefits on certain Additional Tier 1 capital instrument distributions that give rise to a foreign income tax deduction, and include the deduction amount in the distributing entity's assessable income."
+  ],
+  "changes": [
+   "Clarify the operation of hybrid mismatch rules for trusts and partnerships.",
+   "Ensure the hybrid mismatch integrity rule can apply to financing arrangements designed to circumvent the rules.",
+   "Allow franking benefits on distributions made on Additional Tier 1 capital instruments that give rise to a foreign income tax deduction."
+  ],
+  "affected": "Entities subject to the hybrid mismatch rules, including trusts, partnerships, MEC groups, consolidated groups and issuers of Additional Tier 1 capital instruments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6404",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (2020 Measures No. 2) Bill 2020 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 57,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 106
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-16/12"
+  },
+  {
+   "key": "federal-representatives-6427",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (2020 Measures No. 2) Bill 2020 - Consideration of Senate Message - Disagree with Senate amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 56,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 107
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-17/11"
+  },
+  {
+   "key": "federal-representatives-6428",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-06-17.139.1) \"*That the reasons be adopted,*\" which means that it succeeded.",
+   "stage": "Consideration of Senate message",
+   "ayes": 56,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 107
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-17/12"
+  },
+  {
+   "key": "federal-senate-6431",
+   "date": "2020-06-17",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2020 Measures No. 2) Bill 2020 - Second Reading - Fair Work Commission oversight",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "earliest": 21,
+    "dated": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-17/2"
+  },
+  {
+   "key": "federal-senate-6432",
+   "date": "2020-06-17",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2020 Measures No. 2) Bill 2020 - in Committee - Exemptions for large proprietary companies",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-17/3"
+  },
+  {
+   "key": "federal-senate-6441",
+   "date": "2020-06-17",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2020 Measures No. 2) Bill 2020 - Consideration of House of Representatives Message - Do not insist on amendments",
+   "stage": "Consideration of House message",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 28,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-17/12"
+  },
+  {
+   "key": "federal-representatives-6454",
+   "date": "2020-06-18",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (2020 Measures No. 2) Bill 2020 - Consideration of Senate Message - Disagree with Senate amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 55,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 103
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-18/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391037",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2020 Measures No. 2) Bill 2020 was moved, including measures to amend hybrid mismatch rules, streamline employer child support reporting via Single Touch Payroll, establish a deductible gift recipient category for men's sheds and women's sheds, provide $154 million for World Bank capital raising, allow the ATO to share JobKeeper information with the Fair Work Commission and Ombudsman, and add eight organisations (C.E.W. Bean Foundation, Governor Phillip International Scholarship Trust, High Resolves, Australian Academy of Law, Foundation Broken Hill, Motherless Daughters, Superannuation Consumers' Centre, and The Headstone Project (Tasmania)) to the DGR list."
+  },
+  {
+   "slug": "speech-392972",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the House should agree to Senate amendments removing a corporate law discrimination that lets some large companies avoid transparency, noting the measure was meant to be temporary 25 years ago and that ASIC recommended its removal five years ago, while criticising the government for inaction as national debt reached $673 billion."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2020 Measures No. 2) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00079",
+   "assent_date": "2020-09-03"
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1388",
+ "title": "Protecting the Spirit of Sea Country Bill 2023",
+ "short_title": "Protecting the Spirit of Sea Country Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-08",
+ "originating_house": "senate",
+ "sponsor": "COX, Sen Dorinda",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10964",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1388%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1388%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1388%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1388_ems_96cf4458-4c60-4133-b549-ec36b6c5f644%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1388%22",
+   "document_date": "2023-08-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-08",
+  "sentences": [
+   "The bill would require offshore oil and gas companies to consult Traditional Owners before submitting project proposals.",
+   "It would add First Nations communities and knowledge holders to the legal definition of 'Relevant Person' and create mandatory consultation standards.",
+   "The bill responds to a court case where Santos was found not legally required to consult Traditional Owners about a pipeline through their sea country."
+  ],
+  "changes": [
+   "Expands the definition of 'Relevant Person' to include Traditional Owners and knowledge holders.",
+   "Requires the creation of consultation standards for offshore projects.",
+   "Mandates that underwater and intangible cultural heritage be identified in project proposals and environment plans.",
+   "Requires evaluation of impacts, risks, and alternative options for offshore projects."
+  ],
+  "affected": "Traditional Owners and First Nations communities, fossil fuel companies, and the offshore petroleum industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

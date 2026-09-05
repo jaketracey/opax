@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6058",
+ "title": "Banking Amendment (Rural Finance Reform) Bill 2018",
+ "short_title": "Banking Amendment (Rural Finance Reform) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-26",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Nick Xenophon Team",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-09-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6058%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6058%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6058_ems_f30a249a-e617-467c-95e9-38852a90c7ba%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6058%22",
+   "document_date": "2018-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-26",
+  "sentences": [
+   "This bill is part of a package that would give small family-run farms extra protections when borrowing from banks.",
+   "Banks would be banned from including certain default clauses, from changing loan terms without notice, and from charging borrowers for valuations or audits.",
+   "The rules would start on the first 1 July after the bill becomes law."
+  ],
+  "changes": [
+   "Banks must give borrowers a one-page summary of clauses that could trigger a non-monetary default.",
+   "Banks are prohibited from unilaterally valuing loan security.",
+   "Banks cannot include catch-all material adverse change clauses except for fraud or criminal activity.",
+   "Banks must give 30 business days' notice before using a general restriction covenant, except for fraud or criminal activity.",
+   "Banks must give borrowers valuation instructions and final reports at no cost.",
+   "Banks must give 90 business days' notice if they decide not to renew or extend a loan."
+  ],
+  "affected": "Small primary production businesses that borrow from authorised deposit-taking institutions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359889",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Banking Amendment (Rural Finance Reform) Bill 2018 and highlighted a crisis of suicide and mental illness in rural and regional Australia, citing a lack of coordinated services and a national strategy. They called for a holistic government plan with \"boots on the ground\" rather than relying on the NBN or mobile broadband to address the problem."
+  }
+ ],
+ "acts": []
+}

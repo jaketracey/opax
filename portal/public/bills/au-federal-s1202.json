@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1202",
+ "title": "Live Animal Export (Slaughter) Prohibition Bill 2019",
+ "short_title": "Live Animal Export (Slaughter) Prohibition Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": "FARUQI, Sen Mehreen",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10912",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1202%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1202%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1202%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1202_ems_84094633-16b7-4b46-89a9-5f4fb4ee4dd7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1202%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would ban exporting live animals from Australia for slaughter.",
+   "It would make it illegal to export livestock for slaughter, starting two years after the law begins.",
+   "The ban applies to cattle, calves, sheep, lambs, goats, and other prescribed animals."
+  ],
+  "changes": [
+   "The bill amends the Export Control Act 1982.",
+   "It makes the export of livestock for slaughter unlawful.",
+   "It defines livestock for slaughter as animals intended to be exported and killed overseas.",
+   "It provides that regulations are taken to have declared livestock for slaughter as prescribed goods.",
+   "It provides that regulations are taken to have absolutely prohibited the export of livestock for slaughter."
+  ],
+  "affected": "Exporters of live animals for slaughter.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

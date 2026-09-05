@@ -1,0 +1,574 @@
+{
+ "key": "au-federal-r6716",
+ "title": "Fuel Security Bill 2021",
+ "short_title": "Fuel Security Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science, Energy and Resources",
+ "status": "passed",
+ "status_as_of": "2021-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6716_ems_e2da35cc-16b8-4c15-8463-a24810555796%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6716%22",
+   "document_date": "2021-05-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00065",
+   "document_date": "2021-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-26",
+  "sentences": [
+   "The bill would require industry to hold minimum amounts of key transport fuels and offer payments to refineries to keep operating until mid-2027.",
+   "The Minister would set a national consumption target, and each company's obligation would be based on that target and its past operations.",
+   "The diesel minimum stockholding obligation would be 40% above pre-COVID-19 levels from mid-2024, and the fuel security services payment would be up to 1.8 cents per litre when refineries are making losses."
+  ],
+  "changes": [
+   "Establishes a minimum stockholding obligation for industry to hold baseline quantities of gasoline, diesel and kerosene.",
+   "Creates a fuel security services payment for refinery operators who commit to refining until at least 30 June 2027.",
+   "Sets the diesel minimum stockholding obligation 40% higher than pre-COVID-19 levels from mid-2024.",
+   "Provides for quarterly payments of the fuel security services payment in arrears.",
+   "Allows recovery of payments if refining stops before the commitment period ends."
+  ],
+  "affected": "Corporate entities that import or refine transport fuels, and refinery operators.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7269",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bills be read for a second time*\" (parliamentary jargon for agreeing with the main idea of the bills). This means the amendment was unsuccessful. ### Amendment text > *Omit all words after \"That\", substitute \"the bill be withdrawn and the Senate calls on the Government to divert the full funding amount to a national electric vehicle strategy that includes:* > > *(a) clear consumer incentives to ensure rapid electric vehicle uptake; and* > > *(b) public investment in a national fast charging infrastructure network.*",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 19,
+    "dated": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/1"
+  },
+  {
+   "key": "federal-senate-7270",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted in favour of reading the bills for [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is parliamentary jargon for agreeing with the main idea of the bills. The Senate can now discuss it in more detail. ### What is the bills' main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6716), the bills were introduced in order to: * *establish a minimum stockholding obligation for corporate entities that undertake certain activities (broadly, importing and refining) in relation to certain transport fuels to hold a minimum quantity of those fuels nationally; and* * *enable a production payment for refinery operators (referred to as a fuel security services payment) to provide an adjustable cent per litre payment to refineries in return for a commitment to continue refining until at least 30 June 2027.*",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 19,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/2"
+  },
+  {
+   "key": "federal-senate-7271",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against the [motion](https://www.openaustralia.org.au/senate/?id=2021-06-22.16.1): > *That the Fuel Security Bill 2021 be referred to the [Economics Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Economics) for inquiry and report by 2 August 2021.* This means the motion failed.",
+   "stage": "Reference to Committee",
+   "ayes": 9,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 16,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/3"
+  },
+  {
+   "key": "federal-senate-7281",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6716_amend_677f076c-a658-4879-9531-1c892ef859df%22;rec=0) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice), which means they failed. Senator Rice [explained the amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.214.1): > *These amendments basically have two parts. One is essentially that this legislation shouldn't proceed until we've also got an electric vehicles strategy and we've also got something else going on other than ongoing dependence on fossil fuels. The second part of these amendments is that there should be a review of this act by the Productivity Commission to see whether the way the money being spent is the best way to spend the money. Specifically, it would amend the bill to ensure that it doesn't commence until the passage of the Electric Vehicles Accountability Bill 2021. That's the private senator's bill that I am putting forward.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 16,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/13"
+  },
+  {
+   "key": "federal-senate-7282",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.224.1) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means they failed. ### Amendment text > *(1) Clause 46, page 37 (lines 23 to 27), omit the clause, substitute:* > > *46 Publication of information* > > *(1) The Minister must table in each House of the Parliament, as soon as practicable but no later than 15 sitting days after the end of each financial year, a statement relating to fuel security services payments made during that year.* > > *(2) Without limiting subsection (1), the statement must include the following information:* > >> *(a) the total amount of fuel security services payment paid for quarters ending in each financial year;* >> >> *(b) a list of each FSSP fuel for which a fuel security services payment was paid;* >> >> *(c) for each fuel security services payment paid:* >> >>> *(i) the FSSP fuel for which the payment was paid; and* >>> >>> *(ii) the amount of the fuel security services payment ; and* >>> >>> *(iii) the number of litres of FSSP fuel refined; and* >>> >>> *(iv) the number of cents paid per litre of FSSP fuel; and* >>> >>> *(v) the name of the person paid;* >> >> *(d) the total number of litres of each FSSP fuel for which a fuel security services payment was paid;* >> >> *(e) any other information required by the rules.* > > *(2) The Secretary must publish, on the Department's website, the Minister's statement under subsection (1).*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 18,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-406891",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the Fuel Security Bill 2021 to secure Australia's refining capability and fuel security, including agreements with Ampol and Viva refineries to operate until at least mid-2027, a fuel security service payment, and a minimum stockholding obligation that will increase diesel stocks by 40%."
+  },
+  {
+   "slug": "speech-408166",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "Labor will support the Fuel Security Bill 2021 and facilitate its passage, citing the government's failure on fuel security including 950 job losses, closure of half of Australia's refineries, and non-compliance with the 90-day fuel stock requirement (currently at 58 days). The party also announced a policy to abolish tariffs on electric vehicles below the luxury car tax threshold and provide a fringe benefits tax concession for employers."
+  },
+  {
+   "slug": "speech-408168",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fuel Security Bill 2021, announcing a fuel security services payment for the Ampol refinery in Brisbane and the Geelong facility, and a minimum stockholding obligation from 1 July next year. They cited $1.2 billion for low-emission vehicle technologies and a $74 million future fuels package, and quoted AWU national secretary Dan Walton endorsing the bill."
+  },
+  {
+   "slug": "speech-408170",
+   "speaker": "Ross Vasta",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "The Fuel Security Bill 2021 was argued to lock in Australia's sovereign refining capability and fuel security, backing local jobs in Bonner and supporting the Ampol refinery in Lytton and Victoria's Viva Energy refinery in Geelong until 2027, with measures including a fuel security service payment and minimum stockholding obligation."
+  },
+  {
+   "slug": "speech-408172",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "Supported the Fuel Security Bill 2021, which includes a fuel security services payment subsidising refineries up to 1.2 cents per litre to maintain production until mid-2027."
+  },
+  {
+   "slug": "speech-408336",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fuel Security Bill 2021, while supported, does not adequately address years of government neglect that led to the closure of the Kwinana and Altona refineries, leaving Australia with only two refineries, non-compliance with IEA 90-day oil reserve obligations, and no sovereign shipping capability. They criticised the government for storing fuel in the US, failing to adopt fuel emissions standards, and undermining Australian shipping, citing the loss of 100 flagged vessels to barely 10 and the MV Portland workers' job losses."
+  },
+  {
+   "slug": "speech-408337",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "The Fuel Security Bill 2021 was argued as necessary to secure Australia’s fuel supply for economic and defence needs by keeping domestic refineries open, saving 1,250 direct jobs and 1,700 construction jobs, while also enabling cleaner fuel standards."
+  },
+  {
+   "slug": "speech-408338",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government has failed on fuel security, leading to the closure of half of Australia's refineries, including BP's Kwinana refinery in October 2020 and ExxonMobil's Altona refinery in February 2021. The speaker supported the Fuel Security Bill 2021, which introduces a capped fuel security service payment to the two remaining refineries and imposes a minimum stock obligation on fuel importers, while criticising the government for delaying action and leaving Australia with only 58 days of fuel stocks, far short of the 90-day international obligation."
+  },
+  {
+   "slug": "speech-408343",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fuel Security Bill, arguing it is essential for national security by underpinning the Ampol refinery in Brisbane and the Viva refinery in Geelong, but noted it came too late for ExxonMobil's Altona and BP's Kwinana refineries. He highlighted the Viva refinery's economic contribution of $200 million in wages and over $1 billion in planned investment, and its deep personal and cultural significance to Geelong."
+  },
+  {
+   "slug": "speech-408344",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "The Fuel Security Bill 2021 and its consequential provisions were supported, creating a fuel security services payment with a collar of $10.20 per barrel and a cap of 1.8 cents per litre, and mandating minimum onshore fuel stockholdings from 1 July 2022, rising to a 40% increase in diesel holdings by 2024. The speech noted only two refineries remain—Ampol in Queensland and Viva in Geelong—and backed future fuels like hydrogen and biofuels."
+  },
+  {
+   "slug": "speech-408450",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the second reading amendment and argued that Australia's fuel security is critically vulnerable, with only 18 days of petrol, 22 days of diesel and 23 days of jet fuel cover, non-compliance with the IEA's 90-day obligation since 2012, and just two refineries remaining, while criticising the government for spending $2 billion on refineries instead of investing in electrification, shipping and energy resilience."
+  },
+  {
+   "slug": "speech-408453",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fuel Security Bill 2021, arguing its $2 billion subsidy for refineries lacks a parallel plan to transition to lower-emission transport, citing the need for coherent electric vehicle policies and noting that the package creates only about 3,000 jobs at a cost of nearly $800,000 per job."
+  },
+  {
+   "slug": "speech-408455",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported Labor’s amendment to the Fuel Security Bill 2021, arguing Australia’s liquid fuel security is dangerously inadequate due to 90% import reliance, only about three weeks of fuel cover against the 90-day IEA requirement, and just two remaining refineries at Lytton (Ampol) and Geelong (Viva Energy). They criticised the government’s proposed minimum stock obligations as too weak, dismissed the $94 million US fuel storage plan as ineffective, and called for much stronger measures, noting estimated storage costs of $6–7 billion against $270 billion in defence spending."
+  },
+  {
+   "slug": "speech-408460",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-408461",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's fuel security bills are insufficient due to ongoing failures, including the closure of half of Australia's refineries and non-compliance with International Energy Agency obligations for 90 days of oil reserves. They urged urgent approval of the Stolthaven fuel storage expansion in Newcastle, noting the government has not responded to applications submitted in March, and criticised the lack of an Australian-owned strategic fleet."
+  },
+  {
+   "slug": "speech-408462",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The Morrison government's fuel security package, supported by the Fuel Security Bill 2021 and related bill, will secure 1,250 jobs at the Ampol refinery in Brisbane and the Viva refinery in Geelong, with $250 million for infrastructure upgrades and a minimum stockholding obligation to meet International Energy Agency requirements, including a fuel security services payment capped at 1.8 cents per litre."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fuel Security Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00065",
+   "assent_date": "2021-06-29"
+  }
+ ]
+}

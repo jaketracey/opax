@@ -1,0 +1,726 @@
+{
+ "key": "au-federal-r7081",
+ "title": "Treasury Laws Amendment (Support for Small Business and Charities and Other Measures) Bill 2023",
+ "short_title": "Treasury Laws Amendment (Support for Small Business and Charities and Other Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7081_ems_bcb1756f-3f4f-491f-9648-f4749ea23a1a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7081%22",
+   "document_date": "2023-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00052",
+   "document_date": "2024-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8516",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-11-14.8.2) to the usual second reading motion (which is that the bill be read a second time - parliamentary jargon for agreeing with the main idea of the bill). This means that the usual second reading motion will remain unchanged. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the former government provided extensive support for 3.6 million small and medium businesses, which employ almost 8 million Australians, including through tax relief to support investment and reduce costs; energy programs and initiatives to reduce their power bills; and providing billions in support to keep small businesses open and Australians in jobs during the pandemic;* >> >> *(b) small and medium businesses will be hurt the hardest by the Government's first round of workplace reforms, which the e61 institute analysis has shown will harm firm growth and hurt competition; and* >> >> *(c) that despite promising to only raise taxes on multinationals at the election, the Government has broken promises by raising taxes on superannuation, on unrealised capital gains, on franking credits, and end small business tax incentives; and* > > *(2) calls on the Government to support the Opposition's amendment to restore the Instant Asset Write Off to pre-COVID levels to boost productivity and take pressure off prices\".*",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 71
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-27/1"
+  },
+  {
+   "key": "federal-representatives-8517",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2023-11-27.38.1) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means they failed. ### What do these amendments do? Mr Steggall [explained that](https://www.openaustralia.org.au/debate/?id=2023-11-27.38.2): > *These amendments are important to improve the intent and quality of this legislation. Don't get me wrong; it is a good bill. Two key provisions, nonetheless, require amendment. The instant asset write-off and the energy incentive will no doubt go a long way in assisting small businesses feeling the immense pressure of inflation, interest rates and less consumer spending, amongst other issues. Small businesses are the backbone of the Australian economy. They account for one-third of Australia's GDP and they need targeted support. At the moment small businesses are facing a perfect storm. At home, like all Australians, they are facing cost-of-living price increases and high mortgage rates, but they're also facing reduced revenue in their businesses as consumers spend less but energy prices increase. It's incredibly important that this bill actually achieve its intent by being well targeted. The amendments I am proposing, after consulting with the Manly Business Chamber, the Mosman Chamber of Commerce and the Warringah Chamber of Commerce in my electorate, and the Council of Small Business Organisations Australia—COSBOA—more broadly, give all small businesses certainty and bring forward cash, giving them the opportunity to get more back at tax filing time and allowing them more time to invest and reduce their energy bills.* > > *In relation to the asset write-off, the amendments seek to increase the threshold for the instant asset write-off and the energy incentive bonus, taking the threshold from $20,000 to $50,000 respectively. Respectfully, for businesses to actually have the benefit",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 67
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-27/2"
+  },
+  {
+   "key": "federal-representatives-8518",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2023-11-27.41.1) introduced by Barker MP [Tony Pasin](https://theyvoteforyou.org.au/people/representatives/barker/tony_pasin) (Liberal), which means they failed. ### What do the amendments do? Mr Pasin [explained that](https://www.openaustralia.org.au/debate/?id=2023-11-27.41.1): > *The coalition amendments to this bill give effect to an extension of the instant asset write-off to 26,500 medium businesses and extend the value of assets eligible to $30,000.* ### Amendment text > *(1) Schedule 1, heading, page 4 (lines 1 and 2), omit \"$20,000 instant asset write-off for small business entities\", substitute \"$30,000 instant asset write-off for small and medium business entities\".* > > *(2) Schedule 1, page 4 (after line 2), after item 2, insert:* > >> *2A After subsection 328-180(3)* >> >> *Insert:* >> >> *Extension to medium business entities* >> >> *(3A) If you are an entity covered by subsection (3B) for an income year, then for the purposes of doing any of the following:* >> >>> *(a) deducting under subsection 328-180(1) of the Income Tax Assessment Act 1997 a proportion of the adjustable value of a depreciating asset for an income year in circumstances where paragraph (4)(d) of this section applies to you and the asset;* >>> >>> *(b) deducting under subsection 328-180(2) of that Act a proportion of an amount included in the second element of the cost for an asset in circumstances where paragraph (5)(e) of this section applies to you and the amount;* >>> >>> *(c) applying subsection 328-180(3) of that Act to you and an asset in circumstances where:* >>> >>>> *(i) paragraph (5)(e) of this section applies to you and an amount included in the second element of the asset's cost; and* >>>> >>>> *(ii) paragraph (6)(e) of this section applies to you for a deduction for the asset for an income year;* >>> >>> *Subdivision 328-D of the Income Tax Assessment Act 1997 applies to you for an inco",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 71
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-27/3"
+  },
+  {
+   "key": "federal-senate-8861",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain unchanged. ### Amendment text > *At the end of the motion, add \", but the Senate:* > >> *(a) notes that:* >> >>> *(i) the former government provided extensive support for 3.6 million small and medium businesses, which employ almost 8 million Australians, including through tax relief to support investment and reduce costs; energy programs and initiatives to reduce their power bills; and providing billions in support to keep small businesses open and Australians in jobs during the pandemic,* >>> >>> *(ii) small and medium businesses will be hurt the hardest by the Government's first round of workplace reforms, which will harm firm growth and hurt competition,* >>> >>> *(iii) despite promising to only raise taxes on multinationals at the election, the Government has broken promises by raising taxes on superannuation, on unrealised capital gains, on franking credits, and by ending small business tax incentives; and* >> >> *(b) calls on the Government to support the Opposition's amendment to restore the instant asset write-off to pre-COVID-19 levels to boost productivity and take pressure off prices\".*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/25"
+  },
+  {
+   "key": "federal-senate-8862",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-27.203.1) introduced by Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal), which means they will now be included in the bill. The amendments related to extending provisions to medium business entities and increasing the asset cost threshold. ### Amendment text > *(1) Schedule 1, heading, page 4 (line 1), omit \"$20,000\", substitute \"$30,000\".* > > *(2) Schedule 1, heading, page 4 (line 2), omit \"small business entities\", substitute \"small and medium business entities\".* > > *(3) Schedule 1, page 4 (after line 9), after item 2, insert:* > >> *2A After subsection 328-180(3)* >> >> *Insert:* >> >>> *Extension to medium business entities* >>> >>> *(3A) If you are an entity covered by subsection (3B) for an income year, then for the purposes of doing any of the following:* >>> >>>> *(a) deducting under subsection 328-180(1) of the Income Tax Assessment Act 1997 a proportion of the adjustable value of a depreciating asset for an income year in circumstances where paragraph (4)(d) of this section applies to you and the asset;* >>>> >>>> *(b) deducting under subsection 328-180(2) of that Act a proportion of an amount included in the second element of the cost for an asset in circumstances where paragraph (5)(e) of this section applies to you and the amount;* >>>> >>>> *(c) applying subsection 328-180(3) of that Act to you and an asset in circumstances where:* >>>> >>>>> *(i) paragraph (5)(e) of this section applies to you and an amount included in the second element of the asset's cost; and* >>>>> >>>>> *(ii) paragraph (6)(e) of this section applies to you for a deduction for the asset for an income year;* >>>>> >>>>> *Subdivision 328-D of the Income Tax Assessment Act 1997 applies to you for an income year and the asset as if you were a small business entity for the income year.* >>> >>> *(3B) An entity is covered by this su",
+   "stage": "Committee of the Whole",
+   "ayes": 38,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/26"
+  },
+  {
+   "key": "federal-senate-8863",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-27.205.1) introduced by ACT senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. ### Amendment text > *(1) Schedule 1, page 4 (line 1) to page 5 (line 4), omit the Schedule, substitute:* > > *Schedule 1 — $20,000 instant asset write-off for small business entities* > > *Income Tax Assessment Act 1997* > > *1 Section 328-170 (paragraph (b) of the paragraph beginning \"This Subdivision\")* > >> *Repeal the paragraph.* > > *2 Subsection 328-175(1)* > >> *Omit \"(10)\", substitute \"(9)\".* > > *3 Subsection 328-175(10)* > >> *Repeal the subsection (not including the notes).* > > *4 Subsection 328-175(10) (note 3)* > >> *Omit all words after \"of this\", substitute \"Subdivision in relation to income years between 12 May 2015 and 30 June 2023\".* > > *5 Section 328-180 (heading)* > >> *Omit \"$1,000\", substitute \"$20,000\".* > > *6 Paragraph 328-180(1)(b)* > >> *Omit \"$1,000\", substitute \"$20,000\".* > > *7 Paragraph 328-180(2)(a)* > >> *Omit \"$1,000\", substitute \"$20,000\".* > > *8 Paragraph 328-180(3)(a)* > >> *Omit \"$1,000\", substitute \"$20,000\".* > > *9 Subsection 328-205(4) (example)* > >> *Repeal the example, substitute:* > >>> *Example: When Hannah's van was allocated to her general small business pool for the 2023-24 income year, she estimated that it would be used 50% for her florist business. Due to increasing business, Hannah estimates the van's use to be 70% for the 2023-24 year, and 90% for the 2024-25 year. She makes an adjustment under section 328-225 for both those years.* >>> >>> *Hannah sells the van for $20,000 at the start of the 2026-27 income year. She must now average the business use estimates for the van for the year it was allocated to the pool and the next 3 years to work out the taxable purpose proportion of its termination value. The average is worked out as follows:* >>> >>>> *The taxable pur",
+   "stage": "Committee of the Whole",
+   "ayes": 16,
+   "noes": 21,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/27"
+  },
+  {
+   "key": "federal-senate-8864",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-27.207.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means they failed. The amendments related to solar PV systems and would have extended the period of the instant asset write-off and the small business energy incentive. ### Amendment text > *(1) Schedule 1, item 1, page 4 (line 6), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(2) Schedule 1, item 2, page 4 (line 9), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(3) Schedule 1, item 4, page 4 (line 18), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(4) Schedule 1, item 4, page 4 (line 21), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(5) Schedule 1, item 5, page 4 (line 27), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(6) Schedule 1, item 6, page 5 (line 4), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(7) Schedule 2, item 1, page 6 (line 14), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(8) Schedule 2, item 1, page 7 (line 6), omit \"1 July 2024\", substitute \"1 July 2026\".* > > *(9) Schedule 2, item 1, page 7 (line 11), omit \"1 July 2024\", substitute \"1 July 2026\".* > > *(10) Schedule 2, item 1, page 7 (line 21), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(11) Schedule 2, item 1, page 8 (line 28), omit \"1 July 2024\", substitute \"1 July 2026\".* > > *(12) Schedule 2, item 1, page 9 (line 14), omit \"30 June 2024\", substitute \"30 June 2026\".* > > *(13) Schedule 2, item 1, page 10 (line 20), omit \"(for example, photovoltaic cells)\".* > > *(14) Schedule 2, item 1, page 10 (after line 32), at the end of section 328-470, add:* > >> *(7) Despite subsection (6):* >> >>> *(a) an asset that is a solar photovoltaic system that is part of a package of energy upgrades is not excluded by that subsection; and* >>> >>> *(b) expenditure on such an asset is not excluded by that subsection.*",
+   "stage": "Committee of the Whole",
+   "ayes": 17,
+   "noes": 20,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/28"
+  },
+  {
+   "key": "federal-representatives-8874",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-05-15.22.1): > *That [the amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7081_sched_c705c48f-3e61-496e-820f-8a5cd6ee0d47%22;rec=0) be disagreed to.* In other words, they voted against accepting the amendments agreed to in the Senate, which would have extended provisions to medium business entities and lifted the annual threshold of assets that can be instantly written off under the bill from $20,000 to $30,000. ### Amendment text > *(1) Schedule 1, heading, page 4 (line 1), omit “ $20,000 ”, substitute “ $30,000 ”.* > > *(2) Schedule 1, heading, page 4 (line 2), omit “ small business entities ”, substitute “ small and medium business entities ”.* > > *(3) Schedule 1, page 4 (after line 9), after item 2, insert:* > >> *2A After subsection 328-180(3)* >> >> *Insert:* >> >> *Extension to medium business entities* >> >> *(3A) If you are an entity covered by subsection (3B) for an income year, then for the purposes of doing any of the following:* >> >>> *(a) deducting under subsection 328-180(1) of the Income Tax Assessment Act 1997 a proportion of the adjustable value of a depreciating asset for an income year in circumstances where paragraph (4)(d) of this section applies to you and the asset;* >>> >>> *(b) deducting under subsection 328-180(2) of that Act a proportion of an amount included in the second element of the cost for an asset in circumstances where paragraph (5)(e) of this section applies to you and the amount;* >>> >>> *(c) applying subsection 328-180(3) of that Act to you and an asset in circumstances where:* >>> >>>> *(i) paragraph (5)(e) of this section applies to you and an amount included in the second element of the asset’s cost; and* >>>> >>>> *(ii) paragraph (6)(e) of this section applies to you for a deduction for the asset for an income year;* >>>> >",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 92,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-15/1"
+  },
+  {
+   "key": "federal-senate-8936",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2024-05-16.257.1) that the Senate not insist on its [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7081_amend_11526edf-b602-4a8b-a75b-92628794e8da%22;rec=0) to which the House has disagreed. This means the bill and the amendments will go back to the House of Representatives for them to vote on whether they insist on their disagreement or agree to accept the amendments. ### Amendment text > *(1) Schedule 1, heading, page 4 (line 1), omit “ $20,000 ”, substitute “ $30,000 ”.* > > *(2) Schedule 1, heading, page 4 (line 2), omit “ small business entities ”, substitute “ small and medium business entities ”.* > > *(3) Schedule 1, page 4 (after line 9), after item 2, insert:* > >> *2A After subsection 328-180(3)* >> >> *Insert:* >> >> *Extension to medium business entities* >> >> *(3A) If you are an entity covered by subsection (3B) for an income year, then for the purposes of doing any of the following:* >> >>> *(a) deducting under subsection 328-180(1) of the Income Tax Assessment Act 1997 a proportion of the adjustable value of a depreciating asset for an income year in circumstances where paragraph (4)(d) of this section applies to you and the asset;* >>> >>> *(b) deducting under subsection 328-180(2) of that Act a proportion of an amount included in the second element of the cost for an asset in circumstances where paragraph (5)(e) of this section applies to you and the amount;* >>> >>> *(c) applying subsection 328-180(3) of that Act to you and an asset in circumstances where:* >>> >>>> *(i) paragraph (5)(e) of this section applies to you and an amount included in the second element of the asset’s cost; and* >>>> >>>> *(ii) paragraph (6)(e) of this section applies to you for a deduction for the asset for an income year;* >> >> *Subdivision 328-D of the Income Tax Assessment Act 19",
+   "stage": "Consideration of House message",
+   "ayes": 19,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/43"
+  },
+  {
+   "key": "federal-representatives-8939",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2024-05-28.121.6) to insist on disagreeing to the [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7081_sched_19b1129a-80bf-4467-94ca-1490754380a8%22;rec=0) insisted on by the Senate. ### Amendment text > *(1) Schedule 1, heading, page 4 (line 1), omit “ $20,000 ”, substitute “ $30,000 ”.* > > *(2) Schedule 1, heading, page 4 (line 2), omit “ small business entities ”, substitute “ small and medium business entities ”.* > > *(3) Schedule 1, page 4 (after line 9), after item 2, insert:* > >> *2A After subsection 328-180(3)* >> >> *Insert:* >> >> *Extension to medium business entities* >> >> *(3A) If you are an entity covered by subsection (3B) for an income year, then for the purposes of doing any of the following:* >> >>> *(a) deducting under subsection 328-180(1) of the Income Tax Assessment Act 1997 a proportion of the adjustable value of a depreciating asset for an income year in circumstances where paragraph (4)(d) of this section applies to you and the asset;* >>> >>> *(b) deducting under subsection 328-180(2) of that Act a proportion of an amount included in the second element of the cost for an asset in circumstances where paragraph (5)(e) of this section applies to you and the amount;* >>> >>> *(c) applying subsection 328-180(3) of that Act to you and an asset in circumstances where:* >>> >>>> *(i) paragraph (5)(e) of this section applies to you and an amount included in the second element of the asset’s cost; and* >>>> >>>> *(ii) paragraph (6)(e) of this section applies to you for a deduction for the asset for an income year;* >> >> *Subdivision 328-D of the Income Tax Assessment Act 1997 applies to you for an income year and the asset as if you were a small business entity for the income year.* >> >> *(3B) An entity is covered by this subsection for an income year i",
+   "stage": "Consideration of Senate message",
+   "ayes": 73,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-28/3"
+  },
+  {
+   "key": "federal-senate-8976",
+   "date": "2024-06-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-06-25.154.1): > *That the Senate does not further insist on its amendments to which the House of Representatives has insisted on disagreeing.* In other words, the majority of senators voted in favour of passing the bill even without the amendments they had previously requested. ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7081), the bill: > *Amends the:* > > * *Income Tax (Transitional Provisions) Act 1997 to: increase the instant asset write-off threshold from $1,000 to $20,000 for the 2023-24 financial year; and provide small and medium businesses with access to a bonus tax deduction for the 2023-24 financial year relating to electrification and more efficient energy use;* > > * *Income Tax Assessment Act 1997, Taxation Administration Act 1953 and A New Tax System (Australian Business Number) Act 1999 to facilitate certain community charities achieving deductible gift recipient status;* > > * *Income Tax Assessment Act 1997 to: include two new entities on the list of deductible gift recipients and extend the listing for two other entities; extend the Global Infrastructure Hub’s income tax exemption for an additional year; broadly align existing tax requirements with a new accounting standard for insurance contracts; and amend the rules for non-arm’s length expenses for superannuation entities;* > > * *Corporations Act 2001 to reinstate the Australian Financial Complaint Authority’s jurisdiction to hear certain complaints relating to superannuation; and* > > * *Treasury Laws Amendment (2023 Law Improvement Package No. 1) Act 2023 to make contingent amendments.*",
+   "stage": "Consideration of House message",
+   "ayes": 29,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-25/11"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Support for Small Business and Charities and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00052",
+   "assent_date": "2024-06-28"
+  }
+ ]
+}

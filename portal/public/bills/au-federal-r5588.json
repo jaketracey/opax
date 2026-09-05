@@ -1,0 +1,178 @@
+{
+ "key": "au-federal-r5588",
+ "title": "Corporations Amendment (Crowd-sourced Funding) Bill 2015",
+ "short_title": "Corporations Amendment (Crowd-sourced Funding) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5588_ems_b9685ecf-94b6-4209-a42c-7e8c656ed051%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5588%22",
+   "document_date": "2015-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327605",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "Labor announced it would not block the Corporations Amendment (Crowd-sourced Funding) Bill 2015 but reserved the right to amend it, arguing the requirement for startups to convert to public companies was onerous and that the government had ignored widespread industry concerns. It also criticised the Turnbull government’s lack of bipartisanship and offered to support suspending the bill for further consultation, while praising former small business minister Bruce Billson."
+  },
+  {
+   "slug": "speech-327606",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Crowd-Sourced Funding) Bill 2015 establishes a regulatory framework for crowd-sourced equity funding, reducing compliance costs for startups and small businesses while protecting retail investors through ASIC-licensed intermediaries. The bill is part of the Turnbull government's Growing Jobs and Small Business package and aims to boost innovation and job creation, particularly in regional areas like Braddon."
+  },
+  {
+   "slug": "speech-327749",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The speaker supported crowd-sourced equity funding but argued the bill needed further consultation to address concerns raised by Employee Ownership Australia and AVCAL, including excessive compliance costs from requiring startups to become unlisted public companies and problematic related party definitions."
+  },
+  {
+   "slug": "speech-327750",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Crowd-sourced Funding) Bill 2015 and related measures from the National Innovation and Science Agenda—including a capital gains tax exemption for start-up investments held over three years, a 20% tax offset for investors, and expanded early stage venture capital limited partnerships (ESVCLPs) with a $200 million cap and 10% tax reduction—will facilitate funding for early-stage businesses, and announced that the bill will allow small companies to raise up to $5 million annually with individual investments capped at $10,000."
+  },
+  {
+   "slug": "speech-327751",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Crowd-sourced Funding) Bill 2015 is overregulated, complex, and costly, risking the growth of the alternative finance sector, and called for lighter regulation to allow flexibility for entrepreneurs and start-ups."
+  },
+  {
+   "slug": "speech-327754",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Crowd-Sourced Funding) Bill 2015 was debated, with the speaker supporting its aim to allow start-ups a third way to raise equity without becoming public companies while maintaining investor protections. The Greens noted interest in its application to community-owned renewable energy, citing Hepburn Wind as an example, and will consult the sector before finalising a position."
+  },
+  {
+   "slug": "speech-327756",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Corporations Amendment (Crowd-sourced Funding) Bill 2015 would help small businesses and start-ups access capital by allowing them to raise up to $5 million per year from retail investors, with a $10,000 per issuer per 12-month investor cap and reduced disclosure requirements. The bill also introduces a licensed intermediary framework and concessions for newly registered public companies, including exemptions from annual general meetings and audits for up to five years."
+  },
+  {
+   "slug": "speech-327757",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Crowd-sourced Funding) Bill 2015 introduces a framework allowing eligible companies to raise up to $5 million per year from retail investors with reduced disclosure obligations, including a five-year holiday from onerous reporting and governance requirements for unlisted public companies, and provides $7.8 million to the Australian Securities and Investments Commission for implementation."
+  },
+  {
+   "slug": "speech-331526",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-02",
+   "stage_hint": null,
+   "brief": "A motion was moved requesting the Senate to resume consideration of 14 specified bills from the previous session, with each request to be conveyed in a separate message. The bills covered water amendment, managed investment trusts, social services, crime commission, deaths registration, tax and superannuation, crowd-sourced funding, firearms trafficking, and parliamentary entitlements."
+  }
+ ],
+ "acts": []
+}

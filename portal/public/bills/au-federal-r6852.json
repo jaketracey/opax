@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6852",
+ "title": "Treasury Laws Amendment (Modernising Business Communications) Bill 2022",
+ "short_title": "Treasury Laws Amendment (Modernising Business Communications) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6852%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6852%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6852%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6852_ems_7d8342c1-c4d2-4147-93f7-14fb52fb0bec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6852%22",
+   "document_date": "2022-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419147",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Modernising Business Communications) Bill 2022 was moved for second reading, modernising several Treasury laws to allow technology-neutral business communications, including electronic signing, flexible document delivery, updated credit communication rules, electronic payment options, and replacement of mandatory newspaper notices with modern methods."
+  }
+ ],
+ "acts": []
+}

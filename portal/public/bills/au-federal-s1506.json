@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-s1506",
+ "title": "Firearms Legislation Amendment (Repealing Unfair Gun Laws) Bill 2026",
+ "short_title": "Firearms Legislation Amendment (Repealing Unfair Gun Laws) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-13",
+ "originating_house": "senate",
+ "sponsor": "MCKENZIE, Sen Bridget",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10758",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1506%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1506%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1506_ems_08340540-03f9-4723-a900-8281a2219d38%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1506%22",
+   "document_date": "2026-08-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-13",
+  "sentences": [
+   "The bill would undo the firearm buyback scheme and restore Commonwealth gun and import laws to how they were before the 2026 Act took effect.",
+   "It would repeal the National Gun Buyback Scheme and reverse changes to several Acts and instruments listed in Schedule 2 of the 2026 Act.",
+   "The bill would keep the background check requirements and the ban on importing extremist material that the 2026 Act introduced."
+  ],
+  "changes": [
+   "Repeals the National Gun Buyback Scheme.",
+   "Returns Commonwealth firearms and importation law to the position before the 2026 Act.",
+   "Reverses amendments made by Schedule 2 of the 2026 Act to specified Acts and instruments.",
+   "Does not repeal background check laws from the 2026 Act.",
+   "Does not change the prohibition on importing violent extremist material from the 2026 Act."
+  ],
+  "affected": "Licensed gun owners, dealers and other businesses affected by the 2026 Act's changes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:02:27Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

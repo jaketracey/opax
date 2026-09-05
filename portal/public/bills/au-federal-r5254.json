@@ -1,0 +1,368 @@
+{
+ "key": "au-federal-r5254",
+ "title": "Australian Citizenship Amendment (Intercountry Adoption) Bill 2014",
+ "short_title": "Australian Citizenship Amendment (Intercountry Adoption) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5254_ems_8e7bbd1a-6e86-4f13-873b-1941bda9b991%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5254%22",
+   "document_date": "2014-05-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00007",
+   "document_date": "2015-02-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-29",
+  "sentences": [
+   "The bill would let a child adopted from certain countries under a bilateral deal become an Australian citizen immediately after the adoption is finalised.",
+   "It gives adopted children the same entitlement to citizenship as those adopted under the Hague Convention, removing the need for travel documents like a home-country passport or an adoption visa.",
+   "The bilateral arrangements covered are those identified in the Family Law (Bilateral Arrangements – Intercountry Adoption) Regulations 1998, currently involving Ethiopia, Korea, and Taiwan."
+  ],
+  "changes": [
+   "Creates an entitlement to Australian citizenship for persons adopted under a bilateral arrangement.",
+   "Allows the immediate grant of citizenship following the adoption's completion.",
+   "Lets the adopted child travel to Australia as an Australian citizen without needing a home country passport or adoption visa."
+  ],
+  "affected": "Australian citizens who adopt a child from Ethiopia, Korea, or Taiwan under a bilateral arrangement.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-295258",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295259",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295260",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295261",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295262",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296355",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296357",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296358",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296363",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296365",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296491",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297028",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297240",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297333",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297334",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297335",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297336",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297337",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297339",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297449",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297450",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297451",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Citizenship Amendment (Intercountry Adoption) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00007",
+   "assent_date": "2015-02-25"
+  }
+ ]
+}

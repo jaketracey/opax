@@ -1,0 +1,880 @@
+{
+ "key": "au-federal-r6022",
+ "title": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018",
+ "short_title": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6022_ems_e4d3fac9-e684-40c4-b573-c000e7a32b03%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6022_ems_3da66b43-4b08-461a-a3be-0a34c57d0831%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6022_ems_c0670f8e-b255-487c-aa0a-df608c6db06a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6022_ems_399f3553-0569-4f01-8f85-b44e6a3c2ca9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6022%22",
+   "document_date": "2017-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00067",
+   "document_date": "2018-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-12-07",
+  "sentences": [
+   "This bill would update and expand Australia's laws against espionage, foreign interference, and related crimes.",
+   "It would create new offences for covert foreign actions aimed at influencing Australian democracy, reform secrecy and sabotage laws, and add a trade secrets theft offence for economic espionage.",
+   "The bill would also amend the Telecommunications (Interception and Access) Act to allow interception powers for all new offences, and add an immunity provision for voluntary information given to the Inspector-General of Intelligence and Security."
+  ],
+  "changes": [
+   "Creates new foreign interference offences targeting covert or deceptive actions by foreign actors.",
+   "Reforms Commonwealth secrecy offences to criminalise harmful leaks while protecting freedom of speech.",
+   "Introduces a new aggravated offence for providing false or misleading information during security clearance processes."
+  ],
+  "affected": "Australian law enforcement agencies, intelligence bodies, and people or entities involved in national security processes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:11:33Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5296",
+   "date": "2018-06-27",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and another - First Reading - Consider bills together",
+   "stage": "First Reading",
+   "ayes": 45,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 2
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 30,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-27/1"
+  },
+  {
+   "key": "federal-senate-5297",
+   "date": "2018-06-27",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and another - First Reading - Speed things along",
+   "stage": "First Reading",
+   "ayes": 47,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 32,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-27/2"
+  },
+  {
+   "key": "federal-senate-5303",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "The majority voted against a motion to add the following words to the normal [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) \"*that the bills be read a second time*\". (Reading bills for a second time is parliamentary jargon for agreeing to the bills' main idea.) ### Motion text > *At the end of the motion, in respect of the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018, add \", and the bill be referred to the Legal and Constitutional Affairs Legislation Committee for inquiry and report by 14 August 2018.\"* ### What do these bills do? These bills were introduced to target foreign influence in Australia by creating a new transparency scheme and introducing a series of new offences targeting things like sabotage, treason and espionage. #### Foreign Influence Transparency Scheme Bill 2018 This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6018) was introduced to establish the Foreign Influence Transparency Scheme to, which will: * require registration by certain people undertaking certain activities on behalf of a foreign principal; * require registrants to disclose information about the nature of their relationship with the foreign principal and activities undertaken pursuant to that relationship; * place additional disclosure requirements on registrants during elections and other voting periods; * establish a register of scheme information and provide for certain information to be made publicly available; * provide the secretary with powers to obtain information and documents; and * establish various penalties for non-compliance with the scheme. Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd087). #### National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018 This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:leg",
+   "stage": "Second reading",
+   "ayes": 17,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 26,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/1"
+  },
+  {
+   "key": "federal-senate-5304",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2018-06-28.3.2) to add the following words to the normal [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) \"*that the bills be read a second time*\". (Reading bills for a second time is parliamentary jargon for agreeing to the bills' main idea.) ### Motion text Greens Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (WA): > *In respect of the Foreign Influence Transparency Scheme Bill 2018, I move:* >> *At the end of the motion, add:* >> *\", and the bill be referred to the Legal and Constitutional Affairs Legislation Committee for inquiry and report by 14 August 2018.\"* ### What do these bills do? These bills were introduced to target foreign influence in Australia by creating a new transparency scheme and introducing a series of new offences targeting things like sabotage, treason and espionage. #### Foreign Influence Transparency Scheme Bill 2018 This [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6018) was introduced to establish the Foreign Influence Transparency Scheme to, which will: * require registration by certain people undertaking certain activities on behalf of a foreign principal; * require registrants to disclose information about the nature of their relationship with the foreign principal and activities undertaken pursuant to that relationship; * place additional disclosure requirements on registrants during elections and other voting periods; * establish a register of scheme information and provide for certain information to be made publicly available; * provide the secretary with powers to obtain information and documents; and * establish various penalties for non-compliance with the scheme. Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd087). #### National Security Legislation A",
+   "stage": "Second reading",
+   "ayes": 16,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 26,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/2"
+  },
+  {
+   "key": "federal-senate-5305",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018 and another - Second Reading - Oversight",
+   "stage": "Second reading",
+   "ayes": 16,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 26,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/3"
+  },
+  {
+   "key": "federal-senate-5306",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018 and another - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 44,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 26,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/4"
+  },
+  {
+   "key": "federal-senate-5311",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018 - in Committee - Sunset provision",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "earliest": 8,
+    "member": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/9"
+  },
+  {
+   "key": "federal-senate-5312",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018 - in Committee - Support the new offence of sabotage",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 23,
+    "earliest": 8,
+    "member": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/10"
+  },
+  {
+   "key": "federal-senate-5313",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018 - in Committee - Freedom of speech",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 8,
+    "member": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/11"
+  },
+  {
+   "key": "federal-senate-5314",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2018 - in Committee - Increasing oversight",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "earliest": 8,
+    "member": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-357698",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-12-07",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and introduced the Foreign Influence Transparency Scheme Bill, which establishes registration obligations for persons or entities with arrangements or activities on behalf of foreign principals to provide transparency about foreign influence in Australia."
+  },
+  {
+   "slug": "speech-365744",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the two national security bills were initially flawed with overreach, threatening journalists, charities, academics, and civil liberties, but after extensive bipartisan committee work and 60 recommendations, the amendments now properly target foreign interference while safeguarding freedoms. The speaker also criticised the government's rushed process and lack of consultation, noting the bills were significantly improved through the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-365746",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and related bill are necessary to protect Australia’s sovereignty and democratic institutions, asserting that the nation speaks with bipartisan unity against foreign threats. The speaker referenced Prime Minister John Curtin’s 1942 wartime address to emphasise Australia’s historical resolve, and noted that the Parliamentary Joint Committee on Intelligence and Security (PJCIS) has included reviews and safeguards in the legislation."
+  },
+  {
+   "slug": "speech-365747",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and the Foreign Influence Transparency Scheme Bill 2017, arguing their definitions of 'national security' and 'foreign influence' are too broad and could criminalise protest, whistleblowing, and reporting to international bodies. He also criticised the government's hypocrisy, noting that 12 MPs had been flown to China by Huawei while claiming to be concerned about foreign influence, and warned that Australia is becoming a \"pre police state\" with over 60 security reforms since 9/11."
+  },
+  {
+   "slug": "speech-365748",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 criminalises dissent, broadens national security definitions, and could jail protesters against projects like the Adani coalmine, while criticising the rushed passage of 50 pages of amendments without proper scrutiny."
+  },
+  {
+   "slug": "speech-365749",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker thanked parliamentary committees and presented government amendments to the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and the Foreign Influence Transparency Scheme Bill 2017, arguing the reforms are the most significant counterintelligence changes since the 1970s and will introduce new offences for foreign interference, economic espionage, and strengthened espionage and secrecy laws."
+  },
+  {
+   "slug": "speech-365893",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "A supplementary explanatory memorandum to the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 was presented, and government amendments (1) to (154) were moved."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Security Legislation Amendment (Espionage and Foreign Interference) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00067",
+   "assent_date": "2018-06-29"
+  }
+ ]
+}

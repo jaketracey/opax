@@ -1,0 +1,372 @@
+{
+ "key": "au-federal-r5746",
+ "title": "VET Student Loans (Consequential Amendments and Transitional Provisions) Bill 2016",
+ "short_title": "VET Student Loans (Consequential Amendments and Transitional Provisions) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2016-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5746_ems_50bfec94-2a01-437f-b25d-08d6927b203e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5746%22",
+   "document_date": "2016-10-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00100",
+   "document_date": "2016-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4462",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Catryna Bilyk I spoke earlier about this bill and I was interrupted. I was explaining to those on the government benches who were previously opposed to a price cap on VET fees. Minister Ryan, Birmingham and Morrison all came out strongly against the idea. Despite all the criticism from those opposite of Labor's price cap policy, these bills we are debating today propose three different price caps on VET FEE-HELP lines: $5000, $10,000 and $15,000. This is a backflip of such proportions that, seriously, it would make an Olympic gymnast proud. Another welcome backflip by the government has been the provision of an ombudsman for the VET sector, something that Labor has been calling for over a long time. The Minister for Education and Training, Senator Birmingham, gave an undertaking a year ago that he would establish an ombudsman, but there was no provision for one in these bills when they were presented to the House. Many stakeholders supported the idea of an ombudsman through their responses to the VET FEE-HELP discussion paper, and it is pleasing to see that the government will finally move to amend their legislation in this place to provide for one. An ombudsman is a sensible, practical step to help students get redress for exploitation and unfair debts. Labor is also pleased to see the government moving to implement a version of the transparency and reporting requirements that Labor moved in the House. This will allow information about the operation of the scheme to be released twice a year so that the public can scrutinise the effectiveness of what providers are doing and what is happening to taxpayers' money. Labor has serious concerns about the government's draft eligible course list which were raised by stakeholders through the Senate inquiry. Submissions to the inquiry noted the simplistic methodology used to create the list. The government has based the list on state skills lists, which were never ever designed for this purpose. The requirement that the cours",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 13,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/11"
+  },
+  {
+   "key": "federal-senate-4464",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Sarah Hanson-Young In respect of the VET Student Loans (Consequential Amendments and Transitional Provisions) Bill 2016, I move the Australian Greens amendment (1) on sheet 7971: (1) Schedule 1, page 8 (after line 16), after item 20, insert: 20A After subclause 46A(1) of Schedule 1A Insert: (1A) The \\*Secretary must also re-credit a person's \\*FEE-HELP balance with an amount equal to the amounts of \\*VET FEE-HELP assistance that the person received for a \\*VET unit of study if, as a result of information provided to the Secretary without the person applying for the re-credit, the Secretary is satisfied of the matters in subclause (1) (other than paragraphs (1) (d) to (f)). (1B) Before making a decision under subclause (1A), the \\*Secretary must give the person and the \\*VET provider a notice in writing in accordance with subclause (3). (1C) In deciding whether to make the decision under subclause (1A), the \\*Secretary must consider any submission received from the person, and from the \\*VET provider, within the 28 day period given for the person and the VET provider to provide submissions. (1D) The \\*Secretary must give written notice of a decision under subclause (1A) to the person and the \\*VET provider. The notice must be given within 28 days after the day the decision was made. There are a number of amendments that have been circulated. I have circulated an amendment that goes directly to the heart of this issue. We know that the system we are reforming with this bill is one that has been rorted, abused and exploited by those who have wished to make a lot of money and a private buck off the goodwill of vulnerable students and the willingness of this place, the parliament, to offer support to students who desperately want to get qualifications. I said right at the outset of my speech in the second reading debate that a number of the Australian Greens, along with a number of other voices, warned at the time that if this sector was to be so deregulated people would",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 37,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/13"
+  },
+  {
+   "key": "federal-senate-4465",
+   "date": "2016-11-30",
+   "house": "senate",
+   "question": "Simon Birmingham by leave—I move government amendments (1) to (25) on sheet GX140 together: (1) Clause 6, page 4 (before line 3), before the definition of _approved course provider_, insert: _approved course_: see section 13. (2) Clause 6, page 4 (after line 3), after the definition of _approved course provider_, insert: _approved external dispute resolution scheme_: see section 42B. _approved external dispute resolution scheme operator_: see paragraph 42B(c). (3) Clause 6, page 6 (after line 12), after the definition of _officer of an approved course provider_, insert: _officer of an approved external dispute resolution scheme operator_ means: (a) an officer or employee of an approved external dispute resolution scheme operator; or (b) a person who performs services for or on behalf of an approved external dispute resolution scheme operator. (4) Clause 6, page 6 (after line 14), after the definition of _officer of a Tertiary Admission Centre_, insert: _officer of a tuition assurance scheme operator_ means: (a) an officer or employee of a tuition assurance scheme operator; or (b) a person who performs services for or on behalf of a tuition assurance scheme operator. (5) Clause 6, page 8 (line 8), at the end of the definition of _VET officer_, add: ; (e) an officer of an approved external dispute resolution scheme operator. (6) Clause 15, page 12 (line 26), omit \"accredited\", substitute \"registered\". (7) Clause 17, page 14 (line 22), omit \"request the student to\". (8) Clause 17, page 14 (line 23), before \"provide\", insert \"request the student to\". (9) Clause 17, page 14 (line 25), omit \"may\". (10) Clause 25, page 21 (line 19), at the end of subclause (2), add: ; and (h) be a member of an approved external dispute resolution scheme. (11) Clause 25, page 21 (lines 20 to 22), omit all the words from and including \"the\" to the end of subclause (3), substitute: either or both of the following: (a) the requirement in paragraph (2) (g) to be a party to an approved tuition a",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 32,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-30/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-335108",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The bill ends the VET FEE-HELP scheme, establishes transition arrangements for current students and providers, and makes consequential amendments to three related acts."
+  },
+  {
+   "slug": "speech-335926",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the VET Student Loans Bill 2016 and associated bills, arguing they would replace the flawed VET FEE-HELP scheme with tougher provider entry criteria, a list of 347 eligible courses (478 removed), and measures to protect students and taxpayers. The speaker also noted Dunkley's 3.6% economic growth and falling unemployment, and cited Phoenix Institute's revocation for inducements and a 4% graduation rate."
+  },
+  {
+   "slug": "speech-335930",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the VET Student Loans bills, which replace the VET FEE-HELP scheme from 1 January 2017 with loan caps of $5,000, $10,000 and $15,000, new student eligibility checks, and powers to suspend noncompliant providers. He also criticised the government for failing to act earlier on provider misconduct and for cutting $2.5 billion from skills and training, including $1 billion from apprenticeships, with apprentice numbers falling from 417,700 to 295,300 between 2013 and 2015."
+  }
+ ],
+ "acts": [
+  {
+   "title": "VET Student Loans (Consequential Amendments and Transitional Provisions) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00100",
+   "assent_date": "2016-12-07"
+  }
+ ]
+}

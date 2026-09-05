@@ -1,0 +1,238 @@
+{
+ "key": "au-federal-r6772",
+ "title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment Bill 2021",
+ "short_title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2021-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6772_ems_e96f35da-bcde-4a93-bd97-7707edd24b48%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6772%22",
+   "document_date": "2021-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00109",
+   "document_date": "2021-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-26",
+  "sentences": [
+   "The bill changes the National Redress Scheme for Institutional Child Sexual Abuse Act 2018 to improve the experience of survivors, as an initial response to the scheme's second-year review.",
+   "It introduces several adjustments, including early payments of $10,000, indexation of past payments, more flexible deadlines, removal of a statutory declaration requirement, and an option for instalment payments.",
+   "The government has only acted on part of the review's recommendations, and has not yet detailed changes for the remaining proposals."
+  ],
+  "changes": [
+   "The bill would create advance payments of $10,000 for certain applicants, such as those who are terminally ill or in exceptional circumstances.",
+   "It would change how prior payments are counted for redress calculations, indexing them by whole years from the application date rather than the decision date.",
+   "It would allow the acceptance period for a redress offer to be extended after it expires, and align the review period with any such extension.",
+   "It would remove the requirement for a statutory declaration to make an application valid.",
+   "It would let applicants choose to receive their redress payment in instalments instead of a lump sum."
+  ],
+  "affected": "Survivors of institutional child sexual abuse who apply to the National Redress Scheme are primarily affected, along with the agency that administers the scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412050",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The National Redress Scheme for Institutional Child Sexual Abuse Amendment Bill 2021 introduces advance payments of $10,000 for elderly or terminally ill applicants, changes indexation of prior payments to the application date, extends review and acceptance periods, removes the statutory declaration requirement, and allows payment by instalments, as part of the government’s initial response to 25 of 38 recommendations from the second year review by Robyn Kruk AO, with over $80 million allocated over four years."
+  },
+  {
+   "slug": "speech-412613",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-31",
+   "stage_hint": null,
+   "brief": "The speaker moved to amend the National Redress Scheme Amendment Bill 2021, calling on the government to implement all second-anniversary review recommendations, including raising the payment cap to $200,000, ending indexation of prior payments, fixing the assessment matrix, ensuring funder-of-last-resort arrangements, guaranteeing no reduction of offers on review, and providing ongoing counselling and support."
+  },
+  {
+   "slug": "speech-412654",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the National Redress Scheme is failing survivors, with only 5,218 payments finalised out of an estimated 60,000 eligible, and called for amendments including raising the cap to $200,000, ending indexation of prior payments, fixing the assessment matrix, ensuring the government acts as funder of last resort, guaranteeing no reduction of offers on review, and providing ongoing counselling."
+  },
+  {
+   "slug": "speech-412656",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The National Redress Scheme Amendment Bill 2021 implements recommendations from the second year review by Robyn Kruk, including a $10,000 advance payment for elderly or terminally ill applicants, over $80 million in funding, and changes to indexation, acceptance periods, and installment payments."
+  },
+  {
+   "slug": "speech-412658",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Redress Scheme Amendment Bill 2021, announcing $80 million over four years for 25 of 38 review recommendations, including a $10,000 advance payment for elderly or terminally ill applicants, indexation changes, and removal of statutory declaration requirements. The speaker noted 10,665 applications received, 5,700 finalised, average payment of $84,743, and 500 institutions joined, while commending Minister Anne Ruston and De La Salle College for their actions."
+  },
+  {
+   "slug": "speech-412660",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speech backed the National Redress Scheme Amendment Bill 2021, citing measures such as a $10,000 advance payment for elderly or terminally ill applicants, removal of the statutory declaration requirement, and $80 million in budget funding. It noted the scheme has made over 6,100 payments totalling about $519 million."
+  },
+  {
+   "slug": "speech-412661",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Redress Scheme amendments are welcome but insufficient, urging the government to implement all 38 review recommendations—not just the $10,000 advance payment for vulnerable applicants—and to address delays, inadequate support for victims, and organisations like the Jehovah's Witnesses that had not yet joined the scheme."
+  },
+  {
+   "slug": "speech-412662",
+   "speaker": "Bridget Archer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The government's National Redress Scheme Amendment Bill 2021 introduces a $10,000 advance payment for applicants over 70 (or 55 for Indigenous Australians) or terminally ill, changes indexation to the application date, and allows instalment payments; the speaker also criticised the Devonport Community Church and two other institutions for refusing to join the scheme, and noted $22.8 million over four years for expanded funder-of-last-resort provisions."
+  },
+  {
+   "slug": "speech-412663",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Redress Scheme Amendment Bill 2021 makes needed changes—including a $10,000 advance payment for elderly, First Nations over 50, and terminally ill survivors—but fails to adopt key recommendations from Robyn Kruk’s second anniversary review, such as increasing the minimum redress payment to $200,000 and ceasing indexation of prior payments."
+  },
+  {
+   "slug": "speech-412664",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The National Redress Scheme for Institutional Child Sexual Abuse Amendment Bill 2021 implements 25 of 38 recommendations from the second-year review, backed by over $80 million over four years to improve survivor access and make the scheme more trauma-informed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Redress Scheme for Institutional Child Sexual Abuse Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00109",
+   "assent_date": "2021-09-13"
+  }
+ ]
+}

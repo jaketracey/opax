@@ -1,0 +1,449 @@
+{
+ "key": "au-federal-r6560",
+ "title": "National Disability Insurance Scheme Amendment (Strengthening Banning Orders) Bill 2020",
+ "short_title": "National Disability Insurance Scheme Amendment (Strengthening Banning Orders) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "National Disability Insurance Scheme",
+ "status": "passed",
+ "status_as_of": "2020-11-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6560_ems_54f1125a-f4c9-43a1-bcab-952d5bf2aa98%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6560_ems_5ef5b570-57fd-4d7e-9606-9318b952dc2e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6560_ems_249b79e4-a9c3-4e6c-ad55-b7323f7cc2d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6560_ems_435ed754-4b9c-41ab-bb5a-6afc46ed60de%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6560%22",
+   "document_date": "2020-06-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00103",
+   "document_date": "2020-11-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-6718",
+   "date": "2020-11-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-11-12.14.1) to the usual second reading motion introduced by West Australian Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means it failed. The usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is \"*that the bill be read a second time*,\" which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes that despite the NDIS Quality and Safeguards Commission gaining 100 more staff and $92.9 million in funding over four years to expand its compliance and investigative capacity, only six of these new staff members will be dedicated investigators; and* > > *(b) calls on the Government and the NDIS Quality and Safeguards Commission to immediately increase the number of investigators on the ground in each state and territory, including in South Australia\".*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 27,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-12/2"
+  },
+  {
+   "key": "federal-senate-6719",
+   "date": "2020-11-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-11-12.24.1) to the usual second reading motion introduced by South Australian Senator [Stirling Griff](https://theyvoteforyou.org.au/people/senate/sa/stirling_griff) (Centre Alliance), which means it failed. The usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is \"*that the bill be read a second time*,\" which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes the recommendations made by the Hon Alan Robertson SC in the 'Independent review of the adequacy of the regulation of the supports and services provided to Ms Ann-Marie Smith, an NDIS participant, who died on 6 April 2020', from abuse and neglect; and* > > *(b) calls on the Government to implement the recommendations in consultation with the disability sector including the introduction of a national community visitor scheme.* ### What were recommendations? You can read the recommendations in the [full report](https://www.ndiscommission.gov.au/sites/default/files/documents/2020-09/independent-review-report-commissioner-public-310820.pdf) [1MB].",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 27,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-12/3"
+  },
+  {
+   "key": "federal-senate-6720",
+   "date": "2020-11-12",
+   "house": "senate",
+   "question": "National Disability Insurance Scheme Amendment (Strengthening Banning Orders) Bill 2020 - Second Reading - Implement recommendations 7 & 8",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 27,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-12/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391990",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The bill strengthens the NDIS Quality and Safeguards Commissioner’s banning order powers to cover workers whose engagement has ended and people unsuitable due to records in other sectors like aged care, and requires banning orders to be published on the NDIS provider register, following the death of Ann Marie Smith."
+  },
+  {
+   "slug": "speech-395450",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to the National Disability Insurance Scheme Amendment (Strengthening Banning Orders) Bill 2020, calling on the government to take responsibility for all NDIS deaths by neglect and immediately respond to Alan Robertson SC's report into the death of Ann‑Marie Smith, who died on 6 April 2020. The speaker argued the bill's changes are peripheral, criticised the NDIS minister Stuart Robert and the NDIS Quality and Safeguards Commission for failing to prevent Smith's death and the death of David Harris, and noted only one fine ($12,600) had been issued despite over 8,000 complaints."
+  },
+  {
+   "slug": "speech-395453",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme Amendment (Strengthening Banning Orders) Bill 2020 expands the NDIS commissioner’s powers to ban providers or individuals who have engaged in misconduct, even if they are no longer employed by an NDIS provider, closing a loophole that allowed unsuitable actors to avoid sanctions. The bill aims to protect vulnerable Australians by strengthening the NDIS provider register and ensuring pre-emptive action against those with a history of misconduct."
+  },
+  {
+   "slug": "speech-395454",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The speaker argued the NDIS Amendment Bill is a first step but insufficient, citing that from over 8,000 complaints the commission issued only one fine and banned one provider and 22 individuals, and that the deaths of Ann‑Marie Smith and David Harris show systemic failures. They called for broader preventive oversight, implementation of the Robertson inquiry’s recommendations, and criticised the government’s $4.6 billion funding cuts and lack of a COVID‑19 plan for the disability sector."
+  },
+  {
+   "slug": "speech-395455",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The NDIS Amendment Bill was argued to strengthen banning orders, with 391,999 participants as of June 2020 and a projected 432,000 when fully rolled out; the NDIS Quality and Safeguards Commission has banned 23 entities (22 individuals) from 5,784 complaints, and the bill broadens the commission's power to ban workers or providers and take pre-emptive action, while the Joint Standing Committee is conducting inquiries into planning, quality safeguards, and workforce development."
+  },
+  {
+   "slug": "speech-395456",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the second reading amendment requiring the government to take responsibility for NDIS deaths by neglect and respond to the Robertson report into Ann-Marie Smith's death, but argued the bill does not address systemic failures to prevent abuse, noting they received no response to correspondence with Minister Robert."
+  },
+  {
+   "slug": "speech-395461",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the NDIS Amendment Bill while arguing it does not address underlying failures, noting the NDIS Quality and Safeguards Commission issued only 23 banning orders against 2,473 complaints and a single $12,600 fine in two years. They highlighted the deaths of Ann-Marie Smith and David Harris, criticised cuts of $4.6 billion, and cited constituent cases of Wendy and Margaret to illustrate systemic neglect."
+  },
+  {
+   "slug": "speech-395463",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The Labor member for Corangamite argued the NDIS amendment is too little too late, citing the deaths of Ann-Marie Smith and David Harris and stating 12,000 Australians with disability died while waiting for scheme funding. He criticised the Morrison-McCormack government for $4.6 billion in funding cuts and a narrow Robertson review that lacked subpoena power, and called for implementation of recommendations including spot checks, clearer reporting, and better interagency communication."
+  },
+  {
+   "slug": "speech-395464",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to strengthen NDIS banning orders but argued the government has mismanaged the scheme, citing $4.6 billion in cuts, 1,200 participant deaths while waiting for funding, and systemic failures including workforce understaffing, plan delays, and lack of community understanding. The speaker highlighted specific issues in Tasmania, such as a nine-month plan delay for a child, a lack of high-needs accommodation, and a Huntington's disease client sent home without required supports after quarantine."
+  },
+  {
+   "slug": "speech-395591",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to strengthen NDIS banning orders but argued it does not fix systemic failures, citing 1,200 deaths of disabled people awaiting funding under the government, the $4.6 billion cut from the scheme, and the case of Ann-Marie Smith who died from neglect."
+  },
+  {
+   "slug": "speech-395592",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme Amendment (Strengthening Banning Orders) Bill 2020 broadens the circumstances in which the NDIS Quality and Safeguards Commissioner can issue banning orders against providers or individuals, closing a loophole that allowed banned workers to re-enter the scheme after leaving employment. The speaker also urged the government to address implementation concerns raised by providers, accelerate the national worker screening database, and adopt recommendations from the Every Australian Counts survey, including additional financial support and simpler NDIS processes."
+  },
+  {
+   "slug": "speech-395593",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The NDIS Quality and Safeguards Commission has structural failings that place people with disability at risk, as shown by the Ann-Marie Smith case; the Strengthening Banning Orders Bill expands the commissioner's power to ban unsuitable providers and workers from the NDIS using external information, but more protections are needed."
+  },
+  {
+   "slug": "speech-395594",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition government has mismanaged the NDIS, citing a $4.6 billion underspend and the avoidable death of Ann-Marie Smith on 6 April 2020 due to neglect. They called for the government to implement all 10 recommendations from Alan Robertson SC’s independent review, including earlier identification of vulnerable participants, banning sole carers in private homes, and establishing community visitor schemes."
+  },
+  {
+   "slug": "speech-395595",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme Amendment (Strengthening Banning Orders) Bill 2020 expands the NDIS Commissioner’s power to ban workers or providers deemed unfit to deliver services, including pre-emptive bans based on information from other sectors, and requires banning orders to be publicly searchable on the NDIS provider register. As at 30 June 2020, there were 17,253 registered NDIS providers, 45% of whom were individuals or sole traders."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment (Strengthening Banning Orders) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00103",
+   "assent_date": "2020-11-20"
+  }
+ ]
+}

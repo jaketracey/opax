@@ -1,0 +1,103 @@
+{
+ "key": "au-federal-r6834",
+ "title": "Veterans’ Affairs Legislation Amendment (Enhanced Family Support) Bill 2022",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Enhanced Family Support) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6834_ems_2f6394df-d804-4472-8f7c-970df32210c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6834%22",
+   "document_date": "2022-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419739",
+   "speaker": "Shayne Kenneth Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The Labor Party supports the Veterans' Affairs Legislation Amendment (Enhanced Family Support) Bill 2022, which expands eligibility for family support packages, harmonises the MRCA, DRCA and VA Acts, and implements recommendations from a veteran suicide inquiry and the Productivity Commission, effective 1 July; the speaker criticised the government for delaying the bill until just before an election."
+  },
+  {
+   "slug": "speech-419741",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Enhanced Family Support) Bill 2022 expands eligibility and increases financial assistance for veteran families, providing up to $12,500 over two years for at-risk families, additional payments per child, and up to $27,835 per year for widowed partners, in response to the 2017 Senate inquiry into veteran suicide and the 2019 Productivity Commission report."
+  }
+ ],
+ "acts": []
+}

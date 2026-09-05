@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-r6366",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Bill 2019",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2019-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6366_ems_975bbd19-0270-46f9-a966-493304eeb7c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6366%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00093",
+   "document_date": "2019-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "This bill updates the levy law for offshore petroleum and greenhouse gas activities to match recent regulatory changes.",
+   "It adds new charges on greenhouse gas wells, adjusts existing charges following rule changes, removes outdated clauses, and makes references to regulations more flexible.",
+   "The bill also clarifies when investigation-related levies apply, and lets future regulation titles be set by regulation rather than fixed in the Act."
+  ],
+  "changes": [
+   "Imposes levies on greenhouse gas wells, which currently only face petroleum well charges.",
+   "Adds a charge for five-yearly revisions of well operations management plans and drops the charge for starting well activities.",
+   "Extends investigation levies to cover probes under a newer regulatory powers law.",
+   "Repeals transitional provisions that have served their purpose.",
+   "Allows references to specific regulation titles to be prescribed by regulation instead of written into the Act."
+  ],
+  "affected": "Companies and regulators involved in offshore petroleum and greenhouse gas storage operations, particularly those dealing with well investigations and management plans.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-380411",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The amendment called for a large-scale carbon capture and storage plan, arguing that Australia’s emissions rose 0.6% in the year to March 2019, existing projects like Gorgon, CarbonNet, and COAL21 store less than 10 million tonnes annually against a 2030 budget of 440 million tonnes, and the government provides no carbon price or policy framework to bridge the $40 per tonne cost gap."
+  },
+  {
+   "slug": "speech-380412",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment and the bills to transfer regulatory oversight of offshore greenhouse gas storage wells to NOPSEMA, strengthening its powers to inspect and enforce compliance, including warrantless entry to contractors and integrity inspections, and noted the Gorgon Project on Barrow Island as the world's largest carbon capture and storage project."
+  },
+  {
+   "slug": "speech-380413",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment (Miscellaneous Amendments) Bill 2019 transfers regulatory oversight of offshore greenhouse storage, environmental management and well operations to NOPSEMA, strengthens NOPSEMA inspectors’ powers, and introduces enforceable undertakings. The Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Bill 2019 extends well-related levies to greenhouse gas titles to allow NOPSEMA to recover costs for overseeing well operations under those titles."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage (Regulatory Levies) Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00093",
+   "assent_date": "2019-10-28"
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1134",
+ "title": "Treasury Laws Amendment (Improving the Energy Efficiency of Rental Properties) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Improving the Energy Efficiency of Rental Properties) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-22",
+ "originating_house": "senate",
+ "sponsor": "STORER, Sen Tim",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10909",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1134%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1134%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1134%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1134_ems_259da832-4de7-4c93-a433-7011103272d7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1134%22",
+   "document_date": "2018-08-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-22",
+  "sentences": [
+   "The bill would give landlords a tax break of up to $2,000 each year for three years if they improve the energy efficiency of low-rent properties.",
+   "Landlords could claim the offset for each eligible dwelling, but only for upgrades that meet national quality standards and are done by accredited professionals.",
+   "The scheme applies to properties rented at $300 a week or less, and an independent review must be completed by the end of the 2021–2022 income year."
+  ],
+  "changes": [
+   "Creates a new tax offset for landlords who make energy efficiency upgrades to rental properties.",
+   "Limits the offset to $2,000 per eligible property per year for a three-year trial period.",
+   "Requires that upgrades meet industry standards and be installed by accredited professionals.",
+   "Restricts the offset to properties rented at $300 per week or less.",
+   "Prevents landlords from claiming for appliance installation or replacement in the first year of the property.",
+   "Mandates an independent review of the scheme before the end of the 2021–2022 income year."
+  ],
+  "affected": "Landlords of rental properties leased at $300 per week or less, and low-income tenants who live in those properties.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

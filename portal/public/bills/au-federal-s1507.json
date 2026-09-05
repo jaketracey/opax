@@ -1,0 +1,77 @@
+{
+ "key": "au-federal-s1507",
+ "title": "Crimes Amendment (Prohibiting Shackling During Childbirth) Bill 2026",
+ "short_title": "Crimes Amendment (Prohibiting Shackling During Childbirth) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-18",
+ "originating_house": "senate",
+ "sponsor": "THORPE, Sen Lidia",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10961",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1507%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1507_ems_43c1df2d-2bbb-405e-8edb-a4c7d83d228b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1507%22",
+   "document_date": "2026-08-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-18",
+  "sentences": [
+   "The bill would ban the practice of restraining people while they give birth.",
+   "It would insert a new section into the Crimes Act 1914 that prohibits shackling during childbirth and overrides any inconsistent state or territory laws.",
+   "The ban would start the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "The bill prohibits the restraint of people during childbirth.",
+   "The bill overrides any state or territory law that conflicts with the new prohibition.",
+   "The bill applies the ban to conduct in Commonwealth places and territories."
+  ],
+  "affected": "People giving birth in Australian jurisdictions, including in Commonwealth places and territories.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:59:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205609",
+   "speaker": "Lidia Thorpe",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-08-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

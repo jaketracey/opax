@@ -1,0 +1,907 @@
+{
+ "key": "au-federal-r7284",
+ "title": "Online Safety Amendment (Social Media Minimum Age) Bill 2024",
+ "short_title": "Online Safety Amendment (Social Media Minimum Age) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7284_ems_b9c134ac-a19a-47b2-9879-b03dda6e3c1a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7284_ems_ca8c5dba-cc80-4846-92f5-bea56885dcdf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7284%22",
+   "document_date": "2024-11-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00127",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-21",
+  "sentences": [
+   "The bill would set a minimum age of 16 for holding a social media account.",
+   "It would require providers of age-restricted social media platforms to take reasonable steps to stop users under that age from having an account.",
+   "The government says the framework would allow legislative rules to exclude certain services, such as messaging apps and health or education platforms."
+  ],
+  "changes": [
+   "Introduces an obligation on age-restricted social media platform providers to prevent under-16 users from holding accounts.",
+   "Sets a minimum age of 16 for access to age-restricted social media platforms.",
+   "Allows legislative rules to exempt specific services, including messaging apps and health or education platforms."
+  ],
+  "affected": "Providers of age-restricted social media platforms, and young people under 16 who use or would use those platforms.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9427",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-11-27.8.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. This means they can now discuss it in more detail. ### Rebellions There was one rebellion during this division, with Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) voting No against the rest of the Liberal Party, who voted Yes. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd039) (which is a document prepared by the parliamentary library): > * *The Online Safety Amendment (Social Media Minimum Age) Bill 2024 (the Bill) introduces an obligation on certain social media platforms to take reasonable steps to prevent children under 16 years of age from having an account.* > > * *It is the responsibility of the eSafety Commissioner to write guidelines on the ‘reasonable steps’ to be taken by age-restricted social media platforms.* > > * *Details on what may be included in these guidelines, such as what age estimation or age verification technology may be used, is not included in the Bill.* > > * *The obligation for certain social media platforms to restrict under-age account holders will not commence for at least 12 months, with the date to be set by the Minister.* > > * *Research, including by the eSafety Commissioner, suggests that there are both benefits and risks to social media use by children, and that these benefits and risks are individualised.* > > * *The Bill has bipartisan support. However, some experts and researchers in relevant fields have encouraged the government to pursue alternative action.* > > * *The Bill has been referred to the Senate Environment and Communications Legislation Committee for inquiry and report by 26 November 2024.* > > * *At the time of writing, the Bill has not been consid",
+   "stage": "Second reading",
+   "ayes": 97,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 52,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 101,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/1"
+  },
+  {
+   "key": "federal-representatives-9428",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 48,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 46,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 64
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/2"
+  },
+  {
+   "key": "federal-representatives-9429",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2024-11-27.10.1) introduced by Goldstein MP [Zoe Daniel](https://theyvoteforyou.org.au/people/representatives/goldstein/zoe_daniel) (Independent), which means it failed and will not be included in the bill. ### What do the amendments do? Ms Daniel [explained that](https://www.openaustralia.org.au/debates/?id=2024-11-27.10.1): > *... what I've attempted to do with these amendments is to create an exemption framework in order that social media platforms may be able to bridge the gap between having to ban young people from being inside a platform and actually doing something about the way that they run their platforms.* ### Amendment text See the [House debates](https://www.openaustralia.org.au/debate/?id=2024-11-27.10.2) for the text of the amendments.",
+   "stage": "Consideration in detail",
+   "ayes": 15,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 59
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/3"
+  },
+  {
+   "key": "federal-representatives-9430",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 46,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/4"
+  },
+  {
+   "key": "federal-representatives-9431",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-11-27.16.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means they failed and won't be included in the bill. ### What do the amendments do? Ms Spender explained that the [amendments](https://www.openaustralia.org.au/debate/?id=2024-11-27.16.1) would: > *[require] the government to formally respond to any recommendations made by the independent review within six months of receiving it. It is a modest and commonsense amendment that reflects similar requirements in places like New South Wales, where the government of the day is required to provide a formal response to certain inquiries within six months. I understand that the government does not intend to support any amendments in the House, but I would request that the minister commits today to provide a formal response to the independent review as and when it is presented in a few years time.* ### Amendment text > *(1) Schedule 1, item 16, page 11 (after line 21), at the end of section 239B, add:* > >> *(4) If the report of the review sets out one or more recommendations to the Commonwealth Government, the Minister must, within 6 months after receiving the report:* >> >>> *(a) cause to be prepared a statement setting out:* >>> >>>> *(i) the Commonwealth Government's response to each of the recommendations; and* >>>> >>>> *(ii) if the Commonwealth Government has not accepted a recommendation—the reasons for not accepting the recommendation; and* >>> >>> *(b) cause copies of the statement to be tabled in each House of the Parliament.*",
+   "stage": "Consideration in detail",
+   "ayes": 15,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 61,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/5"
+  },
+  {
+   "key": "federal-representatives-9432",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 49,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 46,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/6"
+  },
+  {
+   "key": "federal-representatives-9433",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Consideration in Detail - Personal data harvesting",
+   "stage": "Consideration in detail",
+   "ayes": 17,
+   "noes": 48,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/7"
+  },
+  {
+   "key": "federal-representatives-9434",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Online Safety Amendment (Social Media Minimum Age) Bill 2024 - Consideration in Detail - Agree with the bill",
+   "stage": "Consideration in detail",
+   "ayes": 102,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 6
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 113,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/8"
+  },
+  {
+   "key": "federal-senate-10497",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question before the Senate is that the second reading amendment standing in the name of Senator Hanson-Young be agreed to.",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/59"
+  },
+  {
+   "key": "federal-senate-10498",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan We now come to the second second reading amendment, standing in the name of Senator Roberts. The question is that the second reading amendment standing in the name of Senator Roberts be agreed to. _Pauline Hanson's One Nation's circulated amendment—_ Omit all words after \"That\", substitute \"further consideration of the bill be postponed until Wednesday, 12 February 2025\".",
+   "stage": "Second reading",
+   "ayes": 19,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/60"
+  },
+  {
+   "key": "federal-senate-10499",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question is that the bill now be read a second time.",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/61"
+  },
+  {
+   "key": "federal-senate-10500",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Jenny McAllister I table a supplementary explanatory memorandum relating to government amendments to be moved to the bill. I seek leave to move government amendments (1) to (8) on sheet SY115 together: Leave granted. I move: (1) Schedule 1, item 7, page 6 (after line 29), after section 63D, insert: 63DA Information that must not be collected (1) A provider of an age-restricted social media platform must not collect information: (a) for the purpose of complying with section 63D; or (b) for purposes that include the purpose of complying with section 63D; if the information is of a kind specified in the legislative rules. Civil penalty: 30,000 penalty units. (2) Before making legislative rules specifying a kind of information for the purposes of subsection (1), the Minister: (a) must seek advice from the Commissioner, and must have regard to that advice; and (b) must seek advice from the Information Commissioner, and must have regard to that advice. (3) Section 63D does not apply to the provider of an age-restricted social media platform if, because of legislative rules made for the purposes of subsection (1) of this section, there are no reasonable steps that the provider could take in order to comply with section 63D. Note: In proceedings for a civil penalty order against a person for a contravention of section 63D, the person bears an evidential burden in relation to the matter in this subsection (see section 96 of the _Regulatory Powers (Standard Provisions) Act 2014_). 63DB Use of certain identification material and services (1) A provider of an age-restricted social media platform must not: (a) collect government-issued identification material; or (b) use an accredited service (within the meaning of the _Digital ID Act 2024_); for the purpose of complying with section 63D, or for purposes that include the purpose of complying with section 63D. Civil penalty: 30,000 penalty units. (2) Subsection (1) does not apply if: (a) the provider provides alternative means (n",
+   "stage": "In committee",
+   "ayes": 19,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/62"
+  },
+  {
+   "key": "federal-senate-10501",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now put the second question on Senator David Pocock's amendments. The question is that Senator David Pocock's amendments on sheets 3206 and 3207 be agreed to. _Senator David Pocock's circulated amendments—_ SHEET 3206 (1) Schedule 1, item 7, page 4 (after line 21), after the paragraph beginning \"Providers of\" in section 63A, insert: (2) Schedule 1, item 7, page 6 (after line 29), after section 63D, insert: 63DA Civil penalty for failing to take reasonable steps to remove or suspend inauthentic and bot accounts A provider of an age-restricted social media platform must take reasonable steps to remove or suspend inauthentic accounts and bot accounts with the age-restricted social media platform. Civil penalty: 30,000 penalty units. (3) Schedule 1, item 7, page 7 (line 2), omit \"Section 63D takes\", substitute \"Sections 63D and 63DA take\". (4) Schedule 1, item 7, page 7 (lines 8 to 13), omit subsection (4), substitute: (4) To avoid doubt, the obligations in sections 63D and 63DA apply in relation to accounts with an age-restricted social media platform if the accounts exist on or after the day sections 63D and 63DA take effect (including accounts that began to exist before that day, and accounts that began to exist before the day this section commences). (5) Schedule 1, item 7, page 9 (line 9), after \"section 63D\", insert \"or 63DA\". (6) Schedule 1, item 7, page 10 (after line 2), after paragraph 63J(a), insert: (aa) has contravened section 63D (failing to take reasonable steps to prevent inauthentic or bot accounts); or (7) Schedule 1, item 13, page 11 (after line 3), after paragraph (da), insert: (daa) section 63DA; (8) Schedule 1, item 16, page 11 (line 14), omit \"section 63D takes\", substitute \"sections 63D and 63DA take\". \\_\\_\\_\\_\\_ SHEET 3207 (1) Schedule 1, item 7, page 7 (after line 25), after subparagraph 63F(1)(b)(i), insert: (ia) for the purpose of complying with a requirement specified in a legislative instrument made under subsection",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/63"
+  },
+  {
+   "key": "federal-senate-10502",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question before the committee is that Senator Canavan's remaining amendments on sheet 3181 and the amendments on sheets 3180, 3183, 3195, 3215 and 3216 be agreed to. _Senator Canavan's_ _circulated amendments—_ SHEET 3180 (1) Schedule 1, item 7, page 6 (line 26), before \"A provider\", insert \"(1)\". (2) Schedule 1, item 7, page 6 (after line 29), at the end of section 63D, add: (2) For the purposes of subsection (1), the taking of reasonable steps to prevent age-restricted users having accounts with an age-restricted social media platform does not include creating, collecting or using the digital ID (within the meaning of the _Digital ID Act 2024_) of an individual for the purpose of determining whether or not the individual is an age-restricted user. \\_\\_\\_\\_\\_ SHEET 3181 (1) Schedule 1, item 5, page 4 (lines 5 to 8), omit paragraphs 27(1)(qa) and (qb), substitute: (qa) to promote guidelines formulated under section 63EA. (3) Schedule 1, item 7, page 7 (after line 13), at the end of Division 2, add: 63EA Ministerial guidelines on reasonable steps The Minister must, by legislative instrument, formulate guidelines for the taking of reasonable steps to prevent age-restricted users having accounts with age-restricted social media platforms. \\_\\_\\_\\_\\_ SHEET 3183 (1) Schedule 1, item 7, page 6 (before line 18), before paragraph 63C(7)(a), insert: (aa) the Minister must be satisfied that the legislative rules would not have the effect, or be likely to have the effect, of substantially lessening competition in the market for that kind of electronic service; and \\_\\_\\_\\_\\_ SHEET 3195 (1) Schedule 1, item 7, page 5 (line 1) to page 6 (line 22), omit section 63C, substitute: 63C Age-restricted social media platform (1) For the purposes of this Act, _age-restricted social media platform_ means an electronic service that satisfies the following conditions: (a) the service allows end-users to upload content or view the content or activity of other end-users;",
+   "stage": "In committee",
+   "ayes": 19,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/64"
+  },
+  {
+   "key": "federal-senate-10503",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/65"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Online Safety Amendment (Social Media Minimum Age) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00127",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

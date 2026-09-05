@@ -1,0 +1,218 @@
+{
+ "key": "au-federal-r6830",
+ "title": "Social Security Amendment (Improved Child to Adult Transfer for Carer Payment and Carer Allowance) Bill 2022",
+ "short_title": "Social Security Amendment (Improved Child to Adult Transfer for Carer Payment and Carer Allowance) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6830_ems_0b707ac6-df1b-4f03-913c-c1eaea5cc2d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6830%22",
+   "document_date": "2022-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00025",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "The bill would change the Social Security Act 1991 to keep carers qualified for payments and health care cards when a child they care for turns 16.",
+   "It would extend qualification until the child reaches 16 years and 3 months, or until an Adult Disability Assessment Tool assessment is completed by Services Australia, whichever is later.",
+   "From 1 January 2023, carers of children with a terminal condition would keep carer payment until the child turns 18 or the assessment is done, if they submit required documents before the 18th birthday."
+  ],
+  "changes": [
+   "Removes an anomaly where some carers lose payment when the care receiver turns 16 while others continue until 16 years and 3 months.",
+   "Provides continuity of payment for carers who have submitted information for an Adult Disability Assessment Tool assessment before the child's 16th birthday.",
+   "Extends access to health care cards for Carer Allowance – Health Care Card Only recipients beyond the child turning 16.",
+   "Extends carer payment for carers of children over 16 with a terminal condition until the child turns 18 or the assessment is completed."
+  ],
+  "affected": "Carers receiving Carer Payment or Carer Allowance, including those with a Health Care Card Only and those caring for a child with a terminal condition.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7683",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2022-03-30.222.1) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read for a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. Because this vote failed, the usual second reading motion will remain unchanged. ### Amendment text At the end of the motion, add \", but the Senate condemns the Government for failing many of Australia's 2.6 million carers during the pandemic\".",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 19,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-419549",
+   "speaker": "Linda Jean Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment noting the Coalition government's long-delayed changes to carer support age transfer rules caused anxiety for families, and condemned the government for failing Australia's 2.6 million carers, especially during COVID. The bill makes modest changes to extend payments until children turn 16 years and three months, and allows carers of terminally ill children aged 16–18 to continue receiving support without an adult assessment."
+  },
+  {
+   "slug": "speech-419552",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Security Amendment (Improved Child to Adult Transfer for Carer Payment and Carer Allowance) Bill 2022, which extends carer payments and healthcare cards until the child turns 16 years and three months and improves notification timing. The speaker highlighted a constituent case in Mayo involving a single mother who lost her child’s carer payment and healthcare card due to process issues, despite submitting the required assessment on time."
+  },
+  {
+   "slug": "speech-419553",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The Social Security Amendment (Improved Child to Adult Transfer for Carer Payment and Carer Allowance) Bill 2022 will, from 1 April 2023, allow carers to retain carer payment and carer allowance until their care receiver turns 16 years and three months, and align the standalone carer allowance healthcare card with that age. The government allocates around $9 billion per year to over 620,000 carers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security Amendment (Improved Child to Adult Transfer for Carer Payment and Carer Allowance) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00025",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

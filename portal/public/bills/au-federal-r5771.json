@@ -1,0 +1,271 @@
+{
+ "key": "au-federal-r5771",
+ "title": "Veterans’ Affairs Legislation Amendment (Digital Readiness and Other Measures) Bill 2017",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Digital Readiness and Other Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2017-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5771_ems_c7f6ea52-3cf2-4129-87d4-04262f4a0163%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5771_ems_d79b9557-e74b-4752-a777-53d4b0be3988%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5771_ems_827bad28-8853-4424-9105-c426e59d98b3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5771_ems_7b4de70b-6bbe-4f2a-bc51-02a7ad3f6fdb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5771_ems_d4bf3468-e66e-4216-8563-0911bcd5c7e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5771%22",
+   "document_date": "2016-11-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00028",
+   "document_date": "2017-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-11-24",
+  "sentences": [
+   "The bill would update the Department of Veterans’ Affairs' legal framework to support its digital transformation and service improvements.",
+   "It would allow the department’s Secretary to authorise computer programs to make decisions and determinations under three veterans’ Acts, and to disclose information in the public interest with safeguards.",
+   "The public interest disclosure power would be reviewed two years after it starts, and the bill also adds information-sharing provisions to the DRCA for consistency with the MRCA."
+  ],
+  "changes": [
+   "Authorises computer programs to make decisions and determinations under the VEA, MRCA and DRCA.",
+   "Allows the Secretary to disclose case information in the public interest, with safeguards including a ministerial rule-making requirement and a mandatory review after two years.",
+   "Inserts three information-sharing provisions in the DRCA involving the Military Rehabilitation and Compensation Commission, the Secretary of Defence and the Chief of the Defence Force.",
+   "Makes two minor technical fixes to the VEA that were omitted from the Statute Update Act 2016.",
+   "Corrects the short title of the DRCA."
+  ],
+  "affected": "Veterans, their families, the Department of Veterans’ Affairs, the Department of Defence, and the Military Rehabilitation and Compensation Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:23:08Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-342962",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to modernise DVA's ICT systems and reduce claim processing times, but stressed that automation must not replace face-to-face services or repeat Centrelink's debt recovery failures. The party negotiated stronger safeguards on the disclosure of veterans' personal information and called for the government to publicly release the business case for ICT reform."
+  },
+  {
+   "slug": "speech-342963",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Digital Readiness and Other Measures) Bill 2016, which enables information sharing between the Department of Veterans' Affairs and Defence to improve services for veterans, with amendments requiring mandatory rules and a two-year review. They also noted that the Centrelink debt repayment system was implemented by the previous government and has not been changed."
+  },
+  {
+   "slug": "speech-342964",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The speaker expressed support for the bill's intent but warned of the government's history of failed digital projects, citing the census, Centrelink robo-debt, and ATO website crash, and criticised the Digital Transformation Agency for being \"missing in action.\" The opposition will monitor the DVA's upgrade closely, demanding the DTA provide clear support and ensure adherence to the Ombudsman's recommendations on automated decision-making, data accuracy, and complaint mechanisms."
+  },
+  {
+   "slug": "speech-342965",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Digital Readiness and Other Measures) Bill 2016 was supported by Labor to streamline claims processing, but the speaker warned that automated decision-making must include human oversight, citing the Centrelink robo-debt failures, and raised concerns about the broad public interest disclosure powers allowing the DVA secretary to release veterans' personal information."
+  },
+  {
+   "slug": "speech-342967",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Digital Readiness Bill but warned against repeating past IT failures like the census and Centrelink, and noted that the government agreed to committee recommendations including a privacy impact assessment and a two-year review."
+  },
+  {
+   "slug": "speech-342968",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Digital Readiness and Other Measures) Bill 2016 and praised the previous member for Bruce and Minister for Veterans' Affairs for his outstanding service and popularity among veterans and RSLs."
+  },
+  {
+   "slug": "speech-342971",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-344861",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker moved to agree to amendments and tabled a consolidated explanatory memorandum for the Veterans' Affairs Legislation Amendment (Digital Readiness and Other Measures) Bill, noting it would reflect both government and opposition amendments agreed to by the Senate on Monday evening."
+  },
+  {
+   "slug": "speech-344862",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "Labor's amendment to the Veterans' Affairs Legislation Amendment (Digital Readiness and Other Measures) Bill ensures that any claim rejected by computer decision-making is automatically sent to a delegate for review. The speaker also welcomed the government's amendment removing public disclosure of personal information, though the department does not yet have the computer systems to deliver the automated process."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans' Affairs Legislation Amendment (Digital Readiness and Other Measures) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00028",
+   "assent_date": "2017-04-04"
+  }
+ ]
+}

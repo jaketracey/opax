@@ -1,0 +1,569 @@
+{
+ "key": "au-federal-r7060",
+ "title": "Higher Education Support Amendment (Response to the Australian Universities Accord Interim Report) Bill 2023",
+ "short_title": "Higher Education Support Amendment (Response to the Australian Universities Accord Interim Report) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2023-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7060_ems_5af966c6-9dcf-48dc-8766-b3ddd4ae863b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7060%22",
+   "document_date": "2023-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00089",
+   "document_date": "2023-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-03",
+  "sentences": [
+   "This bill would make more Indigenous students eligible for government-funded university places.",
+   "It would remove the rule that students must pass half their subjects to keep their funded place and require universities to have a policy to help students succeed.",
+   "The government would fund all Indigenous students in bachelor degrees at Table A providers with no cap on numbers, except for medicine courses."
+  ],
+  "changes": [
+   "Expands eligibility for Commonwealth supported places to all First Nations students, including those in metropolitan areas.",
+   "Removes the 50 per cent pass requirement for Commonwealth supported places and FEE-HELP assistance.",
+   "Requires higher education providers to have and comply with a student support policy."
+  ],
+  "affected": "First Nations students and higher education providers listed as Table A providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8332",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-09-06.27.26) to the usual second reading motion, which is \"*that the bill be read a second time*\" (reading a bill for a second time is parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Barker MP [Tony Pasin](https://theyvoteforyou.org.au/people/representatives/barker/tony_pasin) (Liberal). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the bill is deficient in a number of respects including that:* > > *(1) more than three million Australians have a HECS debt or other type of student debt under the Higher Education Loan Program (HELP) scheme which increased by a massive 7.1 per cent on 1 June 2023, the highest indexation rate in more than 30 years, as a result of the Government's cost of living crisis and sky-high inflation rate;* > > *(2) by proposing to abolish the Coalition's 50 per cent pass rule, the Government has failed to protect students at high risk of not completing their course from accumulating debilitating HECS debts and suffering acute financial hardship;* > > *(3) the Government's reliance on a 'survey' of 27 universities to justify the abolition of the 50 per cent pass rule indicates that the Government has not been able to access the relevant data as to how many students are impacted by this measure, reflecting a poor adherence to evidence-based policy;* > > *(4) in proposing to uncap Commonwealth supported places (CSPs) available to Indigenous students living in metropolitan areas which extends the Coalition's measure to uncap CSPs for Indigenous students living in regional and remote Australia, the Government has not explained how it will hold universities to account for poor completion rates by Indigenous students which currently sees only 26 per cent of Indigenou",
+   "stage": "Second reading",
+   "ayes": 52,
+   "noes": 88,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-09-06/2"
+  },
+  {
+   "key": "federal-representatives-8412",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "question": "The majority voted in favour of the [amendment](https://theyvoteforyou.org.au/divisions/senate/2023-10-19/8) agreed to by the Senate, which means the bill had now been agreed to by both houses of Parliament and so can now become law. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd12) (which is a document prepared by the non-partisan parliamentary library): > *The purpose of the [Higher Education Support Amendment (Response to the Australian Universities Accord Interim Report) Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7060) (the Bill) is to amend the Higher Education Support Act 2003 (HESA) to:* > > * *uncap the number of Indigenous students who can enrol in a Commonwealth supported place (CSP) by extending eligibility of demand-driven funding to all Indigenous students, rather than only Indigenous students living in regional and remote areas* > > * *remove the ‘unnecessarily harsh’ requirement—introduced as part of the Job-ready Graduates Package—that after 8 units of a bachelor degree, students need to maintain a pass rate of at least 50% to continue as a Commonwealth supported student and to be eligible for FEE-HELP assistance* > > * *motivate higher education providers to provide appropriate support for students by requiring providers to have and comply with a ‘support for students’ policy to assist in identifying students at risk of falling behind and to support them to complete their study.* > > *The Bill implements 2 priority actions recommended in the Australian Universities Accord Interim Report that require legislation.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 84,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 130,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-19/7"
+  },
+  {
+   "key": "federal-senate-8418",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "Higher Education Support Amendment (Response to the Australian Universities Accord Interim Report) Bill 2023 - Second Reading - Make university and TAFE fee-free",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 7,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/6"
+  },
+  {
+   "key": "federal-senate-8419",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-10-19.48.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill a second time. This means they can now discuss the bill in more detail. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd12) (which is a document prepared by the non-partisan parliamentary library): > *The purpose of the [Higher Education Support Amendment (Response to the Australian Universities Accord Interim Report) Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7060) (the Bill) is to amend the Higher Education Support Act 2003 (HESA) to:* > > * *uncap the number of Indigenous students who can enrol in a Commonwealth supported place (CSP) by extending eligibility of demand-driven funding to all Indigenous students, rather than only Indigenous students living in regional and remote areas* > > * *remove the ‘unnecessarily harsh’ requirement—introduced as part of the Job-ready Graduates Package—that after 8 units of a bachelor degree, students need to maintain a pass rate of at least 50% to continue as a Commonwealth supported student and to be eligible for FEE-HELP assistance* > > * *motivate higher education providers to provide appropriate support for students by requiring providers to have and comply with a ‘support for students’ policy to assist in identifying students at risk of falling behind and to support them to complete their study.* > > *The Bill implements 2 priority actions recommended in the Australian Universities Accord Interim Report that require legislation.*",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/7"
+  },
+  {
+   "key": "federal-senate-8420",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7060_amend_fda8b3b8-3488-4605-8942-34f92b259783%22;rec=0) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they succeeded. The amendment replaces a table related to the commencement of certain parts.",
+   "stage": "Consideration in detail",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/8"
+  },
+  {
+   "key": "federal-senate-8421",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-10-19.52.1) introduced by the Australian Greens, which means it failed. ### Explanation of amendments > *Statement pursuant to the order of the Senate of 26 June 2000* > > *Amendments (1) and (2)* > >> *Amendments (1) and (2) are framed as requests because they amend the bill to expand the scope of demand driven Commonwealth supported places for Indigenous students to include non-research postgraduate courses of study.* >> >> *The amendments would expand the categories of courses of study that are demand driven higher education courses and expand the circumstances in which Table A higher education providers must enrol students as Commonwealth supported students. This will have the effect of increasing the amounts payable to Table A providers for grants in relation to Commonwealth supported places under Part 2-2 of the Higher Education Act 2003 and increase the number of students who are Commonwealth supported students eligible for HECS-HELP under that Act.* >> >> *The effect of the amendments would increase the amount of expenditure under the standing appropriation in section 238-12 of the Higher Education Act 2003.* >> >> *Statement by the Clerk of the Senate pursuant to the order of the Senate of 26 June 2000* > > *Amendments (1) and (2)* > >> *If the effect of the amendment is to increase expenditure under the standing appropriation in section 238-12 of the Higher Education Act 2003 then it is in accordance with the precedents of the Senate that the amendment be moved as a request.* ### Amendment text > *Australian Greens' circulated requests for amendments—* > > *That the House of Representatives be requested to make the following amendments:* > > *(1) Schedule 1, page 3 (after line 3), before item 1, insert:* > >> *1A Paragraph 36-30( 1)( aa)* >> >> *After \"*undergraduate course of study\", insert \"or a *demand driven higher education course\".* > > *(2) Schedule 1, page 3 (",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/9"
+  },
+  {
+   "key": "federal-senate-8422",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-10-19.54.1) to pass the bill in the Senate. In parliamentary jargon, they voted to read the bill a third time. This means the bill will now be sent back to the House of Representatives, where our MPs will consider whether they agree with the Senate amendments so the bill can become law. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd12) (which is a document prepared by the non-partisan parliamentary library): > *The purpose of the [Higher Education Support Amendment (Response to the Australian Universities Accord Interim Report) Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7060) (the Bill) is to amend the Higher Education Support Act 2003 (HESA) to:* > > * *uncap the number of Indigenous students who can enrol in a Commonwealth supported place (CSP) by extending eligibility of demand-driven funding to all Indigenous students, rather than only Indigenous students living in regional and remote areas* > > * *remove the ‘unnecessarily harsh’ requirement—introduced as part of the Job-ready Graduates Package—that after 8 units of a bachelor degree, students need to maintain a pass rate of at least 50% to continue as a Commonwealth supported student and to be eligible for FEE-HELP assistance* > > * *motivate higher education providers to provide appropriate support for students by requiring providers to have and comply with a ‘support for students’ policy to assist in identifying students at risk of falling behind and to support them to complete their study.* > > *The Bill implements 2 priority actions recommended in the Australian Universities Accord Interim Report that require legislation.*",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/10"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (Response to the Australian Universities Accord Interim Report) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00089",
+   "assent_date": "2023-11-06"
+  }
+ ]
+}

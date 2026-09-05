@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-s1336",
+ "title": "Sex Discrimination and Other Legislation Amendment (Save Women’s Sport) Bill 2022",
+ "short_title": "Sex Discrimination and Other Legislation Amendment (Save Women’s Sport) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-10",
+ "originating_house": "senate",
+ "sponsor": "CHANDLER, Sen Claire",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10955",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1336%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1336%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1336_ems_4c1f5b97-e7ca-4bb3-bdea-4246e891822a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1336%22",
+   "document_date": "2022-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "The bill would make it clear that running single-sex sport is not illegal under the Sex Discrimination Act 1984.",
+   "It would amend the Act to allow sporting organisations to exclude people of one sex from activities intended for the other sex, based on biological sex rather than gender identity.",
+   "The bill would start the day after it receives royal assent."
+  ],
+  "changes": [
+   "Amends section 42 of the Sex Discrimination Act 1984 to clarify that excluding persons of one sex from a sporting activity for the opposite sex is not unlawful.",
+   "Re-inserts sex-based definitions of 'man' and 'woman' into the Act.",
+   "Adds a new object for the Australian Sports Commission to support single-sex sport for women and girls.",
+   "Deletes paragraphs 42(2)(d) and (e) of the Act, removing the ability to prescribe exemptions and the age restriction for children under 12.",
+   "Inserts a note that sex in the Act refers to biological sex, not gender identity.",
+   "Amends the objects of the Act to include the provision of single-sex sports for women."
+  ],
+  "affected": "Sporting organisations, administrators, and participants in single-sex sporting activities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,1044 @@
+{
+ "key": "au-federal-r6670",
+ "title": "Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021",
+ "short_title": "Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Resources, Water and Northern Australia",
+ "status": "passed",
+ "status_as_of": "2021-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6670_ems_d6e0aa16-bf2b-4b08-923f-c69063006a9e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6670_ems_06bcbbbf-c247-42a0-a780-990eb4be4be1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6670_ems_cb2b7dc6-277e-4787-a65d-14773c588c05%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6670_ems_4837383d-08f2-40f2-86ca-5964a7e3325c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6670%22",
+   "document_date": "2021-02-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00041",
+   "document_date": "2021-05-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-24",
+  "sentences": [
+   "This bill would give the Northern Australia Infrastructure Facility more time and flexibility to fund projects in northern Australia.",
+   "It would extend the Facility's investment period until 30 June 2026, improve its governance, and make it faster and more adaptable in providing financial help.",
+   "The bill follows a statutory review that found the Facility could do more to support economic and population growth in the region."
+  ],
+  "changes": [
+   "Extends the Facility's investment period by five years to 30 June 2026.",
+   "Strengthens the Facility's governance.",
+   "Increases the scope, speed and flexibility of the Facility's financial assistance for economic infrastructure."
+  ],
+  "affected": "The Northern Australia Infrastructure Facility and projects contributing to northern Australia's economic and population growth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7105",
+   "date": "2021-05-12",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2021-05-12.147.1) that: > *That the [Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6670) be referred to the [Environment and Communications Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Environment_and_Communications) for inquiry and report by 15 June 2021.*",
+   "stage": "Reference to Committee",
+   "ayes": 9,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 19,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-12/6"
+  },
+  {
+   "key": "federal-representatives-7115",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "question": "Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021 - Consideration of Senate Message - Stop MP Bandt from speaking",
+   "stage": "Consideration of Senate message",
+   "ayes": 72,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 117
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-13/5"
+  },
+  {
+   "key": "federal-senate-7130",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-05-13.74.1) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it was successful. The amendment added the words below to the [original motion](https://www.openaustralia.org.au/senate/?gid=2021-05-13.25.1), which was agreed to earlier this day. ### Amendment text > *That the order of the Senate agreed to earlier today relating to the consideration of legislation be varied as follows:* > > *At the end of subparagraph (a)(v), add:* > >> *(E) [Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6670);* ### Original motion > *That today:* > > *(a) the routine of business from 11.45 am be as follows:* > >> *(i) notices of motion;* >> >> *(ii) consideration of a report from the Standing Committee for Selection of Bills;* >> >> *(iii) placing of business;* >> >> *(iv) formal motions; and* >> >> *(v) consideration of the following bills:* >>> >>> *(A) Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 and Migration Amendment (Tabling Notice of Certain Character Decisions) Bill 2021,* >>> >>> *(B) Education Legislation Amendment (2021 Measures No. 1) Bill 2021,* >>> >>> *(C) Health Insurance Amendment (Prescribed Fees) Bill 2021, and* >>> >>> *(D) Social Services and Other Legislation Amendment (Student Assistance and Other Measures) Bill 2021;* > > *(b) if by 1.30 pm consideration of the bills has not concluded, the questions on all remaining stages be put without debate;* > > *(c) paragraph (b) operate as a limitation of debate under standing order 142; and* > > *(d) following consideration of the bills, the Senate return to its routine of business.*",
+   "stage": "Business motion",
+   "ayes": 40,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 21,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/15"
+  },
+  {
+   "key": "federal-senate-7135",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes the Government's failure to:* > >> *(i) deliver what it promised as part of its Northern Australia Agenda, and* >> >> *(ii) get money out the door of the Northern Australia Infrastructure Facility (NAIF); and* > > *(b) further notes that the bill includes amendments that the Opposition has been calling for over a number of years; and* > > *(c) calls on the Prime Minister and the Government to:* > >> *(i) learn from their failures with the NAIF over the past five years,* >> >> *(ii) deliver the funding they have promised for development in Northern Australia by speeding up the release of funds from the NAIF, and* >> >> *(iii) realise the potential in Northern Australia and re-commit to delivering on their Northern Australia agenda\".* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to the Facility.* Currently, the [purpose of the Facility](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062#_Toc71535773) is: > *...to provide financial assistance to the states and territories for the construction of economic infrastructure in Northern Australia. It does this through provid",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "member": 10,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/20"
+  },
+  {
+   "key": "federal-senate-7136",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-05-13.96.1) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *SHEET 1274* > > *At the end of the motion, add: \", and the bill be referred to the Environment and Communications Legislation Committee for inquiry and report by 15 June 2021\".* > > *_____* > > *SHEET 1290* > > *At the end of the motion, add: \", but the Senate is of the view that no public money should be invested in coal, gas or oil projects\".* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to the Facility.* Currently, the [purpose of the Facility](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062#_Toc71535773) is: > *...to provide financial assistance to the states and territories for the construction of economic infrastructure in Northern Australia. It does this through providing concessional loans and guarantees.*",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 22,
+    "dated": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/21"
+  },
+  {
+   "key": "federal-senate-7137",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted in favour of agreeing with the bill's main idea, which means they can now consider any possible amendments to the bill before deciding whether to pass it. This vote is known as the [second reading vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to the Facility.* Currently, the [purpose of the Facility](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062#_Toc71535773) is: > *...to provide financial assistance to the states and territories for the construction of economic infrastructure in Northern Australia. It does this through providing concessional loans and guarantees.*",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 22,
+    "dated": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/22"
+  },
+  {
+   "key": "federal-senate-7138",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a Government [amendment](https://www.openaustralia.org.au/senate/?gid=2021-05-13.101.3), which means it was successful and will now form part of the bill. ### Amendment text > *(1) Schedule 1, item 12, page 7 (line 7), after \"assistance\", insert \"(other than equity investments)\".* > > *(2) Schedule 1, item 12, page 7 (line 9), after \"assistance\", insert \"(other than in the form of equity investments)\".* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to the Facility.* Currently, the [purpose of the Facility](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062#_Toc71535773) is: > *...to provide financial assistance to the states and territories for the construction of economic infrastructure in Northern Australia. It does this through providing concessional loans and guarantees.*",
+   "stage": "In committee",
+   "ayes": 46,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 22,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/23"
+  },
+  {
+   "key": "federal-senate-7139",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021 - in Committee - Net Zero by 2035",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 21,
+    "dated": 21,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/24"
+  },
+  {
+   "key": "federal-senate-7140",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-05-13.108.5) introduced by the Australian Labor Party, which means they failed. ### Amendment text > *(1) Schedule 1, page 9 (after line 10), after item 29, insert:* > > *29A At the end of section 15(4)* > > *Add:* > > *(5) At least one member must be an Indigenous person.* > > *(6) In this section:* > > *Indigenous person means a person who is:* > >> *(a) a member of the Aboriginal race of Australia; or* >> >> *(b) a descendant of an Indigenous inhabitant of the Torres Strait Islands.* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to the Facility.* Currently, the [purpose of the Facility](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062#_Toc71535773) is: > *...to provide financial assistance to the states and territories for the construction of economic infrastructure in Northern Australia. It does this through providing concessional loans and guarantees.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "member": 14,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/25"
+  },
+  {
+   "key": "federal-senate-7141",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021 - in Committee - Limit on Investment Mandate",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 14,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/26"
+  },
+  {
+   "key": "federal-senate-7142",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-05-13.112.1) introduced by the Australian Labor Party, which means they failed. The amendments related to the [Indian ocean territories](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6670_amend_9cf33b8d-acaa-466e-8f6f-c12f2c764840%22;rec=0) and a [portfolio benchmark return](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6670_amend_74c4b06b-9780-4ecd-b844-2ed2deb74f48%22;rec=0). ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to the Facility.* Currently, the [purpose of the Facility](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062#_Toc71535773) is: > *...to provide financial assistance to the states and territories for the construction of economic infrastructure in Northern Australia. It does this through providing concessional loans and guarantees.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "member": 14,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/27"
+  },
+  {
+   "key": "federal-senate-7143",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted in favour of the items listed below remaining as they are. This vote occurred after the Australian Greens proposed to oppose them. These items related to the powers of the Secretary of the Department. ### Amendment text > *(2) [Schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6670_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6670_first-reps%2F0000%22;rec=0), item 25, page 8 (line 29) to page 9 (line 1), to be opposed.* > > *(3) [Schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6670_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6670_first-reps%2F0000%22;rec=0), item 27, page 9 (lines 4 and 5), to be opposed.* > > *(4) [Schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6670_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6670_first-reps%2F0000%22;rec=0), item 42, page 10 (lines 15 to 24), to be opposed.* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to the Facility.* Currently, the [purpose of the Facility](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062#_Toc71535773) is: > *...to provide financial assistance to the states and territories for the construction of economic infrastructure in Northern Australia. It does this through providing concessional loans and guarantees.*",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 20,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/28"
+  },
+  {
+   "key": "federal-senate-7144",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted against a series of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-05-13.116.1) introduced by the Australian Greens, which means they failed. The amendments can be found on sheets [1268](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6670_amend_2ed7021c-abea-4f7d-a435-a5cb632e6860%22;rec=0), [1278](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6670_amend_fe30aedb-0f58-4925-883e-e8aaa68de92f%22;rec=0), [1280](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6670_amend_86e36e77-79c5-456b-9997-b7b6001dcbe2%22;rec=0), [1281](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6670_amend_1612cfb3-0bc3-4601-9268-ad5bea4bb225%22;rec=0), [1282](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6670_amend_c3520058-1d37-4641-ae85-2c9f41cb362b%22;rec=0) and [1287](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6670_amend_216d7a67-26b1-426a-acef-23290caabeff%22;rec=0). ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to t",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 19,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/29"
+  },
+  {
+   "key": "federal-senate-7145",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021 - in Committee - New fossil fuel projects",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 19,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/30"
+  },
+  {
+   "key": "federal-senate-7146",
+   "date": "2021-05-13",
+   "house": "senate",
+   "question": "The majority voted in favour of passing the bill, with amendments, in the Senate. It will now be sent to the House of Representatives, where our MPs will decide on whether they agree with the Senate amendments. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062), the bill was introduced in order to: > * *extend the period when the Northern Australia Infrastructure Facility (the Facility) can issue financial assistance* > * *expand who the Facility can give assistance to, and how it provides this assistance* > * *add the Finance Minister as a responsible minister for the Facility and* > * *change some governance arrangements in relation to the Facility.* Currently, the [purpose of the Facility](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd062#_Toc71535773) is: > *...to provide financial assistance to the states and territories for the construction of economic infrastructure in Northern Australia. It does this through providing concessional loans and guarantees.*",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 20,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-13/31"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-405421",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Northern Australia Infrastructure Facility (NAIF) has spent only $218.4 million of its $5 billion budget, representing just 5% of promised funds, with fewer than ten projects completed. The speaker supported the bill to extend NAIF to 2026, expand eligible activities, and allow direct lending, while moving a second reading amendment to note the government's failure and call for faster funding release."
+  },
+  {
+   "slug": "speech-405424",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Northern Australia Infrastructure Facility has released only $218.4 million of its $5 billion allocation, and the bill is a necessary response to the government’s failure to get funds out the door. The speaker supported the five-year extension and smaller-project changes, while criticising the government’s record and noting apparent inconsistencies in the minister’s job and funding figures."
+  },
+  {
+   "slug": "speech-405426",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Northern Australia Infrastructure Facility (NAIF) has been a failure, spending only $218 million of its $5 billion budget in five years; the speaker welcomed the bill's changes to broaden funding purposes and allow direct funding to proponents, but stressed the need for Northern Territory and First Nations representation on the NAIF board."
+  },
+  {
+   "slug": "speech-405427",
+   "speaker": "Phillip Thompson",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021, arguing it would expand NAIF to make equity investments (capped at $500 million) and fund non-physical infrastructure, citing $2.8 billion in commitments and specific Townsville projects including $35 million for the Cowboys' training centre, $96 million and $46 million for James Cook University, $20 million for Mater Hospital car park, and $50 million for airport redevelopment, while criticising the Queensland Labor state government for delaying approvals."
+  },
+  {
+   "slug": "speech-405428",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Northern Australia Infrastructure Facility Amendment Bill but argued for two changes: a mandated First Nations representative on the NAIF board, and the inclusion of Christmas Island and the Cocos (Keeling) Islands (Indian Ocean Territories) as part of northern Australia for NAIF access, citing their proximity to Darwin and critical infrastructure needs."
+  },
+  {
+   "slug": "speech-405429",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Northern Australia Infrastructure Facility Amendment Bill, arguing it weakens the NAIF's independence, removes state vetoes, and risks funding fossil fuel projects like the Beetaloo Basin, which could become stranded assets. They noted the bill expands NAIF functions to equity investments and derivatives, with $2.3 billion in remaining funds potentially misused on projects the market won't support."
+  },
+  {
+   "slug": "speech-405430",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Northern Australia Infrastructure Facility Amendment Bill 2021 is a slush fund for the gas industry, diverting public money from schools and hospitals to fossil fuel projects during a climate crisis. They opposed expanding the NAIF’s scope, including bypassing state vetoes, equity investments, and derivatives, and pledged Greens amendments to require climate and environmental assessments."
+  },
+  {
+   "slug": "speech-405436",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Bill 2021 extends the NAIF’s active investment period and introduces reforms to accelerate lending, enable direct lending to proponents, invest in on-lending partnerships, and expand investment flexibility, including equity investments. The NAIF has made $2.8 billion in investment decisions, and a correction to the explanatory memorandum was tabled."
+  },
+  {
+   "slug": "speech-405441",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker moved amendments to the Northern Australia Infrastructure Facility Amendment Bill to remove the Department Secretary from the NAIF board and prohibit financial assistance for fossil fuel-based infrastructure, arguing this would prevent government control and taxpayer losses on risky fossil fuel ventures."
+  },
+  {
+   "slug": "speech-406250",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed amendments that would exempt equity investments from the requirement to have written terms and conditions, noting this could allow government stakes in fossil fuel projects without a formal agreement."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Northern Australia Infrastructure Facility Amendment (Extension and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00041",
+   "assent_date": "2021-05-27"
+  }
+ ]
+}

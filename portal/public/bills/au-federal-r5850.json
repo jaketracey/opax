@@ -1,0 +1,291 @@
+{
+ "key": "au-federal-r5850",
+ "title": "Treasury Laws Amendment (2017 Enterprise Incentives No. 1) Bill 2017",
+ "short_title": "Treasury Laws Amendment (2017 Enterprise Incentives No. 1) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5850_ems_4d7d2101-ac9b-4f77-a02f-59141cb6131d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5850_ems_9c63224c-b123-4869-9e49-3b8a125006e5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5850%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00007",
+   "document_date": "2019-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4838",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2017-06-22.22.6) to the usual second reading motion \"*that the bill be read a second time*\", which means it was unsuccessful. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"The House declines to give this bill a second reading and calls on the Government to explain why it is desperate to legislate additional tax concessions for large businesses while pursuing a $50 billion tax cut for big banks and multinationals.\"*",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-22/1"
+  },
+  {
+   "key": "federal-representatives-4839",
+   "date": "2017-06-22",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2017-06-22.24.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. This means they can now consider the bill in greater detail. ### What is the main idea of the bill? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd039): > *The purpose of the Treasury Laws Amendment (2017 Enterprise Incentives No. 1) Bill 2017 (the Bill) is to amend the Income Tax Assessment Act 1997 (the ITAA 1997) and the Income Tax Assessment Act 1936 (the ITAA 1936) to:* > > * *improve access to previous year tax losses for companies and listed widely held trusts by introducing a ‘similar business test’ that will allow those that have changed ownership but conduct substantially the same business after that change of ownership, to access those tax losses (which the application of the existing ‘same business test’ would prevent) and* > * *provide taxpayers with the choice to self-assess the effective life of certain intangible depreciating assets (such as patents, in-house software, registered designs and certain copyrights and licences) that they start to hold on or after 1 July 2016, rather than using the existing specified statutory effective life.*",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-22/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-350069",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The bill changes employee share scheme taxation so tax is only paid when a benefit is realised, relaxes the same-business test for prior year losses, and lets businesses determine depreciation schedules for intangible assets. The speaker also highlighted the government's $25 billion tax cut over a decade for 113,000 businesses with turnover between $2 million and $50 million, and criticised the opposition for opposing it, claiming an average tax increase of over $200,000 per business."
+  },
+  {
+   "slug": "speech-350070",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The speaker opposed big corporate tax cuts as unfair and unaffordable, citing a $65 billion revenue loss and higher taxes for families on $60,000. They supported the Treasury Laws Amendment Bill's similar-business test and intangible asset measures but opposed schedule 2, and criticised the Abbott-Turnbull government for faster debt accumulation and poor economic forecasts."
+  },
+  {
+   "slug": "speech-350073",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2017 Enterprise Incentives No. 1) Bill 2017 was argued to support small business by relaxing the test for accessing past company losses and allowing self-assessment of depreciable intangible assets like intellectual property. The speaker also defended the government's enterprise tax cuts, citing that small businesses will keep $1.6 billion of their own money in 2016-17, rising to $2.8 billion by 2019-20, and criticised Labor for abandoning bipartisan support for corporate tax cuts."
+  },
+  {
+   "slug": "speech-350077",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (2017 Enterprise Incentives No. 1) Bill 2017 supports businesses by increasing access to losses and allowing self-assessment of the effective life of acquired intellectual property, noting the measure was estimated to cost $80 million over the forward estimates. They cited companies like Tanda and emphasised the need to keep Australia competitive and attractive for investment."
+  },
+  {
+   "slug": "speech-350078",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The speaker linked the Treasury Laws Amendment (2017 Enterprise Incentives No. 1) Bill 2017 to the 75th anniversary of Sir Robert Menzies' \"The Forgotten People\" speech, noting its historical context of the fall of Singapore, the attack on Darwin, and the Battle of the Coral Sea."
+  },
+  {
+   "slug": "speech-350225",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-22",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2017 Enterprise Incentives No. 1) Bill 2017 was commended to the House, arguing it would better align corporate tax with business investment by increasing access to past-year loss deductions for startups and allowing taxpayers to self-assess the effective life of intellectual property and other depreciable intangible assets."
+  },
+  {
+   "slug": "speech-374494",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-12",
+   "stage_hint": null,
+   "brief": "Labor argued against schedule 2 of the Treasury Laws Amendment Bill, which would have allowed self-assessment of intangible asset depreciation, initially costing $80 million but later revealed to cost $425 million. Labor supported removing the schedule, citing the need for responsible economic management with net government debt at $350 billion (almost $14,000 per person), and opposed the tax concession as fiscally reckless."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2017 Enterprise Incentives No. 1) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00007",
+   "assent_date": "2019-03-01"
+  }
+ ]
+}

@@ -1,0 +1,826 @@
+{
+ "key": "au-federal-r6343",
+ "title": "Migration Amendment (Repairing Medical Transfers) Bill 2019",
+ "short_title": "Migration Amendment (Repairing Medical Transfers) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6343_ems_1a615ff8-fbf6-41ba-8ccb-5a02d997cfa1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6931273%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6343%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00110",
+   "document_date": "2019-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would remove the legal framework for transferring certain people from regional processing countries to Australia for medical assessment and treatment.",
+   "It would repeal the medical transfer provisions and abolish the Independent Health Advice Panel, leaving only a discretionary ministerial power to bring people to Australia for temporary purposes.",
+   "The Bills Digest notes that legal organisations predict the repeal may increase court proceedings, as at least 52 cases had been filed in the Federal Court by February 2019 seeking to compel medical transfers."
+  ],
+  "changes": [
+   "Repeals the medical transfer provisions in the Migration Act.",
+   "Abolishes the Independent Health Advice Panel.",
+   "Removes the statutory right of review or appeal for refused medical transfer requests."
+  ],
+  "affected": "Transitory persons in regional processing countries and the Independent Health Advice Panel.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:34Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5774",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "question": "The majority voted against a amendment to the original [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which means it failed. The amendment would have changed the usual wording to the wording below. The usual wording is: *that this bill be now read a second time*, which is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by the MP for Scullin [Andrew Giles](https://theyvoteforyou.org.au/people/representatives/scullin/andrew_giles) (Labor). ### Amendment wording > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the:* > > *(1) Minister for Home Affairs has:* > >> *(a) failed to accurately describe the processes providing for the medical transfer of people from Papua New Guinea and Nauru; and* >> >> *(b) consistently mischaracterised the effects of these processes; and* > > *(2) Minister for Home Affairs and the Minister for Immigration and Citizenship have failed to put forward any amendments which would address any genuine concerns they may have with the operation of the processes\".*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-24/6"
+  },
+  {
+   "key": "federal-representatives-5775",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "question": "Migration Amendment (Repairing Medical Transfers) Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 2,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-24/7"
+  },
+  {
+   "key": "federal-representatives-5788",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "question": "The majority voted against the following [motion](https://www.openaustralia.org.au/debate/?id=2019-07-25.14.1), which was introduced by the MP for Dickson [Peter Dutton](https://theyvoteforyou.org.au/people/representatives/dickson/peter_dutton). > *That so much of the [standing orders](https://www.peo.gov.au/learning/fact-sheets/standing-orders.html) be suspended as would prevent the motion for the [third reading](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) being moved without delay.* In other words, the majority voted against ending debate on this bill so the House could vote immediately on whether to pass it. Because this division was unsuccessful, the House could continue its discussion of the bill.",
+   "stage": "Third reading",
+   "ayes": 75,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-25/1"
+  },
+  {
+   "key": "federal-representatives-5789",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "question": "Migration Amendment (Repairing Medical Transfers) Bill 2019 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 46,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-25/2"
+  },
+  {
+   "key": "federal-senate-6127",
+   "date": "2019-12-04",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2019-12-04.16.1) introduced by WA Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal), which means it succeeded. ### Motion text > *That—* > > *(a) the [Migration Amendment (Repairing Medical Transfers) Bill 2019](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6343) be called on immediately and have precedence over all other business;* > > *(b) if, by 11 am the bill has not been finally considered, the questions on all remaining stages shall be put without debate;* > > *(c) paragraph (b) of this order shall operate as a limitation of debate under standing order 142; and* > > *(d) following conclusion of consideration of the bill, the Senate shall return to the routine of business.*",
+   "stage": "Business motion",
+   "ayes": 38,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 32,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-04/4"
+  },
+  {
+   "key": "federal-senate-6128",
+   "date": "2019-12-04",
+   "house": "senate",
+   "question": "Migration Amendment (Repairing Medical Transfers) Bill 2019 - Second Reading - Let a vote happen",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 30,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-04/5"
+  },
+  {
+   "key": "federal-senate-6129",
+   "date": "2019-12-04",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) \"*That [this bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6343) be now read a second time.*\" Reading a bill for a second time is the same as agreeing with the main idea of the bill. The amendment was introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor). ### Amendment text > *At the end of the motion add:* > > *\", and further consideration of the bill be made an order of the day for the first sitting day after the Minister representing the Minister for Home Affairs has laid on the table all documents relating to negotiations between the Government and Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) in relation to this bill\".* ### What is the bill's the main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd034): > *The purpose of the Migration Amendment (Repairing Medical Transfers) Bill 2019 (the Bill) is to amend the Migration Act 1958 to repeal the provisions inserted by Schedule 6 of the Home Affairs Legislation Amendment (Miscellaneous Measures) Act 2019. These provisions (commonly referred to as the medical transfer, or medevac, provisions) established a framework for the transfer of transitory persons from regional processing countries to Australia for the purpose of medical treatment or assessment. The Bill also amends the Migration Act to allow for the removal of people brought to Australia under the medical transfer provisions back to a regional processing country once they no longer need to be in Australia.*",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 30,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-04/6"
+  },
+  {
+   "key": "federal-senate-6130",
+   "date": "2019-12-04",
+   "house": "senate",
+   "question": "Migration Amendment (Repairing Medical Transfers) Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 31,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-04/7"
+  },
+  {
+   "key": "federal-senate-6131",
+   "date": "2019-12-04",
+   "house": "senate",
+   "question": "Migration Amendment (Repairing Medical Transfers) Bill 2019 - In Committee - Savings provisions",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 30,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-04/8"
+  },
+  {
+   "key": "federal-senate-6132",
+   "date": "2019-12-04",
+   "house": "senate",
+   "question": "Migration Amendment (Repairing Medical Transfers) Bill 2019 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 30,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-04/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-378141",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-23",
+   "stage_hint": null,
+   "brief": "Labor opposed the Migration Amendment (Repairing Medical Transfers) Bill 2019, arguing the medevac regime is working and should not be repealed. The speaker cited that around 90 transfers were approved, 20 cases went to the Independent Health Advice Panel, and only seven transfers occurred without ministerial approval, while moving a second reading amendment criticising the Home Affairs Minister for mischaracterising the process."
+  },
+  {
+   "slug": "speech-378142",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed repealing the medevac law, arguing it is working with around 96 approvals and 40 transfers, mostly with ministerial sign-off, and accused the government of denying sick people medical care and playing politics, citing hypocrisy over refugee Hakeem Al-Araibi."
+  },
+  {
+   "slug": "speech-378205",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "Arguing against the Migration Amendment (Repairing Medical Transfers) Repeal Bill 2019, the speaker defended the medevac law as a humane first step and argued Australia can move beyond fear-based politics toward coordinated international refugee leadership, citing the 1970s-80s Southeast Asian refugee arrivals as a model."
+  },
+  {
+   "slug": "speech-378215",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Repairing Medical Transfers) Bill 2019, arguing it would deny sick asylum seekers in offshore detention access to medical treatment. They cited that under the existing medevac law the minister agreed with doctors' recommendations 80% of the time and was overridden only eight times, praised Kerryn Phelps and the member for Maribyrnong for supporting the original bill, and urged the Senate to reject the repeal."
+  },
+  {
+   "slug": "speech-378216",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Repairing Medical Transfers) Bill 2019, arguing the medevac legislation is working properly with 96 evacuations, 88 approved by ministers, and only eight overruled, and called for the government to accept New Zealand's resettlement offer and end indefinite detention."
+  },
+  {
+   "slug": "speech-378217",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Repairing Medical Transfers) Bill 2019 is a misnomer and disgraceful, defending the existing medevac legislation as an orderly, working process that has allowed 90 medical transfers and is supported by stakeholders including the AMA and Law Council. They accused the government of running scare campaigns and wasting $185 million on reopening Christmas Island detention centre, while failing to accept New Zealand’s longstanding offer to resettle 150 refugees per year from Manus and Nauru."
+  },
+  {
+   "slug": "speech-378218",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Repairing Medical Transfers) Bill 2019, arguing it is inhumane and politically motivated, and that the existing medevac bill was working—noting only seven patients were transferred without Immigration Minister David Coleman’s approval, and citing a $300 million Australian Border Force budget blowout and $7 million spent on an unreleased strategic review."
+  },
+  {
+   "slug": "speech-378219",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed repealing the medevac legislation, arguing it has enabled medical transfers for 90 sick detainees from Manus Island and Nauru, with the Independent Health Advice Panel overturning the minister's refusal in seven cases. They also urged the government to accept New Zealand's offer to resettle 150 people from offshore detention and referenced the preventable deaths of Hamid Khazaei and Fariborz Karami."
+  },
+  {
+   "slug": "speech-378221",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Repairing Medical Transfers) Bill 2019, arguing it would repeal necessary medevac legislation that allows asylum seekers on Nauru and Manus Island to access medical care in Australia. They claimed the government's arguments are baseless, noted that 88% of people on Manus Island have mental health conditions and nearly one in three asylum seekers in Nauru have suicidal thoughts, and that all litigated medical transfer cases (over 50) have resulted in transfers."
+  },
+  {
+   "slug": "speech-378414",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Repairing Medical Transfers) Bill 2019, arguing the medevac legislation is working and should not be repealed, and criticised Minister Dutton and the coalition for fearmongering and political point-scoring. Key figures cited: seven patients transferred without ministerial approval, around 90 transfers approved by the government, 20 cases referred to the Independent Health Advice Panel, with 13 ministerial decisions upheld and seven overturned."
+  },
+  {
+   "slug": "speech-378422",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-07-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Migration Amendment (Repairing Medical Transfers) Bill 2019, arguing the existing medevac law is working properly with 96 approved transfers and no national security impact, and called on the government to focus on settling the 600-plus people still in offshore detention on Nauru and Manus Island."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Repairing Medical Transfers) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00110",
+   "assent_date": "2019-12-04"
+  }
+ ]
+}

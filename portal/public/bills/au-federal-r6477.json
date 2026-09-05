@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-r6477",
+ "title": "Export Charges (Imposition—General) Amendment Bill 2019",
+ "short_title": "Export Charges (Imposition—General) Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2020-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6480_ems_f508430e-71ff-42db-b160-4fdd5f359c20%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6477%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00016",
+   "document_date": "2020-03-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-386168",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The Export Charges (Imposition-General) Amendment Bill 2019 was moved for a second reading as the first of three bills updating export charging legislation to align with the Export Control Bill 2019 and the repeal of the Export Control Act 1982 and the Export Charges (Collection) Act 2015. The bill amends the Export Charges (Imposition-General) Act 2015 to allow the Commonwealth to impose charges reflecting export control administration costs, with specific amounts set in regulations and the Minister for Agriculture required to ensure charges do not exceed likely costs."
+  },
+  {
+   "slug": "speech-388039",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The Export Control Bill 2019 and associated bills consolidate and replace existing agricultural export legislation, streamlining rules, improving certification, and enabling faster government responses to market changes. The package also transitions arrangements smoothly and continues cost-recovery charges for administering the export control system."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Charges (Imposition—General) Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00016",
+   "assent_date": "2020-03-06"
+  }
+ ]
+}

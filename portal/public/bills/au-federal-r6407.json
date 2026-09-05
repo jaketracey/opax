@@ -1,0 +1,352 @@
+{
+ "key": "au-federal-r6407",
+ "title": "Agricultural and Veterinary Chemicals Legislation Amendment (Australian Pesticides and Veterinary Medicines Authority Board and Other Improvements) Bill 2019",
+ "short_title": "Agricultural and Veterinary Chemicals Legislation Amendment (Australian Pesticides and Veterinary Medicines Authority Board and Other Improvements) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2021-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6407_ems_b0404fb4-211c-4b71-ac10-2ea2b3393ed5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6407_ems_eb146816-48d6-4abb-8303-e0cfb43e5b65%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6407%22",
+   "document_date": "2019-09-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00125",
+   "document_date": "2021-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "This bill would change the national system for regulating agricultural and veterinary chemical products.",
+   "It would create a governance board for the Australian Pesticides and Veterinary Medicines Authority and give the agency more flexible powers to handle applications, approvals and penalties.",
+   "The bill would also repeal the Agricultural and Veterinary Chemicals Legislation Amendment (Removing Re-approval and Re-registration) Act 2014."
+  ],
+  "changes": [
+   "Establish a governance board for the Australian Pesticides and Veterinary Medicines Authority.",
+   "Repeal the Agricultural and Veterinary Chemicals Legislation Amendment (Removing Re-approval and Re-registration) Act 2014.",
+   "Provide more flexible regulatory processes for chemicals of low concern.",
+   "Extend limitation and protection periods as an incentive for registering new uses of chemical products.",
+   "Create civil pecuniary penalties for providing false or misleading information to the Australian Pesticides and Veterinary Medicines Authority.",
+   "Harmonise obligations to inform the Australian Pesticides and Veterinary Medicines Authority of new safety information."
+  ],
+  "affected": "The Australian Pesticides and Veterinary Medicines Authority, chemical companies, and industry holders and applicants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6022",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "question": "Agricultural and Veterinary Chemicals Legislation Amendment (Australian Pesticides and Veterinary Medicines Authority Board and Other Improvements) Bill 2019 - Second Reading - Stop Joyce MP from speaking",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-28/15"
+  },
+  {
+   "key": "federal-senate-7545",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-12-01.23.18) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means they can now discuss the bill in more detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd063), the bill was introduced to: * *to amend various statutes to improve the effectiveness and efficiency of the national system for regulating agricultural and veterinary (agvet) chemical products and* * *to establish a governance Board for the Australian Pesticides and Veterinary Medicines Authority Board (APVMA) and formally cease the existing APVMA Advisory Board.*",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "earliest": 14,
+    "dated": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/1"
+  },
+  {
+   "key": "federal-senate-7546",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-12-01.45.1) to pass the bill. In parliamentary jargon, they voted to read the bill a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means the bill will now return to the House of Representatives, where our MPs will consider whether they agree with the Senate's amendments. If the agree, then the bill will become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd063), the bill was introduced to: * *to amend various statutes to improve the effectiveness and efficiency of the national system for regulating agricultural and veterinary (agvet) chemical products and* * *to establish a governance Board for the Australian Pesticides and Veterinary Medicines Authority Board (APVMA) and formally cease the existing APVMA Advisory Board.*",
+   "stage": "Third reading",
+   "ayes": 27,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "earliest": 14,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-381654",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The Agricultural and Veterinary Chemicals Legislation Amendment Bill 2019 was moved to establish a governance board for the APVMA, streamline chemical reporting processes, and introduce incentives for including priority uses on product labels. The bill creates a part-time board with a chair, CEO, and three members, extends data protection periods up to five years for certain uses, and broadens the APVMA's enforcement powers."
+  },
+  {
+   "slug": "speech-385363",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for moving the Australian Pesticides and Veterinary Medicines Authority from Canberra to Armidale, arguing it was politically motivated and caused staff losses, and noted the government later breached its own policy order by allowing up to 50 staff to work in Canberra. The opposition supported the bill's efficiency measures but condemned the government's repeated delays on agricultural legislation."
+  },
+  {
+   "slug": "speech-385742",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to establish a governance board for the Australian Pesticides and Veterinary Medicines Authority, improving oversight of chemicals like glyphosate, and noted agriculture employs 329,000 Australians, with a goal of becoming a $100 billion industry by 2030."
+  },
+  {
+   "slug": "speech-386075",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the relocation of the Australian Pesticides and Veterinary Medicines Authority (APVMA) from Canberra to Armidale was a destructive, anti-science move that cost hundreds of millions of dollars, caused the loss of half its scientific staff, and created major delays. The bill establishes a governance board costing $400,000–$600,000 annually, which industry groups oppose, and the speaker criticised the government for lacking transparency and prioritising votes over science."
+  },
+  {
+   "slug": "speech-386076",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The Agricultural and Veterinary Chemicals Legislation Amendment Bill 2019 establishes a five-person skills-based governance board for the APVMA, ceases the advisory board, and introduces measures to streamline processes, enable computerised decision-making, strengthen sanctions for misleading information, and improve voluntary recall transparency."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Agricultural and Veterinary Chemicals Legislation Amendment (Australian Pesticides and Veterinary Medicines Authority Board and Other Improvements) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00125",
+   "assent_date": "2021-12-07"
+  }
+ ]
+}

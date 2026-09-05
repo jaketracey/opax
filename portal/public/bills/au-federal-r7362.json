@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-r7362",
+ "title": "Australia Day Bill 2025",
+ "short_title": "Australia Day Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-01",
+ "originating_house": "representatives",
+ "sponsor": "PIKE, Henry, MP",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10969",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-09-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7362%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7362_ems_4255a5a3-816c-4cc0-9f9d-f1b0697d626c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7362%22",
+   "document_date": "2025-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-01",
+  "sentences": [
+   "This bill is part of a package that would make Australia Day a national day in federal law and set its date as 26 January.",
+   "It would also create a process for changing the date through a national plebiscite, with 26 January always an option for voters.",
+   "The same voters as in federal elections would be eligible to vote in any plebiscite on an alternative date."
+  ],
+  "changes": [
+   "Establishes Australia Day as a national day in federal law.",
+   "Sets the date of Australia Day as 26 January.",
+   "Creates a process for changing the date through a national plebiscite.",
+   "Requires any plebiscite to include 26 January as an option.",
+   "Limits eligibility to vote in the plebiscite to those qualified for federal elections."
+  ],
+  "affected": "All Australians who are eligible to vote in federal elections.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

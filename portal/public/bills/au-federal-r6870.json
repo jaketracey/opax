@@ -1,0 +1,149 @@
+{
+ "key": "au-federal-r6870",
+ "title": "Excise Tariff Amendment (Cost of Living Support) Bill 2022",
+ "short_title": "Excise Tariff Amendment (Cost of Living Support) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-03-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6868_ems_991630fd-7d91-40cf-8e01-4acd6d89d0bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6870%22",
+   "document_date": "2022-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00015",
+   "document_date": "2022-03-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-03-30",
+  "sentences": [
+   "This bill is part of a package that would raise the income thresholds below which people pay no Medicare levy or surcharge.",
+   "The thresholds would be adjusted each year in line with CPI movements, as set out in the Medicare Levy Act 1986 and related legislation.",
+   "The changes would apply from the 2021-22 income year, with a projected revenue loss of $90 million over five years."
+  ],
+  "changes": [
+   "The bill would increase the low-income thresholds for the Medicare levy for individuals, families and those eligible for SAPTO.",
+   "It would also increase the low-income threshold for the Medicare levy surcharge.",
+   "All thresholds would be indexed to CPI."
+  ],
+  "affected": "Individuals and families who pay the Medicare levy or surcharge, particularly those on low incomes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419526",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The bill halves excise-equivalent customs duty on imported fuels (excluding aviation) from 44.2c to 22.1c per litre for six months from 30 March to 28 September 2022, with indexation applying to the reduced rates in August and rates reverting after the period."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excise Tariff Amendment (Cost of Living Support) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00015",
+   "assent_date": "2022-03-31"
+  }
+ ]
+}

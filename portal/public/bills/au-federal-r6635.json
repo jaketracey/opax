@@ -1,0 +1,190 @@
+{
+ "key": "au-federal-r6635",
+ "title": "Customs Tariff Amendment (Incorporation of Proposals and Other Measures) Bill 2020",
+ "short_title": "Customs Tariff Amendment (Incorporation of Proposals and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6635_ems_04086b32-874f-489f-a236-90aeb4c86b60%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6635%22",
+   "document_date": "2020-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00010",
+   "document_date": "2021-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6962",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-17.14.4) to keep the usual second reading motion unchanged. In parliamentary jargon, they voted \"*that the words proposed to be omitted stand part of the question.*\" The usual second reading motion is \"*that the bill be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/),*\" which is parliamentary jargon for agreeing with the main idea of the bill. This vote took place after Gorton MP [Brendan O'Connor](https://theyvoteforyou.org.au/people/representatives/gorton/brendan_o'connor) (Labor) proposed the amendment below. ### Proposed amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) acknowledges the bill provides for reduced rates of customs duty for goods required to combat the COVID-19 pandemic; and* > > *(2) notes that the Government has failed to outline a plan to address the economic impacts of COVID-19.\"*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-399726",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The bill incorporates temporary concessional customs duty rates for COVID-19 medical supplies (face masks, soaps, eyewear) from February to December 2020, and makes six further amendments: new tariff subheadings for formulated caffeinated beverages, supplementary foods and sports foods; realignments for wheelie bins, vitamin/medicament classification and metal parts; removal of the $12,000 special customs duty on used vehicles from Peru and the Trans-Pacific Partnership; and deletion of redundant phasing rates from free trade agreements."
+  },
+  {
+   "slug": "speech-402325",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment supporting the bill’s reduced customs duty for COVID-19 medical products but argued the government has failed to outline a plan to address the economic impacts, noting over 200,000 jobs lost and nearly 2.1 million Australians unemployed or underemployed."
+  },
+  {
+   "slug": "speech-402331",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Incorporation of Proposals and Other Measures) Bill 2020 incorporates tariff proposals providing temporary concessions for COVID-19 medical supplies like face masks and soaps, creates new tariff classifications for certain goods, removes the $12,000 special duty on used motor vehicles from two free trade agreements, and deletes redundant provisions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Incorporation of Proposals and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00010",
+   "assent_date": "2021-03-01"
+  }
+ ]
+}

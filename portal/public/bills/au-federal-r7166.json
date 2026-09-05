@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r7166",
+ "title": "Crimes and Online Safety Legislation Amendment (Combatting Online Notoriety) Bill 2024",
+ "short_title": "Crimes and Online Safety Legislation Amendment (Combatting Online Notoriety) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-25",
+ "originating_house": "representatives",
+ "sponsor": "COLEMAN, David, MP",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10783",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-11-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7166%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7166%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7166%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7166_ems_f09d0456-136e-4b4c-9f8d-8a822824c165%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7166%22",
+   "document_date": "2024-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

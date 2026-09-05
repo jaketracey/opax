@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r7000",
+ "title": "Australia Day Bill 2023",
+ "short_title": "Australia Day Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-27",
+ "originating_house": "representatives",
+ "sponsor": "PIKE, Henry, MP",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10969",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-11-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7000%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7000%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7000%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7000_ems_662ad8d6-08aa-4311-b72e-b208b2d8c615%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7000%22",
+   "document_date": "2023-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-27",
+  "sentences": [
+   "This bill is part of a package that would give Australia Day legal status as a national day in federal law.",
+   "The bill would fix 26 January as the date of Australia Day and require any future change to be decided by a national plebiscite.",
+   "The plebiscite would be open to people eligible to vote in federal elections, and any alternative date must include 26 January as an option."
+  ],
+  "changes": [
+   "Establishes Australia Day as a national day in federal law.",
+   "Sets 26 January as the official date.",
+   "Requires a national plebiscite for any future date change.",
+   "Stipulates that 26 January must be an option in the plebiscite.",
+   "Limits voting in the plebiscite to those qualified to vote in federal elections."
+  ],
+  "affected": "All Australians, particularly those eligible to vote in federal elections.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:57Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,397 @@
+{
+ "key": "au-federal-r7462",
+ "title": "Fair Work Amendment (Fairer Fuel) Bill 2026",
+ "short_title": "Fair Work Amendment (Fairer Fuel) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7462_ems_78367156-fa97-44d0-8d5a-f349874faf51%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7462%22",
+   "document_date": "2026-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00020",
+   "document_date": "2026-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-26",
+  "sentences": [
+   "This bill would change the Fair Work Act 2009 to let the Minister fast-track certain applications related to road transport contractual chain orders when national emergencies hit the industry.",
+   "The Minister could declare an application an emergency one if it would have a major nationwide effect on road transport and if doing so serves the public interest, and then the Fair Work Commission could speed up its consultation and other steps.",
+   "Orders issued or updated through this emergency route could take effect quickly, cover only topics tied to the emergency plus mandatory coverage and dispute resolution terms, and have deferral or suspension processes fast-tracked; the power applies to applications from the bill's start date."
+  ],
+  "changes": [
+   "Allow the Minister to label an application for an RTCCO as an emergency one under specific conditions.",
+   "Let the Fair Work Commission compress mandatory consultation periods for such emergency applications.",
+   "Permit emergency-based orders to start operating swiftly, limit their scope to the emergency's matters, and accelerate deferral and suspension procedures."
+  ],
+  "affected": "Parties involved in making, varying, or revoking road transport contractual chain orders—such as transport businesses, contractors, and the Fair Work Commission—along with the Minister responsible for these decisions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10111",
+   "date": "2026-03-26",
+   "house": "representatives",
+   "question": "Tim Wilson We're very happy to see that this legislation, the Treasury Laws Amendment (Doubling Penalties for ACCC Enforcement) Bill 2026, is being debated, though we're very disappointed that the government has gone through a shambled process, to introduce the Fair Work Amendment (Fairer Fuel) Bill 2026 this morning. They have tried to force it through the parliament before anyone in the entire country has read it. The Leader of the House understands full well the scale of the legislation he is trying to introduce, and he is now trying to ram it through the parliament on the basis that he has no interest in the opposition or anyone outside this parliament scrutinising it. It's a very dangerous precedent. This is in comparison to the schedules that are being updated in the context of the Competition and Consumer Act which are focused very squarely on making sure penalties are imposed on those who seek to price gouge or harm Australians. It's a straightforward exercise that they have dawdled on every step of the way. The response from the minister has been to not bring the legislation to the House, to bring it to a vote to resolve the matter and to up the penalties, but instead he has allowed time to drift. We are simply asking that that matter, which is simple, straightforward and clear, be resolved. Instead, what the government is now doing is a shambolic process to try and shut down parliamentary scrutiny and parliamentary accountability. I'll remind the House this Fair Work legislation was introduced this morning. A copy has not even, as far as I am aware, been made available to the opposition—or, if it has, we certainly haven't had the chance to read it yet. When you're making such substantial changes to industrial relations legislation—and I know the Labor Party works for the trade union movement; it doesn't work for Australians—at some point you actually have to factor Australians into the conversation. We hope and pray sanity prevails and that the government",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 93,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 90
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-26/3"
+  },
+  {
+   "key": "federal-senate-10141",
+   "date": "2026-03-30",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7462_amend_e3b039f6-82ea-4ce2-8a97-74c47685d6b8%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal). Following the vote, ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) [asked that](https://www.openaustralia.org.au/senate/?gid=2026-03-30.154.1) WA Senator [Fatima Payman's](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Australia's Voice) support for the amendment be noted. ### Amendment text > *At the end of the motion, add “and, following passage of the bill, the following matter be referred to the Education and Employment Legislation Committee for inquiry and report by 29 May 2026:* > >> *The operation, effectiveness and implications of the amendments made by the Fair Work Amendment (Fairer Fuel) Act 2026 ”.*",
+   "stage": "Limitation of debate",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 57,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-30/11"
+  },
+  {
+   "key": "federal-senate-10142",
+   "date": "2026-03-30",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-03-30.154.3) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Queensland Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (One Nation). Following the vote, ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) [asked that](https://www.openaustralia.org.au/senate/?gid=2026-03-30.156.1) WA Senator [Fatima Payman's](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Australia's Voice) support for part (a) be noted and her opposition to part (b) be noted. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that both parties of government have been warned about fuel security for decades and have failed to secure enough fuel stocks to protect Australians from inevitable global shocks; and* > > *(b) calls on the Government to:* > >> *(i) cut the fuel excise by 100% for 3 months and/or remove GST on fuel, which is a tax on a tax, to give immediate 57 cent per litre relief to Australians, while pausing the heavy vehicle road user charge for truckies and road transport businesses,* >> >> *(ii) declare a national liquid fuel emergency under the Liquid Fuel Emergency Act 1984 to force fuel supplies to the regions and stop price gouging,* >> >> *(iii) outline plans for rationing so that essential sectors like emergency services, defence, hospitals and food production can be prioritised if the Strait of Hormuz remains closed, and* >> >> *(iv) ditch net zero so we can drill Australia's own oil, invest in gas to liquid and coal to liquid technology and rebuild refineries so Australia is never subject to fuel vulnerability again\".*",
+   "stage": "Limitation of debate",
+   "ayes": 4,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-30/12"
+  },
+  {
+   "key": "federal-senate-10143",
+   "date": "2026-03-30",
+   "house": "senate",
+   "question": "The majority voted against [opposition amendments](https://www.openaustralia.org.au/senate/?gid=2026-03-30.156.3) on sheets [3738](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7462_amend_4d4dfedc-1990-49b5-b469-6f8ccb48bca1%22;rec=0), [3739](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7462_amend_a33bdf8d-4103-4a5f-8cdc-1918a528f459%22;rec=0), [3741](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7462_amend_43832509-0fe5-44b7-a8e5-4240989fab70%22;rec=0), [3742](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7462_amend_0597cba1-b194-4f07-9ade-611a0e727f08%22;rec=0), and [3746](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7462_amend_a51bd5f7-2a78-497d-bb8c-92e3b0404040%22;rec=0), which means they were unsuccessful. These amendments were on the subject of: * introducing a review of the amendments' operation; * restricting emergency applications to national liquid fuel emergencies; * terms included in time‑sensitive road transport contractual chain orders; * repeal of amendments on 31 March 2027; * requirement to conduct consultation; and * terms for time‑sensitive road transport contractual chain orders. Following the vote, ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) asked that his opposition to sheets 3741 (about the repeal of amendments on 31 March 2027) be recorded and that WA Senator [Fatima Payman's](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Australia's Voice) support for sheets 3738 (about a review of operat",
+   "stage": "Limitation of debate",
+   "ayes": 29,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-30/13"
+  },
+  {
+   "key": "federal-senate-10144",
+   "date": "2026-03-30",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7462_amend_31d8838f-b333-4367-bb23-3deb924b148b%22;rec=0) introduced by the Australian Greens party, which means they were unsuccessful. The amendments introduced a new schedule that would require that mandatory terms of workplace determinations must not be less favourable. ### Amendment text The amendment text is available on [openaustralia.org.au](https://www.openaustralia.org.au/senate/?gid=2026-03-30.159.3).",
+   "stage": "Limitation of debate",
+   "ayes": 17,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-30/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1201866",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202175",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202177",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Fairer Fuel) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00020",
+   "assent_date": "2026-04-01"
+  }
+ ]
+}

@@ -1,0 +1,917 @@
+{
+ "key": "au-federal-r6672",
+ "title": "Treasury Laws Amendment (Your Future, Your Super) Bill 2021",
+ "short_title": "Treasury Laws Amendment (Your Future, Your Super) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6672_ems_55ca2b32-39d1-4534-93a1-b99763fbcef4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6672_ems_9182d9a1-3ce4-4bb2-b681-a7e2dbb65468%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6672_ems_a090cd8d-d5a1-4c47-b6ea-cdac26c828b6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6672_ems_2105cbdd-2f58-4135-b152-d508cb4b3562%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6672_ems_8cae6657-67e9-45dd-b205-ac6429a01df3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6672%22",
+   "document_date": "2021-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00046",
+   "document_date": "2021-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7198",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2021-06-03.131.2) to agree with the main idea of the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), which is parliamentary jargon for reading it a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that the bill can now be discussed in greater detail. ### What is this bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and directors of the corporate trustee of a registrable superannuation entity to perform their duties and exercise their powers in the best financial interests of the beneficiaries;* * *reverse the evidential burden of proof for the best financial interests duty so that the onus is on the trustee of a registrable superannuation entity;* * *allow regulations to be made to prohibit certain payments made by trustees of registrable superannuation entities and prescribe additional requirements on trustees and directors of trustee companies of registrable superannuation entities;* * *allow contraventions of record-keeping obligations specified in regulation",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-03/12"
+  },
+  {
+   "key": "federal-representatives-7200",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of disagreeing with [amendments](https://www.openaustralia.org.au/debate/?id=2021-06-03.137.1) introduced by Hughes MP [Craig Kelly](https://theyvoteforyou.org.au/people/representatives/hughes/craig_kelly) (Independent), which means they failed. MP Kelly [explained his amendments](https://www.openaustralia.org.au/debate/?id=2021-06-03.137.1): > *This is very significant legislation that requires an enormous amount of change for the superannuation industry—and much of it justified. However, we are now in June. To have a start date for this legislation of 1 July when it is yet to even go to the Senate is, I believe, rush and haste. When you rush and you do things in haste, you make mistakes. I believe it would be far more prudent and wise of this House if we moved the start date for this legislation to 1 July 2022 rather than 2021. I believe that, if we are doing our job, that would give time for all the vested stakeholders to go through all the detail, and it would be far more prudent for our economy to get the best outcomes, which is what we all require.* ### Amendment text > *(1) Section 2 (Commencement), where the Bill specifies \"the day this Act receives Royal Assent\" or \"1 July 2021\", replace with \"1 July 2022\"* > > *Note: The intent of amendment 1 is to delay the start of all elements of the legislation until 1 July 2022.* ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authorit",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-03/14"
+  },
+  {
+   "key": "federal-representatives-7201",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2021-06-03.140.1) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means they failed. MP Steggall [explained her amendment](https://www.openaustralia.org.au/debate/?id=2021-06-03.140.1): > *These amendments are in respect of the change that is identified in relation to the definition of 'best financial interests' duty. Item 9 of the amendment bill omits 'best interests' and replaces it with 'best financial interests' in the Superannuation Industry (Supervision) Act 1993. The government states that it wishes to increase the accountability of trustees in their day-to-day operations and investing members' money. Whilst this may, at first blush, appear sensible, it has significant potential consequences for the interests and wellbeing of super members and is in fact not founded on any recommendation or proper basis. This is because, when considering whether something is in best financial interests alone, we also capture a large number of activities and investments that exist in a grey area and that may in fact be beneficial to members of super funds but are potentially now going to be excluded as a result of this amendment. For example, an ethical super fund purchasing carbon offsets or spending money planting trees to reduce emissions to achieve an overarching goal of reaching a net zero emissions goal around their investment portfolio—something which the member would arguably want—could now be prohibited under the best financial interests covenant, unless we have a major change from this government, in accepting putting a price on carbon or in actually ensuring that there is proper financial recognition of the impact of our emissions.* ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legi",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-03/15"
+  },
+  {
+   "key": "federal-representatives-7202",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with the [amendments](https://www.openaustralia.org.au/debate/?id=2021-06-03.143.1) introduced by Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor), which means they failed. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and directors of the corporate trustee of a registrable superannuation entity to perform their duties and exercise their powers in the best financial interests of the beneficiaries;* * *reverse the evidential burden of proof for the best financial interests duty so that the onus is on the trustee of a registrable superannuation entity;* * *allow regulations to be made to prohibit certain payments made by trustees of registrable superannuation entities and prescribe additional requirements on trustees and directors of trustee companies of registrable superannuation entities;* * *allow contraventions of record-keeping obligations specified in regulations to be subject to a strict liability offence; and* * *remove an exemption from disclosing information about certain investments under the portfolio holdings disclosure rules.*",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-03/16"
+  },
+  {
+   "key": "federal-representatives-7203",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2021-06-03.146.1) to pass the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672) in the House of Representatives, which is parliamentary jargon for reading it a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that the bill will now go to the Senate for their consideration. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and directors of the corporate trustee of a registrable superannuation entity to perform their duties and exercise their powers in the best financial interests of the beneficiaries;* * *reverse the evidential burden of proof for the best financial interests duty so that the onus is on the trustee of a registrable superannuation entity;* * *allow regulations to be made to prohibit certain payments made by trustees of registrable superannuation entities and prescribe additional requirements on trustees and directors of trustee companies of registrable superannuation entities;* * *allow contraventions of record-keeping obligations specified in",
+   "stage": "Third reading",
+   "ayes": 67,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-03/17"
+  },
+  {
+   "key": "federal-representatives-7649",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-06-17.135.3) \"*The question is that the amendments be agreed to.*\" The amendments were passed in the Senate and returned to the House for our MPs' consideration. Because this vote was successful, this bill will [now become law](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and directors of the corporate trustee of a registrable superannuation entity to perform their duties and exercise their powers in the best financial interests of the beneficiaries;* * *reverse the evidential burden of proof for the best financial interests duty so that the onus is on the trustee of a registrable superannuation entity;* * *allow regulations to be made to prohibit certain payments made by trustees of registrable superannuation entities and prescribe additional requirements on trustees and directors of trustee companies of registrable superannuation entities;* * *allow contraventions of record-keeping obligations specified in regulations to be subject to a strict liability offence; and* * *remove a",
+   "stage": "Consideration of Senate message",
+   "ayes": 72,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-17/10"
+  },
+  {
+   "key": "federal-senate-7656",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (7)](https://www.openaustralia.org.au/senate/?gid=2021-06-17.74.1) on sheet 1269, which were introduced by South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent). Senator Patrick [explained that](https://www.openaustralia.org.au/senate/?gid=2021-06-17.74.1): > *These amendments seek to delay the stapling until 1 July 2022. They also seek to include choice products in the performance test, because they are currently not in the performance test. They include administrative fees in the performance test. They also delay the performance testing commencing until 1 July 2023.* ### What is this bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and directors of the corporate trustee of a registrable superannuation entity to perform their duties and exercise their powers in the best financial interests of the beneficiaries;* * *reverse the evidential burden of proof for the best financial interests duty so that the onus is on the trustee of a registrable superannuation entity;* * *allow regulations to be made to prohibit certain payments made by trustees of registrable superannuation entities and prescribe additional",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 28,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/7"
+  },
+  {
+   "key": "federal-senate-7657",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-06-17.92.1) to leave [schedule 3](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6672_first-reps%2F0003;query=Id%3A%22legislation%2Fbills%2Fr6672_first-reps%2F0000%22;rec=0) unchanged - in parliamentary jargon, they voted that schedule 3 \"*stand as printed*.\" That schedule relates to best financial interests duty. ### What is this bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and directors of the corporate trustee of a registrable superannuation entity to perform their duties and exercise their powers in the best financial interests of the beneficiaries;* * *reverse the evidential burden of proof for the best financial interests duty so that the onus is on the trustee of a registrable superannuation entity;* * *allow regulations to be made to prohibit certain payments made by trustees of registrable superannuation entities and prescribe additional requirements on trustees and directors of trustee companies of registrable superannuation entities;* * *allow contraventions of record-keeping obligations specified in regulations to be subject to a strict liabili",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 28,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/8"
+  },
+  {
+   "key": "federal-senate-7658",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-06-17.94.1) to keep the following items unchanged (in parliamentary jargon, that they stand as printed): items 3, 5, 10, 14, 20, 22 and subsection 34(2B) in item 6 of [schedule 3](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6672_first-reps%2F0003;query=Id%3A%22legislation%2Fbills%2Fr6672_first-reps%2F0000%22;rec=0). This motion was put to vote after the Opposition proposed that those items should \"be opposed.\" The items relate to the burden of proof, strict liability and other regulations. ### Amendment text > *SHEET 1308* > > *(19) Schedule 3, item 6, page 30 (line 1), subsection 34(2B) to be opposed.* > > *(20) Schedule 3, item 20, page 31 (line 26) to page 32 (line 18), to be opposed.* > > *(21) Schedule 3, item 22, page 33 (lines 22 to 28), to be opposed.* > > *SHEET 1324* > > *(1) Schedule 3, item 3, page 29 (lines 8 to 10), to be opposed.* > > *(2) Schedule 3, item 10, page 30 (lines 17 to 19), to be opposed.* > > *(3) Schedule 3, item 14, page 31 (lines 7 to 9), to be opposed.* ### What is this bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and dir",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 28,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/9"
+  },
+  {
+   "key": "federal-senate-7659",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted against [Labor amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-17.96.1), which means they failed and won't form part of [the bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672). ### What does this bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and directors of the corporate trustee of a registrable superannuation entity to perform their duties and exercise their powers in the best financial interests of the beneficiaries;* * *reverse the evidential burden of proof for the best financial interests duty so that the onus is on the trustee of a registrable superannuation entity;* * *allow regulations to be made to prohibit certain payments made by trustees of registrable superannuation entities and prescribe additional requirements on trustees and directors of trustee companies of registrable superannuation entities;* * *allow contraventions of record-keeping obligations specified in regulations to be subject to a strict liability offence; and* * *remove an exemption from disclosing information about certain investments under the portfolio holdings disclosure rules.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 28,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/10"
+  },
+  {
+   "key": "federal-senate-7660",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-17.98.1) introduced by South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent), which means they failed. ### Amendment text > *(1) Schedule 1, item 18, page 8 (lines 19 to 22), omit section 32Q, substitute:* > > *32Q What is the stapled fund for an employee* > > *(1) A fund is the stapled fund for an employee at a particular time, if at that time:* > >> *(a) the employee is not employed in a dangerous occupation; and* >> >> *(b) no fail assessments have been given in the previous 12 months in relation to any Part 6A products offered by the fund and held by the employee; and* >> >> *(c) the requirements prescribed by the regulations for the purposes of this section are met.* > > *(2) In this section:* > > *dangerous occupation means an occupation:* > >> *(a) that the Australian Government Actuary has certified that:* >> >>> *(i) based on rates of death, or death and total and permanent disability; and* >>> >>> *(ii) using information from the most recent 5 years in relation to Australian occupations;* >> >> *is in the riskiest quintile of Australian occupations; or* >> >> *(b) as an emergency services worker (as defined for the purposes of the Work Health and Safety Act 2011).* > > *fail assessment, in relation to a Part 6A product offered by a fund, means a notification:* > >> *(a) given by the Australian Prudential Regulation Authority to the Commissioner under subsection 60C(3) of the Superannuation Industry (Supervision) Act 1993; and* >> >> *(b) of a determination that the requirement in subsection 60D(1) of that Act has not been met for the Part 6A product offered by the fund.* > > *Part 6A product has the same meaning as in the Superannuation Industry (Supervision) Act 1993.* > > *(2) Schedule 2, item 9, page 17 (line 12), after \"APRA must give\", insert \"the Commissioner of Taxation and\".* > > *(3) Schedule 2, Pa",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 28,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/11"
+  },
+  {
+   "key": "federal-senate-7661",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-06-17.100.1) to pass the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672) in the Senate, which is parliamentary jargon for reading it a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that the bill can now return to the House of Representatives, where our MPs will decide on whether they agree with the Senate amendments. ### What is this bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6672), the bill was introduced to: * *provide that if a new employee has an existing 'stapled' superannuation fund and does not choose a fund to receive contributions, their employer is required to make contributions on behalf of the employee into the stapled fund; and ensure that employers are not in breach of various rules, or are not liable for superannuation guarantee charge, in certain circumstances;* * *require the Australian Prudential Regulation Authority to conduct an annual performance test for MySuper products and other products to be specified in regulations;* * *require trustees of registrable superannuation entities and self managed superannuation funds and directors of the corporate trustee of a registrable superannuation entity to perform their duties and exercise their powers in the best financial interests of the beneficiaries;* * *reverse the evidential burden of proof for the best financial interests duty so that the onus is on the trustee of a registrable superannuation entity;* * *allow regulations to be made to prohibit certain payments made by trustees of registrable superannuation entities and prescribe additional requirements on trustees and directors of trustee companies of registrable superannuation entities;* * *a",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 28,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-407612",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Your Future, Your Super) Bill 2021 is deeply flawed, particularly its stapling provisions that could default three million workers into underperforming funds and its unprecedented directions power giving the Treasurer authority to cancel private sector investments. Labor will move amendments to prevent stapling to underperforming funds and to reject the directions power."
+  },
+  {
+   "slug": "speech-407615",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Your Future, Your Super) Bill 2021 unfairly targets industry super funds, which have outperformed retail funds (30% asset growth since 2018 versus 3.2%), and that Labor is seeking amendments to protect workers' retirement savings from excessive red tape, regulatory uncertainty, and an ideological attack."
+  },
+  {
+   "slug": "speech-407616",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The bill would require employers to check existing super funds via the ATO when a new employee does not nominate one, mandate annual APRA performance tests for funds, and prohibit persistently underperforming funds from accepting new members after two years, with the aim of saving Australians $14 billion over a decade. It also clarifies trustees’ obligations to act solely in members’ financial interests."
+  },
+  {
+   "slug": "speech-407617",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Your Future, Your Super) Bill 2021 gives the Treasurer unilateral power to cancel investments, a measure the speaker called illiberal and dangerous, and argued it fails to reduce superannuation fees while potentially locking up to three million Australians into underperforming funds costing $635,000 less in retirement."
+  },
+  {
+   "slug": "speech-407768",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The speaker supported schedules 1 and 2 of the bill—which staple super accounts to employees and introduce annual performance testing—but opposed schedule 3, arguing its “best financial interests” covenant, reversal of the burden of proof, and regulation-making power allowing the Treasurer to ban investments could harm members and were not recommended by reviews. They called on the government to rethink schedule 3 and re-engage with stakeholders."
+  },
+  {
+   "slug": "speech-407770",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The independent MP announced they will oppose the Treasury Laws Amendment (Your Future, Your Super) Bill 2021, primarily because schedule 3 gives the Treasurer broad unilateral powers over super fund investments; they support other schedules subject to amendments including delaying stapling until after two years of performance testing and applying the performance test to all funds equally."
+  },
+  {
+   "slug": "speech-407771",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The Morrison government's Treasury Laws Amendment (Your Future, Your Super) Bill 2021 aims to save Australians $17.9 billion over 10 years by limiting multiple superannuation accounts, requiring annual performance tests for super products, and tightening trustee duties to act in members' best financial interests."
+  },
+  {
+   "slug": "speech-407779",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Your Future, Your Super) Bill 2021 for introducing a single default fund, transparency on underperforming funds, and a best-interest duty, and argued Labor opposed it to protect union funding and influence."
+  },
+  {
+   "slug": "speech-407963",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Your Future, Your Super) Bill 2021, arguing it would allow workers to be stapled to underperforming superannuation funds, replace trustees’ duty to act in members’ best interests with a narrower “best financial interests” standard that could discourage long-term community investments, and give the Treasurer excessive power via unfinished regulations—reflecting what the speaker described as a government ideological attack on industry superannuation, despite industry funds outperforming retail funds and the royal commission finding widespread abuse in retail funds only."
+  },
+  {
+   "slug": "speech-407964",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-06-03",
+   "stage_hint": null,
+   "brief": "The speaker gave qualified support for the Treasury Laws Amendment (Your Future, Your Super) Bill 2021, urging amendments such as sequencing to eliminate poor-performing funds before the stapling provision begins, extending annual performance tests to all superannuation products not just MySuper, and setting a financial threshold on best‑financial‑interest provisions to avoid unnecessary administrative costs. They welcomed the removal of the directions power and specifically opposed the use of compulsory superannuation for political donations, advertising at sporting events, or corporate box hire."
+  },
+  {
+   "slug": "speech-407965",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-03",
+   "stage_hint": null,
+   "brief": "The Morrison government's Your Future, Your Super Bill implements Productivity Commission and banking royal commission recommendations to prevent multiple super accounts, empower member choice, penalise underperforming funds, and increase transparency, projected to save Australians nearly $18 billion over 10 years."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Your Future, Your Super) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00046",
+   "assent_date": "2021-06-22"
+  }
+ ]
+}

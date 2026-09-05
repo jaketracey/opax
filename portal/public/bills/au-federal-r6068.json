@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r6068",
+ "title": "Australian Institute of Health and Welfare Amendment Bill 2018",
+ "short_title": "Australian Institute of Health and Welfare Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6068_ems_dffa18dd-b3b3-43d7-93d7-f8c10f5358a5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6068_ems_fd8a5c65-8d6c-457e-b3f1-ec4a46abd411%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6068_ems_70902874-6998-44bb-a5e8-31ded26df4dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6068%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00105",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-03-28",
+  "sentences": [
+   "The bill changes how members are chosen for the board of the Australian Institute of Health and Welfare.",
+   "Instead of representing stakeholder groups, board members will be selected for their combined expertise in fields such as health, welfare, finance and law.",
+   "Board members would serve terms of up to five years, and the Health Minister would handle appointments rather than the Governor-General."
+  ],
+  "changes": [
+   "Replaces the representative-based board with a skills-based membership.",
+   "Gives the Minister for Health responsibility for board appointments, resignations and terminations.",
+   "Extends maximum appointment terms to five years.",
+   "Removes the need for the Institute to get the Australian Bureau of Statistics' agreement before collecting health and welfare data, requiring only consultation.",
+   "Removes the requirement for written ministerial approval on contract limits.",
+   "Changes the title of the Director to Chief Executive Officer."
+  ],
+  "affected": "The Australian Institute of Health and Welfare, its board members and staff, the Minister for Health, and the Australian Bureau of Statistics.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:38Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-369022",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-12",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Institute of Health and Welfare Amendment Bill 2018 but criticised the government for needing to amend its own health legislation three times in two days, attributing the errors to incompetence and Health Minister Greg Hunt's focus on internal leadership plotting rather than governance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Institute of Health and Welfare Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00105",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

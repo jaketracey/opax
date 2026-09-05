@@ -1,0 +1,228 @@
+{
+ "key": "au-federal-r6806",
+ "title": "National Disability Insurance Scheme Amendment (Participant Service Guarantee and Other Measures) Bill 2022",
+ "short_title": "National Disability Insurance Scheme Amendment (Participant Service Guarantee and Other Measures) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "National Disability Insurance Scheme",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6806_ems_0b91c1c4-78c6-45c4-814e-7b50fdb6f812%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6806_ems_23e64022-8ef3-482b-a342-10cf29b64caa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6806_ems_4a983424-0c02-40be-a002-d7a28a0af273%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6806%22",
+   "document_date": "2021-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00027",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2021-10-28",
+  "sentences": [
+   "This bill would cut red tape and set clearer decision-making timelines for the National Disability Insurance Scheme.",
+   "It would create a Participant Service Guarantee that puts into law how long key processes can take and how the Agency must engage with people.",
+   "The bill also simplifies plan changes, clarifies eligibility for those with episodic impairments, and lets the Agency pay providers directly for participants."
+  ],
+  "changes": [
+   "The bill would set legislated timeframes and engagement principles for the Agency's main administrative tasks.",
+   "It would simplify how a participant's plan can be changed.",
+   "It would reduce other administrative burdens for participants, families and carers.",
+   "It would clarify who qualifies when someone has a fluctuating or episodic impairment.",
+   "It would let the Agency make direct payments for participants.",
+   "It would remove redundant rules and rule-making powers left over from the NDIS's transition period."
+  ],
+  "affected": "People with disability who use the NDIS, along with their families and carers, are the main groups affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7686",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "National Disability Insurance Scheme Amendment (Participant Service Guarantee and Other Measures) Bill 2022 - Consideration of amendments - Greens amendments",
+   "stage": "Consideration of amendments",
+   "ayes": 9,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 15,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-419708",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The member supported the NDIS amendment bill but noted concerns about a 4% drop in average plan values, a rise in AAT appeals from 2,160 to 3,853, and $19.1 million in legal costs in six months, while also criticising age discrimination that excludes people over 65 from the NDIS."
+  },
+  {
+   "slug": "speech-419709",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The Labor MP argued that the Morrison-Joyce government has delayed legislating NDIS timeframes for two and a half years and criticised independent assessments as a tool to cut participant funding, citing examples of constituents Liv Kalavasi, whose plan was cut by 45%, and Ian Waller, who lost funding for his guide dog."
+  },
+  {
+   "slug": "speech-419710",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The bill legislates the Participant Service Guarantee, requiring the NDIA to make decisions within set timeframes and meet service standards, with oversight by the Commonwealth Ombudsman; it also introduces plan variations, mandates representation of people with disability on the NDIA board, clarifies eligibility for episodic or fluctuating disabilities, and removes obsolete trial provisions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment (Participant Service Guarantee and Other Measures) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00027",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

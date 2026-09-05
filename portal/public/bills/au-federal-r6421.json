@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6421",
+ "title": "Crimes Legislation Amendment (Age of Criminal Responsibility) Bill 2019",
+ "short_title": "Crimes Legislation Amendment (Age of Criminal Responsibility) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-14",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-06-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6421%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6421%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6421_ems_74c9109b-0ebf-400e-b0d5-e4d780748396%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6421%22",
+   "document_date": "2019-10-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-382206",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-10-14",
+   "stage_hint": null,
+   "brief": "The speech supported raising the minimum age of criminal responsibility to 14, noting that 600 children under 14 are imprisoned each year, 70% of whom are Aboriginal or Torres Strait Islander, and that the international median age is 14."
+  }
+ ],
+ "acts": []
+}

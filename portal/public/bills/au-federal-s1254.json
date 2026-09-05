@@ -1,0 +1,120 @@
+{
+ "key": "au-federal-s1254",
+ "title": "Australian Education Legislation Amendment (Prohibiting the Indoctrination of Children) Bill 2020",
+ "short_title": "Australian Education Legislation Amendment (Prohibiting the Indoctrination of Children) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2020-02-10",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1254_ems_2862fcdb-e6fb-4ff1-b470-7288c6fff241%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1254%22",
+   "document_date": "2020-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-10",
+  "sentences": [
+   "The bill would give parents a way to object to teaching they consider one-sided in schools.",
+   "It would make federal school funding to states and territories conditional on laws that ban staff from promoting partisan views and require balanced teaching of opposing viewpoints.",
+   "Parents or guardians could apply to a court to enforce these requirements, and schools would need to consult them on whether staff are presenting balanced views."
+  ],
+  "changes": [
+   "Inserts new subsections into the Australian Curriculum, Assessment and Reporting Authority Act to require balanced presentation of opposing views where they exist.",
+   "Inserts a new section into the Australian Education Act 2013 tying federal funding to state and territory laws that prohibit staff from promoting partisan views and mandate balanced teaching.",
+   "Requires state and territory laws to include court enforcement mechanisms for parents or guardians.",
+   "Requires state and territory laws to mandate school consultation with parents or guardians on staff compliance with balanced presentation requirements."
+  ],
+  "affected": "Parents, guardians, school staff, state and territory governments, and the Australian Curriculum, Assessment and Reporting Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195265",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

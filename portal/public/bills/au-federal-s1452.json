@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-s1452",
+ "title": "Liability for Climate Change Damage (Make the Polluters Pay) Bill 2025",
+ "short_title": "Liability for Climate Change Damage (Make the Polluters Pay) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-03-26",
+ "originating_house": "senate",
+ "sponsor": "FARUQI, Sen Mehreen",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10912",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1452%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1452%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1452%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1452_ems_5c6a4f5f-40d5-42d6-8ad0-3db9f5749a1d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1452%22",
+   "document_date": "2025-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-26",
+  "sentences": [
+   "This bill would make fossil fuel companies legally responsible for harm caused by climate change.",
+   "People harmed by climate change, the Commonwealth Attorney-General, or a state or territory attorney-general could sue major emitters in the Federal Court for damages or an injunction.",
+   "A major emitter's share of the damage could be assumed by the court to be at least the same as its share of global greenhouse gas emissions, and liability would start from September 1990 or an earlier date if the company knew sooner."
+  ],
+  "changes": [
+   "Creates a new right to sue major emitters for climate change damage.",
+   "Allows the Federal Court to grant injunctions and award damages.",
+   "Sets the start of liability at September 1990 or an earlier date if the company knew earlier."
+  ],
+  "affected": "Fossil fuel producers, owners or operators of coal-fired power stations, and people who suffer climate change damage in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194848",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

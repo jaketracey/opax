@@ -1,0 +1,708 @@
+{
+ "key": "au-federal-r7041",
+ "title": "Social Services and Other Legislation Amendment (Strengthening the Safety Net) Bill 2023",
+ "short_title": "Social Services and Other Legislation Amendment (Strengthening the Safety Net) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2023-08-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7041_ems_b0798406-41c1-4eff-9a8f-284c656bff90%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7041%22",
+   "document_date": "2023-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00052",
+   "document_date": "2023-08-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-25",
+  "sentences": [
+   "The bill would increase several social security payments for people on low incomes.",
+   "It would raise the age limit for single parents to receive Parenting Payment Single, increase working-age and student payments, expand JobSeeker Payment eligibility for older recipients, and boost Commonwealth Rent Assistance.",
+   "The changes include raising the youngest child age for Parenting Payment Single from under 8 to under 14 years, adding $40 per fortnight to various payments, lowering the qualifying age for the higher JobSeeker rate to 55 years, and increasing rent assistance by 15 per cent."
+  ],
+  "changes": [
+   "Expanding Parenting Payment Single to single principal carers with a youngest child under 14 years.",
+   "Increasing working-age and student payments by $40 per fortnight.",
+   "Lowering the age for the higher JobSeeker Payment rate to 55 years after nine continuous months on payment.",
+   "Raising Commonwealth Rent Assistance maximum rates by 15 per cent."
+  ],
+  "affected": "Single parents, jobseekers, students, disability support pensioners (youth), and rent assistance recipients.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:46Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8133",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2023-05-31.28.1) to the usual second reading motion \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain as it is. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) welcomes the changes to eligibility for parenting payment (single) which will see 57,000 single carers receive a higher basic payment to help with the costs of raising children;* > > *(2) notes that with the current start date of 20 September 2023, over 8000 families whose children turn eight in the interim period will lose over $200 a fortnight, and face tighter income and work tests; and* > > *(3) in light of the growing cost of living challenges, especially those faced by single parents, calls on the Government to bring forward the start date to 1 July 2023.*",
+   "stage": "Second reading",
+   "ayes": 72,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 87
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-31/6"
+  },
+  {
+   "key": "federal-representatives-8134",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2023-05-31.24.1) to the usual second reading motion \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain as it is. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House calls on the government to ensure no one is left behind and lift all income support payments above the poverty line\".*",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 91
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-31/7"
+  },
+  {
+   "key": "federal-representatives-8135",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debates/?id=2023-05-31.22.1) to the usual second reading motion \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain as it is. ### Rebellion Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) rebelled against the Coalition by voting \"No\" and [explained her reasons](https://www.openaustralia.org.au/debate/?id=2023-05-31.119.1): > *While I do support the coalition's policy to increase the earning threshold to $300 a fortnight before the rate of income support is impacted, I will not be supporting the second reading amendment put forward by the member for Deakin, as it calls for the scrapping of the $40 increase. Yes, a job is the best way to improve the living standards of individuals and their families, but I'd say it's a little hard to look for a job if you're starving, cold or can't afford transport. In my view, $40 a fortnight, while a step in the right direction, is not enough and falls short of the coalition's increase of $50 a fortnight in 2021. Whilst I note the government has a fine line to walk between addressing the cost-of-living challenges and addressing inflation, I don't believe that providing this minimal increase to income support, which still falls chronically below the poverty line, is the right approach, nor is it living Labor's own values, particularly as they've promised time and again not to leave any Australian behind.* ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) while in Government, the Coalition through disciplined economic management was able to deliver the largest permanent increase to the JobSeeker income support payment;* >> >",
+   "stage": "Second reading",
+   "ayes": 90,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-31/8"
+  },
+  {
+   "key": "federal-senate-8211",
+   "date": "2023-08-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-01.5.8) to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). Because this vote was unsuccessful, the text set out below won't be added to the motion. The amendment was introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent). Note that these types of amendments don't make any legal changes, but instead are politically influential as they represent the will of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) the expert Economic Inclusion Advisory Committee (EIAC) found that the rates of social security payments for working age Australians are seriously inadequate and are creating barriers to paid work,* >> >> *(ii) the EIAC recommended the JobSeeker Payment, Youth Allowance and other related payments be raised to 90 per cent of the aged pension to restore a previous relativity between the payments, reduce financial stress in the community and improve the wellbeing and security of the most vulnerable Australians,* >> >> *(iii) the Albanese Government has rejected the expert advice of the EIAC and has chosen to raise the rates of income support by just $2.85 a day, before the payments are indexed,* >> >> *(iv) the Albanese Government has decided not to remove the Activity Test for the Child Care Subsidy, despite recommendations to do so by the EIAC and the Women's Economic Equality Taskforce given findings that it is perversely reducing economic inclusion, especially for women, and causing hardship for children,* >> >> *(v) the Albanese Government has chosen not to raise the age of eligibility for Parenting Payment (Single) to when a parent's youngest child turns 16 years-of-age, leaving over 18,000 single parents without access to the payment,* >> >> *(v",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-01/1"
+  },
+  {
+   "key": "federal-senate-8212",
+   "date": "2023-08-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-01.7.1) to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). Because this vote was unsuccessful, the text set out below won't be added to the motion. The amendment was introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens). Note that these types of amendments don't make any legal changes, but instead are politically influential as they represent the will of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to ensure no one is left behind and lift all income support payments above the poverty line\".*",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-01/2"
+  },
+  {
+   "key": "federal-senate-8213",
+   "date": "2023-08-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-01.9.1) to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). Because this vote was unsuccessful, the text set out below won't be added to the motion. The amendment was introduced by South Australian Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens). Note that these types of amendments don't make any legal changes, but instead are politically influential as they represent the will of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to increase the income free area of JobSeeker and other payments to at least $300 per fortnight\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-01/3"
+  },
+  {
+   "key": "federal-senate-8214",
+   "date": "2023-08-01",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Strengthening the Safety Net) Bill 2023 - in Committee - Eligibility and commencement",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-01/4"
+  },
+  {
+   "key": "federal-senate-8216",
+   "date": "2023-08-02",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Strengthening the Safety Net) Bill 2023 - in Committee - Raise income support",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-02/1"
+  },
+  {
+   "key": "federal-senate-8217",
+   "date": "2023-08-02",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Strengthening the Safety Net) Bill 2023 - in Committee - Income free areas",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-02/2"
+  },
+  {
+   "key": "federal-senate-8218",
+   "date": "2023-08-02",
+   "house": "senate",
+   "question": "The majority voted against [amendments and requests](https://www.openaustralia.org.au/senate/?gid=2023-08-02.18.1) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means they were unsuccessful. ### What do these amendments do? Senator Ruston [explained that](https://www.openaustralia.org.au/senate/?gid=2023-08-02.18.1): > *The coalition's amendment and request remove the $40 increase per fortnight for JobSeeker and related working-age payments and replaces it with an increase to the income-free areas of $150 per fortnight. These payments include JobSeeker, disability support pension under 21, youth allowance, Austudy payment and parenting payment partner.*",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-02/3"
+  },
+  {
+   "key": "federal-senate-8219",
+   "date": "2023-08-02",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Strengthening the Safety Net) Bill 2023 - in Committee - Increase working-age payments",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-02/4"
+  },
+  {
+   "key": "federal-senate-8220",
+   "date": "2023-08-02",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-02.39.1) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means it failed. ### What does the amendment do? Senator Rice [explained that](https://www.openaustralia.org.au/senate/?gid=2023-08-02.39.1): > *This amendment is about implementing one of the recommendations from the Royal Commission into the Robodebt Scheme ...* > > *We have legislation before us today to amend the Social Security Act. It is a very straightforward thing, as per my amendment, to reinstate the provisions that were there before the Abbott government's changes. This recommendation isn't complex. It's not one of the complex robodebt royal commission recommendations. I understand the arguments from the government that we need to implement those recommendations slowly and carefully. I accept that for most of them, but that's not the case for this one ...* > > *In the meantime, here is a very straightforward opportunity to provide some justice for people by putting in place the provision as it used to be—to say that debts that are more than six years old should not be pursued. We don't know when the full suite of changes, after the government's careful consideration of them, are going to come into place. It might be years off. In the meantime, at least do this. It was a very simple recommendation of the royal commission and it's something that could easily be done today.*",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-02/5"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Strengthening the Safety Net) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00052",
+   "assent_date": "2023-08-10"
+  }
+ ]
+}

@@ -1,0 +1,953 @@
+{
+ "key": "au-federal-r5303",
+ "title": "Migration Amendment (Protection and Other Measures) Bill 2014",
+ "short_title": "Migration Amendment (Protection and Other Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-04-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-04-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5303_ems_6ab8fffb-a1dd-4ffa-b95a-2f5852a17590%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5303_ems_c531ca9f-1844-4090-baf4-67de063e4421%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5303_ems_fea74ad6-a3dc-4dee-9620-1ac1af28adda%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5303_ems_d2985b0e-6aad-443d-8ab2-3ed098badf3d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5303%22",
+   "document_date": "2014-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00035",
+   "document_date": "2015-04-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-25",
+  "sentences": [
+   "This bill would change the Migration Act to make the asylum process faster and more honest.",
+   "It would require asylum seekers to provide full evidence for their claims and let tribunals draw negative inferences if new claims are raised late without a good reason.",
+   "The bill sets a risk threshold of 'more likely than not' for protection obligations under the ICCPR and CAT, meaning a greater than fifty percent chance of significant harm."
+  ],
+  "changes": [
+   "Clarifies that asylum seekers must specify their claims and provide sufficient evidence.",
+   "Allows the Refugee Review Tribunal to draw an unfavourable inference on late claims without reasonable explanation.",
+   "Creates grounds to refuse a protection visa if an applicant fails to establish identity, nationality or citizenship without reasonable explanation.",
+   "Defines the risk threshold for protection obligations under the ICCPR and CAT as 'more likely than not'.",
+   "Prevents unauthorised maritime arrivals from making a valid visa application unless the Minister determines it is in the public interest.",
+   "Strengthens the powers of the Principal Member of the MRT and RRT to issue guidance decisions and practice directions."
+  ],
+  "affected": "Asylum seekers and protection visa applicants, including unauthorised maritime arrivals and transitory persons.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3422",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "question": "Migration Amendment (Protection and Other Measures) Bill 2014 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 45,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-22/1"
+  },
+  {
+   "key": "federal-representatives-3423",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "question": "Migration Amendment (Protection and Other Measures) Bill 2014 - Consideration in Detail - Complementary protection",
+   "stage": "Consideration in detail",
+   "ayes": 46,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-22/2"
+  },
+  {
+   "key": "federal-representatives-3424",
+   "date": "2014-09-22",
+   "house": "representatives",
+   "question": "Migration Amendment (Protection and Other Measures) Bill 2014 - Consideration in Detail - Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-09-22/3"
+  },
+  {
+   "key": "federal-senate-3727",
+   "date": "2015-03-19",
+   "house": "senate",
+   "question": "Migration Amendment (Protection and Other Measures) Bill 2014 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 9,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/4"
+  },
+  {
+   "key": "federal-senate-3728",
+   "date": "2015-03-19",
+   "house": "senate",
+   "question": "Michaelia Cash I table two supplementary explanatory memoranda relating to the government amendments to be moved to this bill. Sarah Hanson-Young I have got a question for the minister in relation to the explanatory memoranda—the additions—that have just been tabled. Could the minister please outline the purpose of those additions to the explanatory memorandum and the impact that they will have on those affected by this bill overall. Michaelia Cash I, unfortunately, have to say that I do not think that anything I actually say is going to change the way that Senator Hanson-Young votes in relation to this particular piece of legislation. Quite frankly, I think I am wasting the committee's and the Senate's time in seeking to address something upon which the government and the Australian Greens are fundamentally at different ends of the political spectrum. I do not think there is one part of this legislation that Senator Hanson-Young is going to agree to. But, Senator Hanson-Young, I have tabled the explanatory memoranda and I refer you to them. Sarah Hanson-Young I take that to mean that perhaps the minister does not want to have a conversation about this. However, at the last minute, we have received a nine-page addition to the explanatory memorandum. For the sake of clarity, I would like the minister to explain why this was needed and the impacts of it. I think this is what the committee stage is for: being able to understand the legislation better and to inform not just us as legislators but of course those interpreting the act once it passes. It is absolutely in line with what we do in this place. If the minister does not like it, perhaps she is in the wrong house. Michaelia Cash If Senator Hanson-Young had actually listened to my summing up speech she may have been enlightened as to the reasons that the explanatory memorandum has been updated. The purpose of the addendum is to provide additional material to the explanatory memorandum to the Migration Amendment (Pr",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 9,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/5"
+  },
+  {
+   "key": "federal-senate-3729",
+   "date": "2015-03-19",
+   "house": "senate",
+   "question": "The majority voted in favour of leaving [part 1 of schedule 1](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fbills%2Fr5303_first-reps%2F0001%22;rec=0#b4cd6c9e7e634e05b25bf640a3803e2c) unchanged. This vote happened because the Australian Greens party had introduced a motion to oppose that part. Because this vote was successful, the part will remain as it is. ### What is part 1 of schedule 1? Greens Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) [explains](http://www.openaustralia.org.au/senate/?id=2015-03-19.41.1) that part 1 of schedule 1 includes: > *amendments being made to the issue of burden of proof and new claims.* > *This is one of the issues that was raised consistently throughout the Senate committee process—particularly, a number of legal experts are concerned about changing the expectations and shifting the burden of proof onto asylum seekers* Read more of Senator Hanson-Young's [explanation](http://www.openaustralia.org.au/senate/?gid=2015-03-19.53.1).",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/6"
+  },
+  {
+   "key": "federal-senate-3730",
+   "date": "2015-03-19",
+   "house": "senate",
+   "question": "Sarah Hanson-Young The Greens oppose schedule 1 in the following terms: (1) Schedule 1, item 2, page 5 (lines 3 to 12), to be opposed. (3) Schedule 1, items 4 to 10, page 5 (line 18) to page 6 (line 22), to be opposed. (4) Schedule 1, item 11, page 6 (line 25) to page 7 (line 14), section 91WA to be opposed. (5) Schedule 1, items 12 and 13 (lines 28 to 32), to be opposed. Gavin Marshall The question is that schedule 1 stand as printed.",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/7"
+  },
+  {
+   "key": "federal-senate-3731",
+   "date": "2015-03-19",
+   "house": "senate",
+   "question": "The existing bill states that a protection visa *must* be refused if an applicant presents bogus evidence of the applicant's identity, nationality or citizenship, or if it is believed such evidence has been destroyed. It was argued by Sarah Hanson-Young (Greens) that to flee persecution asylum seekers may need to use false documents as a necessity, and the existing legislation is unfair. The proposed amendment would say that a visa *may* be refused in these circumstances, but the refusal is at the minister's discretion.",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/8"
+  },
+  {
+   "key": "federal-senate-3732",
+   "date": "2015-03-19",
+   "house": "senate",
+   "question": "Migration Amendment (Protection and Other Measures) Bill 2014 - in Committee - Family protection visas",
+   "stage": "In committee",
+   "ayes": 42,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-19/9"
+  },
+  {
+   "key": "federal-senate-3738",
+   "date": "2015-03-25",
+   "house": "senate",
+   "question": "Sarah Hanson-Young Could I just seek some clarification from the Clerk as to whether we dealt with the amendments on sheet 7683 last time. I think we were halfway through that vote, from memory. The CHAIRMAN: Where we are up to is Australian Greens amendments (3) and (4), but they were actually consequential on the previous one, on which the question has been resolved. So I do not think you would want to move those. We would then be ready to go on to— Opposition amendments? The CHAIRMAN: Opposition amendments, yes—if we are following the running sheet. Kim Carr The opposition opposes schedule 2 in the following terms: (5) Schedule 2, page 10 (line 1) to page 15 (line 9), to be opposed. Schedule 2 of the bill seeks to make significant changes to the way in which Australia will determine if it has protection obligations in relation to certain non-citizens. Specifically, the bill inserts a new section 6A that provides that a non-citizen is not entitled to complementary protection unless the person can prove that it is more likely than not that he or she will suffer significant harm if removed from Australia. Currently, the 'real chance' test means that a person must not be returned to a situation where there is a real chance that they would face significant harm. This means a chance which is not remote or insubstantial but which may be below 50 per cent and may be as low as 10 per cent. These changes have the potential to put vulnerable people seeking Australia's protection at risk of persecution, death or serious harm if returned to their country. While Labor notes that complementary protection applies to only a small cohort of those who apply for refugee status but are refused, they are nonetheless an important cohort. When Labor introduced the Migration Amendment (Complementary Protection) Act 2011, it was intended to assess and provide protection to those who do not satisfy the definition of a refugee. However, they are nonetheless provided protection on the basis",
+   "stage": "In committee",
+   "ayes": 44,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 42,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/1"
+  },
+  {
+   "key": "federal-senate-3739",
+   "date": "2015-03-25",
+   "house": "senate",
+   "question": "Gavin Marshall Senator Hanson-Young, your amendment (7) would have been consequential on that amendment being successful, so I take it you will not proceed with amendment (7). Sarah Hanson-Young That is right. The CHAIRMAN: Thank you, Senator. Then maybe we should now move to your amendment (5) on sheet 7683. My understanding is that was consequential as well. The CHAIRMAN: The question would be that part 3 of schedule 1 stand as printed. I think we will move on from that amendment if that is okay. The CHAIRMAN: Thank you. I would like to go to amendments (1) to (5) on sheet 7675. These are fairly basic amendments. They deal with removing the retrospectivity elements of this bill across all of the schedules—1, 2, 3 and 4. They speak for themselves. We should not, in this place, be creating legislation that is retrospective in its impact and its nature to pull the rug out from under people. It is a basic concept that we apply across the board when we are debating issues in this place that you do not make things retrospective. These amendments are fairly simple. They just say that, from the moment that this bill passes and has royal assent, that is when these new rules will apply. We should not be trying to change the rules backwards, which is effectively what the government is doing by having these retrospective elements in the legislation. Of course, I am concerned about the very real impact that will have on asylum seekers who do have their claims already on foot. I do not think it is fair at all, but it is a broader point than that. This is actually about ensuring that we stick by the basic notion that you do not make laws in this place retrospective. Because these amendments are all of the same nature, I seek leave to move them all together. Leave granted. I move Greens amendments (1) to (5) on sheet 7675 revised: (1) Schedule 1, item 15, page 9 (lines 3 to 12), omit subitems (1) and (2), substitute: (1) Section 5AAA of the _Migration Act 1958_ as amended by Part",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/2"
+  },
+  {
+   "key": "federal-senate-3740",
+   "date": "2015-03-25",
+   "house": "senate",
+   "question": "Michaelia Cash I move: That this bill be now read a third time. Gavin Marshall The question is that the bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 9,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-293373",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297457",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297459",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297460",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297461",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297462",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297466",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297467",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297468",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297469",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297470",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297471",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297474",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297477",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297478",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-22",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Protection and Other Measures) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00035",
+   "assent_date": "2015-04-13"
+  }
+ ]
+}

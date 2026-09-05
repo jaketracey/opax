@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6461",
+ "title": "Climate Change Authority Amendment (Impact of 3 Degrees of Global Warming on Australia) Bill 2019",
+ "short_title": "Climate Change Authority Amendment (Impact of 3 Degrees of Global Warming on Australia) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-02",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6461%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6461%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6461%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6461_ems_b563ad10-1958-4ddc-9aee-950628793c9d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6461%22",
+   "document_date": "2019-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-385567",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2019-12-02",
+   "stage_hint": null,
+   "brief": "The speaker introduced the Climate Change Authority Amendment (Impact of 3 Degrees of Global Warming on Australia) Bill 2019, arguing that the Morrison government's current climate targets would lead to three degrees of global warming with catastrophic consequences for Australia, and the bill would require the Climate Change Authority to report on those impacts."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,315 @@
+{
+ "key": "au-federal-r5959",
+ "title": "First Home Super Saver Tax Bill 2017",
+ "short_title": "First Home Super Saver Tax Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5959_ems_69d18cb2-fb2f-4a48-aaa4-101deeb0e9db%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5959%22",
+   "document_date": "2017-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00133",
+   "document_date": "2017-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4828",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/a923c04b-f8ae-47fa-a4b3-94f3cba5886d/&sid=0000) to reject the main idea of the bills. In parliamentary jargon, they voted against refusing to read the bills for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that the House can continue to consider the bills. ### What is the bills' main idea? The bills were introduced to establish the First Home Super Saver Scheme. Together they will: * *enable first home savers to make voluntary contributions into the superannuation system and to withdraw those contributions and associated earnings for the purposes of purchasing their first home;* * *allow an individual aged 65 years or over to use the proceeds of one sale of their main residence to make contributions (downsizer contributions) of up to $300 000 to their superannuation; and* * *impose a first home super saver tax on individuals who have not entered into a contract to purchase or construct their first home or recontributed the required amount into superannuation.* Read more about the bills and their purpose in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd043). ### Motion text > *That all words after 'That' be omitted with a view to substituting the following words:* > *'The House declines to give the bill and related bill a second reading as:* > *(1) the First Home Super Saver Scheme will do nothing to address housing affordability but will instead work to undermine Australia’s world class superannuation system; and* > *(2) any housing affordability package that does not include reforms to negative gearing and capital gains tax is a sham.'*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-18/1"
+  },
+  {
+   "key": "federal-senate-5035",
+   "date": "2017-12-05",
+   "house": "senate",
+   "question": "The majority agreed with the bills' main idea, which means they can now discuss them in more detail. In parliamentary jargon, they voted to read the bills for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What is the bills' main idea? The bills were introduced to establish the First Home Super Saver Scheme. Together they will: * *enable first home savers to make voluntary contributions into the superannuation system and to withdraw those contributions and associated earnings for the purposes of purchasing their first home;* * *allow an individual aged 65 years or over to use the proceeds of one sale of their main residence to make contributions (downsizer contributions) of up to $300 000 to their superannuation; and* * *impose a first home super saver tax on individuals who have not entered into a contract to purchase or construct their first home or recontributed the required amount into superannuation.* Read more about the bills and their purpose in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd043).",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 40,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-12-05/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-355050",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Treasury Laws Amendment (Reducing Pressure on Housing Affordability Measures No. 1) Bill 2017 and the First Home Super Saver Tax Bill 2017, promoting the First Home Super Saver Scheme and downsizing barriers as measures to help first home buyers. They criticised the shadow Treasurer, the member for McMahon, for opposing the bill and accused him of lying about it undermining Australian superannuation."
+  },
+  {
+   "slug": "speech-355062",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment bills, arguing that the super saver scheme for first home buyers is a dangerous tinker that fails to address the core drivers of unaffordability—negative gearing and capital gains tax concessions, which respectively benefit the top 10% of earners by 50% and 70%. They supported the downsizing measure (allowing over-65s to contribute up to $300,000 from home sale proceeds) but rejected the combined bill, citing local price surges (Malabar homes rose 46% to a $2 million average; Coogee to $2.4 million)."
+  },
+  {
+   "slug": "speech-355148",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued for the housing affordability bills, which allow first home buyers to use superannuation contributions for a deposit (capped at $15,000 per year and $30,000 total), reduce revenue by $250 million, and permit older Australians to downsize with super contributions up to $300,000 or $600,000 for couples, while also introducing a foreign-resident vacancy tax, a 50% cap on foreign ownership in new developments, and $117.2 million for homelessness services."
+  },
+  {
+   "slug": "speech-355149",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Reducing Pressure on Housing Affordability Measures No. 1) Bill 2017 and the First Home Super Saver Tax Bill 2017, arguing they fail to address negative gearing and capital gains tax reform and would undermine superannuation. They supported Labor's alternative plan, including building 55,000 new homes over three years, creating 25,000 jobs annually, a bond aggregator for affordable rental housing, a vacant property tax, and $88 million for a safe housing fund."
+  },
+  {
+   "slug": "speech-355151",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the First Home Super Saver Scheme, arguing superannuation was designed for retirement, not home buying, and criticised the government for failing to reform negative gearing and capital gains tax, which largely benefit high-income earners. They highlighted record median house prices in the ACT ($723,980) and Sydney ($1 million), cited data showing close to 70% of Australians are concerned about home ownership, and called for appointing a Minister for Housing and Homelessness and exploring innovative housing models like the Nightingale project and YWCA’s Lady Heydon House to address a looming homelessness crisis, particularly among older women."
+  },
+  {
+   "slug": "speech-355154",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s housing bills were ineffective bandaids that would not fix the housing affordability crisis, instead repeating Labor’s policy to limit negative gearing to new housing and reduce the capital gains tax discount. They cited statistics such as Melbourne’s median house price at $880,902, only 40% of 25–34-year-olds owning a home, and negative gearing costing $10 billion annually, while praising Victorian Labor’s rental reforms."
+  },
+  {
+   "slug": "speech-355156",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for a belated and inadequate response to the housing affordability crisis, noting that homeownership among 25–34 year olds fell from 60% to under 40% over 30 years and that tax concessions have driven price acceleration. The government's bill includes the First Home Super Saver Scheme, which lets first home buyers withdraw voluntary super contributions for a deposit."
+  }
+ ],
+ "acts": [
+  {
+   "title": "First Home Super Saver Tax Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00133",
+   "assent_date": "2017-12-13"
+  }
+ ]
+}

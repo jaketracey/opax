@@ -1,0 +1,270 @@
+{
+ "key": "au-federal-alrc-4144",
+ "title": "Marine Engineers Qualifications Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2013-06-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-03",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2412",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 62,
+    "member": 3,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/1"
+  },
+  {
+   "key": "federal-senate-2413",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Lin Thorp As an educationalist, I find it disturbing that this place is being used to consider quite a retrograde step in educational history. There is a movement in education that has been going on since the late eighties, with a move from prescriptive assessment to descriptive assessment, and from time based learning to competency based learning. It is recognising what learning is. It is recognising that individuals learn at different paces and in different methods to come to the same place, which is a level of competency in a particular area. Time based learning is going back to the past. Time based learning presumes that you have a group of students—whether they be young school students or people who are studying, in this case, to be engineers—who are all in the same room, at the same time, with the same teacher, and, at the end of that particular period of time, they are all qualified to do a particular task. That is not the way education works today. Education works today on the acquiring of skills. It does not matter whether it be about learning how to be a barista or how to be a neurosurgeon. I, for one, would prefer, if I were to be under the knife in a serious operation, to know that that particular individual had not just served time at university for a number of years but had reached the level of competency that they deserve. This is what this is all about. Going along with the analogy of medical training, in a different job I worked for the medical school of Tasmania. My task was to review the curriculum of the six-year course for all students doing a Bachelor of Medicine and a Bachelor of Medical Science. What became very clear during that exercise was that so much of that training was time based and it needed to move. Over the years, more and more had been added to the curriculum, based simply on facts and figures, rote learning, if you like, and it needed in to be brought up to the end of the 20th century, as it was then—this was back in the 1990s. I",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 60,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/2"
+  },
+  {
+   "key": "federal-senate-2414",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Doug Cameron The question now is that this bill be read a second time.",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 61,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-270821",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272839",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272841",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272844",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272845",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272846",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823583",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274402",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274403",
+   "speaker": "Robert McClelland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823955",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-03",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

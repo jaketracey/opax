@@ -1,0 +1,540 @@
+{
+ "key": "au-federal-r6130",
+ "title": "Social Services Legislation Amendment (Cashless Debit Card Trial Expansion) Bill 2018",
+ "short_title": "Social Services Legislation Amendment (Cashless Debit Card Trial Expansion) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6130_ems_9bafe413-5f49-4db7-94f4-2247c4d09854%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6130_ems_b69971e0-eab8-4865-b5b9-31fa99e7c08f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6130%22",
+   "document_date": "2018-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00110",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-30",
+  "sentences": [
+   "The bill would expand a compulsory welfare card trial to a new location, the Bundaberg and Hervey Bay area, and run until 30 June 2020.",
+   "It would set a maximum of 15,000 total trial participants and specify who qualifies in the new area.",
+   "The bill would also let merchants block certain purchases, and prevent the card's restricted funds from being used to buy cash-like items that could be exchanged for alcohol or gambling."
+  ],
+  "changes": [
+   "Expands the cashless debit card trial to the Bundaberg and Hervey Bay area.",
+   "Increases the total number of trial participants to 15,000.",
+   "Introduces an exception from the Competition and Consumer Act 2010 for merchants that automatically block restricted products.",
+   "Limits the use of the restricted portion of payments to stop it being converted into cash-like products for alcohol or gambling."
+  ],
+  "affected": "Trial participants in the Bundaberg and Hervey Bay area, merchants, and welfare recipients in the expanded trial.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5267",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Cashless Debit Card Trial Expansion) Bill 2018 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-21/8"
+  },
+  {
+   "key": "federal-senate-5379",
+   "date": "2018-08-23",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Cashless Debit Card Trial Expansion) Bill 2018 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 35,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-23/1"
+  },
+  {
+   "key": "federal-senate-5380",
+   "date": "2018-08-23",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Cashless Debit Card Trial Expansion) Bill 2018 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 34,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-23/2"
+  },
+  {
+   "key": "federal-senate-5400",
+   "date": "2018-09-11",
+   "house": "senate",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/senate/?id=2018-09-11.4.2) (1) to (5) and (8) to (11), which means they succeeded. ### What do these amendments do? These amendments would move several matters that are currently in disallowable instruments - that is, legislative instruments that the parliament is able to vote against in a single vote so they stop being law - to standard legislation that can't so easily be undone. These matters include the location of the trial sites. According to Liberal MP [Mitch Fifield](https://theyvoteforyou.org.au/people/senate/victoria/mitch_fifield), who introduced the amendments, *\"[this will give certainty](https://www.openaustralia.org.au/senate/?gid=2018-09-11.6.1) to trial participants and local communities\"*. ### What does the bill do? The [bill was introduced to](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6130): * *expand the cashless debit card arrangements to a further trial site, the Bundaberg and Hervey Bay area, to run until 30 June 2020;* * *specify the class of trial participants for the area and increase the total number of trial participants overall to 15 000;* * *provide for an exception from the restrictive trade practices provisions of the Competition and Consumer Act 2010 for merchants that implement product level blocking systems to identify that a cashless debit card is being used for payment and, if any restricted products are being purchased, decline the transaction; and* * *limit the use of the restricted portion of a payment to prevent the portion being used to obtain cash-like products which could be used to obtain alcohol or gambling.*",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 35,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-11/1"
+  },
+  {
+   "key": "federal-senate-5401",
+   "date": "2018-09-11",
+   "house": "senate",
+   "question": "Social Services Legislation Amendment (Cashless Debit Card Trial Expansion) Bill 2018 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 36,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-11/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-365215",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-21",
+   "stage_hint": null,
+   "brief": "Labor opposed the expansion of the cashless debit card trial to Bundaberg and Hervey Bay, citing community opposition from both local mayors, a lack of formal consultation, an inconclusive and poor-quality ORIMA evaluation, and program costs exceeding $24 million to date (including $7.9 million paid to Indue and $1.6 million to ORIMA). It committed to supporting the current trials in Ceduna and the East Kimberley until mid-2019, but would only consider new sites with credible evidence of effectiveness and an agreed community consultation process and definition of consent."
+  },
+  {
+   "slug": "speech-365216",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued for the expansion of the Cashless Debit Card trial to the Hinkler electorate, citing strong community support, over 188 consultation meetings, a ReachTEL poll showing 27.8% opposition, and a cost of less than $2,000 per person. They invited the member for Barton to meet frontline service providers rather than union officials, and noted that the trial would affect 6,700 participants on specific welfare payments to address child neglect and gambling-related harm."
+  },
+  {
+   "slug": "speech-365218",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued for expanding the Cashless Debit Card trial to Bundaberg and Hervey Bay, citing independent evaluation results showing reduced alcohol and drug use, gambling, and improved savings and childcare in existing trial sites (Ceduna and East Kimberley). The bill extends the trial to about 6,700 welfare recipients under 36 in those areas, with additional $1 million in community services, and amends the list of restricted goods to include cash-like products."
+  },
+  {
+   "slug": "speech-365219",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-21",
+   "stage_hint": null,
+   "brief": "The member for Herbert opposed the cashless debit card trial expansion, arguing it should not be imposed on communities that reject it, and instead advocated for early intervention and prevention programs, citing a $5 million commitment to a Salvation Army detox facility and noting that 78% of trial participants reported little or no change."
+  },
+  {
+   "slug": "speech-365220",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-21",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill to expand the cashless debit card trial to Bundaberg and Hervey Bay, arguing the government failed to properly consult communities and lacked credible evidence. They noted the expansion would add around 6,700 participants, bringing the total to over 15,000, and criticised the $1.6 million ORIMA evaluation as unreliable while highlighting the $24 million spent on existing trials."
+  },
+  {
+   "slug": "speech-365221",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-21",
+   "stage_hint": null,
+   "brief": "The bill expands the cashless debit card trial to Bundaberg and Hervey Bay, covering around 6,700 people under 36 on Newstart, youth allowance, or parenting payments, running until 30 June 2020, based on community consultation and evidence of intergenerational welfare dependency."
+  },
+  {
+   "slug": "speech-368760",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-11",
+   "stage_hint": null,
+   "brief": "The speaker argued against expanding the Cashless Debit Card trial to Bundaberg and Hervey Bay, citing a woeful evaluation, no reduction in violence, and a damning Auditor-General's report, while supporting continuation of existing trials in Ceduna and East Kimberley for two years. They opposed the national rollout, insisting on genuine community consultation and wraparound services instead of mandatory income management."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Cashless Debit Card Trial Expansion) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00110",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

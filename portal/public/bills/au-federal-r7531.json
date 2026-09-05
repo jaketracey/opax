@@ -1,0 +1,89 @@
+{
+ "key": "au-federal-r7531",
+ "title": "Criminal Code Amendment (National Sport Integrity Offences) Bill 2026",
+ "short_title": "Criminal Code Amendment (National Sport Integrity Offences) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7531%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7531%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7531_ems_67a988c0-da50-4b96-a114-5b2d35f8855d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7531%22",
+   "document_date": "2026-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-20",
+  "sentences": [
+   "This bill would create seven new federal crimes targeting match-fixing and similar actions that harm sport integrity.",
+   "The offences would be added as a new part of the Criminal Code, covering acts like corrupting a sporting event, offering or asking for bribes to influence a match, and hiding evidence of such corruption.",
+   "The government says the bill implements recommendations from the 2017 Wood Review, which found that inconsistent state laws leave sport vulnerable to match-fixing and organised crime."
+  ],
+  "changes": [
+   "Creates an offence of intentionally corrupting a sporting event to gain a benefit or cause a detriment.",
+   "Creates an offence of providing a benefit to someone, knowing it may lead them to corrupt a sporting event.",
+   "Creates an offence of asking for or accepting a benefit that may lead to corrupting a sporting event.",
+   "Creates an offence of altering, destroying or hiding information about corrupt conduct.",
+   "Makes the offences apply across national borders.",
+   "Links match-fixing offences to betting outcomes, even if the bet itself is lawful."
+  ],
+  "affected": "People involved in Australian sport, including athletes, officials, betting operators and spectators, as well as law enforcement agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:58:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205803",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205903",
+   "speaker": "Karen Grogan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

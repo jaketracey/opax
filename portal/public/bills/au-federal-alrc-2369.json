@@ -1,0 +1,214 @@
+{
+ "key": "au-federal-alrc-2369",
+ "title": "Indigenous Education (Targeted Assistance) Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "School Education, Early Childhood and Youth",
+ "status": "passed",
+ "status_as_of": "2013-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-20",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-27",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00066",
+   "document_date": "2013-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-273615",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273616",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273742",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273743",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273744",
+   "speaker": "Deb O'Neill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273746",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273747",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273748",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273749",
+   "speaker": "Robert Oakeshott",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273750",
+   "speaker": "Peter Garrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823793",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Indigenous Education (Targeted Assistance) Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00066",
+   "assent_date": "2013-06-27"
+  }
+ ]
+}

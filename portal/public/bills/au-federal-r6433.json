@@ -1,0 +1,586 @@
+{
+ "key": "au-federal-r6433",
+ "title": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019",
+ "short_title": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Youth and Sport",
+ "status": "passed",
+ "status_as_of": "2020-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6433_ems_25904456-d9b5-4c75-a128-9029c1b2435f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6433_ems_46a311d5-cb10-4f9c-80ce-f40adcea5665%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6433%22",
+   "document_date": "2019-10-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00011",
+   "document_date": "2020-03-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 10,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-17",
+  "sentences": [
+   "This bill creates a new agency called Sport Integrity Australia to handle threats to the integrity of Australian sport.",
+   "The agency would combine the work of several existing bodies including the Australian Sports Anti-Doping Authority and the National Integrity of Sport Unit.",
+   "The bill follows the 2018 Wood Review, which recommended a national body to coordinate sports integrity efforts."
+  ],
+  "changes": [
+   "Establishes Sport Integrity Australia as a new national agency.",
+   "Transfers the functions of existing sports integrity bodies into the new agency.",
+   "Prepares Australia to meet international obligations under the UNESCO anti-doping convention and the Macolin Convention on match-fixing."
+  ],
+  "affected": "Sporting organisations, athletes, and government agencies involved in sports integrity.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:01:05Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6117",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019 - Second Reading - Stop Sturt MP for speaking",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/14"
+  },
+  {
+   "key": "federal-representatives-6118",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019 - Second Reading - Stop MP Martin from speaking",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/15"
+  },
+  {
+   "key": "federal-representatives-6119",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019 - Second Reading - Stop MP Hammond from speaking",
+   "stage": "Second reading",
+   "ayes": 57,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/16"
+  },
+  {
+   "key": "federal-representatives-6120",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which means it failed. The usual second reading motion is \"*that the bill be read for a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Shortland MP [Pat Conroy](https://theyvoteforyou.org.au/people/representatives/shortland/pat_conroy) (Labor). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the government's patchy approach to sport continues, with three different ministers having had carriage of sports integrity reforms in just two years, resulting in uncertainty for athletes and other parts of the sport sector in relation to sports integrity reform\".*",
+   "stage": "Second reading",
+   "ayes": 61,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/17"
+  },
+  {
+   "key": "federal-representatives-6121",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019 - Third Reading - Stop the MP for Shortland from speaking",
+   "stage": "Third reading",
+   "ayes": 73,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/18"
+  },
+  {
+   "key": "federal-representatives-6122",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 73,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/19"
+  },
+  {
+   "key": "federal-representatives-6123",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019 - Third Reading - Let a vote happen",
+   "stage": "Third reading",
+   "ayes": 73,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/20"
+  },
+  {
+   "key": "federal-senate-6231",
+   "date": "2020-02-24",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-02-24.196.1) to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which means it failed. The usual second reading motion is \"that the bill be read for a second time\", which is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens). ### Motion text > *At the end of the motion, add \"but the Senate:* > > *(a) notes that:* > >> *(i) the provision of adequate sporting infrastructure will assist Sports Integrity Australia in meeting its education and outreach goals,* >> >> *(ii) an evaluation of the Community Sport Infrastructure Program by the Australian National Audit Office found that 'the award of funding reflected the approach documented by the Minister's Office of focusing on 'marginal' electorates held by the Coalition as well as those electorates held by other parties or independent members that were to be 'targeted' by the Coalition at the 2019 Election. Applications from projects located in those electorates were more successful in being awarded funding than if funding was allocated on the basis of merit assessed against the published program guidelines', and* >> >> *(iii) the Government, including the former Minister for Sport, has not displayed ethics and values that promote community confidence in sport; and* > > *(b) calls on the Government to provide an honest, comprehensive account of the role the Prime Minister's office played in allocating these grants\".*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "earliest": 23,
+    "dated": 28
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-24/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-386215",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The speaker withdrew a collective reference to the coalition as \"dope\" after insisting it was not an individual reflection, then argued the bill implements Wood review recommendation No. 18 on enhancing ASADA’s regulatory powers, while noting the government’s plan to replace ASADA with Sport Integrity Australia. They expressed support for the bill and opposition to doping in sport and politics."
+  },
+  {
+   "slug": "speech-386216",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to establish Sport Integrity Australia but noted the government's \"patchy approach\" with three different ministers in two years, and flagged concerns about civil immunity and privacy enforcement that will be examined in a Senate inquiry. The speaker also corrected the record that Don Bradman was from New South Wales, not South Australia."
+  },
+  {
+   "slug": "speech-386221",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the establishment of Sport Integrity Australia to consolidate anti-doping, match-fixing, and corruption investigations, and announced $5 million each for new NSW cricket facilities at Sydney Olympic Park and Wests Tigers redevelopment at Concord Oval, $1 million for the CUBS multicultural sports program, and funding for upgrades to Blair Park, Timbrell Park, Cintra Park, Strathfield Park, and Goddard Park."
+  },
+  {
+   "slug": "speech-386369",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019, citing the need to implement the Wood review and address gambling as a new integrity threat, but condemned the lack of a national integrity commission for federal politics, calling it hypocritical that athletes face public hearings while politicians oppose the same standard."
+  },
+  {
+   "slug": "speech-386385",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "Labor supported the third reading of the Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019, which would establish Sport Integrity Australia as recommended by the Wood review, while criticising the government for lacking a national integrity commission and for inconsistent ministerial oversight of sports integrity reforms."
+  },
+  {
+   "slug": "speech-386389",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The speaker endorsed the Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019, which establishes a new agency, Sports Integrity Australia, in response to the Wood review, and noted the need to address integrity threats in emerging sports like eSports."
+  },
+  {
+   "slug": "speech-386391",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Bill 2019, drawing on lifelong involvement in sport as an athlete, coach, and board member."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Sports Anti-Doping Authority Amendment (Sport Integrity Australia) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00011",
+   "assent_date": "2020-03-06"
+  }
+ ]
+}

@@ -1,0 +1,131 @@
+{
+ "key": "au-federal-s1364",
+ "title": "Northern Territory Safe Measures Bill 2023",
+ "short_title": "Northern Territory Safe Measures Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-07",
+ "originating_house": "senate",
+ "sponsor": "NAMPIJINPA PRICE, Sen Jacinta",
+ "sponsor_party": "Country Liberals (Northern Territory",
+ "sponsor_person_id": "11006",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1364%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1364%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1364%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1364_ems_045c845b-4833-4a0a-be53-2033ed8c753e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1364%22",
+   "document_date": "2023-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-07",
+  "sentences": [
+   "The bill would set up a system to reduce alcohol-related harm in the Northern Territory by reinstating measures that expired under an earlier law.",
+   "It would let the Commonwealth Minister approve Alcohol Management Plans developed by the Northern Territory Government and local communities.",
+   "A Senate review of the laws' effectiveness must happen within one year of the Act starting."
+  ],
+  "changes": [
+   "Reinstates lapsed measures from the Stronger Futures in the Northern Territory Act 2012.",
+   "Allows alcohol protected areas to be declared in Northern Territory communities.",
+   "Requires the Northern Territory Government to lead development of Alcohol Management Plans.",
+   "Gives the Commonwealth Minister power to approve those plans.",
+   "Lets the Commonwealth Minister request an assessor for licensed premises linked to substantial harm.",
+   "Provides for a Senate review within one year of commencement."
+  ],
+  "affected": "All Territorians, particularly vulnerable communities, and the Northern Territory and Commonwealth governments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-827126",
+   "speaker": "Jacinta Nampijinpa Price",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The Northern Territory Safe Measures Bill 2023 was introduced to reduce alcohol-related harm to vulnerable communities in the Northern Territory. The bill was agreed to and read a first time."
+  },
+  {
+   "slug": "speech-827127",
+   "speaker": "Jacinta Nampijinpa Price",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The Northern Territory Safe Measures Bill 2023 was introduced to reduce alcohol-related harm by reinstating alcohol protected areas and management plans, citing a 54.6% rise in alcohol-related assaults and 59.6% increase in property damage in Alice Springs from December 2021 to December 2022. The bill establishes a federal-Territory partnership for approving and reviewing alcohol management plans."
+  },
+  {
+   "slug": "speech-827245",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-08",
+   "stage_hint": null,
+   "brief": "The Senate agreed to schedule the Northern Territory Safe Measures Bill 2023 for consideration today and the Offshore Petroleum and Greenhouse Gas Storage Amendment (Fight for Australia's Coastline) Bill 2022 for Thursday, 9 February 2023."
+  },
+  {
+   "slug": "speech-829041",
+   "speaker": "David Van",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

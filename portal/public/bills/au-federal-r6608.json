@@ -1,0 +1,1110 @@
+{
+ "key": "au-federal-r6608",
+ "title": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020",
+ "short_title": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6608_ems_291e3448-b2fb-4116-b3df-d5759b59cb05%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6608_ems_80c7e2bd-a2ac-469a-9af1-f26490eb3562%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6608_ems_6895e3dd-ac55-4b5d-87ee-8a57f8c74b10%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6608_ems_c61b4b97-68dc-4207-ab17-8935d9d94d40%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6608%22",
+   "document_date": "2020-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00136",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-08",
+  "sentences": [
+   "The bill would make the Cashless Debit Card an ongoing program instead of a trial.",
+   "It would also bring people in the Northern Territory and Cape York who are on Income Management onto the Cashless Debit Card and let people in Bundaberg and Hervey Bay volunteer for the program.",
+   "The bill would extend the program's sunset date to 31 December 2021."
+  ],
+  "changes": [
+   "Removes trial parameters to make the Cashless Debit Card a permanent program.",
+   "Transitions Income Management participants in the Northern Territory and Cape York to the Cashless Debit Card.",
+   "Lets people in Bundaberg and Hervey Bay volunteer for the program.",
+   "Allows voluntary participants to stay in the program even if they leave a program area.",
+   "Enables the Secretary to issue and revoke participant notices.",
+   "Extends the sunset to 31 December 2021."
+  ],
+  "affected": "People receiving welfare payments in certain areas, including those in the Northern Territory, Cape York, Bundaberg and Hervey Bay, and voluntary participants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6782",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual second reading motion unchanged. The usual second reading motion is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*,\" which is parliamentary jargon for agreeing with the main idea of the bill. This division took place after the MP for Barton [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor) proposed an amendment to the usual second reading motion. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House declines to give the bill a second reading and:* > > *(1) notes that:* > >> *(a) thirteen years after the Howard Government's so-called Intervention in the Northern Territory, there is no evidence that compulsory, broad-based income management works;* >> >> *(b) the Minister decided to make the Cashless Debit Card trial permanent before reading the independent review by Adelaide University; and* >> >> *(c) this proposal is racially discriminatory, as approximately 68 per cent of the people impacted are First Nations Australians; and* > > *(2) calls on the Government to:* > >> *(a) not roll out the Cashless Debit Card nationally; and* >> >> *(b) invest in evidence-based policies, job creation and services, rather than ideological policies like the Cashless Debit Card\"* ### What does the bill do? The [bill was introduced](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd033) \"*to establish the [Cashless Debit Card](https://en.wikipedia.org/wiki/Cashless_Welfare_Card) (CDC) as an ongoing program rather than a time-limited trial*\". The CDC program is controversial for many reasons, not least the [limited evidence](https://www.abc.net.au/news/2020-11-16/little-data-cashless-debit-card-effective-unisa-researcher-says/12887258) that it is benefiting the communities",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-07/1"
+  },
+  {
+   "key": "federal-representatives-6783",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-07/2"
+  },
+  {
+   "key": "federal-representatives-6784",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "question": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 63,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-07/3"
+  },
+  {
+   "key": "federal-senate-6814",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-12-08.15.2): > *that the [Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query%3DId%3A%22legislation%2Fbillhome%2Fr6608%22) be included with the other bills exempt from the cut-off order.* In other words, they wanted to suspend the usual procedural rules - known as [standing orders](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) - so that they can consider the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020 during this sitting period.",
+   "stage": "Business motion",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 26,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/5"
+  },
+  {
+   "key": "federal-senate-6853",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2020-12-09.158.1) introduced by South Australian Senator [Simon Birmingham](https://theyvoteforyou.org.au/people/senate/sa/simon_birmingham) (Liberal), which means it passed. ### Motion text > *That today:* > > *(a) the hours of meeting be 9.30 am to adjournment;* > > *(b) if, by 7.20 pm, the [Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query%3DId%3A%22legislation%2Fbillhome%2Fr6608%22) has not been finally considered, the routine of business from that time be consideration of the bill only;* > > *(c) if, by midnight, consideration of the bill has not been completed, the questions on all remaining stages be put without debate;* > > *(d) paragraph (c) operate as a limitation of debate under standing order 142;* > > *(e) divisions may take place after 7.20 pm for the purposes of the bill only; and* > > *(f) the Senate adjourn without debate after the consideration of the bill, or when the adjournment is proposed by a minister, whichever is earlier.*",
+   "stage": "Business motion",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 25,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/16"
+  },
+  {
+   "key": "federal-senate-6854",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020 - Second Reading - Withdraw the bill",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/17"
+  },
+  {
+   "key": "federal-senate-6855",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2020-12-09.199.1) moved by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means it failed. ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) this bill will entrench the racist, discriminatory, paternalistic, ineffective, top-down, blanket approach of compulsory income management via the Cashless Debit Card,* >> >> *(ii) the Government did not consult with First Nations peoples in the Northern Territory about the introduction of the Cashless Debit Card or the continuation of compulsory income management, and* >> >> *(iii) the Government failed to consult with people currently on the Cashless Debit Card about making it permanent; and* > > *(b) calls on the Government to:* > >> *(i) abandon all forms of compulsory income management currently operating in Australia,* >> >> *(ii) carry out extensive consultation around Australia for any move to make income management voluntary and ensure that any new program is co-designed, and* >> >> *(iii) immediately release the second impact evaluation being undertaken by the University of Adelaide\".* ### What does this bill do? The [bill was introduced](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd033) \"*to establish the [Cashless Debit Card](https://en.wikipedia.org/wiki/Cashless_Welfare_Card) (CDC) as an ongoing program rather than a time-limited trial*\". The CDC program is controversial for many reasons, not least the [limited evidence](https://www.abc.net.au/news/2020-11-16/little-data-cashless-debit-card-effective-unisa-researcher-says/12887258) that it is benefiting the communities where it is currently in operation. Read more about the program and what the bill does in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd033).",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 23,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/18"
+  },
+  {
+   "key": "federal-senate-6856",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-12-09.201.1) to the usual second reading motion, which is \"*that the bill be read a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). It was introduced by SA Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent). Note that, while this amendment was successful, it doesn't make any changes to the bill itself. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to provide a commitment that no recipient of the Age Pension or a Veteran or Service Pension will be placed on the Cashless Debit Card, with the exception of those who volunteer or are referred by the Family Responsibility Commission, child protection workers, social workers or the Alcohol Mandatory Treatment Tribunal in the Northern Territory\".* ### What does this bill do? The [bill was introduced](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd033) \"*to establish the [Cashless Debit Card](https://en.wikipedia.org/wiki/Cashless_Welfare_Card) (CDC) as an ongoing program rather than a time-limited trial*\". The CDC program is controversial for many reasons, not least the [limited evidence](https://www.abc.net.au/news/2020-11-16/little-data-cashless-debit-card-effective-unisa-researcher-says/12887258) that it is benefiting the communities where it is currently in operation. Read more about the program and what the bill does in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd033).",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/19"
+  },
+  {
+   "key": "federal-senate-6857",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/20"
+  },
+  {
+   "key": "federal-senate-6858",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "The majority voted against keeping [items (3) and (4)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6608_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6608_first-reps%2F0000%22;rec=0) of schedule 1 unchanged, which means they will be removed from the bill. This division occurred after SA Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal) [proposed](https://www.openaustralia.org.au/senate/?gid=2020-12-09.205.2) that they be opposed. ### Text of Items (3) and (4) > *3 At the end of section 123UCB* > > *Add:* > >> *(5) A person is not subject to the income management regime under this section on or after the day this subsection commences unless the person was subject to the income management regime under this section on the day before that day.* > > *4 At the end of section 123UCC* > > *Add:* > >> *(5) A person is not subject to the income management regime under this section on or after the day this subsection commences unless the person was subject to the income management regime under this section on the day before that day.* ### More about the bill The [bill was introduced](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd033) \"*to establish the [Cashless Debit Card](https://en.wikipedia.org/wiki/Cashless_Welfare_Card) (CDC) as an ongoing program rather than a time-limited trial*\". The CDC program is controversial for many reasons, not least the [limited evidence](https://www.abc.net.au/news/2020-11-16/little-data-cashless-debit-card-effective-unisa-researcher-says/12887258) that it is benefiting the communities where it is currently in operation. Read more about the program and what the bill does in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd033).",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 29,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/21"
+  },
+  {
+   "key": "federal-senate-6859",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "The majority voted to agree to amendments (2) to (8) on [sheet TK264](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6608_amend_60487791-2493-41f8-a738-959f69574fc2%22;rec=0) and (1) and (2) on [sheet TK265](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6608_amend_e38ce0fa-ec79-4add-9a72-3bb70eaef46a%22;rec=0), which means they succeeded. These amendments related to income management in the Northern Territory. SA Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal) [explained that](https://www.openaustralia.org.au/senate/?gid=2020-12-09.205.7): > *This amendment seeks to make the transition from the income management scheme in the Northern Territory, from the BasicsCard to the cashless debit card, a voluntary scheme. It will allow those people who are currently on the BasicsCard in the Northern Territory who wish to transition to the cashless debit card to do so as a voluntary scheme. If they choose to remain on the BasicsCard they will also be able to do that.* Though SA Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor) [argued that](https://www.openaustralia.org.au/senate/?gid=2020-12-09.206.1): > *I just want to take issue with one of the things the minister said, because she asserted that this would somehow make this all voluntary. Well, it won't. The amendment will effectively make it a Hobson's choice between a grey card and a green card. So Labor isn't supporting the government's amendment, because it isn't making income management voluntary. What it is doing is simply providing a choice of a different coloured piece of plastic.* ### More about the bill The [bill was introduced](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd033) \"*to establish the [Cashless Debi",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 29,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/22"
+  },
+  {
+   "key": "federal-senate-6860",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "The majority voted against amendments (4) and (5) on [sheet 1171](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6608_amend_6a1eefb7-d64d-454b-be9d-b164487d4edc%22;rec=0), which were introduced by SA Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent). This means they failed. ### Amendment text > *(4) Schedule 1, page 23 (after line 13), after item 92, insert:* > > *92A Paragraph 124PJ(4)(a)* > > *Repeal the pargraph, substitute* > >> *(a) the Secretary is satisfied that the person is unable to use the person’s debit card that was issued to the person and that is attached to the person’s welfare restricted bank account, or is unable to access that account, as a direct result of:* >> >>> *(i) a technological fault or malfunction with that card or account; or* >>> >>> *(ii) a power or communications outage; or* >>> >>> *(iii) a natural disaster; or* >>> >>> *(iv) if a national emergency declaration (within the meaning of the National Emergency Declaration Act 2020 ) is in force—an emergency to which the declaration relates; or* > > *(5) Schedule 1, page 23 (before line 14), before item 93, insert:* > > *92B At the end of Subdivision B of Division 3 of Part 3D* > > *Add:* > > *124PMA Transfer of funds from welfare restricted bank account* > >> *(1) For a person who is a program participant or voluntary participant, the Secretary may make a determination that the person is permitted to transfer a specified amount from the person’s welfare restricted bank account to another bank account.* >> >> *(2) The Secretary may make a determination under subsection (1) only if the Secretary is satisfied that the person is unable to use the person’s debit card that was issued to the person and that is attached to the person’s welfare restricted bank account as a direct result of a matter covered by paragraph 124PJ(4)(a).* >> >> *(3) A determinat",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 29,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/23"
+  },
+  {
+   "key": "federal-senate-6861",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020 - in Committee - Keep items unchanged",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 29,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/24"
+  },
+  {
+   "key": "federal-senate-6862",
+   "date": "2020-12-09",
+   "house": "senate",
+   "question": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 29,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-09/25"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-398773",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020, arguing it is racially discriminatory—68% of those affected are First Nations Australians—and lacks evidence, as the minister decided to make the Cashless Debit Card permanent before reading the independent Adelaide University evaluation. The speaker moved an amendment to decline the bill and called for investing in evidence-based policies, job creation and services instead of the card."
+  },
+  {
+   "slug": "speech-398775",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued for the continuation of the cashless debit card trial in the Goldfields, citing positive impacts such as reduced alcohol-related harm, improved child welfare, and community support, with 276 exit applications (87 approved) and 151 wellbeing applications (106 granted). They criticised senators for not visiting trial sites and thanked local leaders including Gay Harris, Patrick Hill, and Betty Logan for their advocacy."
+  },
+  {
+   "slug": "speech-398776",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020, arguing it disregards Aboriginal communities and noting 68% of those impacted are First Nations people. They highlighted that the minister had not read the $2.5 million review before introducing the bill and cited Aboriginal Peak Organisations Northern Territory’s statements that compulsory income management has a \"disabling\" effect and denies basic freedoms."
+  },
+  {
+   "slug": "speech-398778",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the original motion for the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020 but opposed the amendment, arguing the cashless welfare card has been successful in Ceduna with broad community support and should be made permanent rather than renewed annually. He rejected claims of racial discrimination or expansion to age pensioners, and noted that increased unrestricted cash during COVID led to more antisocial behaviour in Ceduna."
+  },
+  {
+   "slug": "speech-398779",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020, arguing it is based on ideology rather than evidence and discriminates against First Nations people. The speaker cited research showing negative impacts, including stigma, insufficient cash for essentials, and that 68% of those affected (over 23,000 of 34,000 people) are Aboriginal or Torres Strait Islander, and criticised the government for proceeding without reading a relevant review."
+  },
+  {
+   "slug": "speech-398780",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued for the continuation of the Cashless Welfare Bill, citing personal experience as a criminal lawyer seeing children harmed by parental alcohol, drug and gambling abuse, and rejected claims of racial discrimination, stating the program applies geographically. He supported restricting 80% of welfare payments to essentials, claiming it leads to better outcomes for vulnerable children."
+  },
+  {
+   "slug": "speech-398781",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued against making the cashless welfare card permanent and expanding it to new locations, citing the government's failure to release the University of Adelaide evaluation report and the lack of promised rehabilitation services and education opportunities in trial sites like Ceduna. Centre Alliance will not support the bill but would back a continued trial extension if the government provides rehabilitation facilities, education courses, and proper consultation, particularly for remote Indigenous communities."
+  },
+  {
+   "slug": "speech-398782",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020, citing evidence of reduced alcohol and gambling harm and citing ANU evaluation findings. Concrete figures mentioned include youth unemployment in Bundaberg and Hervey Bay dropping from 28% in May 2018 to 18.1% in May 2019."
+  },
+  {
+   "slug": "speech-398783",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The Greens opposed the bill to make cashless welfare card trials permanent and extend them to over 25,000 people in the Northern Territory, arguing it disempowers Indigenous Australians, lacks evidence, and violates the National Agreement on Closing the Gap."
+  },
+  {
+   "slug": "speech-398786",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued for making the cashless debit card trials permanent in Ceduna, East Kimberley, Bundaberg, Hervey Bay, the Northern Territory and Cape York, affecting 25,000 people on income management and 12,500 already using the card, stating the bill saves lives and improves opportunities for disadvantaged Australians."
+  },
+  {
+   "slug": "speech-399671",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the cashless debit card, arguing it has shifted from a community‑agreed trial to a draconian measure that causes shame and stigma, and noted her own experience as a single mother on welfare."
+  },
+  {
+   "slug": "speech-399674",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Cashless Welfare Bill, arguing it lacks evidence, was made permanent before an independent review, and is racially discriminatory—with around 68% of those affected being First Nations Australians. They called for the bill to be halted and for investment in evidence‑based policies, job creation, and services instead."
+  },
+  {
+   "slug": "speech-399680",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "Labor opposed the bill, arguing it makes permanent cashless debit card trial sites without local community support or evidence of effectiveness, and that 68% of those forced onto the card are First Nations Australians."
+  },
+  {
+   "slug": "speech-399681",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill is discriminatory and racist, disproportionately affecting First Nations people, and that the minister responsible did not read the independent University of Adelaide review before proceeding. The speaker announced Labor's opposition to the bill, calling for it to be rejected."
+  },
+  {
+   "slug": "speech-399682",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020, arguing it permanently imposes a racist, punitive cashless debit card system in Ceduna, the East Kimberley, the Goldfields, Bundaberg and Hervey Bay, and the entire Northern Territory, while failing to address underlying poverty or provide an exit strategy from income management."
+  },
+  {
+   "slug": "speech-399989",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill to permanently replace the BasicsCard with the cashless debit card in the Northern Territory, arguing it is racially discriminatory, lacks evidence of reducing harm, and was rushed without proper consultation—including the minister not reading a $2.5 million review. The card would affect over 23,000 people in the NT, two-thirds of whom are Indigenous, and communities overwhelmingly do not want it."
+  },
+  {
+   "slug": "speech-399991",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020, arguing that the compulsory cashless debit card is a blunt instrument with no substantiated evidence of effectiveness, disproportionately targets First Nations communities, and that voluntary cards are preferable."
+  },
+  {
+   "slug": "speech-399998",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020, arguing it is discriminatory, lacks evidence, and would permanently place 35,000 people—70% of them First Nations—on the cashless debit card, despite opposition from communities, the Auditor-General, and an independent review still underway."
+  },
+  {
+   "slug": "speech-400133",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the cashless welfare card is racist, stigmatises recipients, and disproportionately affects First Nations people, contrasting it with voluntary credit card use. They demanded the minister rule out extending the card to other welfare recipients, questioned the evidence base for the policy, and accused the Prime Minister of contradicting his February commitment to Indigenous self-determination."
+  },
+  {
+   "slug": "speech-400134",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security (Administration) Amendment (Continuation of Cashless Welfare) Bill 2020, arguing it divides Australians into two classes, ignores Indigenous voices and expert evidence (including ANU and University of Adelaide studies showing no reduction in domestic violence), and relies on outdated stereotypes of the unemployed—noting that 20% of Australians aged 55–65 are unemployed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security (Administration) Amendment (Continuation of Cashless Welfare) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00136",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

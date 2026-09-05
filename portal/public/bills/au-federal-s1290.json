@@ -1,0 +1,161 @@
+{
+ "key": "au-federal-s1290",
+ "title": "Work Health and Safety Amendment (Norfolk Island) Bill 2021",
+ "short_title": "Work Health and Safety Amendment (Norfolk Island) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-24",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industrial Relations",
+ "status": "passed",
+ "status_as_of": "2021-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1290_ems_24ce5174-6f56-4457-aa17-71b77fd53884%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1290%22",
+   "document_date": "2021-02-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00105",
+   "document_date": "2021-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-24",
+  "sentences": [
+   "This bill would make the Work Health and Safety Act 2011 cover activities carried out by the federal government on Norfolk Island.",
+   "It would remove Norfolk Island from a section of the Act that currently excludes the island's administration from being treated as a government business.",
+   "The change comes after the island lost its self-governing status in 2015, when the Commonwealth took over funding and services there."
+  ],
+  "changes": [
+   "Norfolk Island is no longer listed as a self-governing territory in the Act's definitions.",
+   "The Act's application to Commonwealth work on the island is clarified.",
+   "References to Norfolk Island in sections 4, 7, and 12(2) of the Act are removed."
+  ],
+  "affected": "The federal government, which runs activities on Norfolk Island, and people doing work there.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412370",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Work Health and Safety Amendment (Norfolk Island) Bill clarifies that the Commonwealth Work Health and Safety Act applies to Australian government activities on Norfolk Island, removing obsolete exclusions that remained after Norfolk Island lost its self-governing status in 2015."
+  },
+  {
+   "slug": "speech-412371",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Work Health and Safety Amendment (Norfolk Island) Bill 2021 makes four minor amendments—deleting 'Norfolk Island' and moving the word 'or'—to extend Commonwealth workplace health and safety laws to workers on Norfolk Island, a change the speaker says took six years since 2015 to implement."
+  },
+  {
+   "slug": "speech-412372",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Work Health and Safety Amendment (Norfolk Island) Bill 2021 removes obsolete exclusions for Norfolk Island from the Commonwealth Work Health and Safety Act, clarifying that the Act applies to all Commonwealth activities on the island and ensuring local entities engaged by the Commonwealth assist in meeting work health and safety obligations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Work Health and Safety Amendment (Norfolk Island) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00105",
+   "assent_date": "2021-09-10"
+  }
+ ]
+}

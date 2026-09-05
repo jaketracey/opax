@@ -1,0 +1,98 @@
+{
+ "key": "au-federal-s993",
+ "title": "Australian Centre for Social Cohesion Bill 2015",
+ "short_title": "Australian Centre for Social Cohesion Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2015-02-09",
+ "originating_house": "senate",
+ "sponsor": "MILNE, Sen Christine",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10458",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s993%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s993%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s993%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s993%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s993%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s993%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s993%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s993_ems_d2afe076-d2f9-4b2a-b1fc-8069dddafe90%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s993%22",
+   "document_date": "2015-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-02-09",
+  "sentences": [
+   "The bill would create a national body to run programs that stop young Australians from being drawn into extremism.",
+   "The Australian Centre for Social Cohesion would be an independent consultative body that brings together government, law enforcement, academics, researchers and former extremists.",
+   "The Director of the Centre would serve a maximum term of 5 years and could be reappointed."
+  ],
+  "changes": [
+   "Establishes the Australian Centre for Social Cohesion as an independent consultative body.",
+   "Gives the Director powers to consult, conduct research, examine legislation, and report to the Minister and Parliament on violent extremism and social cohesion.",
+   "Sets a maximum term of 5 years for the Director and allows reappointment.",
+   "Prevents legal action being brought against the Centre, its Director, deputy Directors and staff for actions done in good faith."
+  ],
+  "affected": "Young Australians at risk of radicalisation, and communities affected by violent extremism.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6131",
+ "title": "Refugee Protection Bill 2018",
+ "short_title": "Refugee Protection Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-18",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-11-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6131%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6131%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6131%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6131_ems_d83fe003-1984-4e67-a9d8-83e50c173722%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6131%22",
+   "document_date": "2018-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-18",
+  "sentences": [
+   "This bill is part of a package that would set up a network of centres in Asia Pacific countries, including Australia, for asylum seekers to register and receive basic aid.",
+   "The package would create a process for assessing claims in Australia if an asylum seeker chooses Australia and falls within a set quota, with oversight, time limits, and judicial review.",
+   "The bill would prohibit mandatory detention and align Australian law with several international human rights treaties, such as the Refugee Convention and the Convention against Torture."
+  ],
+  "changes": [
+   "Establishes a network of centres for asylum seekers to register and get immediate humanitarian help.",
+   "Creates a process for assessing asylum claims in Australia within a quota, with oversight and judicial review.",
+   "Bans mandatory detention and prioritises refugee and human rights law."
+  ],
+  "affected": "Asylum seekers in the Asia Pacific region, including those who may choose Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-364263",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-06-18",
+   "stage_hint": null,
+   "brief": "The bill abolishes mandatory offshore detention, brings all asylum seekers on Manus Island and Nauru to Australia, and establishes the Asia-Pacific asylum seeker solution (APASS)—a regional framework with quotas and protections—citing 12 deaths in offshore detention and over $1 billion spent on 1,577 detainees in 2014–15."
+  }
+ ],
+ "acts": []
+}

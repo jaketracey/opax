@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1214",
+ "title": "Australian Institute of Health and Welfare Amendment (Assisted Reproductive Treatment Statistics) Bill 2019",
+ "short_title": "Australian Institute of Health and Welfare Amendment (Assisted Reproductive Treatment Statistics) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": "GRIFF, Sen Stirling",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10851",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1214%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1214%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1214%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1214_ems_3dbb231a-3057-4652-8ff6-9a384db40869%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1214%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would require fertility clinics to report their performance data to the Australian Institute of Health and Welfare, which would then publish the information for each clinic.",
+   "The data published would include numbers of women treated, treatments received, patient ages, clinical pregnancies, and live births, with the AIHW deciding how to present the information, ideally as a searchable online database.",
+   "The bill would take effect the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "Requires accredited ART centres to report their performance statistics to the AIHW.",
+   "Requires the AIHW to publish clinic-specific performance statistics.",
+   "Allows consumers to compare clinic outcomes, similar to existing registers in the United States and the United Kingdom."
+  ],
+  "affected": "Fertility clinics (accredited ART centres), consumers using fertility services, and the Australian Institute of Health and Welfare.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:34Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

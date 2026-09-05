@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1261",
+ "title": "Australian Sports Commission Amendment (Ensuring a Level Playing Field) Bill 2020",
+ "short_title": "Australian Sports Commission Amendment (Ensuring a Level Playing Field) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-14",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1261%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1261%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1261%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1261_ems_2b29f6b6-06fc-48e3-940c-1c7df2a04859%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1261%22",
+   "document_date": "2020-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-14",
+  "sentences": [
+   "This bill would let the Australian Sports Commission fund projects that were recommended for grants but not approved by the Minister for Sport.",
+   "The Commission would decide on these grants independently, without the Minister's electoral considerations, and must give written reasons if it refuses funding.",
+   "Payments could be made through state and territory governments, with conditions that they pass on the full amounts and repay any overpayments."
+  ],
+  "changes": [
+   "The bill would insert a new section into the Australian Sports Commission Act 1989 to allow funding for unsuccessful applicants.",
+   "It would require the Commission to assess eligibility and decide grant amounts, capped at the cost of completing unfinished work.",
+   "It would ensure decisions are made transparently and independently of the Minister's parallel process.",
+   "It would allow payments via states and territories, with conditions on passing on funds and repayment.",
+   "It would require parliamentary appropriation before any payments are made."
+  ],
+  "affected": "Applicants for Community Sport Infrastructure Grants who were recommended by the Commission but not funded by the Minister, and state and territory governments that would pass on payments.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

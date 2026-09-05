@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1273",
+ "title": "Judges’ Pensions Amendment (Pension Not Payable for Misconduct) Bill 2020",
+ "short_title": "Judges’ Pensions Amendment (Pension Not Payable for Misconduct) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-06",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1273%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1273%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1273%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1273_ems_8f9e48f2-5e8f-4798-a56b-b806046ced04%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1273%22",
+   "document_date": "2020-10-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-06",
+  "sentences": [
+   "The bill would make retired High Court judges lose their pension if serious misconduct is discovered after they leave the bench.",
+   "It would amend the Judges' Pensions Act 1968 to apply the same penalty for misconduct to retired judges as currently applies to sitting judges.",
+   "The bill would operate retrospectively to cover past judges whose misconduct comes to light after retirement."
+  ],
+  "changes": [
+   "The bill imposes a pension forfeiture for serious misconduct on retired judges.",
+   "The bill applies the same misconduct consequences to retired judges as to sitting judges.",
+   "The bill operates retrospectively to cover past misconduct discovered after retirement."
+  ],
+  "affected": "Retired High Court judges and other retired federal judges covered by the Judges' Pensions Act 1968.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

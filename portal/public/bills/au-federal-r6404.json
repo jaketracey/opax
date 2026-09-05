@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6404",
+ "title": "Australian Bill of Rights Bill 2019",
+ "short_title": "Australian Bill of Rights Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-16",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-03-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6404%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6404%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6404%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6404_ems_e8fd1431-106a-42e4-8876-523c270e7923%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6404%22",
+   "document_date": "2019-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-16",
+  "sentences": [
+   "The bill would create a Bill of Rights in Australian law.",
+   "It would invalidate any Commonwealth, State or Territory law that conflicts with the Bill of Rights and require laws to be interpreted consistently with it.",
+   "The Australian Human Rights Commission could investigate acts or practices that may breach a right or freedom in the Bill of Rights."
+  ],
+  "changes": [
+   "Invalidates inconsistent Commonwealth, State and Territory laws.",
+   "Requires laws to be interpreted consistently with the Bill of Rights.",
+   "Empowers the Australian Human Rights Commission to inquire into potential infringements."
+  ],
+  "affected": "Commonwealth, State and Territory governments and the Australian Human Rights Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-381067",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-09-16",
+   "stage_hint": null,
+   "brief": "The Australian Bill of Rights Bill 2019 was moved to enshrine fundamental rights in Australian law, invalidating inconsistent Commonwealth, state or territory laws and allowing complaints to the Australian Human Rights Commission. The speaker argued Australia is the only democratic nation without a bill of rights, citing weak existing protections, AFP raids on the ABC, Indigenous treatment, and homelessness as evidence of the need for a national framework."
+  }
+ ],
+ "acts": []
+}

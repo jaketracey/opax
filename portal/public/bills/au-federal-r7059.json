@@ -1,0 +1,205 @@
+{
+ "key": "au-federal-r7059",
+ "title": "Social Security and Other Legislation Amendment (Miscellaneous Measures) Bill 2023",
+ "short_title": "Social Security and Other Legislation Amendment (Miscellaneous Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-08-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2023-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7059_ems_7e2c321f-22a1-40f4-b0f7-50f0225a9e3d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7059_ems_2c2e339c-8cce-452e-80d6-c289c6589174%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7059%22",
+   "document_date": "2023-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00105",
+   "document_date": "2023-11-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-08-03",
+  "sentences": [
+   "This bill would clarify the operation of a chapter of the Social Security Act that lets the Employment Secretary make grants for employment and skills programs.",
+   "It would align payments made under that chapter with the treatment of payments under the FFSP Act and mostly stop the Social Security Administration Act from applying to the chapter.",
+   "The bill would also make minor technical amendments to better link the chapter's authority to Commonwealth constitutional powers."
+  ],
+  "changes": [
+   "Clarify the interaction between Chapter 2D and other social security law provisions.",
+   "Ensure payments under Chapter 2D are treated the same as if made under section 32 of the FFSP Act.",
+   "Exclude most of the Social Security Administration Act from applying to Chapter 2D.",
+   "Confirm that Chapter 2D operates alongside the FFSP Act.",
+   "Streamline rules so programs under Chapter 2D are clearer and reporting requirements are explicit.",
+   "Make minor technical amendments to improve the chapter's engagement with constitutional powers."
+  ],
+  "affected": "The Employment Secretary, participants in employment and skills programs, and the Department of Social Services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:22:01Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8514",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "Social Security and Other Legislation Amendment (Miscellaneous Measures) Bill 2023 - Second Reading - Base rate and mutual obligation requirements",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/17"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Social Security and Other Legislation Amendment (Miscellaneous Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00105",
+   "assent_date": "2023-11-28"
+  }
+ ]
+}

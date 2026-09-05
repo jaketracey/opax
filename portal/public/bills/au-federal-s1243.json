@@ -1,0 +1,252 @@
+{
+ "key": "au-federal-s1243",
+ "title": "Wine Australia Amendment (Label Directory) Bill 2019",
+ "short_title": "Wine Australia Amendment (Label Directory) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-02",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1243_ems_d5baba5d-854e-4186-95a4-c4271021c8f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1243%22",
+   "document_date": "2019-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00132",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-02",
+  "sentences": [
+   "The bill would create a public online directory of labels on Australian wine and grape products for export.",
+   "Wine Australia would run the directory, letting brand owners search for labels that might copy their trademarks and take civil action.",
+   "The directory would include digital colour images of labels and details about the products and exporters, and regulations would set up how it works."
+  ],
+  "changes": [
+   "Establishes a label directory for exported grape products.",
+   "Allows brand owners to search for potentially infringing labels and take legal action.",
+   "Enables Wine Australia to use the directory in its export control role.",
+   "Clarifies that the directory is not a legislative instrument."
+  ],
+  "affected": "Wine Australia, brand owners, and exporters of grape products from Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400750",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Wine Australia Amendment (Label Directory) Bill 2019 establishes a public online database of all Australian wine labels for export, allowing brand owners to identify copycat labels and enabling Wine Australia to suspend or cancel licences of non-compliant exporters. Australia exports two-thirds of its wine production, worth $2.89 billion annually, and is the world's sixth-largest wine producer and fifth-largest exporter."
+  },
+  {
+   "slug": "speech-400751",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "Labor supported the Wine Australia Amendment (Label Directory) Bill 2019, which creates a publicly searchable label database to help brand owners deter copycat wine exports, while condemning the government for failing to prioritise the wine industry and secure new markets after growers were hit by drought, bushfires, and China's 160% tariff."
+  },
+  {
+   "slug": "speech-400753",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-400853",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Wine Australia Amendment (Label Directory) Bill 2019, which establishes a public online database of wine export labels to protect intellectual property rights and combat counterfeit wine. The government has committed $50 million to the Export and Regional Wine Support Package and $417,000 for the directory, aiming to grow wine exports in the US and Asian markets."
+  },
+  {
+   "slug": "speech-400854",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Wine Australia Amendment (Label Directory) Bill 2019 to establish a public directory of grape product labels for export, and argued that climate change threatens the industry, citing bushfires and drought that reduced yields by up to 75%, while also calling for foetal alcohol syndrome warnings on labels and diversification of export markets including repairing trade with China."
+  },
+  {
+   "slug": "speech-400855",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The member argued that the Wine Australia Amendment (Label Directory) Bill 2019 would help protect iconic Australian wine brands like Penfolds from counterfeiting in overseas markets by establishing a publicly accessible label database, supporting brand integrity and export growth."
+  },
+  {
+   "slug": "speech-400856",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Wine Australia Amendment (Label Directory) Bill 2019, arguing it strengthens copyright and brand protection for the wine industry. They noted Australia has 2,500 wineries, 6,250 grapegrowers, 150,000 employees across 65 wine regions, and is the sixth-largest wine producer and fifth-largest wine exporter globally."
+  },
+  {
+   "slug": "speech-400860",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Wine Australia Amendment (Label Directory) Bill 2019, which establishes a publicly available label directory to protect Australian wine producers' intellectual property and help control exports, citing difficulties faced by winemaker John Cassegrain from drought, bushfires, COVID-19 and Chinese tariffs of up to 217 per cent."
+  },
+  {
+   "slug": "speech-400861",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Wine Australia Amendment (Label Directory) Bill 2019 to create a public online database of wine labels for export, protecting intellectual property. They also highlighted $140 million in bushfire smoke-taint damage and the impact of China’s tariffs, calling for a $1.6 million regional smoke-taint sensor system and a plan to diversify export markets."
+  },
+  {
+   "slug": "speech-400862",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Labor member argued that the Morrison Government has failed Australian wine producers facing Chinese anti-dumping tariffs of up to 212%, citing the Minister for Agriculture’s inability to contact his Chinese counterpart and noting $1.1 billion in annual exports were at risk. She criticised the government’s suggestion that producers simply use existing free trade agreements to diversify markets, calling it out of touch with the years needed to build trade relationships."
+  },
+  {
+   "slug": "speech-400866",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Wine Australia Amendment (Label Directory) Bill 2019 establishes a public online database of Australian wine export labels to help brand owners protect intellectual property rights against copycat exporters, supporting an industry that employs over 69,000 people and is worth $2.87 billion annually."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Wine Australia Amendment (Label Directory) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00132",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

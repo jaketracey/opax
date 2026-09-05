@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r5625",
+ "title": "Ethical Cosmetics Bill 2016",
+ "short_title": "Ethical Cosmetics Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-29",
+ "originating_house": "representatives",
+ "sponsor": "O'NEIL, Clare, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10814",
+ "portfolio": "(s) O'NEIL, Clare, MP",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5625%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5625%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5625%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5625_ems_86a5551f-debc-4598-9903-8878c2ee01a0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5625%22",
+   "document_date": "2016-02-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-329302",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker moved the Ethical Cosmetics Bill to ban animal testing for cosmetics in Australia and ban the import of cosmetics tested on animals overseas, citing that over 90% of Australians support the ban and that the bill includes a three-year phase-in period."
+  }
+ ],
+ "acts": []
+}

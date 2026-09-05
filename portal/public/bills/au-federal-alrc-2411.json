@@ -1,0 +1,292 @@
+{
+ "key": "au-federal-alrc-2411",
+ "title": "Banking Amendment (Unclaimed Money) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-19",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00090",
+   "document_date": "2013-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1118",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "question": "Anthony Albanese I move: _That the debate be adjourned, and the resumption of the debate be made an order of the day for the next sitting._ Anna Burke The question is that the debate be adjourned.",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-18/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-276296",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276297",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276298",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276299",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276308",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276310",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276311",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276316",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276322",
+   "speaker": "Bronwyn Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276323",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824393",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276643",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276646",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276647",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276649",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Banking Amendment (Unclaimed Money) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00090",
+   "assent_date": "2013-06-28"
+  }
+ ]
+}

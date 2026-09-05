@@ -1,0 +1,602 @@
+{
+ "key": "au-federal-r7104",
+ "title": "Australian Naval Nuclear Power Safety Bill 2024",
+ "short_title": "Australian Naval Nuclear Power Safety Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2024-10-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-10-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7104_ems_00bd675a-fe1e-47db-b188-3d2c3cd249bd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7104_ems_fd1e153c-7624-4367-b383-dc36c168af98%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7104_ems_8b4ce1d5-b2ca-4c01-877b-60067157c66a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7104_ems_e6b914f1-90b5-4820-a821-f08adf98ec28%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7104%22",
+   "document_date": "2023-11-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00091",
+   "document_date": "2024-10-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2023-11-16",
+  "sentences": [
+   "The bill would create a safety regulator for Australia's part in the AUKUS nuclear-powered submarine program.",
+   "It would impose nuclear safety duties on people conducting regulated activities and require licences for those activities.",
+   "Government amendments would ban storing or disposing of spent nuclear fuel from non-Australian submarines and prevent the bill from authorising civil nuclear power plants."
+  ],
+  "changes": [
+   "Establishes the Australian Naval Nuclear Power Safety Regulator.",
+   "Creates nuclear safety duties and licensing requirements for regulated activities.",
+   "Makes it an offence to obstruct inspectors and expands that offence to all Regulator members.",
+   "Requires the Minister for Defence to publicly consult on new designated zone boundaries.",
+   "Sets up an advisory committee to advise the Minister on the bill's operation.",
+   "Mandates a parliamentary report within three sitting days of a serious nuclear safety incident."
+  ],
+  "affected": "Commonwealth-related persons who apply for licences, inspectors, the Regulator, the Minister for Defence, and people conducting regulated activities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9202",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-10-10.85.4) that the bills be read a second time, which is parliamentary jargon for agreeing with the main idea of the bills. This means the Senate will now discuss the bills in more detail. ### What does this bills do? Note that the Australian Naval Nuclear Power Safety Bill 2024 was formerly known as the Australian Naval Nuclear Power Safety Bill 2023. The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd32) sets out the following key points in respect to the bills: > *The Australian Naval Nuclear Power Safety Bill 2023 (ANNPS Bill) establishes a new regulatory framework to promote and regulate the nuclear safety of activities relating to AUKUS submarines. The framework would apply to Australian submarines and, in more limited circumstances, to activities related to UK/US submarines.* > > *The ANNPS Bill establishes a new regulator, the Australian Naval Nuclear Power Safety Regulator. The Regulator would be able to grant Australian naval nuclear power safety licences to Commonwealth-related persons for 3 types of regulated activities in designated zones. The Regulator would have a range of compliance and enforcement powers.* > > *The Minister would be able to give the Regulator directions ‘if it is necessary … in the interests of national security and to deal with an emergency’.* > > *The ANNPS Bill provides for a range of matters to be established in regulations and contains few transparency mechanisms.* > > *The Australian Naval Nuclear Power Safety (Transitional Provisions) Bill 2023 (Transitional Provisions Bill) provides for the transfer of existing licences granted under the Australian Radiation Protection and Nuclear Safety Act 1998 (ARPANS Act) to Australian naval nuclear power safety licences under the Australian Naval Nuclear Power Safety Act 2024 for activities that would become regulated activities under that Act.* >",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/10"
+  },
+  {
+   "key": "federal-senate-9203",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-10-10.87.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means they failed and will not form part of the bill. ### Amendment texts *SHEET 2574* > *(1) Clause 107, page 96 (after line 28), after subclause (1), insert:* > >> *(1A) In performing the Director-General's functions, the Director-General must have regard to the advice of the CEO of the Australian Radiation Protection and Nuclear Safety Agency.* > > *(2) Page 96 (after line 31), after clause 107, insert:* > >> *107A CEO of ARPANSA to advise Director-General* >> >> *(1) The functions of the CEO of the Australian Radiation Protection and Nuclear Safety Agency include advising the Director-General on the performance of the Director-General's functions.* >> >>> *Note Other functions of the CEO of the Australian Radiation Protection and Nuclear Safety Agency are set out in section 15 of the Australian Radiation Protection and Nuclear Safety Act 1998.* >> >> *(2) Before advising the Director-General, the CEO must request the following to advise the CEO about the performance of the Director-General's functions:* >> >>> *(a) the Radiation Health and Safety Advisory Council;* >>> >>> *(b) the Radiation Health Committee;* >>> >>> *(c) the Nuclear Safety Committee.* *SHEET 2576* > *(1) Clause 5, page 10 (line 29), omit \", storing or disposing of\".* > > *(2) Clause 12, page 16 (lines 9 and 10), omit paragraph (c).* > > *(3) Clause 12, page 16 (line 12), omit \", storing or disposing of\".* > > *(4) Clause 32, page 34 (after line 10), after paragraph (1)(a), insert:* > >> *(aa) if the licence authorises a regulated activity for the purposes of a radioactive waste management facility—the condition set out in subsection (2A);* > > *(5) Clause 32, page 34 (after line 21), after subclause (2), insert:* > >> *(2A) A licence of a kind referred to in paragraph",
+   "stage": "Committee of the Whole",
+   "ayes": 16,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/11"
+  },
+  {
+   "key": "federal-senate-9204",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-10-10.90.3) \"*that [clause 136](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7104_first-reps%2F0006;query=Id%3A%22legislation%2Fbills%2Fr7104_first-reps%2F0000%22;rec=0#d6243d7a04e54028a8e2c44b7897d218) stand as printed*\", which means the clause will remain in the bill unchanged. This vote was put after the Australian Greens proposed to delete the clause. ### What is clause 136? > *136 Functions to be performed having regard to prescribed international agreements* > > *If this Act confers a function on a person, the person must have regard to Australia’s obligations under any international agreement prescribed by the regulations in performing that function.* #### Error on this page Note that West Australian Senator [Fatima Payman](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Independent) is currently recorded as a rebel voter in the Labor Party, but this is wrong as Senator Payman is now an Independent senator.",
+   "stage": "Committee of the Whole",
+   "ayes": 27,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/12"
+  },
+  {
+   "key": "federal-senate-9205",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-10-10.92.15) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means they failed and will not form part of the bill. ### Amendment text *SHEET 2516* > *(1) Clause 6, page 13, (lines 7 to 9), omit paragraph (b).* > > *(2) Clause 6, page 13 (after line 11), at the end of the clause, add:* > >> *; and (e) to promote the nuclear safety of all activities relating to AUKUS submarines; and* >> >> *(f) to protect the health and safety of people, and to protect the environment; and* >> >> *(g) to promote public confidence and trust in relation to the nuclear safety of Australia's nuclear-powered submarine enterprise, including through the following:* >> >>> *(i) ensuring that relevant and meaningful information relating to AUKUS submarines is available to the public, except where it is necessary to limit the provision of such information for reasons of national security, defence operational capability or the protection of confidential technology and learnings;* >>> >>> *(ii) providing opportunities for public involvement and participation in decisions relating to activities that may impact communities; and* >> >> *(h) to protect workers, other persons and communities against harm to their health, safety and welfare through the elimination or minimisation of risks arising from regulated activities; and* >> >> *(i) to promote the provision of advice, information, education and training in relation to nuclear safety; and* >> >> *(j) to ensure appropriate scrutiny.* *SHEET 2629* > *(1) Clause 18, page 20 (lines 5 and 6), omit \", so far as reasonably practicable,\".* > > *(2) Clause 18, page 21 (after line 21), at the end of the clause, add:* > >> *Exception* >> >> *(7) Subsections (2), (3), (4) and (5) do not apply if the person exercised due diligence and took all reasonably practicable precautions.* >> >>",
+   "stage": "Committee of the Whole",
+   "ayes": 13,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/13"
+  },
+  {
+   "key": "federal-senate-9206",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-10-10.95.32) introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network), which means they failed and will not form part of the bill. ### Amendment text > *(1) Clause 5, page 9 (after line 6), after the definition of licence, insert:* > >> *low level radioactive material means radioactive material (within the meaning of the National Radioactive Waste Management Act 2012) that is not high level radioactive material (within the meaning of that Act).* > > *(2) Clause 8A, page 14 (after line 15), at the end of the clause, add:* > >> *(3) This section has no effect to the extent of any inconsistency with section 8C.* > > *(3) Page 14 (after line 27), at the end of Subdivision A, add:* > >> *8C Prohibition on receiving and storing radioactive waste* >> >> *(1) Nothing in this Act is taken to authorise the receipt or storage of radioactive waste from an AUKUS submarine, unless:* >> >>> *(a) for an AUKUS submarine not operated by Australia for naval or military purposes—arrangements have been made for any low level radioactive material to be removed from Australia by the operator of that AUKUS submarine to a suitable radioactive waste management facility outside of Australia within 12 months; or* >>> >>> *(b) for an AUKUS submarine operated by Australia for naval or military purposes—the site of a suitable long-term radioactive waste management facility has been identified and gazetted.* >> >> *(2) The Regulator must not issue a licence in respect of the receipt or storage of radioactive waste from an AUKUS submarine unless paragraph (1)(a) or (b) applies.* > > *(4) Clause 21, page 24 (lines 13 and 14), omit subparagraph (2)(b)(ii), substitute:* > >> *(ii) releases radioactive material into the environment, or could have resulted in a release of radioactive material into the environment; or* > > *(5) Clause",
+   "stage": "Committee of the Whole",
+   "ayes": 14,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/14"
+  },
+  {
+   "key": "federal-senate-9207",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-10-10.97.4) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed and will not form part of the bill. ### Amendment text *SHEET 2962* > *(1) Page 119 (after line 14), at the end of Part 6, add:* > >> *Division 5 — Review* >> >> *147 Review of operation of Act* >> >> *(1) The Minister must cause an independent review to be conducted of the operation of this Act.* >> >> *(2) The review must start as soon as practicable after the end of 5 years after this Act commences.* >> >> *(3) The persons who conduct the review must give the Minister a written report of the review within 6 months of the commencement of the review.* >> >> *(4) The Minister must table a copy of the report in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.* *SHEET 2963* > *(1) Clause 140A, page 115 (after line 31), at the end of the clause, add:* > >> *(7) Subject to subsection (8), if the advisory committee gives the Minister advice under subsection (2) the advisory committee must cause a copy of that advice to be:* >> >>> *(a) published on the Department's website as soon as practicable after giving the advice to the Minister; and* >>> >>> *(b) tabled in each House of the Parliament within 15 sitting days of that House after giving the advice to the Minister.* >> >> *(8) The Minister may direct the advisory committee that subsection (7) does not apply if the Minister is satisfied that it is necessary to do so in the interests of national security and to deal with an emergency.* >> >> *(9) The Minister must:* >> >>> *(a) table a copy of each written instrument made under subsection (3) in each House of the Parliament within 15 sitting days of that House after making the instrument; and* >>> >>> *(b) table a copy of each written direction made under subsection (4) i",
+   "stage": "Committee of the Whole",
+   "ayes": 16,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/15"
+  },
+  {
+   "key": "federal-senate-9208",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments 2518 and 2519](https://www.openaustralia.org.au/senate/?gid=2024-10-10.103.3) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means they failed and will not form part of the bill. ### Amendment text > *(1) Clause 135, page 111 (lines 1 to 4), to be opposed.* ##### What is the text of Clause 135 This amendment would have deleted [clause 135](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7104_first-reps%2F0006;query=Id%3A%22legislation%2Fbills%2Fr7104_first-reps%2F0000%22;rec=0): > *135 Operation of State and Territory laws* > > *If a law of a State or Territory, or one or more provisions of such a law, is prescribed by the regulations, that law or provision does not apply in relation to a regulated activity.* #### Error on this page Note that West Australian Senator [Fatima Payman](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Independent) is currently recorded as a rebel voter in the Labor Party, but this is wrong as Senator Payman is now an Independent senator.",
+   "stage": "Committee of the Whole",
+   "ayes": 26,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/16"
+  },
+  {
+   "key": "federal-senate-9209",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments 2518 and 2519](https://www.openaustralia.org.au/senate/?gid=2024-10-10.103.3) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means they failed and will not form part of the bill. ### Amendment text (sheet 2518) > *(1) Clause 6, page 13 (line 9), omit \"enterprise; and\", substitute \"enterprise.\".* > > *(2) Clause 6, page 13 (lines 10 and 11), omit paragraphs (c) and (d).* ##### What is the text of Clause 6 paragraphs (c) and (b) This amendment would have deleted paragraphs (c) and (b), which are: > *6 Objects of this Act* > > *The objects of this Act are:* > > *...* > > *(c) to promote the defence and interests of Australia; and* > > *(d) to support the AUKUS partnership.* ### Amendment text (sheet 2519) > *(1) Page 92 (after line 17), after Division 1, insert:* > >> *Division 2A — Register* >> >> *99A Register of Nuclear Power Safety* >> >> *(1) The Regulator must establish and maintain a Register of Nuclear Power Safety setting out details in relation to the following matters:* >> >>> *(a) designated zones (if any) prescribed by regulations made for the purpose of paragraph 10(2)(c);* >>> >>> *(b) nuclear safety incidents reported under subsection 21(1);* >>> >>> *(c) licence applications made under section 28;* >>> >>> *(d) decisions by the Regulator to issue, or refuse to issue, a licence under subsection 31(1);* >>> >>> *(e) if a licence is issued under subsection 31(1):* >>> >>>> *(i) the conditions of the licence under subsection 32(1); and* >>>> >>>> *(ii) variations (if any) to the conditions of the licence under subsection 34(1); and* >>>> >>>> *(iii) a decision (if any) to suspend the licence under subsection 35(1) or (3); and* >>>> >>>> *(iv) a decision (if any) to cancel the licence under subsection 35(1);* >>> >>> *(f) prohibition notices issued by the Regulator under subsection 78(2);* >>> >>> *(g) convictions for an offence aga",
+   "stage": "Committee of the Whole",
+   "ayes": 14,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/17"
+  },
+  {
+   "key": "federal-senate-9210",
+   "date": "2024-10-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-10-10.106.4) *that the remaining stages of these bills be agreed to.* ### What does this bill do? Note that the Australian Naval Nuclear Power Safety Bill 2024 was formerly known as the Australian Naval Nuclear Power Safety Bill 2023. The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd32) sets out the following key points in respect to the bills: > *The Australian Naval Nuclear Power Safety Bill 2023 (ANNPS Bill) establishes a new regulatory framework to promote and regulate the nuclear safety of activities relating to AUKUS submarines. The framework would apply to Australian submarines and, in more limited circumstances, to activities related to UK/US submarines.* > > *The ANNPS Bill establishes a new regulator, the Australian Naval Nuclear Power Safety Regulator. The Regulator would be able to grant Australian naval nuclear power safety licences to Commonwealth-related persons for 3 types of regulated activities in designated zones. The Regulator would have a range of compliance and enforcement powers.* > > *The Minister would be able to give the Regulator directions ‘if it is necessary … in the interests of national security and to deal with an emergency’.* > > *The ANNPS Bill provides for a range of matters to be established in regulations and contains few transparency mechanisms.* > > *The Australian Naval Nuclear Power Safety (Transitional Provisions) Bill 2023 (Transitional Provisions Bill) provides for the transfer of existing licences granted under the Australian Radiation Protection and Nuclear Safety Act 1998 (ARPANS Act) to Australian naval nuclear power safety licences under the Australian Naval Nuclear Power Safety Act 2024 for activities that would become regulated activities under that Act.* > > *The Bills have been referred to the Senate Foreign Affairs, Defence and Trade Legislation Committee for inquiry and re",
+   "stage": "Third reading",
+   "ayes": 26,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-10-10/18"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Australian Naval Nuclear Power Safety Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00091",
+   "assent_date": "2024-10-24"
+  }
+ ]
+}

@@ -1,0 +1,258 @@
+{
+ "key": "au-federal-r6481",
+ "title": "Export Control Bill 2019",
+ "short_title": "Export Control Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2020-03-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6481_ems_0713f727-1deb-4300-8f2d-f5551a7ccd85%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6481%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00012",
+   "document_date": "2020-03-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "The bill would create a new legal framework to replace the current system that controls agricultural exports from Australia.",
+   "The Agriculture Department's secretary could make Export Control Rules that ban shipping certain goods unless conditions like holding a licence or using approved facilities are met.",
+   "Many existing regulations expire on 1 April 2021, and the bill is based on a review of those rules."
+  ],
+  "changes": [
+   "The bill replaces 17 existing Acts and more than 40 legislative instruments with a single framework.",
+   "The bill allows the secretary to set conditions for exporting prescribed goods, including requiring licences or accredited premises.",
+   "The bill aims to align Australian export regulation with international trade agreements and human rights obligations."
+  ],
+  "affected": "Domestic exporters, farmers, and businesses involved in producing, preparing, or shipping agricultural goods from Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6213",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"that the bill be read a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)\" (parliamentary jargon for agreeing with the main idea of the bill). It was introduced by Hunter MP [Joel Fitzgibbon](https://theyvoteforyou.org.au/people/representatives/hunter/joel_fitzgibbon) (Labor). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House condemns the Government for its lack of a comprehensive plan for agricultural exports, including a plan for ensuring Australian agriculture will reach $100 billion in farm-gate value by 2030\".*",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-12/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-386164",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The Export Control Bill 2019 was introduced to streamline and consolidate agricultural export legislation, with the goal of growing Australia's agricultural exports from $51 billion in 2019-20 to $100 billion by 2030, while reducing complexity, supporting innovation, and strengthening enforcement powers."
+  },
+  {
+   "slug": "speech-386165",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The Export Control (Consequential Amendments and Transitional Provisions) Bill 2019 repeals 17 redundant acts and amends seven Commonwealth acts to ensure a smooth transition to the new Export Control Bill 2019, preserving existing rights, liabilities, and enforcement measures to avoid disruption to exporters and trade."
+  },
+  {
+   "slug": "speech-386166",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The Export Charges (Imposition-Customs) Amendment Bill 2019, part of the Export Control Bill 2019 package, amends the Export Charges (Imposition-Customs) Act 2015 to ensure export charges are set by regulations and reflect the Commonwealth's costs of regulating exports."
+  },
+  {
+   "slug": "speech-386167",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The Export Charges (Imposition-Excise) Amendment Bill 2019 was moved for a second reading as part of the Export Control Bill 2019 package, amending the 2015 Act to ensure export charges are set by regulation and reflect the Commonwealth's regulatory costs."
+  },
+  {
+   "slug": "speech-386168",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The Export Charges (Imposition-General) Amendment Bill 2019 was moved for a second reading as the first of three bills updating export charging legislation to align with the Export Control Bill 2019 and the repeal of the Export Control Act 1982 and the Export Charges (Collection) Act 2015. The bill amends the Export Charges (Imposition-General) Act 2015 to allow the Commonwealth to impose charges reflecting export control administration costs, with specific amounts set in regulations and the Minister for Agriculture required to ensure charges do not exceed likely costs."
+  },
+  {
+   "slug": "speech-387900",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The Export Control Bill 2019 was welcomed as important but criticised for taking five years to introduce; a second reading amendment was moved condemning the government for lacking a comprehensive agricultural export plan, including a target of $100 billion in farm-gate value by 2030."
+  },
+  {
+   "slug": "speech-388034",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The member for Kennedy argued that free market policies have driven population loss from rural Australia and destroyed secondary industries, citing closures in motor vehicles, petrol, textiles, and whitegoods, and a decline from 172 million sheep."
+  },
+  {
+   "slug": "speech-388039",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The Export Control Bill 2019 and associated bills consolidate and replace existing agricultural export legislation, streamlining rules, improving certification, and enabling faster government responses to market changes. The package also transitions arrangements smoothly and continues cost-recovery charges for administering the export control system."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Control Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00012",
+   "assent_date": "2020-03-06"
+  }
+ ]
+}

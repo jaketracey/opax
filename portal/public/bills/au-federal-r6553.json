@@ -1,0 +1,155 @@
+{
+ "key": "au-federal-r6553",
+ "title": "Life Insurance Supervisory Levy Imposition Amendment Bill 2020",
+ "short_title": "Life Insurance Supervisory Levy Imposition Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6555_ems_f8870fc3-bf1a-4558-8c6d-e3cf2abcfc9c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6553%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00058",
+   "document_date": "2020-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "This bill is one of seven in a package that changes how the Australian Prudential Regulation Authority is funded.",
+   "The package would let the Commonwealth recover costs for more of the activities it pays for through the supervisory levy system.",
+   "The package would set a new maximum levy of $10 million per financial year starting 1 July 2020 and base future increases on the latest CPI figures."
+  ],
+  "changes": [
+   "Lets the Commonwealth recover costs for a wider set of activities through the levy framework.",
+   "Raises the maximum levy amount that can be set under the Levy Imposition Acts to $10 million from 1 July 2020.",
+   "Changes the way the maximum is indexed to use the most recent CPI figures."
+  ],
+  "affected": "Financial institutions supervised by APRA, including life insurers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391042",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Life Insurance Supervisory Levy Imposition Amendment Bill 2020 was moved for a second reading to give the Treasurer flexibility to set levies so that life insurance institutions pay their appropriate share."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Life Insurance Supervisory Levy Imposition Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00058",
+   "assent_date": "2020-06-19"
+  }
+ ]
+}

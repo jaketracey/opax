@@ -1,0 +1,197 @@
+{
+ "key": "au-federal-r5453",
+ "title": "Social Services Legislation Amendment (No. 2) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (No. 2) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2015-09-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5453_ems_cb2676de-45d7-4ca7-b87b-6e6a6a600620%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5453_ems_02140a5a-534c-45a7-867b-5020a22ede7f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5453%22",
+   "document_date": "2015-05-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00128",
+   "document_date": "2015-09-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-28",
+  "sentences": [
+   "This bill would extend the income management programme and its payment card for two more years while changing how it operates.",
+   "It would end certain incentive payments linked to income management, adjust the vulnerable measure, and tidy up the rules to help the programme work better.",
+   "It would also stop a residential care subsidy from 1 July 2015 for beds held empty for up to a week before a resident arrives, and would dissolve the aged care planning advisory bodies."
+  ],
+  "changes": [
+   "Extends income management and the BasicsCard for another two years.",
+   "Abolishes some incentive payments for income management.",
+   "Adjusts the vulnerable measure of income management.",
+   "Removes ambiguities to improve the programme's effectiveness.",
+   "Ends the holding payment for residential care places from 1 July 2015.",
+   "Repeals provisions for the Aged Care Planning Advisory Committees."
+  ],
+  "affected": "People on income management, residential aged care providers and care recipients, and the former advisory committees' functions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:55:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-312564",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill's abolition of the 'vulnerable' income management measure and removal of Centrelink social worker support for at-risk recipients, but supported ending matched savings (up to $500) and voluntary incentive payments ($250). Labor argued for targeted income management requiring social worker assessments."
+  },
+  {
+   "slug": "speech-312565",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The bill extends income management for two years with $146.7 million, streamlines the system by removing social worker assessments, matched savings payments, and voluntary incentive payments, and amends aged care subsidies and abolishes Aged Care Planning Advisory Committees."
+  },
+  {
+   "slug": "speech-312566",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill's cuts to social worker support for income management participants and aged care planning, citing projected savings of $11.6 million and the reduction of pre-entry leave for aged care, and criticized the government for removing the dementia and severe behaviour supplement."
+  },
+  {
+   "slug": "speech-312661",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The bill extends income management and the BasicsCard for two years, abolishes certain incentive payments, and from 1 July 2015 stops residential care subsidies for holding places before care entry. It also repeals redundant provisions for aged care planning advisory committees, which expired in September 2014."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (No. 2) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00128",
+   "assent_date": "2015-09-16"
+  }
+ ]
+}

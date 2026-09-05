@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5627",
+ "title": "Tax Laws Amendment (Tougher Penalties for Country-by-Country Reporting) Bill 2016",
+ "short_title": "Tax Laws Amendment (Tougher Penalties for Country-by-Country Reporting) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-29",
+ "originating_house": "representatives",
+ "sponsor": "LEIGH, Andrew, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10746",
+ "portfolio": "(s) LEIGH, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5627%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5627%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5627%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5627_ems_904e425d-056c-49bd-9f3b-2fb662704bfa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5627%22",
+   "document_date": "2016-02-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-29",
+  "sentences": [
+   "This bill is one of a package that tightens penalties for large multinational companies that do not file annual reports on their global activities and taxes.",
+   "The package would raise the top fine for not lodging such a report from $5,400 to $270,000, and would let the tax commissioner examine companies that still do not comply after paying that fine.",
+   "The higher fine applies to businesses classed as significant global entities, which are those with worldwide revenue above $1 billion."
+  ],
+  "changes": [
+   "The bill would create a new penalty structure for significant global entities that must file country-by-country reports.",
+   "It would increase the maximum penalty for failing to file from $5,400 to $270,000.",
+   "It would give the Commissioner of Taxation the power to audit companies that still do not file after the maximum penalty is applied."
+  ],
+  "affected": "Large multinational companies with global turnover above $1 billion that are required to report their economic activity and tax payments in each country where they operate.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:48:32Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

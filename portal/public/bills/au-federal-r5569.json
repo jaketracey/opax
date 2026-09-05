@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5569",
+ "title": "Privacy Amendment (Protecting Children from Paparazzi) Bill 2015",
+ "short_title": "Privacy Amendment (Protecting Children from Paparazzi) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-23",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5569%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5569%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5569%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5569_ems_aac8dc3f-d50f-44de-9d9b-db7f8c4bb2de%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5569%22",
+   "document_date": "2015-11-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-23",
+  "sentences": [
+   "The bill would create a new criminal offence for harassing the children of celebrities or other people because of their occupation by photographing or recording them.",
+   "It would amend the Privacy Act 1988 to prohibit following or lying in wait for a child to take their image or voice without consent.",
+   "The bill would have no financial impact and includes a statement on compatibility with human rights."
+  ],
+  "changes": [
+   "Creates a new criminal offence for harassing children of celebrities or others due to their vocation.",
+   "Amends the Privacy Act 1988 to prohibit photographing or recording a child without consent.",
+   "Makes it illegal to follow or lie in wait for a child to capture their image or voice."
+  ],
+  "affected": "Children of celebrities or persons of prominence, and their parents or guardians.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,266 @@
+{
+ "key": "au-federal-r7482",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2026-2027",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2026-2027",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2026-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7482_ems_27aeec60-1745-43d5-8767-49f7c83fcc21%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7482%22",
+   "document_date": "2026-05-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00056",
+   "document_date": "2026-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10648",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will first deal with the second reading amendment circulated by the Australian Greens. The question is that the amendment on sheet 3861 be agreed to. _Australian Greens_ _' circulated_ _amendment—_ At the end of the motion, add \", but the Senate: (a) notes that: (i) Australia is one of the world's largest exporters of gas, yet multinational gas corporations are making extraordinary profits while offshore projects get our gas for free, (ii) introducing a minimum tax rate of at least 25% on gas export revenue would ensure that big gas corporations pay their fair share and raise an estimated $17 billion per year in public revenue, and (iii) this revenue could be invested in cost of living support, accelerating the transition to clean energy and properly funding essential public services, including the National Disability Insurance Scheme; and (b) calls on the Government to reverse all cuts to the National Disability Insurance Scheme included in these bills\".",
+   "stage": "Limitation of debate",
+   "ayes": 10,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/25"
+  },
+  {
+   "key": "federal-senate-10649",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the second reading amendment circulated by One Nation. The question is that the amendment on sheet 3858 be agreed to. _One Nation's_ _circulated_ _amendment—_ Omit all words after \"That\", substitute \"further consideration of the bills be made an order of the day for the first sitting day after amendments are circulated removing all funding for net zero measures and the administration of net zero measures\". _A division having been called and the bells being rung—_ David Pocock by leave—I was just wondering if my support for (a) on that last amendment could be noted. Sue Lines On 3861? David Pocock Yes.",
+   "stage": "Limitation of debate",
+   "ayes": 5,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/26"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1202585",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203018",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203075",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203223",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-28",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Parliamentary Departments) Act (No. 1) 2026-2027",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00056",
+   "assent_date": "2026-06-30"
+  }
+ ]
+}

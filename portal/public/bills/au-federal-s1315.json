@@ -1,0 +1,232 @@
+{
+ "key": "au-federal-s1315",
+ "title": "Crimes Amendment (Remissions of Sentences) Bill 2021",
+ "short_title": "Crimes Amendment (Remissions of Sentences) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2021-12-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1315_ems_c4ba2268-641f-450b-87b3-61c8a1f84e5c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8282976%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1315%22",
+   "document_date": "2021-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00129",
+   "document_date": "2021-12-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2021-08-25",
+  "sentences": [
+   "The bill would stop federal prisoners from having their sentences reduced by state or territory remission schemes.",
+   "It would repeal section 19AA of the Crimes Act 1914, which currently applies those remissions to federal sentences.",
+   "The change would apply to prisoners who have already earned emergency management days (EMDs) but not to those who have already been released because of them."
+  ],
+  "changes": [
+   "Repeals section 19AA of the Crimes Act.",
+   "Removes the application of state and territory sentence remissions to federal prisoners.",
+   "Applies the change retrospectively to federal prisoners who have accrued EMDs but have not yet completed their sentence."
+  ],
+  "affected": "Federal prisoners, particularly convicted terrorist offenders, and the Australian Federal Police.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7526",
+   "date": "2021-11-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-11-25.14.2) to agree with [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1315)'s main idea. In parliamentary jargon, they voted to read the bill for a second time. This means they can now discuss the bill in more detail before deciding on whether to pass the bill in the Senate. ### What is the bill's main idea? According to the [bill's digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd029), the bill was introduced to: > *repeal section 19AA, which applies remissions or reductions granted under state or territory laws to federal sentences and* > *impose a consistent regime in every jurisdiction that allows courts to consider periods of compliance with parole obligations when dealing with federal offenders for breaches of parole.* It [further explained](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd029) that: > *The Commonwealth does not own or operate any prisons and federal prisoners are housed in state and territory prisons. As of June 2021, 1,151 people were serving federal sentences in prisons across Australia. Prisons located in Victoria accommodated 317 people serving federal sentences as of June 2021 (that is, 27.5% of all persons serving federal sentences). As at 30 June 2020, convicted federal offenders comprised approximately six per cent of Victoria’s total prison population.* > > *[...]* > > *Victoria is currently the only jurisdiction with laws providing significant remissions or reductions that are applicable to federal offenders' sentences. In Victoria these remissions are known as emergency management days (EMDs).* > > *The Bill was prompted by the granting of EMDs in Victoria; however, it will also apply to federal prisoners in any state or territory which makes provisions in the future allowing for the remission or reduction of se",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 14,
+    "dated": 10,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-417051",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to give priority to three bills: the Biosecurity Amendment (Enhanced Risk Management) Bill 2021, the Independent National Security Legislation Monitor Amendment Bill 2021, and the Crimes Amendment (Remissions of Sentences) Bill 2021. It also proposed that after the third reading of the Treasury Laws Amendment (Enhancing Superannuation Outcomes For Australians and Helping Australian Businesses Invest) Bill 2021, the House adjourn until 9:30 am on 2 December 2021, and that from 8 pm any divisions be deferred and a quorum count occur at that time."
+  },
+  {
+   "slug": "speech-417057",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The Crimes Amendment (Remissions of Sentences) Bill 2021 repeals section 19AA of the Crimes Act 1914 to stop automatic application of state remissions to federal sentences, targeting Victoria's emergency management days that have given large discounts to federal offenders including terrorists and child-sex offenders, with examples such as Adam Brookman receiving over 340 days off his sentence."
+  },
+  {
+   "slug": "speech-417058",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Crimes Amendment (Remissions of Sentences) Bill 2021, which repeals section 19AA of the Crimes Act to stop automatic application of state and territory sentence remissions to federal offenders, and argued that despite retrospective concerns, the bill would improve consistency and community safety."
+  },
+  {
+   "slug": "speech-417059",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-12-01",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to prioritise three bills—Biosecurity Amendment (Enhanced Risk Management) Bill 2021, Independent National Security Legislation Monitor Amendment Bill 2021, and Crimes Amendment (Remissions of Sentences) Bill 2021—and to defer any divisions from 8 pm until 9.30 am on 2 December 2021."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Amendment (Remissions of Sentences) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00129",
+   "assent_date": "2021-12-08"
+  }
+ ]
+}

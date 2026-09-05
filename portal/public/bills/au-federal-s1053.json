@@ -1,0 +1,240 @@
+{
+ "key": "au-federal-s1053",
+ "title": "Fisheries Legislation Amendment (Representation) Bill 2017",
+ "short_title": "Fisheries Legislation Amendment (Representation) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-08",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2017-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1053_ems_793d15a8-ab94-41bf-88e5-0a0db8cdc8cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1053%22",
+   "document_date": "2017-02-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00123",
+   "document_date": "2017-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-08",
+  "sentences": [
+   "The bill would give recreational and Indigenous fishers a stronger role in managing Commonwealth commercial fisheries.",
+   "It would require the Australian Fisheries Management Authority to consider the interests of all fishery users when making decisions.",
+   "The bill also expands eligibility for the AFMA Commission to include people with expertise in recreational and Indigenous fishing."
+  ],
+  "changes": [
+   "Recognises recreational and Indigenous fishers explicitly in Commonwealth legislation.",
+   "Requires AFMA to consider the interests of all fishery users in management decisions.",
+   "Increases opportunities for membership of AFMA advisory bodies.",
+   "Extends eligibility criteria for the AFMA Commission to include recreational and Indigenous fishing expertise."
+  ],
+  "affected": "Recreational and Indigenous fishers, the Australian Fisheries Management Authority, and its advisory bodies and Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:54Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-356047",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The Fisheries Legislation Amendment (Representation) Bill 2017 amends the Fisheries Management Act 1991 and Fisheries Administration Act 1991 to formally recognise recreational and Indigenous fishing sectors, expand AFMA commissioner eligibility to include expertise in those sectors, and increase management advisory committee membership from seven to ten to improve stakeholder representation."
+  },
+  {
+   "slug": "speech-356048",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The opposition supports the Fisheries Legislation Amendment (Representation) Bill 2017 to give recreational and Indigenous fishers a voice in Commonwealth decision-making, noting that around five million recreational fishers contribute over $2 billion to the economy, but criticising the slow progress since before the 2013 election."
+  },
+  {
+   "slug": "speech-356049",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-356606",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fisheries Legislation Amendment (Representation) Bill 2017 should be supported to give a greater voice to Aboriginal and Torres Strait Islander fishers and recreational fishers in Commonwealth fisheries management, including increasing the Australian Fishing Management Authority board from seven to 10 members and ensuring independence from fishing organisations. He noted the fishing industry is worth $2.8 billion and employs over 14,000 people, and emphasised the need to balance recreational, commercial, and Indigenous fishing interests."
+  },
+  {
+   "slug": "speech-356607",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The Fisheries Legislation Amendment (Representation) Bill 2017 was supported to give recreational and Indigenous fishers a stronger voice in Commonwealth fisheries management, and a ban on supertrawlers in the Small Pelagic Fishery was argued, citing illegal fishing by Chinese vessels in Timor-Leste."
+  },
+  {
+   "slug": "speech-356608",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fisheries Legislation Amendment (Representation) Bill, citing recreational fishing’s $3.7 billion economic contribution and arguing that the government should go further by establishing a national recreational fishing council. He also criticised the government’s past support for supertrawlers and called for greater recreational fisher representation in fisheries management decisions."
+  },
+  {
+   "slug": "speech-356609",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fisheries Legislation Amendment (Representation) Bill 2017 for improving input from recreational, Indigenous and commercial fishers, but condemned the government for cutting marine protected areas by 50% (40 million hectares), including the Coral Sea and Perth Canyon, despite 82,000 submissions (97% from recreational fishers) supporting the original 2012 network and 1,460 scientists opposing the reduction."
+  },
+  {
+   "slug": "speech-356610",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fisheries Legislation Amendment (Representation) Bill 2017 to give recreational and Indigenous fishers a formal seat in Commonwealth fisheries management, and opposed factory freezer trawlers like the Geelong Star, citing dolphin and seal deaths and negligible economic benefit."
+  },
+  {
+   "slug": "speech-356611",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-26",
+   "stage_hint": null,
+   "brief": "The Fisheries Legislation Amendment (Representation) Bill 2017 broadens AFMA commissioner eligibility to include recreational and Indigenous fishing expertise, increases the advisory committee from seven to ten members, and adds an objective to the Fisheries Management Act 1991 and Fisheries Administration Act 1991 to consider recreational and Indigenous fishers' interests."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fisheries Legislation Amendment (Representation) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00123",
+   "assent_date": "2017-11-06"
+  }
+ ]
+}

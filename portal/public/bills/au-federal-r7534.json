@@ -1,0 +1,611 @@
+{
+ "key": "au-federal-r7534",
+ "title": "Interactive Gambling (Cost Recovery Levy) Bill 2026",
+ "short_title": "Interactive Gambling (Cost Recovery Levy) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+ "status": "passed",
+ "status_as_of": "2026-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7534_ems_7a0824c2-258b-46e9-a93a-db0e660e6ba1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7534%22",
+   "document_date": "2026-08-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00073",
+   "document_date": "2026-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10701",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to the order agreed to on 18 August, the time allotted for the second reading of the interactive gambling bills has expired. I will now put the question before the chair and then put the remaining questions required to complete the second reading stage. I will first deal with the amendment moved by Senator David Pocock.The question is that the amendment on sheet 4005 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/6"
+  },
+  {
+   "key": "federal-senate-10702",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the second reading amendment circulated by the Australian Greens. _Australian Greens' circulated amendment—_ At the end of the motion, add \", but the Senate: (a) notes that the major parties have been given more than $10 million by gambling companies and lobby groups; (b) acknowledges that these political inducements being funnelled into the two major parties by the gambling lobby has bought the gambling industry significant influence throughout the debate on these bills; (c) notes that this level of vested interests in politics is corrosive to our democracy; and (d) calls on the Government to ban all political donations from the gambling industry\". The question is that the amendment on sheet 4009 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/7"
+  },
+  {
+   "key": "federal-senate-10703",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the second reading amendment circulated by Senator Thorpe. _Senator Thorpe's circulated amendment—_ Omit all words after \"That\", substitute \"the Senate rejects the bill and is of the opinion that: (a) gambling disproportionately harms Aboriginal and Torres Strait Islander people; (b) the bill was subject to inadequate consultation with Aboriginal and Torres Strait Islander people impacted by gambling harms; and (c) the bill ignores many of the recommendations in the House of Representatives Standing Committee on Social Policy and Legal Affairs report 'You win some, you lose more' (known as the Murphy report), including: (i) that the Australian Government should establish a national online gambling regulator with the sole purpose of reducing harm and with responsibility for all licencing and regulation, and (ii) that this regulator should levy online wagering service providers to fund national strategy harm reduction measures, including supporting Aboriginal and Torres Strait Islander community-controlled health organisations to develop and implement measures that reduce gambling harm impacting Aboriginal and Torres Strait Islander people\". The question is that the amendment on sheet 3973 be agreed to. Question negatived. Nick McKim I ask that the Australian Greens' support for Senator Thorpe's second reading amendment be noted. Sue Lines The question now is that the bills be now read a second time.",
+   "stage": "Limitation of debate",
+   "ayes": 29,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/8"
+  },
+  {
+   "key": "federal-senate-10704",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Mehreen Faruqi I'm not a betting woman but you can always be confident betting on the two major parties to screw over the people who live in this country. It isn't even a gamble to bet on Labor and the Liberals joining up to pass half-baked weak laws, because this is what the big gambling corporations want them to do. They just say, 'Yes, sir'. Labor collected over $4 million in gambling-related bribes—sorry, I mean 'donations'—between 2020 and 2025. Anthony Chisholm I'd ask that Senator Faruqi withdraw that. Varun Ghosh Senator Faruqi, there's been a request that you withdraw your reference to bribes. I think that it would be appropriate for you to do that. You corrected it and said something else, so I will ask you to withdraw that, please. Mehreen Faruqi I withdraw. Labor collected over $4 million in gambling-related inducements between 2020 and 2025. This legislation makes clear exactly who is pulling the strings. The late Peta Murphy, in a foreword to her report _You win some, you lose_ _m__ore_, said that she was proud to deliver a unanimous report that says enough is enough. She was explicit when she said: A phased, comprehensive ban on all gambling advertising on all media, that leaves no room for circumvention, is needed. Partial bans on gambling advertising do not work. But you guys paid no heed. Since the publication of Peta Murphy's report, Australians have lost over $104 billion to gambling. That's $666 million per week. The social harm that this has caused has devastated people and families. The Labor and Liberal senators voting for this today should be so ashamed. It seems that you come in here with the determination of harming people and communities. Yesterday, it was the cruel NDIS cuts. Today, it is the gambling industry that you are supporting and propping up. This is the Albanese Labor government's MO: do just enough to get a headline, but don't actually fix the real issue, and definitely do not risk upsetting whichever corporations and their big",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/9"
+  },
+  {
+   "key": "federal-senate-10705",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Slade Brockman Minister, please resume your seat. Pursuant to order agreed on 18 August, the time allotted for the remaining stages of these bills has expired. The question before the chair is that Australian Greens amendments (1) and (2) on sheet 3995 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/10"
+  },
+  {
+   "key": "federal-senate-10706",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Slade Brockman The next question is that section 62E in item 18 of schedule 1 stand as printed. This is item (7) of the Australian Greens amendments on sheet 3966. _Australian_ _Greens_ _'_ _circulated amendment—_ (7) Schedule 1, item 18, page 19 (line 7) to page 20 (line 26), section 62E to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 32,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/11"
+  },
+  {
+   "key": "federal-senate-10707",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Limitation of debate",
+   "ayes": 10,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/12"
+  },
+  {
+   "key": "federal-senate-10708",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "David Pocock by leave—Mr Deputy President, please, can I note my opposition to sheet 3966. Slade Brockman Thank you, Senator Pocock. I will now deal with the amendments circulated by Senator Cadell, beginning with amendment (1) on sheet 4008. The question is that item 1 in schedule 4 stand as printed. _Opposition_ _'s circulated amendments—_ (1) Schedule 4, item 1, page 106 (lines 4 to 8), to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 39,
+   "noes": 21,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/13"
+  },
+  {
+   "key": "federal-senate-10709",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Slade Brockman The question is now that the remaining amendment on sheet 4008 be agreed to. _Opposition's circulated amendment—_ (2) Schedule 4, item 11, page 109 (line 9), omit subparagraph 8D(2)(a)(iii).",
+   "stage": "Limitation of debate",
+   "ayes": 21,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/14"
+  },
+  {
+   "key": "federal-senate-10710",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Slade Brockman I will now deal with the amendments circulated by Senator David Pocock. The first question is that sections 62L and 62RA in item 18 of schedule 1, and schedule 4A stand as printed. _Senator David Pocock's circulated amendments—_ SHEET 3864 REVISED 2 (6)—Schedule 4A, page 110 (line 1) to page 122 (line 8), to be opposed. \\_\\_\\_\\_\\_ SHEET 3867 REVISED (6) Schedule 1, item 18, page 25 (line 28) to page 27 (line 8), section 62L to be opposed. (11)—Schedule 1, item 18, page 40 (line 1) to page 41 (line 27), section 62RA to be opposed .",
+   "stage": "Limitation of debate",
+   "ayes": 31,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/15"
+  },
+  {
+   "key": "federal-senate-10711",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Slade Brockman The question is that amendments on sheet 3865, 3868 revised; 3925, 3926, 3927, 3928, 3994 and 4004; the remaining amendments on sheet 3864 revised and 3867 revised; and request for amendment on sheet 3993 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/16"
+  },
+  {
+   "key": "federal-senate-10712",
+   "date": "2026-08-19",
+   "house": "senate",
+   "question": "Slade Brockman I will now deal with the amendments circulated by the Jacqui Lambie Network. The question is that the amendments on sheet 3970 be agreed to. _Jacqui Lambie Network's circulated amendments—_ (1) Clause 2, after table item 2, insert: (2) Before Schedule 5, insert: Schedule 4D — Regulating gambling like elements in computer games _Classification (Publications, Films and Computer Games) Act 1995_ 1 Section 5 Insert: _in-game purchase_, in relation to a computer game, means a purchase made within the computer game: (a) using real world currency; or (b) using in-game virtual currency, items or credits that can be purchased using real-world currency. _linked to elements of chance_ has a meaning affected by subsection 9B(2). _loot box_, in relation to a computer game, means a virtual container, however described that rewards a player of the computer game with an in-game digital item, where the exact reward the player is to receive is not disclosed to the player prior to receiving the virtual container. Note: Loot boxes may be known by other names in the computer game industry including but not limited to prize crates and card packs. _simulated gambling_ has the same meaning as in the _Guidelines for the Classification of Computer Games 2023_. 2 Section 9 After \"section 9A\", insert \"or section 9B\". 3 After section 9A Insert: 9B Minimum classification for computer games with gambling like elements _Computer games with gambling like elements must be classified R 18+_ (1) Subject to section 9A, a computer game must be classified R 18+ or a higher classification if the computer game contains, or allows access to: (a) an in-game purchase linked to elements of chance; or (b) simulated gambling. (2) For the purposes of paragraph (1)(a), an in-game purchase is _linked to elements of chance_ if the exact good, service or reward that a person will receive from the in-game purchase is not disclosed to the person before the in-game purchase is made. Example: If a computer",
+   "stage": "Limitation of debate",
+   "ayes": 37,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 8,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-19/17"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1205524",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-18",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Interactive Gambling (Cost Recovery Levy) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00073",
+   "assent_date": "2026-08-26"
+  }
+ ]
+}

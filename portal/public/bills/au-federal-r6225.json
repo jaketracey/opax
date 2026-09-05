@@ -1,0 +1,137 @@
+{
+ "key": "au-federal-r6225",
+ "title": "Tertiary Education Quality and Standards Agency Amendment Bill 2018",
+ "short_title": "Tertiary Education Quality and Standards Agency Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6225%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6225%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6225%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6225_ems_388178d7-742e-4e52-85c2-8436adb2d9b2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6225%22",
+   "document_date": "2018-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-05",
+  "sentences": [
+   "The bill would amend the Tertiary Education Quality and Standards Agency Act 2011 to adopt recommendations from a review of that Act's effect on higher education.",
+   "It would simplify the standards framework, adjust quorum rules for TEQSA meetings, and allow overseas universities to use the word 'university' without penalty for certain courses.",
+   "The bill would also expand when TEQSA can disclose information, including to complainants without the consent of the body the information concerns."
+  ],
+  "changes": [
+   "Remove references to specific categories of non-threshold standards from the Higher Education Standards Framework.",
+   "Require TEQSA to tell the Minister and the Higher Education Standards Panel about a quality review before it starts, if the review could affect most higher education providers.",
+   "Allow an overseas university not registered by TEQSA to offer a course not mainly provided from Australian premises and use 'university' without committing an offence.",
+   "Change quorum for TEQSA meetings to a majority of Commissioners.",
+   "Expand the skillset and functions of the Higher Education Standards Panel to cover oversight of TEQSA's strategic and operational planning.",
+   "Create exceptions to the offence of unauthorised disclosure for written consent, research, and disclosure to complainants."
+  ],
+  "affected": "Higher education providers, TEQSA, the Higher Education Standards Panel, overseas universities, and the responsible Minister and Department.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:21:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-374005",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The Tertiary Education Quality and Standards Agency Amendment Bill 2018 implements recommendations from a review of the TEQSA Act, including simplifying the Higher Education Standards Framework, requiring TEQSA to inform the minister and Higher Education Standards Panel before undertaking quality assessments, expanding the panel's skill set and functions, and allowing TEQSA to disclose information to complainants. The review, conducted by Deloitte Access Economics, received 36 written submissions and interviewed 33 stakeholders, finding the regulatory system broadly effective."
+  },
+  {
+   "slug": "speech-374863",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "Labor supported the bill but moved a second reading amendment condemning the government for cutting billions from universities, capping undergraduate places, and slashing research funding. Concrete commitments included uncapping undergraduate places with a $10 billion investment, $174 million for equity and pathways, a $300 million university future fund, and waiving fees for 100,000 TAFE students."
+  },
+  {
+   "slug": "speech-374866",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that successive Australian governments have turned education into a business, burdening young people with debt, insecure work, and unaffordable housing, and announced the Greens' plan to make TAFE and undergraduate university free, funded by ending fossil fuel tax breaks, while boosting university funding by 10% per student and increasing youth allowance by $75 a week."
+  },
+  {
+   "slug": "speech-374867",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tertiary Education Quality and Standards Agency Amendment Bill 2018 and a Labor amendment, arguing that the government has cut $2.2 billion from universities, causing 9,500 students to miss out on places in 2018 and another 9,500 in 2019. Specific cuts to Queensland universities were cited: $36 million to the University of Southern Queensland, $92 million to Griffith University, and $100 million each to QUT and the University of Queensland."
+  },
+  {
+   "slug": "speech-374868",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "The MP criticised the Abbott-Turnbull-Morrison government for cutting $328.5 million from university research, delaying a TEQSA review response for three years, and leaving youth allowance wait times up to six months. They announced that a Labor government would uncap university places for 200,000 more students, invest $300 million in a university future fund, and waive TAFE fees for 100,000 students."
+  },
+  {
+   "slug": "speech-374869",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has neglected higher education by delaying action on the national regulator review for three years, capping university places, cutting research funding, and shifting costs to students. They announced Labor’s commitments to uncap university places (expected to create 200,000 more places over a decade), provide three-year guaranteed funding agreements, and invest $300 million in a university future fund, including $20 million for research at Western Sydney University’s Hawkesbury campus."
+  }
+ ],
+ "acts": []
+}

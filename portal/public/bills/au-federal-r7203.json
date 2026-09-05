@@ -1,0 +1,850 @@
+{
+ "key": "au-federal-r7203",
+ "title": "Export Control Amendment (Ending Live Sheep Exports by Sea) Bill 2024",
+ "short_title": "Export Control Amendment (Ending Live Sheep Exports by Sea) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2024-07-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7203_ems_1977839c-5660-4c94-b165-ef7bc668d5bc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7203%22",
+   "document_date": "2024-05-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00068",
+   "document_date": "2024-07-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-05-30",
+  "sentences": [
+   "This bill would change the Export Control Act 2020 to stop sending live sheep from Australia by ship starting 1 May 2028.",
+   "It would also allow the government to spend money to help people and businesses get ready for and deal with the end of this trade.",
+   "The government has set aside $107 million for this transition, and the ban would start on the same date as the existing northern summer pause in sheep exports."
+  ],
+  "changes": [
+   "The bill would make it illegal to export live sheep by sea from Australia after 1 May 2028.",
+   "It would create penalties for breaking this ban.",
+   "It would keep allowing live sheep to be sent by air and other livestock, like cattle, to be sent by sea or air.",
+   "It would let the government spend money to help sheep farmers and related businesses adapt to the end of the sea trade."
+  ],
+  "affected": "Sheep producers, sheep supply chain businesses, and communities, especially in Western Australia, would be affected by this bill.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8943",
+   "date": "2024-05-30",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2024-05-30.6.1): > *That the [Export Control Amendment (Ending Live Sheep Exports by Sea) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7203) be referred to the Standing committee on Agriculture for consideration and an advisory report at 8 October 2024.* This means that it failed and the bill won't be referred to the committee. It was introduced by Maranoa MP [David Littleproud](https://theyvoteforyou.org.au/people/representatives/maranoa/david_littleproud) (Nationals).",
+   "stage": "Reference to Committee",
+   "ayes": 56,
+   "noes": 82,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 6
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-30/1"
+  },
+  {
+   "key": "federal-representatives-8978",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "question": "Export Control Amendment (Ending Live Sheep Exports by Sea) Bill 2024 - Second Reading - Decline a second reading",
+   "stage": "Second reading",
+   "ayes": 54,
+   "noes": 89,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 75
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-26/2"
+  },
+  {
+   "key": "federal-representatives-8979",
+   "date": "2024-06-26",
+   "house": "representatives",
+   "question": "Export Control Amendment (Ending Live Sheep Exports by Sea) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 89,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-06-26/3"
+  },
+  {
+   "key": "federal-senate-8999",
+   "date": "2024-06-27",
+   "house": "senate",
+   "question": "The majority voted against an amendment to part (b) of the [original amendment](https://www.openaustralia.org.au/senate/?gid=2024-06-27.18.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it failed. The amendment was introduced by Victorian Senator [Bridget McKenzie](https://theyvoteforyou.org.au/people/senate/victoria/bridget_mckenzie) (Nationals). ### Amendment text > *At the end of the motion, add:* > > *\"and, in respect of [Export Control Amendment (Ending Live Sheep Exports by Sea) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7203), the provisions of the bill be referred immediately to the Rural and Regional Affairs and Transport Legislation Committee for inquiry and report by 25 November 2024\".* ### Original amendment text > *At the end of the motion, add: \", and:* > > *(a) the provisions of the Nature Positive (Environment Information Australia) Bill 2024 and related bills be referred immediately to the Environment and Communications Legislation Committee for inquiry and report by 8 August 2024; and* > > *(b) the provisions of the Export Control Amendment (Ending Live Sheep Exports by Sea) Bill 2024 not be referred to a committee.*",
+   "stage": "Committee motion",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-06-27/3"
+  },
+  {
+   "key": "federal-senate-10429",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Mehreen Faruqi Too many animals have died and too many have suffered on the ships of misery for decades. Sheep that have been treated as cargo, not as the living, breathing sentient beings that they are, have suffered for far too long. Governments have facilitated this trade for decades, condemning thousands upon thousands of animals to horrific deaths and unimaginable suffering. In 1966, 67,000 sheep died aboard the _Uniceb_; in 1980, 40,000 sheep died on the _Farid Fares_; in 2003, 5½ thousand sheep perished on the MV _Cormo Express_; in 2014, 4,000 sheep died on the _Bader III_; in 2017, 3,000 died aboard the _Al Messilah_; in 2017, 2,400 sheep died on the _Awassi Express_; and, between 2018 and 2023, more than 6½ thousand sheep deaths have been recorded. These are just some of the horrors of this barbaric trade that we know about. There are many thousands more animals that suffer in extreme heat in cramped, overcrowded and filthy containers and that go hungry and thirsty. The industry has long tried to hide and downplay the true extent of suffering involved in live sheep export, and the government has aided and abetted the industry for years. To this day, there is little transparency about the suffering on board these ships of misery. It is only thanks to the tireless and courageous efforts of animal welfare advocates, whistleblowers and activists who, time after time, have exposed the cruelty of the industry and the failures of the government that we know the extent of suffering that live exports inflicts on animals. These exposes have brought the need for urgent reform to the fore. In August 2017 Faisal Ullah, a young 25-year-old Pakistani trainee navigation officer, bravely exposed the calamity that occurred on the _Awa __s__ si Express_. By April 2018, Animals Australia and _60 Minutes_ helped reveal the sickening image of thousands of live sheep and lambs being cooked alive from heat stress, being crushed to death from overcrowding and having their throats",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/11"
+  },
+  {
+   "key": "federal-senate-10430",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Sue Lines The question is that the suspension motion, as moved by Senator Cash, be agreed to.",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/12"
+  },
+  {
+   "key": "federal-senate-10431",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Sue Lines In accordance with the resolution agreed to earlier today, I will now put the question before the chair and then put the questions on the remaining stages of the bills listed in that resolution. The question is that the second reading amendment moved by Senator Cash on sheet 2697 be agreed to.",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/13"
+  },
+  {
+   "key": "federal-senate-10432",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the second reading amendment circulated by the opposition on sheet 2695 be agreed to. _Opposition's circulated amendment—_ Omit all words after \"That\", substitute \"the Senate: (a) criticises the Government for imposing its reckless and ideological decision to shut down Australia's live sheep export industry by sea; (b) recognises that: (i) Australia's live sheep export industry employs more than 3,000 people in Western Australia, including shearers, truck drivers, fodder suppliers, livestock agents, farmers and producers, (ii) these workers now face the prospect of losing their job, and families that are struggling under financial stress may now face a difficult decision to leave their rural towns and communities, (iii) this industry has delivered comprehensive reforms which have secured exemplary animal welfare outcomes, and (iv) Australia has the highest standards of animal welfare in the world; (c) further criticises the Government for the mismanagement and lack of consultation on this policy to end live sheep exports with farmers, sheep producers and impacted communities; (d) acknowledges that this policy is widely and strongly opposed across the agriculture sector; (e) expresses concern that if the live sheep export industry is banned, alternatives will be sourced from countries that do not share Australia's animal welfare standards, resulting in perverse international animal welfare outcomes; and (f) calls on the Government to immediately reverse its policy to shut down this industry\".",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/14"
+  },
+  {
+   "key": "federal-senate-10433",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Sue Lines The question is that the second reading amendment circulated by the opposition on sheet 2698 be agreed to. _Opposition's circulated amendment—_ Omit all words after \"That\", substitute \"the bill be referred to the Rural and Regional Affairs and Transport Legislation Committee for inquiry and report by 5 September 2024\".",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/15"
+  },
+  {
+   "key": "federal-senate-10434",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/16"
+  },
+  {
+   "key": "federal-senate-10435",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Committee of the Whole amendments, starting with the amendments circulated by the opposition. The question is that the amendment on sheet 2699 be agreed to. _Opposition's circulated amendment—_ (1) Page 2 (after line 11), after clause 3, insert: 4 Independent review (1) The Minister must cause an independent review to be conducted of the operation of the amendments made by this Act. (2) Without limiting subsection (1), the review must consider: (a) the operation and effectiveness of the independent panel that was appointed to consult with stakeholders on how and when the Government should phase-out live sheep exports by sea; and (b) the operation and effectiveness of Division 6A of Part 6 of Chapter 11 of the _Export Control Act 2020_ (relating to assistance in relation to the phasing out of the export of live sheep by sea); and (c) whether any rural, regional, remote or Indigenous communities are adversely affected or worse off as a result of the operation of the amendments made by this Act. (3) The review must start as soon as practicable after the end of 3 months after this Act commences. (4) The persons who conduct the review must give the Minister a written report of the review within 12 months of the commencement of the review. (5) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister. The question is that the amendment on sheet 2699 be agreed to.",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/17"
+  },
+  {
+   "key": "federal-senate-10436",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/18"
+  },
+  {
+   "key": "federal-senate-10437",
+   "date": "2024-07-01",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-01/19"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Export Control Amendment (Ending Live Sheep Exports by Sea) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00068",
+   "assent_date": "2024-07-09"
+  }
+ ]
+}

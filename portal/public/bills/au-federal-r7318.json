@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-r7318",
+ "title": "AusCheck Amendment (Global Entry Program) Bill 2025",
+ "short_title": "AusCheck Amendment (Global Entry Program) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2025-03-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7318_ems_36eb9497-eb63-4507-9c45-7c85be524ab1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7318%22",
+   "document_date": "2025-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00023",
+   "document_date": "2025-03-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-10",
+  "sentences": [
+   "The bill would create a legal basis for Australian background checks on citizens applying for the United States' Global Entry trusted traveller program.",
+   "It would expand the regulation-making power in the AusCheck Act to allow the AusCheck scheme to cover these checks, with new definitions and protections for personal information.",
+   "The bill would also allow background checks to include certain offences under the Defence Force Discipline Act 1982 to meet US eligibility criteria, and phase two of the program would have no cap on applicants."
+  ],
+  "changes": [
+   "Expands the regulation-making power in section 8 of the AusCheck Act to enable background checks for the Global Entry program.",
+   "Amends the definition of background check to include offences under the Defence Force Discipline Act 1982.",
+   "Inserts a new provision allowing regulations to prescribe matters for Global Entry background checks.",
+   "Amends the definition of AusCheck scheme personal information to cover data obtained before the bill's amendments commence.",
+   "Inserts new definitions in subsection 4(1) of the Act to support Global Entry background checks."
+  ],
+  "affected": "Australian citizens who travel frequently to the United States and apply for the Global Entry program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:49Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1194289",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194832",
+   "speaker": "Murray Watt",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194932",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "AusCheck Amendment (Global Entry Program) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00023",
+   "assent_date": "2025-03-27"
+  }
+ ]
+}

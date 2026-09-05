@@ -1,0 +1,442 @@
+{
+ "key": "au-federal-r5467",
+ "title": "Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2015-09-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5467_ems_f2e5b475-4592-41f2-945e-71d91bdb9c5d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5467_ems_48e0d120-766c-42eb-8385-dcc5fd0ad44f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5467%22",
+   "document_date": "2015-05-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3843",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "question": "Russell Broadbent The question is that this bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-24/5"
+  },
+  {
+   "key": "federal-senate-3910",
+   "date": "2015-09-09",
+   "house": "senate",
+   "question": "Mitch Fifield I was indicating to colleagues before the interruption that, under the Growing Jobs and Small Business package, there will be additional support options for young people with a mental illness, as well as young refugees and other vulnerable young migrants. There will also be a number of trials to provide intensive support to disadvantaged job seekers who have multiple barriers to work. These additional supports will be complemented by services through jobactive, which include work experience and better access to wage subsidies. But, most importantly, this measure will only apply to stream A job-ready individuals—that is, someone who resides in a labour market region, with good employment opportunities, and who has reasonable language, literacy and numeracy skills and recent work experience. A further 2015 budget measure in the bill will cease the Low Income Supplement from 1 July 2017. The measure will cease a supplement that has a very low take-up rate and is administratively highly complex. Indeed, service delivery costs in administering this payment far exceed the financial benefit accrued by the eligible individual. Many of those who qualify for the payment will continue to receive the energy supplement, with their family tax benefit payment. The bill also takes the opportunity to reintroduce some amendments relating to indexation that are currently before the Senate. The first of these indexation amendments will maintain at level for three years the income-free areas for all working-age allowances, other than student payments and parenting payment single. The start date for this was to have been 1 July 2015. The second amendment will maintain at level for three years the income-free areas and other means test thresholds for student payments, including the student income bank limits, with a new start date of 1 January 2016. By not indexing thresholds, some customers will not receive increases to payments that would otherwise have occurred. Payments",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 14,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-09-09/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-312719",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015, arguing the one-month Newstart waiting period for under-25s, the lower Youth Allowance eligibility for 22–24 year olds, and the one-week waiting period for all working-age payments are cruel and unfair. Labor announced it will oppose most measures, citing youth unemployment at double the national average (56,800 long-term unemployed young people in 2014 vs. 19,500 in 2008) and noting budget forecasts of 6.5% unemployment, while supporting only the cessation of the Low Income Supplement and calling for the bill to be split."
+  },
+  {
+   "slug": "speech-312720",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill introducing a four-week waiting period for Newstart and other payments for job-ready young people under 25 from 1 July 2016, with exemptions for students, those with significant barriers, and hardship provisions, and contrasted the government’s $331 million youth employment strategy with Labor’s $21 million commitment."
+  },
+  {
+   "slug": "speech-312722",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the four-week waiting period for Newstart for under-25s, arguing exemptions make the measure modest and that it provides an incentive, while noting $18.3 million for work experience placements and $8.1 million in emergency relief."
+  },
+  {
+   "slug": "speech-312724",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015, arguing it would cut young people's income by $48 a week and impose a one-month waiting period for unemployment benefits, citing youth unemployment rates of 17.9% in northern Adelaide and 15.8% in the Barossa-Yorke-Mid North area."
+  },
+  {
+   "slug": "speech-314210",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The coalition government's bill introduces a revised four-week waiting period for young people accessing youth income support, replacing the previous six-month waiting period for those under 30. The government also announced a $330 million youth employment strategy to assist 45,000 young jobseekers annually, contrasting it with Labor's $21 million plan."
+  },
+  {
+   "slug": "speech-314211",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The bill would leave job seekers under 25 with no income for the first month and cut payments for 22–24 year olds by $48 per week, while youth unemployment in regions like Bendigo is 18.2% and the government lacks a jobs plan."
+  },
+  {
+   "slug": "speech-314212",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015, part of the Abbott government's Growing Jobs and Small Business package, introduces a four-week waiting period for Newstart for under-25s with exemptions for students, people with disabilities, pregnant women, and others, alongside $18.3 million for additional work experience places and $8.1 million in emergency relief funding."
+  },
+  {
+   "slug": "speech-314213",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it would cut income for under-25 job seekers by at least $48 per week, push 22–24 year olds onto lower youth allowance, and leave young people with no income for four weeks, which would increase poverty, debt, and housing stress in communities like Lalor where youth unemployment is high."
+  },
+  {
+   "slug": "speech-314214",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill's one-month waiting period for job-ready under-25s to access youth allowance sends a moderate message to encourage young people to take any job, citing youth unemployment over 20% in their Upper Spencer Gulf electorate, South Australia's 7.6% unemployment rate, and 198,000 457 visa holders filling jobs Australians avoid."
+  },
+  {
+   "slug": "speech-314219",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's policies failed to reduce youth unemployment and announced a four-week waiting period for youth allowance from July 2016, with exceptions for students and those with significant barriers, alongside funding of $20 million for work experience, $20 million for youth mental health, $22.1 million for young migrants and refugees, $18.9 million for parents, and $8.1 million in emergency relief, while praising SYC, Woolworths, and Roger Drake for employing young people."
+  },
+  {
+   "slug": "speech-314221",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015 would cut youth allowance and Newstart eligibility, impose a four-week waiting period for new claimants, and abolish the low-income supplement, harming young job seekers. They cited a 20% youth unemployment rate in Scullin and stated Labor would oppose the cuts, calling the government's approach \"ideology over evidence.\""
+  },
+  {
+   "slug": "speech-314222",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that addressing youth unemployment requires four elements: skills and training, opportunities, services and support, and a good attitude. He announced support for the bill's measures, including a four-week waiting period from 1 July 2016 for job-ready young people under 25 applying for youth allowance, with exemptions for students and those with significant barriers, and highlighted vocational education programs at schools in his electorate of Cowan."
+  },
+  {
+   "slug": "speech-314223",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015 is punitive, not about job readiness, and would impose a one-month Newstart waiting period and a cut of at least $48 per week for some young job seekers. They cited youth unemployment at 13.5% (280,000 young Australians) and NATSEM modelling showing nine out of 10 lowest-income families lose under the budget while nine out of 10 wealthiest benefit."
+  },
+  {
+   "slug": "speech-314224",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor’s past government created $667 billion in debt and near‑$50‑billion annual deficits, causing high youth unemployment, and supported the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015 to require young job‑seekers to actively pursue work rather than rely on welfare, while criticising Labor and the member for Lilley for opposing labour market flexibility."
+  },
+  {
+   "slug": "speech-314227",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015, arguing its one-month waiting period for youth allowance and Newstart would push young job seekers into poverty and increase welfare dependency, citing concerns from the National Welfare Rights Network and ACOSS. The speaker also noted that youth unemployment and intergenerational unemployment grew under the Howard government and have risen again under the current government."
+  },
+  {
+   "slug": "speech-314228",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The member for Petrie argued that the bill's four-week waiting period for youth income support is reasonable and includes safety nets, and that the government's changes—including lowering the age from 30 to 25 at a cost of $1.9 billion—are necessary for budget sustainability and to prevent welfare dependency. He criticised the opposition for increasing debt and taxes, and promoted the government's small business package as a jobs plan."
+  },
+  {
+   "slug": "speech-314229",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015 is a punitive budget cut rather than a genuine solution to youth unemployment, stating that withholding Newstart allowance for one month will not help young people find work. They criticised the government for cutting programs like Youth Connections and Gonski school funding, and for failing to invest in skills training, apprenticeships, and STEM education, while noting that 20,000 Australians work in Silicon Valley due to domestic skill shortages."
+  },
+  {
+   "slug": "speech-314230",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015, introducing a four-week waiting period for job-ready under-25s with exemptions for students and those with barriers, and highlighted a $331 million youth employment strategy including a $212 million transition to work program and a $6,500 wage subsidy. He also criticised the previous Labor government's debt and deficit record."
+  },
+  {
+   "slug": "speech-314231",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker condemned the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015, arguing it would leave job seekers under 25 with no income for a month and push young people into poverty. They cited 54,000 affected youth, 20% youth unemployment in south-west Sydney, and cuts to Newstart and homelessness services, opposing the government's approach as cruel and economically harmful."
+  },
+  {
+   "slug": "speech-314232",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it would cut Newstart eligibility for 22–24 year olds from $519.20 to $426.80 per fortnight and impose a four-week waiting period with no income support, worsening already-high youth unemployment (14% nationally, 14.3% in Queensland) and citing $500 million in cuts to Indigenous programs."
+  },
+  {
+   "slug": "speech-314235",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015, which would impose a month-long waiting period for under-25 job seekers, raise the Newstart age from 22 to 24, and end the low-income supplement, citing 18.6% youth unemployment in the Hunter region and warning of financial hardship; they also announced $62,000 in emergency relief funding for Hunter storm-affected areas."
+  },
+  {
+   "slug": "speech-314650",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill would encourage young job seekers to find work by introducing a four-week waiting period for unemployment payments, with exemptions, and that it is part of a broader $375 million support package; he contrasted the coalition’s record of 280,000 jobs created and 300,000 fewer unemployed under the previous coalition government with Labor’s 200,000 increase in unemployment and 519,000 small business jobs lost."
+  },
+  {
+   "slug": "speech-314657",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The speaker argued for extending the waiting period for Youth Allowance for job seekers aged 16–25 to four weeks, and cited a meeting with Community Employers WA and VisAbility Guide Dogs WA, noting a KPMG cost-benefit analysis showing $5.58 of economic value per dollar invested in VisAbility’s employment program."
+  },
+  {
+   "slug": "speech-314660",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Youth Employment and Other Measures) Bill 2015, arguing it unfairly denies young Australians income while employers like Baiada use 417 working holiday visas to bypass entry-level jobs, citing a Fair Work Ombudsman report that found Baiada obstructed investigations and used labour‑hire contractors with fabricated records."
+  }
+ ],
+ "acts": []
+}

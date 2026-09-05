@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1148",
+ "title": "Australian Broadcasting Corporation Amendment (Appointment of Directors) Bill 2018",
+ "short_title": "Australian Broadcasting Corporation Amendment (Appointment of Directors) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-10-17",
+ "originating_house": "senate",
+ "sponsor": "STORER, Sen Tim",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10909",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1148%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1148%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1148%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1148_ems_ed7e3a75-6981-442e-9685-e04a7849343c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1148%22",
+   "document_date": "2018-10-17",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-10-17",
+  "sentences": [
+   "This bill aims to make the process for choosing non-executive members of the ABC's board more independent and transparent.",
+   "It would change the appointment rules to match the merit-based system that was introduced by a 2012 law.",
+   "The new rules would start the day after the bill becomes law."
+  ],
+  "changes": [
+   "It would strengthen the independence and autonomy of the director appointment process.",
+   "It would increase transparency and integrity in how non-executive directors are chosen.",
+   "It would align the appointment process with the merit-based arrangements from 2012."
+  ],
+  "affected": "The ABC and the people appointed as non-executive directors to its board.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:51Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

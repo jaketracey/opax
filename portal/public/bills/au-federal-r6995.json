@@ -1,0 +1,595 @@
+{
+ "key": "au-federal-r6995",
+ "title": "Infrastructure Australia Amendment (Independent Review) Bill 2023",
+ "short_title": "Infrastructure Australia Amendment (Independent Review) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2023-12-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-12-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6995_ems_9e24e043-1d7c-4072-9c76-eb4e1734825d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6995%22",
+   "document_date": "2023-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00117",
+   "document_date": "2023-12-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-22",
+  "sentences": [
+   "This bill would change the law that sets up Infrastructure Australia, aiming to turn it into a more effective advisory body for the federal government.",
+   "It would give the agency three Commissioners instead of a Board, clarify its role, and redefine its main tasks such as auditing infrastructure and evaluating projects.",
+   "The changes follow the government's response to an independent review announced in December 2022, and transitional rules would keep earlier IA products valid."
+  ],
+  "changes": [
+   "The bill replaces the IA Board with three Commissioners who oversee the agency's work.",
+   "It adds a new object clause to the Act that states IA's purpose is to advise the government.",
+   "It redefines IA's functions to include audits, project evaluations, infrastructure lists, and a power to conduct inquiries into national infrastructure matters."
+  ],
+  "affected": "Infrastructure Australia and the Australian Government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8114",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an amendment introduced by Gippsland MP [Darren Chester](https://theyvoteforyou.org.au/people/representatives/gippsland/darren_chester) (Nationals), which means it failed. The amendment was to the usual second reading motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > >> *\"whilst not declining to give the bill a second reading, the House:* >> >> *(1) notes this Government's record of cancellations, cuts and delays to infrastructure projects across Australia;* >> >> *(2) criticises the Government's failure to adhere to processes of assessing infrastructure investment projects they set themselves before the 2022 election by agreeing to invest $2.2 billion in the Melbourne Suburban Rail Loop and $2.5 billion in the Brisbane Arena without first obtaining advice from Infrastructure Australia; and* >> >> *(3) notes the nation-building and economy strengthening $120 billion 10-year pipeline of infrastructure investments inherited by the Government upon its election in May 2022\".*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 84,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-24/1"
+  },
+  {
+   "key": "federal-representatives-8115",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2023-05-24.11.1) introduced by Gippsland MP [Darren Chester](https://theyvoteforyou.org.au/people/representatives/gippsland/darren_chester) (Nationals), which means it failed. ### What does this amendment do? Mr Chester [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.11.1): > *This amendment is an important, practical and fair measure that will ensure that regional Australia has a strong voice on the board of Infrastructure Australia. In appointing the commissioners on the board of Infrastructure Australia, our amendment requires that the minister must ensure that at least one of the commissioners has a substantial connection or substantial experience in a regional area through business, industry or community involvement. The federal coalition urges the House to support this amendment.* ### Amendment text > *(1) Schedule 1, item 22, page 12 (after line 25), after subsection 8(2), insert:* > >> *(2A) In appointing the Commissioners, the Minister must ensure that at least one of the Commissioners has a substantial connection to, or substantial experience in, a regional area through business, industry or community involvement.*",
+   "stage": "Consideration in detail",
+   "ayes": 77,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-24/2"
+  },
+  {
+   "key": "federal-representatives-8116",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "question": "Infrastructure Australia Amendment (Independent Review) Bill 2023 - Consideration in Detail - Publication requirement + Post-completion cost data",
+   "stage": "Consideration in detail",
+   "ayes": 84,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 99
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-24/3"
+  },
+  {
+   "key": "federal-representatives-8117",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2023-05-24.21.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means they failed. ### What do the amendments do? Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.21.1): > *These amendments replicate an amendment moved by the Prime Minister as the shadow minister for infrastructure in 2014. My thinking and my goals are the same as the Prime Minister's thinking and goals were at that time. The goal is to ensure that the government only invests in infrastructure projects that create benefits that are greater than the costs. To achieve this these amendments require that Infrastructure Australia cannot include projects on the infrastructure priority list unless they have undertaken a cost-benefit analysis and that analysis has returned a positive benefit. To ensure these analyses are undertaken in a reliable and consistent way without the selection of favourable variables the amendments require Infrastructure Australia to publish a standard methodology which must be used by proponents. The amendments then create the requirement that the Commonwealth not provide public funding to major projects which are not on the priority list.* > > *In line with the Prime Minister's amendment back in 2014, a major project is defined as one worth more than $100 million.* ### Amendment text See [OpenAustralia.org.au](https://www.openaustralia.org.au/debate/?id=2023-05-24.21.1) for the text of the amendments.",
+   "stage": "Consideration in detail",
+   "ayes": 64,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-24/4"
+  },
+  {
+   "key": "federal-representatives-8118",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "question": "Infrastructure Australia Amendment (Independent Review) Bill 2023 - Consideration in Detail - Community and transparency",
+   "stage": "Consideration in detail",
+   "ayes": 50,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 47,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 66
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-24/5"
+  },
+  {
+   "key": "federal-representatives-8119",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2023-05-24.38.1) introduced by Fowler MP [Dai Le](https://theyvoteforyou.org.au/people/representatives/fowler/dai_le) (Independent), which means they failed. ### What do these amendments do? Ms Le [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-24.38.1): > *Overall, my amendments seek to ensure that the government think about the plan for infrastructure in communities where there are large influxes of migrants and refugees, such as in electorates like Fowler. We have had over 10,000 refugees settle in our city in recent years with no infrastructure planning in place to deal with the growth of the community.* > > *Amendments (1) and (2) refer to the auditing responsibilities of Infrastructure Australia to ensure that the decisions they make will have particular regard to migrant and refugee settlement policies. I don't understand why communities like ours, who have had to shoulder the challenges of settling refugees and migrants, miss out on resources that would enable these newly arrived migrants or refugees to one day be able to stand on their own two feet and contribute back to this society. This amendment may be specific, but migrant and refugee policy ultimately affects Australians currently living here. We are about to bring in 1.5 million people, and therefore I would say that infrastructure is critical to sustaining the influx and the settlement of migrants.* > > *Amendment (7) refers to the particular clause in which Infrastructure Australia allows for affirmative action in relation to the appointment of women in their commission and advisory board. I really urge the government to also consider this point with relation to the appointment of people of culturally and linguistically diverse lived experience who have experience of infrastructure.* ### Amendment text > *(1) Schedule 1, item 4, page 4 (line 3), after \"growth\", insert \",",
+   "stage": "Consideration in detail",
+   "ayes": 42,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 58
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-24/6"
+  },
+  {
+   "key": "federal-representatives-8120",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "question": "Infrastructure Australia Amendment (Independent Review) Bill 2023 - Consideration in Detail - Transparency",
+   "stage": "Consideration in detail",
+   "ayes": 48,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 64
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-24/7"
+  },
+  {
+   "key": "federal-representatives-8121",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "question": "Infrastructure Australia Amendment (Independent Review) Bill 2023 - Consideration in Detail - Appointments",
+   "stage": "Consideration in detail",
+   "ayes": 57,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 51,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 73
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-24/8"
+  },
+  {
+   "key": "federal-senate-8573",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2023-12-05.16.1) introduced by Victorian Senator [Bridget McKenzie](https://theyvoteforyou.org.au/people/senate/victoria/bridget_mckenzie) (Nationals) to the Greens amendment (6), which means it failed and the Greens amendment will remain as it is. ### Amendment text > *(1) After subsection 5DA(2), insert:* > > *Initial assessment* > >> *(2A) Infrastructure Australia must conduct an assessment under this section, and prepare a report on the assessment, in relation to projects covered by subsection (2) that are commitments of the Commonwealth Government first made on or after 22 May 2022.* >> >> *(2B) Infrastructure Australia must cause a copy of the report on the assessment under subsection (2A) to be tabled in each House of the Parliament:* >> >>> *(a) within 3 months after the commencement of this section; or* >>> >>> *(b) if no sitting day of the relevant House occurs within that period and after the report is finalised—on the next sitting day after the end of that period.* > > *Annual assessments* ### Original Greens amendment > *(6) Schedule 1, item 4, page 7 (after line 29), after section 5D, insert:* > > *5DA Functions — assessments of certain nationally significant infrastructure projects without prior evaluation* > > *(1) For the purposes of paragraph 5(d), Infrastructure Australia has the function of assessing, and reporting on, projects covered by subsection (2).* > > *(2) A project is covered by this subsection if:* > >> *(a) it is a project for investment in, or enhancements to, nationally significant infrastructure; and* >> >> *(b) the project involves expenditure by or on behalf of the Commonwealth; and* >> >> *(c) the Commonwealth Government's total expenditure involved in the project is more than $250 million; and* >> >> *(d) the Commonwealth Government has committed to the project without prior evaluation (or endorsement of evaluation) of a proposal for the projec",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829773",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Bill 2023, the Infrastructure Australia Amendment (Independent Review) Bill 2023, the Family Law Amendment Bill 2023, the Family Law Amendment (Information Sharing) Bill 2023, and the Crimes and Other Legislation Amendment (Omnibus) Bill 2023 were referred to the Federation Chamber for further consideration at the adjournment of the debate on the second reading of each bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Infrastructure Australia Amendment (Independent Review) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00117",
+   "assent_date": "2023-12-14"
+  }
+ ]
+}

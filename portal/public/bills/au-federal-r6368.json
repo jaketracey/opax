@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-r6368",
+ "title": "Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2019",
+ "short_title": "Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-10-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6368_ems_e5852f78-cda2-4ad7-bcc1-8a6bf4367b20%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6368%22",
+   "document_date": "2019-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00078",
+   "document_date": "2019-10-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-24",
+  "sentences": [
+   "This bill would let workers with more than one employer avoid accidentally exceeding their tax-advantaged superannuation contribution limit.",
+   "Employees could ask the Commissioner for a certificate that stops a particular employer from having to make super contributions, and instead negotiate for extra pay or other benefits.",
+   "The change applies to the Superannuation Guarantee (Administration) Act 1992."
+  ],
+  "changes": [
+   "Allows individuals to opt out of the superannuation guarantee regime for a specific employer.",
+   "Creates a process for employees to apply for an employer shortfall exemption certificate.",
+   "Lets employees receive additional cash or non-cash remuneration instead of super contributions."
+  ],
+  "affected": "Workers with multiple employers and their employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-380816",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's three measures to prevent unintentional breaches of concessional contribution caps, close loopholes on non-arms-length income, and adjust limited recourse borrowing rules, but argued the government must address the $6 billion in unpaid superannuation affecting 3 million workers annually."
+  },
+  {
+   "slug": "speech-380817",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The government argued the Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2019 will allow people with multiple employers to apply for an ATO exemption certificate to avoid breaching the $25,000 concessional cap, receiving take-home pay instead. The bill also targets non-arms-length expenses and limited recourse borrowing arrangements to prevent tax advantages and gaming of the superannuation system."
+  },
+  {
+   "slug": "speech-380818",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "Labor supports the bill tightening superannuation rules on multiple employers, non-arms-length income, and limited recourse borrowing arrangements. The speaker also argued the government cannot be trusted to increase the superannuation guarantee to 12%, noting the earlier freeze at 9.5% under the Abbott government."
+  },
+  {
+   "slug": "speech-380824",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2019 was supported, along with an amendment by the member for Kingsford Smith, as it removes a controversial superannuation guarantee amnesty and includes measures to prevent unintentional breaches of concessional contributions caps for multiple-employer workers and tighten non-arms-length expenditure rules."
+  },
+  {
+   "slug": "speech-380825",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The member supported the Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2019 as a technical integrity measure, but stressed the need for broader action on superannuation adequacy and returns, highlighting that women have significantly lower balances (e.g., $157,050 vs $270,710 for those aged 60–64) and that five million members are stuck in underperforming funds, costing $2.6 billion annually in unnecessary fees from unintended multiple accounts."
+  },
+  {
+   "slug": "speech-380826",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2018 Superannuation Measures No. 1) Bill 2019 allows employees with multiple employers to opt out of the superannuation guarantee to avoid breaching the concessional contribution cap, and prevents related-party transactions and limited recourse borrowing arrangements from circumventing contribution caps, effective from 1 July 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2018 Superannuation Measures No. 1) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00078",
+   "assent_date": "2019-10-02"
+  }
+ ]
+}

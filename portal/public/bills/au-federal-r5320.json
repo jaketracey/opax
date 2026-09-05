@@ -1,0 +1,247 @@
+{
+ "key": "au-federal-r5320",
+ "title": "Australian Sports Anti-Doping Authority Amendment Bill 2014",
+ "short_title": "Australian Sports Anti-Doping Authority Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-07-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2014-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5320_ems_a62f9a50-b726-4231-b390-8353e6fbb0fd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5320%22",
+   "document_date": "2014-07-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00121",
+   "document_date": "2014-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-07-16",
+  "sentences": [
+   "The bill would update Australia's anti-doping laws to match the revised World Anti-Doping Code and International Standards that take effect on 1 January 2015.",
+   "It would amend the Australian Sports Anti-Doping Authority Act to allow regulations creating a new 'Prohibited Association' doping violation, extend the time to start action on violations from eight to ten years, expand the medical advisory committee to include review members, and simplify information sharing rules.",
+   "The explanatory memorandum states that most changes will be made to regulations and sporting organisations' policies, with only some amendments to the Act."
+  ],
+  "changes": [
+   "Creates a new anti-doping rule violation for athletes associating with certain banned support persons.",
+   "Extends the limitation period for commencing action on a doping violation from eight to ten years.",
+   "Expands the Australian Sports Drug Medical Advisory Committee to include three members with the sole function of reviewing decisions on therapeutic use exemptions.",
+   "Requires at least one committee member to have experience in caring for athletes with impairments.",
+   "Repeals current distinctions between types of protected information and restructures information sharing around a single concept of protected information."
+  ],
+  "affected": "The Australian Sports Anti-Doping Authority, national sporting organisations, athletes, and athlete support persons.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-301180",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301181",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301182",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301183",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301186",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301188",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301189",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301244",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301245",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301246",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301247",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Sports Anti-Doping Authority Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00121",
+   "assent_date": "2014-11-26"
+  }
+ ]
+}

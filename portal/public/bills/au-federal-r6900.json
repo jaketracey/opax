@@ -1,0 +1,173 @@
+{
+ "key": "au-federal-r6900",
+ "title": "Atomic Energy Amendment (Mine Rehabilitation and Closure) Bill 2022",
+ "short_title": "Atomic Energy Amendment (Mine Rehabilitation and Closure) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science and Resources",
+ "status": "passed",
+ "status_as_of": "2022-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6900_ems_8de21757-bc1b-45a0-978e-f6818f83e91e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6900%22",
+   "document_date": "2022-09-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00063",
+   "document_date": "2022-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-08",
+  "sentences": [
+   "The bill would let the Minister keep the existing rules for the Ranger Uranium Mine in the Northern Territory after mining stopped and full rehabilitation began.",
+   "It would allow the Minister to give the mine operator a new Rehabilitation Authority for rehabilitation, remediation and monitoring, or extend the current authority beyond 2026.",
+   "The bill would also let the Minister declare that an authority no longer applies to a part of the mine site once the operator has met rehabilitation requirements for that part."
+  ],
+  "changes": [
+   "The Minister can confer a Rehabilitation Authority on the mine operator for rehabilitation, remediation and monitoring at Ranger.",
+   "The Minister can extend the period of the existing Section 41 Authority to authorise rehabilitation beyond 2026.",
+   "The Minister can declare that a Part III Authority no longer applies to a part of the Ranger Project Area when rehabilitation requirements are satisfied."
+  ],
+  "affected": "The mine operator (currently Energy Resources of Australia Ltd), the Northern Land Council, Traditional Owners, and the Australian Government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-422503",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The government introduced the Atomic Energy Amendment (Mine Rehabilitation and Closure) Bill 2022 to extend Ranger Uranium Mine's regulatory framework beyond January 2026, allowing operator Energy Resources of Australia (ERA) to continue rehabilitation and enabling progressive closure of rehabilitated land parcels, without recommencing mining or altering environmental standards."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Atomic Energy Amendment (Mine Rehabilitation and Closure) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00063",
+   "assent_date": "2022-11-29"
+  }
+ ]
+}

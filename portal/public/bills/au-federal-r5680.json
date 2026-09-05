@@ -1,0 +1,483 @@
+{
+ "key": "au-federal-r5680",
+ "title": "Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016",
+ "short_title": "Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2016-10-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5680_ems_a53702c5-cc84-4420-ac1a-2e299a9a97a9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5680%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00062",
+   "document_date": "2016-10-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-08-31",
+  "sentences": [
+   "The bill would stop workplace agreements from including clauses that limit how emergency services groups manage their volunteers.",
+   "It does this by adding new kinds of banned terms to the Fair Work Act that cannot be in agreements covering designated emergency bodies.",
+   "The bill also lets some volunteer organisations make written views to the Fair Work Commission about agreements affecting volunteers."
+  ],
+  "changes": [
+   "Adds 'objectionable emergency management terms' to the list of unlawful terms in enterprise agreements.",
+   "Bans terms that restrict a body's ability to deploy volunteers, provide equipment, or manage volunteer operations.",
+   "Allows volunteer representative bodies to submit comments to the Fair Work Commission on relevant agreements or determinations."
+  ],
+  "affected": "Designated emergency management bodies, their volunteers, and volunteer representative organisations are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:46:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4325",
+   "date": "2016-10-10",
+   "house": "senate",
+   "question": "Doug Cameron On behalf of the opposition I rise to oppose the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016. We do this because the legislation is ambiguous, it is unclear and it is imprecise. This legislation was designed to give the coalition a political weapon during an election campaign. That is simply what this bill is about. If you are wondering what the situation is in terms of the proposed enterprise agreement that was the genesis of this bill, all you have to do is go to the words of the CFA chief fire officer, Mr Steve Warrington, who was unequivocal in his view that the proposed EBA would not impact the CFA's firefighting abilities. He stated: I am really confident that, during a firefight, operations will not be compromised. What is this about? The chief fire officer is saying that operations will not be compromised, yet we have heard all of the argument from the Prime Minister, from Minister Cash, in relation to what a terrible thing this agreement would be. Yet the chief fire officer in Victoria said: I am really confident that, during a firefight, operations will not be compromised. Not only is this bill ambiguous, unclear and imprecise; it goes to a number of fundamental issues in terms of both the state legislation and the federal legislation. Every senator in this chamber who truly believes in state rights must vote against this bill. This is clearly an attack on state rights. Every senator who claims to support small government must vote against this bill. Every senator who has argued against government red tape—and there are plenty of them over here—must vote against this bill. Every senator who has argued against undue government interference against individuals and businesses should vote against this bill. Every senator who wants a sensible, sustainable and fair resolution to the Victorian firefighters dispute must vote against this bill. Every senator who wants the focus of all Victorian firefighters, both volunteer",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 46,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-10-10/1"
+  },
+  {
+   "key": "federal-senate-4328",
+   "date": "2016-10-10",
+   "house": "senate",
+   "question": "Doug Cameron Minister, your interview with Mr David Speers on Sky News was generally described as an excruciating train wreck. Can you explain to the Senate what you could not explain to David Speers and take us to specific clauses in the UFU agreement which could result in the destruction of the CFA. Michaelia Cash Senator Cameron, I am sure you are aware that Volunteer Fire Brigades Victoria have prepared a substantial document going through, on a clause-by-clause basis, what they say will be the impact on the CFA of the proposed clauses. So there is that document. I believe it would have been part of the Senate committee's documents. The committee would have already seen that document. I can take you through some of the clauses that have been raised as being of particular concern to Volunteer Fire Brigades Victoria. For example, clause 21 sets out the extensive consensus based consultation process required under the agreement. The clause's operation means that in conjunction with, for example, clause 41 all current CFA policies will be reviewed and only remade through a process where union consensus is required. In terms of evidence given in particular to the recent Senate committee that inquired into the bill, volunteers questioned why the proposed agreement's consultation term gives the union a veto power over changes under the agreement, including policies directly relevant to volunteers. I will take you through a number of other clauses shortly, but I will just take a step back. The first question one needs to ask is: what is an enterprise agreement and to whom does an enterprise agreement apply? I am sure you would be aware, Senator Cameron, that an enterprise agreement is an agreement that deals with the terms and conditions of the employees to which the enterprise agreement is relevant. Volunteer Fire Brigades Victoria have obviously raised concerns about the impact of clauses in the agreement on the volunteers. I will take you now to clause 44. Clause 44",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 44,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-10-10/4"
+  },
+  {
+   "key": "federal-senate-4329",
+   "date": "2016-10-10",
+   "house": "senate",
+   "question": "Michaelia Cash I move: That this bill be now read a third time. Stephen Parry The question is that motion be agreed to.",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 44,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-10-10/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332740",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The government moved the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016 to protect volunteer firefighters from union control, specifically targeting the United Firefighters Union’s agreement with the Victorian Country Fire Authority. The bill expands unlawful terms in enterprise agreements to prohibit restrictions on volunteer management, deployment, and consultation requirements, and grants volunteer organisations a right to make submissions to the Fair Work Commission."
+  },
+  {
+   "slug": "speech-334019",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016, arguing it was an opportunistic federal intervention in a state industrial dispute between Victoria's Country Fire Authority and the United Firefighters Union, and that the government could not explain how the bill would affect volunteers."
+  },
+  {
+   "slug": "speech-334077",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016 would prohibit enterprise agreements from containing terms that undermine volunteer emergency service bodies or that conflict with state laws, specifically to protect Victorian Country Fire Authority volunteers. The speaker argued the current proposed enterprise agreement with the United Firefighters Union would sideline volunteers, require union consent on operational changes and uniforms, and create dangerous command structures, and noted that CFA leadership resigned and the board was sacked over the agreement."
+  },
+  {
+   "slug": "speech-334080",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016 is based on false claims about fire services in outer metropolitan Melbourne, particularly that the enterprise agreement does not require volunteers to wait for paid firefighters before fighting fires and that paid firefighters can report to volunteer incident controllers."
+  },
+  {
+   "slug": "speech-334085",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The bill would amend the Fair Work Act to define \"objectionable emergency management terms\" and prohibit enterprise agreements from undermining volunteer emergency services, citing clauses in the UFU-CFA EBA and the resignations of Jane Garrett, Lucida Nolan and others. The amendment applies to firefighting and SES organisations in Victoria, the ACT and the Northern Territory."
+  },
+  {
+   "slug": "speech-334086",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 45th Parliament is sitting too little and that the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016 is an embarrassingly thin, politically motivated bill that the government cannot defend, citing Minister Michaelia Cash’s inability to explain its effect when questioned by journalist David Speers."
+  },
+  {
+   "slug": "speech-334090",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016 was argued as essential to protect the volunteer spirit, citing flood relief in Coleraine and Casterton by CFA and SES volunteers. The speaker criticised union interference, noting that Peter Marshall met with crossbench senators to oppose the bill."
+  },
+  {
+   "slug": "speech-334094",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016 is hypocritical, restricting bargaining while the government is incompetent in bargaining with the Australian Public Service, and cited the marriage equality plebiscite bill as another example of the Liberals sacrificing principles for political expediency."
+  },
+  {
+   "slug": "speech-334098",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-334101",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016, citing the reliance of their electorate of Mayo on approximately 3,500 Country Fire Service volunteers across 75 brigades. They noted reservations about potential constitutional overreach and state autonomy, and welcomed a Senate committee inquiry into unintended consequences."
+  },
+  {
+   "slug": "speech-334102",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016 is a rushed, poorly-drafted political move to undermine unions rather than protect volunteers, noting a pending Supreme Court case in Victoria and criticising the government for creating division between career and volunteer firefighters. They highlighted that the bill duplicates existing definitions in section 109 of the Fair Work Act and gives the government power to decide which organisations are covered via regulations, while the minister could not identify specific clauses harming volunteers."
+  },
+  {
+   "slug": "speech-334103",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The government introduced the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill 2016 to protect CFA volunteers from union control, citing the resignations of Victorian Labor minister Jane Garrett, CFA CEO Lucinda Nolan, and chief fire officer Joe Buffone, and the sacking of the CFA board."
+  },
+  {
+   "slug": "speech-334173",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The House passed the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill, which removes clauses from Victoria’s CFA enterprise agreement that gave unions power over volunteer firefighters. The speaker also noted the passage of the Budget Savings (Omnibus) Bill, saving $6.3 billion, and reported 3.3% economic growth with over 200,000 jobs created in the past year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Respect for Emergency Services Volunteers) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00062",
+   "assent_date": "2016-10-12"
+  }
+ ]
+}

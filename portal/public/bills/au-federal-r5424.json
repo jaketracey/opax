@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5424",
+ "title": "Food Standards Australia New Zealand Amendment Bill 2015",
+ "short_title": "Food Standards Australia New Zealand Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2015-09-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5424%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5424%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5424%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5424_ems_7f92da07-957e-424d-b8ab-103960a8e7df%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5424%22",
+   "document_date": "2015-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-319358",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-319359",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The bill amends the Food Standards Australia New Zealand Act 1991 to reflect the renaming of the food regulation forum, improve legislative clarity and regulatory efficiency, and change FSANZ Board composition and appointment processes to include a competitive selection method. Consequential changes to the Food Standards Australia New Zealand Regulations 1994 are also included."
+  }
+ ],
+ "acts": []
+}

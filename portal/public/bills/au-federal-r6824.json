@@ -1,0 +1,318 @@
+{
+ "key": "au-federal-r6824",
+ "title": "Social Services and Other Legislation Amendment (Pension Loans Scheme Enhancements) Bill 2021",
+ "short_title": "Social Services and Other Legislation Amendment (Pension Loans Scheme Enhancements) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6824_ems_32b849bf-af7d-49bc-8c53-9671fb43775e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6824%22",
+   "document_date": "2021-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00028",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7682",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-03-30.218.1) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read for a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. Because this vote failed, the usual second reading motion will remain unchanged. ### Amendment text > *At the end of the motion, add \", but the Senate notes that the Coalition Government has repeatedly tried to cut the pension, including pensioner concessions, the assets test and indexation, and attempted to increase the pension age to 70\".*",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 19,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-418371",
+   "speaker": "Linda Jean Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker moved a second reading amendment to the Social Services and Other Legislation Amendment (Pension Loans Scheme Enhancements) Bill 2021, arguing the Coalition has repeatedly attempted to cut pensions, including through changes to indexation, the assets test, and a proposed pension age increase to 70. The speaker welcomed the bill's introduction of a no negative equity guarantee and lump sum advance payments, but criticised the government for not fully addressing barriers to the scheme, noting take-up rose from 780 participants in 2018 to over 5,000 by September 2021, against a potential pool of around four million older Australians."
+  },
+  {
+   "slug": "speech-418373",
+   "speaker": "Rowan Eric Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Pension Loans Scheme Enhancements Bill 2021, which introduces a no-negative-equity guarantee and allows lump sum advances of up to 50% of the maximum pension rate twice a year (singles $12,580, couples $18,960), and rejected an amendment criticising the government’s record on pensioners."
+  },
+  {
+   "slug": "speech-418374",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services and Other Legislation Amendment (Pension Loans Scheme Enhancements) Bill 2021 makes some positive changes—including a no-negative-equity guarantee and two lump-sum advances per year—but does not address all flaws, such as excluding retirement village residents, and criticised the government's broader record of cuts and inaction on pensions."
+  },
+  {
+   "slug": "speech-418375",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The Social Services and Other Legislation Amendment (Pension Loans Scheme Enhancements) Bill 2021 will allow senior Australians to access capped lump sum advances from 1 July 2022, with a no-negative-equity guarantee ensuring participants never repay more than the equity in their property. The maximum advance is around $12,500 for singles and $18,964 for couples, based on current age pension rates."
+  },
+  {
+   "slug": "speech-418376",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill’s enhancements to the Pension Loans Scheme, including a reduced interest rate to 3.5% and new lump sum payments, but argued the Morrison government’s reforms were insufficient and that the government had repeatedly attempted to cut pensions and neglected older Australians’ needs, particularly in aged care."
+  },
+  {
+   "slug": "speech-418377",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The Pension Loans Scheme Enhancements Bill was defended against a Labor second-reading amendment, which was characterised as dishonest politics and misinformation. The speech also cited a Sydney Morning Herald investigation by Rob Harris alleging that some crossbenchers are fake independents and genuine Labor supporters."
+  },
+  {
+   "slug": "speech-418383",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the member for Mackellar had made no reference to the Social Services and Other Legislation Amendment (Pension Loans Scheme Enhancements) Bill 2021 after seven minutes of a 15-minute speech."
+  },
+  {
+   "slug": "speech-418386",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the opposition’s second reading amendment was a tactic to broaden debate, and criticised the opposition for accepting donations from a coal investor who bought a coalmine from Eddie Obeid, who had an adverse ICAC finding. The speaker asserted the government’s aim to improve pensioners’ lives through the Pension Loans Scheme Enhancements Bill, but claimed the opposition obstructs this."
+  },
+  {
+   "slug": "speech-418393",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Pension Loans Scheme enhancements are positive but insufficient, noting only 5,000 participants out of 4 million eligible Australians, and criticised the government for past pension cuts and a high interest rate that was reduced too late. They called for further changes to include land-lease community residents and for a change of government to better support older Australians."
+  },
+  {
+   "slug": "speech-418394",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The Morrison government's bill enhances the Pension Loans Scheme by introducing a no-negative-equity guarantee and allowing lump sum advances from 1 July 2022, aiming to give senior Australians more flexibility to use home equity for retirement income; the scheme has over 5,000 participants after a fivefold increase since 2019."
+  },
+  {
+   "slug": "speech-418395",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill expanding the Pension Loans Scheme but argued low uptake stems from complexity, conflicting Centrelink advice, and high interest rates, citing constituent Peter's experience; they also criticised the government for past pension cuts, including a 2015 asset test change affecting 370,000 pensioners, and for leaving out those in land lease communities."
+  },
+  {
+   "slug": "speech-418396",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-02-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Pension Loans Scheme Enhancements Bill 2021, which introduces a no-negative-equity guarantee from July 2022 and allows up to two capped lump sum advances (around $12,580 for singles, $18,960 for couples), but cautioned that changing rent assistance for age pensioners who own their house but lease land could harm their income."
+  },
+  {
+   "slug": "speech-419543",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The bill allows Australians over 65 to unlock home equity through fortnightly loan amounts and lump sum advances with a negative equity guarantee, and the interest rate was reduced from 4.5% to 3.9%—though still too high. The speaker also called for better phone service from Services Australia, a higher earnings cap for pensioners, increased pension amounts, and higher Commonwealth rent assistance."
+  },
+  {
+   "slug": "speech-419544",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The bill's enhancements to the Pension Loans Scheme were described as modest and overdue, with the speaker criticising the Coalition for a history of attempted pension cuts—including changes to the assets test affecting 370,000 pensioners by up to $12,000 a year, and multiple budget cuts since 2014 impacting millions."
+  },
+  {
+   "slug": "speech-419545",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The Social Services and Other Legislation Amendment (Pension Loans Scheme Enhancements) Bill 2021 was debated, introducing a no negative equity guarantee so participants repay no more than their property's equity, and allowing capped lump sum advances from annual loan payments. The government will also raise awareness of the scheme to help senior Australians use home equity to support retirement living standards."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Pension Loans Scheme Enhancements) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00028",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

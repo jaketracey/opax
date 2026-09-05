@@ -1,0 +1,517 @@
+{
+ "key": "au-federal-r5397",
+ "title": "Medical Research Future Fund Bill 2015",
+ "short_title": "Medical Research Future Fund Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2015-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5397_ems_0ed64332-f430-4688-97f9-317eeb8fafbc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5397_ems_677f85cd-8688-40e4-ae45-1384d9ac1fa6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5397_ems_6fbc9451-3cff-4716-8a63-059f5167bca7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5397_ems_b742940c-2492-4c2f-a582-5f4f3a6d6df8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5397%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00116",
+   "document_date": "2015-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "This bill and a related bill create a financial endowment called the Medical Research Future Fund to support medical research and innovation.",
+   "The bill as amended would set up an independent Australian Medical Research Advisory Board to develop a five-year strategy and biennial priorities for spending from the fund.",
+   "The Health Minister would report to Parliament every two years on all government medical research funding and how fund decisions align with the priorities."
+  ],
+  "changes": [
+   "Establishes the Medical Research Future Fund as a dedicated endowment for medical research and innovation.",
+   "Creates an independent Australian Medical Research Advisory Board to develop a five-year strategy and two-year priorities.",
+   "Requires the Health Minister to produce a biennial report to Parliament on medical research funding and alignment with the priorities.",
+   "Specifies that programme-level funding decisions by Cabinet must take account of the strategy and priorities.",
+   "Clarifies the National Health and Medical Research Council's role in disbursing fund money.",
+   "Allows fund payments to corporate Commonwealth entities, states, territories, universities, research institutes, not-for-profits and commercial enterprises."
+  ],
+  "affected": "All Australians who would benefit from additional investments in medical research and innovation, along with researchers, health institutions and other recipients of fund money.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:55:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3792",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-04/1"
+  },
+  {
+   "key": "federal-representatives-3821",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "question": "Russell Broadbent The question is that amendments (9) to (21) and (23), moved by the member for Ballarat, be agreed to. Bob Baldwin I reject these opposition amendments. I want to talk about how proud I am that this government is committed to ensuring that our nation remains at the very cutting edge of initiatives in medical research. We have done and will continue to do this through ensuring that our medical researchers are on the forefront of developing technologies, treatments and research. In last year's budget, we as a government committed to the creation of a $20 billion Medical Research Future Fund. This is, by far, the biggest endowment fund of its kind in the world and will be an asset to our nation, delivering benefits for all Australians now and well into the future. When I reflect on the initial purpose of the Medical Research Future Fund Bill 2015 and what it proposes, I think of the enormous benefits that can be delivered. This bill will fund vital research, which will enable more researchers and more scientists to discover and innovate new technologies and new medicines. I know that the Hunter Medical Research Institute, the HMRI, encourages innovation at all levels of health and medical research and that the institute will directly benefit from the establishment of this Medical Research Future Fund, which will provide a secure and reliable revenue stream for further medical research. The fund will enable our nation to support a sustainable health system into the future. The cure to breast cancer, the cure to brain cancer, might only be a number of years in the making. A financial injection such as this, into vital research, may project to such landmark findings that will shape the future and, importantly, save lives. They may only be a few years away. The Hunter Medical Research Institute recently began a project on virtual biopsies for prostate cancer that could bring new-found accuracy in the diagnosis and monitoring of the disease. This was done t",
+   "stage": "Consideration in detail",
+   "ayes": 52,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 51,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-22/2"
+  },
+  {
+   "key": "federal-representatives-3822",
+   "date": "2015-06-22",
+   "house": "representatives",
+   "question": "Mark Butler by leave—I move opposition amendments (1) to (8) and (22): (1) Clause 4, page 3 (lines 18 to 22), omit \"Initially, the Fund's investments are a portion of the investments of the Health and Hospitals Fund which was established under the Nation-building Funds Act 2008. Additional amounts may also be credited to the Medical Research Future Fund Special Account.\", substitute \"Amounts are credited to the Medical Research Future Fund Special Account in accordance with determinations by the responsible Ministers.\". (2) Clause 5, page 5 (lines 22 to 24), omit the definition of _Health and Hospitals Fund_. (3) Clause 5, page 5 (lines 25 to 28), omit the definition of _Health and Hospitals Fund Special Account_. (4) Clause 10, page 12 (lines 6 to 10), omit \"Initially, its investments are a portion of the investments of the Health and Hospitals Fund which was established under the _Nation__-building Funds Act 2008_. Additional amounts may also be credited to the Medical Research Future Fund Special Account.\", substitute \"Amounts are credited to the Medical Research Future Fund Special Account in accordance with determinations by the responsible Ministers.\". (5) Clauses 12 and 13, page 13 (line 9) to page 14 (line 9), omit the clauses. (6) Clause 15, page 15 (line 23), omit \"amounts referred to in paragraph 34(4)(a) are\", substitute \"amount referred to in paragraph 34(4)(a) is\". (7) Clause 19, page 19 (line 6), omit \"Agency; or\", substitute \"Agency.\" (8) Clause 19, page 19 (lines 7 to 9), omit subparagraph (iii). (22) Clause 34, page 27 (lines 15 to 20), omit paragraph (4)(a), substitute: These are important amendments in the context of massive cuts to the Health portfolio under this government—cuts of more than $60 billion to hospitals that over time will have a devastating impact, an inevitable impact on emergency department waiting times and elective surgery waiting times. Labor's opposition to the abolition of the Health and Hospitals Fund and the transfer of th",
+   "stage": "Consideration in detail",
+   "ayes": 52,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 51,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-22/3"
+  },
+  {
+   "key": "federal-senate-3874",
+   "date": "2015-08-12",
+   "house": "senate",
+   "question": "Jan McLucas Without going to specific amendments, I want to speak in generalities to start with. At the outset, I want to restate Labor's strong and absolute support for health and medical research in our country and for the establishment of a Medical Research Future Fund. But there are a number of issues in the bills that I outlined in my contribution on the second reading, when I outlined the concerns that Labor has had with these bills. I indicated in my speech on the second reading that Labor will be moving amendments. Those amendments were circulated a long time ago. At the first opportunity we had to circulate those amendments, we did, because Labor is interested in transparency. During Senator Di Natale's speech, he said that the Greens will vote for good ideas. I invite the Greens to have a look at the substance of our amendments and I invite them to be good to their word. In my speech on the second reading, I used the word 'messy' and said that this had been a messy process, that the gestation of these bills had been long and that the birth was going to be short and sharp. Well, it just got messier. We turn up today and we have another supplementary explanatory memorandum—tabled today We have 21 more amendments that were tabled at 9.30 this morning. They are complex amendments. We will go through the substance of those amendments. I talked about chaos and dysfunction in my second reading speech. Well, it has a 'C' and a 'D' as of this morning. As we know, the first bill had 20 amendments in the House of Representatives. They were passed in that place and we then got the bill and the consequential amendments bill. We had an inquiry just last Thursday. Who is running the show here? Just last Thursday we had an inquiry and then we had the bill appearing on the _Notice Paper_ on Monday morning. The report of that inquiry said: The committee recommends the bills be passed. It did not recommend that we need 21 more amendments, that we need another explanatory mem",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "earliest": 5,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-12/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-312198",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker argued the Medical Research Future Fund bill was rushed without consultation, lacks independent peer review or governance, and allows the government to direct $20 billion in funding to its own pet projects rather than primarily through the National Health and Medical Research Council as originally promised."
+  },
+  {
+   "slug": "speech-312201",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Medical Research Future Fund Bill 2015, which establishes a $20 billion fund by 2019-20 to provide long-term certainty for medical research, and highlighted benefits for Western Sydney including a $2.5 billion investment by the EJ Cooper Group creating 12,000 jobs at the Sydney Science Park, as well as specific research projects at the University of Western Sydney."
+  },
+  {
+   "slug": "speech-312204",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Medical Research Future Fund, starting with a $1 billion contribution from the Health and Hospitals Fund and projected to reach $20 billion by 2019-20, would distribute around $1 billion annually from 2022-23 to support medical research, including a proposed national centre for research into ageing and chronic care in the St George region."
+  },
+  {
+   "slug": "speech-312209",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The Medical Research Future Fund Bill 2015 was criticised for lacking consultation, independent oversight, and peer review, with a broad definition of medical research that could allow political misuse; the speaker noted the government cut $400 million from preventative health, $165 million from Indigenous health, and $500 million from dental programs, while the fund was initially set at $13.9 billion and the Chief Scientist was not consulted."
+  },
+  {
+   "slug": "speech-312214",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker defended the Medical Research Future Fund as a perpetual endowment fund using dividends, not capital, to finance medical research, and rejected accusations of pork-barrelling. They noted the fund will eventually reach $20 billion, with a five per cent return yielding $1 billion annually, and named numerous research institutes and disease areas that stand to benefit, while stating Australia currently allocates only 0.75 per cent of GDP to medical research compared to the OECD average."
+  },
+  {
+   "slug": "speech-312215",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The member argued the Medical Research Future Fund bill is flawed, lacking consultation, independent oversight, and peer review, and fails to deliver on its promise to direct earnings to medical research. They supported the Labor amendment moved by the member for Ballarat to ensure the fund meets its stated purpose."
+  },
+  {
+   "slug": "speech-312217",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Medical Research Future Fund Bill 2015 fails to address the systemic problem of irreproducible research, citing Amgen’s confirmation of only 6 out of 53 landmark papers and similar results at Bayer. He stressed that without mechanisms to ensure scientific integrity, the fund risks wasting public money and undermining the virtuous cycle between research and better patient outcomes."
+  },
+  {
+   "slug": "speech-312218",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The Medical Research Future Fund Bill 2015 establishes a dedicated fund for medical research, with the government supporting the legislation and awaiting Labor’s proposed amendments for detailed consideration."
+  },
+  {
+   "slug": "speech-312224",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The speaker moved opposition amendments to replace references to ministers with the Chief Executive Officer of the NHMRC in the Medical Research Future Fund Bill 2015, arguing that without these changes the bill lacks independent peer review and governance, leaves disbursement to ministerial discretion, and contradicts the government's own commitment to channel funds through the NHMRC."
+  },
+  {
+   "slug": "speech-314064",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker rejected opposition amendments and defended the $20 billion Medical Research Future Fund as the world's largest medical research endowment, citing specific benefits for the Hunter Medical Research Institute, including its work on virtual biopsies for prostate cancer, melanoma drugs, and sleep apnoea treatments."
+  },
+  {
+   "slug": "speech-314065",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Medical Research Future Fund Bill lacks governance, oversight, and an independent peer review process, allowing the government to direct funds to pet projects without consulting the medical research community. They noted the fund was created as an \"accounting trick\" by rebadging existing Future Fund money, and criticised the government for failing to implement the McKeon review’s strategic recommendations or consult bodies like the NHMRC."
+  },
+  {
+   "slug": "speech-314069",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "Presented a supplementary explanatory memorandum to the Medical Research Future Fund Bill 2015 and the Medical Research Future Fund (Consequential Amendments) Bill 2015, and sought leave to move government amendments on sheet HK145 to the Medical Research Future Fund Bill 2015."
+  },
+  {
+   "slug": "speech-314204",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-22",
+   "stage_hint": null,
+   "brief": "Amendments to the Medical Research Future Fund Bill 2015 were outlined to embed governance and accountability into legislation, creating an eight-member expert advisory board (including the NHMRC CEO) and establishing a five-year strategy, two-year priorities, and biennial parliamentary reports. The finance minister's role was clarified as a bursar acting on the health minister's instruction, with the health minister responsible for disbursement decisions."
+  },
+  {
+   "slug": "speech-315691",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-12",
+   "stage_hint": null,
+   "brief": "The Medical Research Future Fund Bill passed the Senate with amendment, and the government expects it to return to the House for passage, aiming to deliver an additional $1 billion annually to medical research from a $20 billion endowment."
+  },
+  {
+   "slug": "speech-315855",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-13",
+   "stage_hint": null,
+   "brief": "The House was asked to endorse the Speaker's statement on constitutional questions arising from Senate Message No. 343 concerning the Medical Research Future Fund Bill 2015."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Medical Research Future Fund Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00116",
+   "assent_date": "2015-08-26"
+  }
+ ]
+}

@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1049",
+ "title": "Criminal Code Amendment (Misrepresentation of Age to a Minor) Bill 2016",
+ "short_title": "Criminal Code Amendment (Misrepresentation of Age to a Minor) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-12",
+ "originating_house": "senate",
+ "sponsor": "KAKOSCHKE-MOORE, Sen Skye",
+ "sponsor_party": "Nick Xenophon Team",
+ "sponsor_person_id": "10854",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1049%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1049%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1049%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1049%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1049_ems_17b35293-b5c0-4ad2-b523-bdfa0d8b90f0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1049%22",
+   "document_date": "2016-10-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-12",
+  "sentences": [
+   "This bill creates a new crime for adults who lie about their age to someone they think is under 16, with the aim of getting that person to meet them or to commit another offence.",
+   "The offence applies to online messages and would start the day after the bill becomes law.",
+   "The bill picks 16 as the threshold because that matches the age at which most states and territories allow sexual activity."
+  ],
+  "changes": [
+   "The bill makes it an offence for someone over 18 to misrepresent their age in online communication to a person believed to be under 16, when done to encourage a meeting or with intent to commit an existing offence.",
+   "The bill applies the offence to online communications.",
+   "The bill sets the commencement for the day after Royal Assent."
+  ],
+  "affected": "Adults who use online communications to misrepresent their age to minors are affected, as are the minors they target.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:31Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

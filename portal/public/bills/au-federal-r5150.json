@@ -1,0 +1,242 @@
+{
+ "key": "au-federal-r5150",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Cash Bidding) Bill 2013",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Cash Bidding) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2013-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5150_ems_7902836e-30cb-4dca-94a9-446d8ac4dff3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5150%22",
+   "document_date": "2013-11-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00141",
+   "document_date": "2013-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-20",
+  "sentences": [
+   "This bill would change how offshore oil and gas exploration permits are allocated in certain areas, using a cash bidding system.",
+   "The government says this method would stop unnecessary exploration in regions where little or none is needed, and keep the release of those areas fair and efficient.",
+   "A reserve price for each block would be set by the Joint Authority before bids are invited, and could be either made public or kept secret."
+  ],
+  "changes": [
+   "Limits the ability to turn down a permit offer to the highest bidder, encouraging real bids.",
+   "Creates a separate pre-qualification step to check bidders' technical and financial ability before they place cash bids.",
+   "Adds a tie-breaker rule for when two or more cash bids are identical."
+  ],
+  "affected": "Companies that bid for offshore petroleum exploration permits in mature or known resource areas.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:06:24Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-280212",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280213",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280463",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280464",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280465",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280467",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280469",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280471",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826110",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826815",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "Moved to schedule non-controversial government bills for consideration from 12:45 pm, including amendments to the Australian Civilian Corps, Import Processing Charges, Grape and Wine Authority, Offshore Petroleum, Rural Research and Development, and Customs Anti-Dumping Commission. Also moved to set general business order for the day, prioritising Senator Moore's motion on pre-election commitments and government document orders."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Cash Bidding) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00141",
+   "assent_date": "2013-12-13"
+  }
+ ]
+}

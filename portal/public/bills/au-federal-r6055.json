@@ -1,0 +1,280 @@
+{
+ "key": "au-federal-r6055",
+ "title": "Veterans’ Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2018-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6055_ems_aa565d38-228c-440a-8c2e-4ca4d3db2f2d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5858984%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6055%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00017",
+   "document_date": "2018-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359681",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The bill introduces eight schedules of veteran-centric reforms, including $7.1 million over four years for family support services, a new veteran payment for approximately 830 veterans and 690 partners awaiting mental health claims, and a $3.6 million Coordinated Veterans' Care Program mental health pilot. Other measures include aligning catastrophic injury entitlements with civilian employees, automating qualifying service determinations, and extending medical treatment eligibility to certain ADF members who served in Japan after World War II."
+  },
+  {
+   "slug": "speech-360379",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018 implements two Senate inquiry recommendations and a Jesse Bird inquiry recommendation, including additional family support services and a veteran payment of up to $913 per fortnight for those awaiting mental health claim determinations. The speaker also criticised the government's freeze on the repatriation medical fee schedule and highlighted a 30% veteran unemployment rate requiring further action."
+  },
+  {
+   "slug": "speech-360380",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-360705",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, highlighting two initiatives: improved family support with childcare assistance and up to two years of counselling for spouses of deceased veterans, and a new income support payment of $994 per fortnight for singles or $774.20 per couple for veterans awaiting mental health claims, plus $133 fortnightly rent assistance, expected to benefit around 830 veterans and partners in the first year."
+  },
+  {
+   "slug": "speech-360706",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The member for Longman supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, which includes interim incapacity payments for mental health claims (up to $913 or $713 for partnered veterans), $10,000 annual childcare assistance, a mental health pilot for rural areas, and automation of qualifying service determinations—measures drawn from the Senate inquiry into veteran suicide. The bill responds to the death of Afghan war veteran Jesse Bird, who had $5.20 in his bank account when he died."
+  },
+  {
+   "slug": "speech-360707",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The bill provides an additional $31 million for veterans' mental health, new income support payments for those unable to work, and improved family support including up to $10,000 per year in childcare and counselling, with the speaker arguing that the two-year service period for spouses should be extended to five years."
+  },
+  {
+   "slug": "speech-360708",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The Labor member supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, which addresses recommendations from the Senate inquiry into veteran suicide, including an interim incapacity payment for mental health claims and a rural mental health pilot. The speaker noted that male former ADF members are 14% more likely to die by suicide, with young males aged 18–24 twice as likely, and highlighted local support groups in Bass such as the Launceston RSL ADF Welfare Team and Misha's Mates."
+  },
+  {
+   "slug": "speech-360710",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, which establishes an interim incapacity payment for mental health and increases support for families, including childcare, home care, and counselling. The speaker noted that between 2001 and 2015 there were 325 certified suicide deaths among people with at least one day of service, with ex-serving men aged 18–24 being two times more likely to die from suicide than Australian men of the same age."
+  },
+  {
+   "slug": "speech-360712",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, which implements recommendations from a Senate inquiry into veteran suicide, including interim incapacity payments, additional childcare assistance ($10,000 per child under school age, $5,000 per primary school aged child), a veteran payment ($913 per fortnight individual, $713 partnered), and a mental health pilot program. They noted 325 veteran suicides between 2001 and 2015, and that the bill also simplifies claims processes and extends gold card access to those who served in Japan from August 1945 to January 1946."
+  },
+  {
+   "slug": "speech-360713",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, which includes measures such as new income support for veterans with mental health claims, a 250-person mental health pilot, family support provisions, and extending gold card eligibility to ADF members who served in Japan post-WWII. The speech cited 325 veteran suicides between 2001 and 2015 and noted the government's additional $31 million for veterans' mental health, on top of $58.6 million from the prior budget."
+  },
+  {
+   "slug": "speech-360714",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, highlighting schedule 8 which extends Department of Veterans' Affairs gold cards to civilian and veteran victims of the Maralinga, Montebello and Emu Field nuclear tests and post-World War II occupation forces in Hiroshima and Nagasaki, following advocacy by former senators Nick Xenophon and Skye Kakoschke-Moore. The speaker noted that approximately 1,100 of the 17,000 affected people survive, and urged the minister to extend the bill’s provisions to allied soldiers from the British Commonwealth Occupation Force who are now Australian citizens."
+  },
+  {
+   "slug": "speech-360715",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speech backed the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, which includes eight schedules with initiatives such as $7.1 million over four years for veteran family support, a new income support payment for around 830 veterans and 690 partners, and a $3.6 million mental health pilot. It also praised local RSL sub-branches in the Forde electorate for their veterans' support services."
+  },
+  {
+   "slug": "speech-360716",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, which establishes interim incapacity payments for mental health claims, increases family support, creates a rural mental health pilot, and extends gold card eligibility to ADF members who served in Japan from 16 August 1945 to 30 January 1946. The speaker also highlighted a $58,000 grant to the Tharwa Valley Forge knife-making program for veterans."
+  },
+  {
+   "slug": "speech-360717",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speech supported the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018, which implements several recommendations from the Senate inquiry into veteran suicides, including an interim income support payment for mental health claims, increased family support, a rural mental health pilot, and streamlined compensation for catastrophic injuries."
+  },
+  {
+   "slug": "speech-360718",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The member for Herbert argued the Veterans' Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Bill 2018 is needed to address veteran mental health and suicide, citing 86 veteran suicides in 12 months, and announced support for measures including an interim incapacity payment for mental health claims, increased childcare assistance (up to $10,000 per child under school age and $5,000 per primary school child per annum), and expanded counselling and household services for families, as well as the Operation Compass suicide prevention trial and The Oasis veterans hub in Townsville."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Veteran-centric Reforms No. 1) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00017",
+   "assent_date": "2018-03-28"
+  }
+ ]
+}

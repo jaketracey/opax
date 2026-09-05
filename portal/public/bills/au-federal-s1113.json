@@ -1,0 +1,668 @@
+{
+ "key": "au-federal-s1113",
+ "title": "Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018",
+ "short_title": "Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2018-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1113_ems_cd500e68-bf15-4da9-ba49-e7a6fb2c8226%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1113_ems_25e9c5d3-daae-4bef-9f20-cc53c405ebd4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1113_ems_b1b59aa1-3b69-453f-897f-b2121b9de09c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1113%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00096",
+   "document_date": "2018-08-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-12-06",
+  "sentences": [
+   "This bill creates a civil penalty regime to stop the non-consensual sharing of intimate images online.",
+   "The eSafety Commissioner would handle complaints, issue removal notices, and enforce penalties including infringement notices and court orders.",
+   "The bill also introduces three new criminal offences under the Criminal Code Act 1995 for transmitting, threatening, or possessing intimate images via a carriage service."
+  ],
+  "changes": [
+   "Prohibits posting or threatening to post an intimate image on social media, electronic services, or designated internet services without consent.",
+   "Establishes a complaints and objections system administered by the eSafety Commissioner.",
+   "Introduces a civil penalty regime with graduated enforcement responses.",
+   "Creates three new criminal offences for using a carriage service to transmit, threaten, or possess intimate images.",
+   "Requires removal of intimate images within 48 hours of a removal notice.",
+   "Requires a review of the amendments' effectiveness within three years of commencement."
+  ],
+  "affected": "Victims of non-consensual intimate image sharing, social media services, relevant electronic services, designated internet services, and perpetrators.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5130",
+   "date": "2018-02-13",
+   "house": "senate",
+   "question": "Enhancing Online Safety (Non-Consensual Sharing of Intimate Images) Bill 2017 - Second Reading - Criminalise",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 37,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-13/8"
+  },
+  {
+   "key": "federal-senate-5131",
+   "date": "2018-02-14",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-02-14.5.1) introduced by Senator [David Leyonhjelm](https://theyvoteforyou.org.au/people/senate/nsw/david_leyonhjelm), which means it was unsuccessful. ### Amendment text > *(1) Schedule 1, item 4, page 4 (after line 23), after the definition of on-demand program service, insert:* >> *outdoor public place means an outdoor place to which the public, or a section of the public, ordinarily has access, whether or not by payment or by invitation (including, for example, the open air areas of an outdoor concert or sportsground).* > *(2) Schedule 1, item 18, page 8 (after line 23), after subsection 9B(6), insert:* >> *(7) For the purposes of this section, an intimate image does not include a drawing, painting or sketch (whether still or moving).* >> *(8) For the purposes of subsections (3) and (4), an intimate image does not include images of a person in an outdoor public place.* ### What does the bill do? The bill [was introduced to](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1113): * *prohibit the posting of, or threatening to post, an intimate image without consent on a social media service, relevant electronic service or a designated internet service;* * *establish a complaints and objections system to be administered by the eSafety Commissioner;* * *provide the commissioner with powers to issue removal notices or remedial directions;* * *establish a civil penalty regime to be administered by the commissioner; and* * *enable the commissioner to seek a civil penalty order from a relevant court, issue an infringement notice, obtain an injunction or enforce an undertaking, or issue a formal warning for contraventions of the civil penalty provisions* Note that the bill *does not* criminalise sharing intimate images without consent. The prohibition it creates is a [civil matter](https://en.wikipedia.org/wiki/Civil_law_(common_law)),",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "earliest": 6,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-14/1"
+  },
+  {
+   "key": "federal-senate-5132",
+   "date": "2018-02-14",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-02-14.44.1) introduced by Senator [David Leyonhjelm](https://theyvoteforyou.org.au/people/senate/nsw/david_leyonhjelm) (NSW), which means it was unsuccessful. The amendment concerns the onus of proof. Liberal Senator [Mitch Fifield](https://theyvoteforyou.org.au/people/senate/victoria/mitch_fifield) (Vic) [explained that](https://www.openaustralia.org.au/senate/?gid=2018-02-14.45.1): > *Under the bill, consent to share an image must be express, voluntary and informed. The evidential burden of proof that consent was given—Senator Leyonhjelm was correct—lies with the person who shared the image in any civil penalty proceedings. Again, I emphasise that this doesn't relate to the sharing of images between two people; this relates to the sharing of those with a third party.* Senator Leyonhjelm wanted the burden of proving consent - or lack of consent, as the case would be - on the person whose image has been shared rather than the person who actually did the sharing. But the majority disagreed. Senator Fifield, as [part of the explanation above](https://www.openaustralia.org.au/senate/?gid=2018-02-14.45.1), stated why the Government was voting against this amendment: > *Given the serious impact that this conduct of sharing beyond the individuals involved has on the victim, the government is of the view that it's appropriate that the alleged perpetrator prove consent to share an image.* ### Amendment text > *(5) Schedule 1, item 26, page 16 (lines 23 to 26), omit the note.* > *(6) Schedule 1, item 26, page 16 (after line 26), after subsection 44B(2), insert:* >> *(2A) Despite section 96 of the Regulatory Powers (Standard Provisions) Act 2014, in proceedings for a civil penalty order against a person for a contravention of subsection (1), the person does not bear an evidential burden in relation to the matter in subsection (2) of this section.* ### What does the bill do? The bill [w",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 23,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-14/2"
+  },
+  {
+   "key": "federal-senate-5133",
+   "date": "2018-02-14",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-02-14.49.1) introduced by Greens Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (WA), which means it failed. The amendment would have made sure that people under eighteen weren't covered by the bill. Liberal Senator [Mitch Fifield](https://theyvoteforyou.org.au/people/senate/victoria/mitch_fifield) (Vic) explained that: > *The government won't be supporting the amendments moved by the Australian Greens. The penalties apply to all persons to ensure that there is a strong deterrent to engaging in the sharing of intimate images without consent.* > *In practice, as Senator Steele-John alluded to, the eSafety Commissioner will take a very cautious approach in relation to any complaint made against a perpetrator under 18 years of age. * ### Motion text > *(1) Schedule 1, item 3, page 3 (line 20), omit \"a person\", substitute \"an adult\".* > *(2) Schedule 1, item 26, page 15 (line 19), omit \"A person\", substitute \"An adult\".* > *(3) Schedule 1, item 26, page 16 (line 17), after \"person\", insert \"is an adult and\".* > *(4) Schedule 1, item 26, page 21 (line 2), omit \"A person\", substitute \"An adult\".* > *(5) Schedule 1, item 26, page 21 (line 3), omit \"the person\", substitute \"the adult\".* > *(6) Schedule 1, item 26, page 21 (line 28), omit \"A person\", substitute \"An adult\".* ### What does the bill do? The bill [was introduced to](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1113): * *prohibit the posting of, or threatening to post, an intimate image without consent on a social media service, relevant electronic service or a designated internet service;* * *establish a complaints and objections system to be administered by the eSafety Commissioner;* * *provide the commissioner with powers to issue removal notices or remedial directions;* * *establish a civil penalty regime to be administere",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 21,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-14/3"
+  },
+  {
+   "key": "federal-senate-5134",
+   "date": "2018-02-14",
+   "house": "senate",
+   "question": "Enhancing Online Safety (Non-Consensual Sharing of Intimate Images) Bill 2017 - in Committee - Criminal offences",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 39,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-14/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-367253",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "Labor supported the Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018 and the government's amendment introducing aggravated criminal offences, arguing the government had finally adopted Labor's long-standing position after years of delay. The speaker noted that one in five Australians, one in two with a disability, and one in two Indigenous Australians have experienced such abuse, and criticised the Minister for Communications for resisting criminalisation until forced by a Senate amendment."
+  },
+  {
+   "slug": "speech-367254",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Enhancing Online Safety (Non-Consensual Sharing of Intimate Images) Bill 2018 and government amendments, citing 217 reports to the eSafety Commissioner and research showing one in five Australians aged 16–49 have experienced image-based abuse. They urged people not to create or allow intimate images to be taken, and noted $10 million in 2016–17 and an additional $14.2 million allocated for online safety initiatives."
+  },
+  {
+   "slug": "speech-367304",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The bill expands the eSafety Commissioner's civil powers to combat non-consensual sharing of intimate images, introducing fines up to $105,000 for individuals and $525,000 for corporations, doubled prison sentences for menacing or harassment using private sexual material, and 48-hour removal notices. The speech also argued that while some victims are responsible for taking images, the bill protects those who were taken advantage of, and that Australians want immediate action rather than lengthy criminal trials."
+  },
+  {
+   "slug": "speech-367305",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The speech supported the Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018, arguing that non-consensual image sharing should be a criminal offence rather than a civil matter and rejecting victim-blaming. It credited Labor members for Gellibrand and Griffith for their advocacy, and cited that one in five Australians have been affected, with higher rates among people with disability, Indigenous Australians, and the LGBTIQ community."
+  },
+  {
+   "slug": "speech-367306",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018, arguing that the prevalence of camera phones and image sharing necessitates legislation to protect victims from devastating harm, and welcomed the bill's incorporation into the Criminal Code Act to send a message that perpetrators face the full force of criminal law."
+  },
+  {
+   "slug": "speech-367307",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-367308",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018 was strongly supported, establishing a civil penalty regime administered by the eSafety Commissioner with removal notices requiring takedown within 48 hours and fines up to $105,000 for individuals or over $500,000 for corporations."
+  },
+  {
+   "slug": "speech-367309",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018 is an important step in addressing the shame, humiliation and loss of control caused by the non-consensual sharing of intimate images, particularly affecting young women in school settings."
+  },
+  {
+   "slug": "speech-367310",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018 is necessary to combat image-based abuse, which affects 20% of Australians and has led to suicide attempts. The bill creates civil penalties up to $105,000 for individuals and $525,000 for corporations, establishes a complaints system through the eSafety Commissioner, and targets non-consensual sharing, threats, and manipulated images like deepfakes."
+  },
+  {
+   "slug": "speech-367311",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018, which introduces civil and criminal penalties for sharing intimate images without consent, including aggravated offences for using a carriage service to share private sexual material. The speaker noted the government adopted Labor's longstanding position on criminal penalties and cited public support, with 80% of Australians agreeing such sharing should be a crime."
+  },
+  {
+   "slug": "speech-367313",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The speech welcomed the government’s amendment criminalising non-consensual sharing of intimate images, noting Labor had advocated for this since 2015 and citing RMIT research that one in five Australians have experienced it. It also criticised the Senate for voting down territory rights for the ACT and NT by two votes, arguing this made their residents second-class citizens."
+  },
+  {
+   "slug": "speech-367314",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-367316",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Enhancing Online Safety Bill 2018, noting that one in five Australians, one in two with a disability, and one in two Indigenous Australians have experienced non-consensual sharing of intimate images, and criticised the government for taking three years to act after Labor's 2015 private member's bill. The speaker also raised concerns about the 48-hour removal timeframe for images and whether the legislation adequately addresses minors as both perpetrators and victims."
+  },
+  {
+   "slug": "speech-367317",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Enhancing Online Safety Bill 2018 but argued it did not go far enough, calling for criminal penalties instead of civil ones for non-consensual sharing of intimate images. The member noted that 844 charges were proved under existing broad criminal code provisions between 2004 and 2016, and pointed to Victoria, South Australia, and the Northern Territory as jurisdictions that have already criminalised such conduct."
+  },
+  {
+   "slug": "speech-367319",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018, citing an RMIT study that one in five Australians have experienced image-based abuse, with higher rates among disabled, Indigenous, and younger Australians, and noted that women are more likely to fear for their safety. The bill criminalises non-consensual sharing of intimate images."
+  },
+  {
+   "slug": "speech-367320",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Bill 2018, which prohibits posting or threatening to post intimate images without consent, establishes a complaints system via the eSafety Commissioner, and creates a civil penalty regime. The speaker noted that one in ten Australians have had intimate images shared without permission, emphasised that women are more likely to be victims, and rejected the term \"revenge porn\" as trivialising abuse."
+  },
+  {
+   "slug": "speech-367321",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-16",
+   "stage_hint": null,
+   "brief": "The government's bill creates civil penalties of up to $105,000 for individuals and $525,000 for corporations, plus new criminal offences with up to seven years' imprisonment for aggravated non-consensual sharing of intimate images, and the speaker criticised Labor for delaying the legislation through political grandstanding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Enhancing Online Safety (Non-consensual Sharing of Intimate Images) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00096",
+   "assent_date": "2018-08-31"
+  }
+ ]
+}

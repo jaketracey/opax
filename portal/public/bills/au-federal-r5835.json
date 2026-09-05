@@ -1,0 +1,785 @@
+{
+ "key": "au-federal-r5835",
+ "title": "Fair Work Amendment (Corrupting Benefits) Bill 2017",
+ "short_title": "Fair Work Amendment (Corrupting Benefits) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2017-08-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5835_ems_f4f5dcb6-f020-4076-887d-87866ee7445c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5835_ems_4e3ddf03-a947-47ef-868f-411f8f99edb8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5835%22",
+   "document_date": "2017-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00084",
+   "document_date": "2017-08-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-22",
+  "sentences": [
+   "The bill creates new criminal offences for giving, receiving or soliciting corrupting benefits involving registered organisations or their officers.",
+   "It also requires bargaining representatives to disclose financial benefits they would derive from a proposed enterprise agreement, with civil penalties for non-compliance.",
+   "The penalties for corrupting benefits offences are substantial, and the disclosure requirement aims to improve transparency for employees voting on an enterprise agreement."
+  ],
+  "changes": [
+   "Creates criminal offences for giving a corrupting benefit to a registered organisation or associated person.",
+   "Creates criminal offences for receiving or soliciting a corrupting benefit.",
+   "Creates criminal offences for national system employers (other than employee organisations) to provide prohibited cash or in-kind payments to employee organisations or their prohibited beneficiaries.",
+   "Creates criminal offences for soliciting, receiving, obtaining, or agreeing to obtain such prohibited payments.",
+   "Requires bargaining representatives to disclose financial benefits reasonably expected from a proposed enterprise agreement.",
+   "Imposes substantial penalties for corrupting benefits offences."
+  ],
+  "affected": "Registered organisations, their officers, national system employers, employee organisations, and bargaining representatives.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4754",
+   "date": "2017-08-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-08-08.128.1) to the usual second reading motion, which means it was unsuccessful. ### Usual second reading motion text > *That the bill be read a second time.* To read a bill for a second time is to agree with its main idea. ### Amendment text > *Leave out all words after \"that\", insert:* > >> *\"the bill be withdrawn and redrafted to provide for the establishment of a national Independent Commission Against Corruption.\"*",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 12,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-08/2"
+  },
+  {
+   "key": "federal-senate-4755",
+   "date": "2017-08-08",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2017-08-08.131.15) to read the bill for a second time. In other words, they voted to agree with the main idea of the bill and can now consider it in detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd006): > *The purpose of the Fair Work Amendment (Corrupting Benefits) Bill 2017 (the Bill) is to amend the Fair Work Act 2009 (the FW Act) to:* > > * *create new criminal offences related to the solicitation, giving or receipt of corrupting benefits (applicable within the context of the industrial relations framework created by the FW Act) and* > > * *create new criminal offences related to national system employers offering, promising or providing certain ‘prohibited payments’ and other persons soliciting, receiving, obtaining or agreeing to obtain such payments.* > > *The FW Act also deals with negotiation and creation of enterprise agreements (EAs). An EA is an agreement made at the enterprise (business) level and is enforceable under the FW Act. An EA sets out terms and conditions of employment and the rights and obligations of the employees and the employer covered by the agreement. An EA must meet a number of requirements under the FW Act before it can be approved by the Fair Work Commission (FWC).* > > *The Bill would amend the FW Act to require bargaining representatives to disclose financial benefits that they, or a person or body reasonably connected with them, would or could reasonably be expected to derive because of a term of a proposed EA.*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 14,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-08/3"
+  },
+  {
+   "key": "federal-senate-4757",
+   "date": "2017-08-09",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-08-09.49.3) introduced by NSW Senator [Doug Cameron](https://theyvoteforyou.org.au/people/senate/nsw/doug_cameron) (Labor), which means they won't be integrated into the bill. ### What did these amendments do? Senator Cameron [explained that](https://www.openaustralia.org.au/senate/?gid=2017-08-09.52.1): > *These amendments have the effect of changing the proposed offence of making and receiving cash and in-kind payments from a strict liability offence to one where the defendant has to act dishonestly. [...]* > > *As it currently is drafted, even though this offence has a maximum of two years imprisonment, there is no need for the giver or receiver of a benefit to intend that it is dishonest, corrupt or improper. [...]* > > *This means that a person can be found criminally liable under the proposed provisions for simply providing funds to a union if those funds do not fall within categories determined by the government as ones that they deem acceptable.* ### Amendment text > *(14) Schedule 1, item 3, page 7 (line 24), after \"defendant\", insert \"dishonestly\".* > > *(15) Schedule 1, item 3, page 10 (line 3), after \"defendant\", insert \"dishonestly\".*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 17,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-09/2"
+  },
+  {
+   "key": "federal-senate-4758",
+   "date": "2017-08-09",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-08-09.59.1) introduced by NSW Senator [Doug Cameron](https://theyvoteforyou.org.au/people/senate/nsw/doug_cameron) (Labor), which means it failed. ### What did this amendment do? Senator Cameron [explained that](https://www.openaustralia.org.au/senate/?gid=2017-08-09.59.1): > *This amendment changes the definition of 'related party' in relation to the new requirements to make disclosures during negotiations of enterprise agreements. The bill imposes disclosure requirements during the negotiation of enterprise agreements where a proposed term of an agreement will give either the union or the employer a financial benefit. The bill requires the union to disclose any potential benefits from an enterprise agreement that may flow to a related party, which, as currently defined, is an extended, unreasonable list of people and entities. The amendment defines 'related party' clearly and precisely as the branch or branches of the organisation which the members of the organisation—that is, the bargaining representatives—are members of, an officer of that branch, an entity controlled by the organisation, or a spouse of a divisional committee of management provided that an officer of the branch referred to in paragraph (a) is also a member of such committee. Again this is overreach. The amendment is needed to make this bill consistent with all the expert advice to the committee and the minister.* ### Amendment text > *(16) Schedule 2, item 1, page 11 (lines 8 and 9), omit the definition of related party in section 12, substitute:* > > *related party, of an organisation that is a bargaining representative for a proposed enterprise agreement, means:* > >> *(a) a branch of the organisation of which employees who will be covered by the agreement are members; or* >> >> *(b) an officer of a branch mentioned in paragraph (a); or* >> >> *(c) an entity controlled by the organisation; or* >> >> *(d",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 18,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-09/3"
+  },
+  {
+   "key": "federal-senate-4766",
+   "date": "2017-08-09",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2017-08-09.245.5) to agree with the bill as amended. This means that they can now vote on [whether to pass the bill](https://theyvoteforyou.org.au/divisions/senate/2017-08-09/12). ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd006): > *The purpose of the Fair Work Amendment (Corrupting Benefits) Bill 2017 (the Bill) is to amend the Fair Work Act 2009 (the FW Act) to:* > > * *create new criminal offences related to the solicitation, giving or receipt of corrupting benefits (applicable within the context of the industrial relations framework created by the FW Act) and* > > * *create new criminal offences related to national system employers offering, promising or providing certain ‘prohibited payments’ and other persons soliciting, receiving, obtaining or agreeing to obtain such payments.* > > *The FW Act also deals with negotiation and creation of enterprise agreements (EAs). An EA is an agreement made at the enterprise (business) level and is enforceable under the FW Act. An EA sets out terms and conditions of employment and the rights and obligations of the employees and the employer covered by the agreement. An EA must meet a number of requirements under the FW Act before it can be approved by the Fair Work Commission (FWC).* > > *The Bill would amend the FW Act to require bargaining representatives to disclose financial benefits that they, or a person or body reasonably connected with them, would or could reasonably be expected to derive because of a term of a proposed EA.*",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 15,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-09/11"
+  },
+  {
+   "key": "federal-senate-4767",
+   "date": "2017-08-09",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2017-08-09.248.1) to read the bill for a third time. In other words, they voted to pass the bill in the Senate. Since new amendments had been added to the bill, it will now return to the House of Representatives, where our MPs will decide on whether they agree with those amendments. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd006): > *The purpose of the Fair Work Amendment (Corrupting Benefits) Bill 2017 (the Bill) is to amend the Fair Work Act 2009 (the FW Act) to:* > > * *create new criminal offences related to the solicitation, giving or receipt of corrupting benefits (applicable within the context of the industrial relations framework created by the FW Act) and* > > * *create new criminal offences related to national system employers offering, promising or providing certain ‘prohibited payments’ and other persons soliciting, receiving, obtaining or agreeing to obtain such payments.* > > *The FW Act also deals with negotiation and creation of enterprise agreements (EAs). An EA is an agreement made at the enterprise (business) level and is enforceable under the FW Act. An EA sets out terms and conditions of employment and the rights and obligations of the employees and the employer covered by the agreement. An EA must meet a number of requirements under the FW Act before it can be approved by the Fair Work Commission (FWC).* > > *The Bill would amend the FW Act to require bargaining representatives to disclose financial benefits that they, or a person or body reasonably connected with them, would or could reasonably be expected to derive because of a term of a proposed EA.*",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 15,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-09/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-345069",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "Labor will support the Fair Work Amendment (Corrupting Benefits) Bill 2017 if it is properly drafted and applies evenly, but moved an amendment calling on the government to abandon its support for the Fair Work Commission's penalty rate cuts affecting 700,000 Australians and to legislate to prevent those cuts. The opposition criticised the government for acting on only three of 79 Heydon royal commission recommendations, questioned the bill's uneven application and lack of consultation, and argued the government prioritises union targeting over addressing worker exploitation like the 7-Eleven underpayment scandal."
+  },
+  {
+   "slug": "speech-345071",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Corrupting Benefits) Bill 2017 is proposed to ban secret and corrupting payments from businesses to unions, require disclosure of legitimate payments related to enterprise agreements, and impose criminal penalties including up to 10 years imprisonment. The speech cited examples such as a $100,000 payment from Thiess-Hochtief to the CFMEU's Drug & Alcohol Committee and a $300,000 payment from Thiess and John Holland to the Australian Workers' Union, both disguised in false invoices."
+  },
+  {
+   "slug": "speech-345244",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Amendment (Corrupting Benefits) Bill 2017 criminalises secret payments between employers and unions, imposing up to 10 years jail and fines of $900,000 for individuals. They cited historical royal commissions (Winneke 1982, Gyles 1992, Cole 2003, Heydon 2015) and specific deals—Thiess John Holland paying AWU Victoria $300,000, ACI Operations paying $500,000, and the Clean Event $75,000 payment—involving the Leader of the Opposition."
+  },
+  {
+   "slug": "speech-345401",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The government will not support a suspension of standing orders to debate the member for Kennedy's motion, as it prioritises its own legislative agenda, including the Fair Work Amendment (Corrupting Benefits) Bill 2017, which implements Heydon royal commission recommendations. The speaker noted the member for Bendigo is a CFMEU member, the member for Bass a former union leader, and the member for Rankin was \"knee-deep\" in corrupting benefits issues as a union secretary."
+  },
+  {
+   "slug": "speech-346057",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Corrupting Benefits) Bill 2017 implements only 3 of 79 Heydon royal commission recommendations, creates unequal prosecution tests for union officials versus employers, and may restrict union training; they also criticised the government for failing to stop asbestos imports (citing 69 job sites with asbestos materials and 700 annual deaths) and for supporting penalty rate cuts affecting 7,000 low-paid workers by $77 per week and 323,000 workers in other industries."
+  },
+  {
+   "slug": "speech-346058",
+   "speaker": "John McVeigh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work Amendment (Corrupting Benefits) Bill 2017, which criminalises secret payments between employers and unions and mandates disclosure of financial benefits before enterprise agreements, citing multiple instances uncovered by the Heydon royal commission—including $300,000 from Thiess John Holland to AWU Victoria, $500,000 from ACI Operations, $75,000 from Clean Event, $32,000 from Unibelt to then-opposition leader Bill Shorten, $24,000 from Chiquita Mushrooms, and $200,000 from Winslow Constructors."
+  },
+  {
+   "slug": "speech-346060",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Corrupting Benefits) Bill was discussed, with support for an amendment by the member for Gorton. The speech noted that Dyson Heydon’s royal commission recommendations were delivered over a year ago at a cost exceeding $46 million."
+  },
+  {
+   "slug": "speech-346211",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Corrupting Benefits) Bill 2017 implements only three of the 79 recommendations from the Dyson Heydon royal commission, which cost $46 million—over $15 million per recommendation."
+  },
+  {
+   "slug": "speech-346214",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Fair Work Amendment (Corrupting Benefits) Bill 2017, which would criminalise secret payments between employers and unions and require disclosure of legitimate benefits during enterprise bargaining, citing Heydon royal commission findings of corrupt payments involving the AWU Victoria, CFMEU, and individuals including Dave Hanna, Bruce Wilson, and the Leader of the Opposition."
+  },
+  {
+   "slug": "speech-346215",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Corrupting Benefits) Bill 2017, based on three of 79 Heydon royal commission recommendations, criminalises conduct already illegal under state law, and criticised the government for rushed, complex drafting that omits the concept of dishonesty, potentially creating unintended consequences. The speaker also noted Australia's declining global anti-corruption rankings and called for better law enforcement resourcing, referencing AFP cuts of around 150 personnel."
+  },
+  {
+   "slug": "speech-346216",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Corrupting Benefits) Bill 2017 is needed to combat corruption by requiring full transparency of secret deals between unions and employers, citing findings from the Heydon royal commission. The bill introduces criminal penalties of up to 10 years imprisonment or fines of $900,000 for individuals and $4.5 million for companies, and mandates disclosure of financial benefits from enterprise agreement negotiations to employees before they vote."
+  },
+  {
+   "slug": "speech-346217",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Corrupting Benefits) Bill 2017 is a meaningless political gesture aimed at destroying the union movement, while existing laws already address the alleged crimes. They cited specific figures, including that 700,000 low-paid workers would lose penalty rates, and that Eden-Monaro would lose $16 million in disposable income, while criticising the government for ignoring systemic worker exploitation and failing to model economic impacts."
+  },
+  {
+   "slug": "speech-346218",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Fair Work Amendment (Corrupting Benefits) Bill 2017, citing Heydon royal commission findings of secret payments between the Australian Workers' Union and employers including ACI ($500,000), Thiess John Holland ($300,000), Clean Event ($75,000), and Winslow Constructors, and stated the bill would make such payments illegal to restore transparency and fairness."
+  },
+  {
+   "slug": "speech-346615",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2017-05-23",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to the Fair Work Amendment (Corrupting Benefits) Bill 2017, arguing the bill is too narrow and calling for the establishment of a National Independent Commission Against Corruption to investigate corruption across all sectors, including corporations, public servants, and politicians, not just unions. The speaker also criticised the government for ignoring widespread underpayment of young workers at companies like McDonald's, Coles, and Woolworths, and urged support for the Greens' paid protection bill."
+  },
+  {
+   "slug": "speech-346617",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-23",
+   "stage_hint": null,
+   "brief": "The MP supported the Fair Work Amendment (Corrupting Benefits) Bill 2017, arguing the building industry is wracked with union corruption and that no-one is above the law. He cited $75 billion in infrastructure spending, including $10 billion for a national rail project, and urged Queensland’s Palaszczuk government to bid for the Beerburrum–Nambour North Coast line duplication."
+  },
+  {
+   "slug": "speech-346624",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-23",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Corrupting Benefits) Bill was argued as necessary to address coercive union conduct and to disincentivise companies from making corrupt payments; the speaker noted the introduction of the ABCC, the Fair Work (Registered Organisations) Act, a new building code, and a commitment to preventing corporate tax evasion."
+  },
+  {
+   "slug": "speech-346630",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-23",
+   "stage_hint": null,
+   "brief": "The speech supported the Fair Work Amendment (Corrupting Benefits) Bill 2017, arguing it would ban secret payments between unions and employers, citing Heydon royal commission findings on payments to the AWU Victoria involving the member for Maribyrnong. It stated union membership is at a record low of 15–17 per cent while 50 per cent of Labor candidates are union-chosen, and claimed union activity adds up to 30 per cent to building costs."
+  },
+  {
+   "slug": "speech-346632",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-23",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Corrupting Benefits) Bill 2017 bans secret payments between employers and unions, requires disclosure of financial benefits before enterprise agreement votes, and imposes criminal penalties of up to 10 years' imprisonment and $900,000 for individuals or $4.5 million for companies. The speech cited specific cases from Western Australia, including the Australian Workers' Union and Bruce Wilson ($400,000 slush fund), SapuraKencana ($350,000), Dredging International ($1 million), and Van Oord ($1 million), as examples of corrupt payments uncovered by the Heydon royal commission."
+  },
+  {
+   "slug": "speech-346636",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-23",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Corrupting Benefits) Bill 2017 criminalises secret payments between employers and unions, with equal penalties for both parties, and requires disclosure of financial benefits in enterprise agreements. The bill responds to the Heydon royal commission's findings of widespread corrupt practices, including the Australian Workers Union in Victoria receiving payments from companies like Cleanevent in exchange for not seeking better conditions for workers."
+  },
+  {
+   "slug": "speech-350821",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-350965",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The government moved to agree to Senate amendments to the Fair Work Amendment (Corrupting Benefits) Bill 2017, which makes it illegal for businesses to pay corrupting benefits to union officials and a criminal offence for officials to accept them. The speaker argued that Labor opposed the bill and sided with those who give corrupting benefits, while the government supports the reform."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Corrupting Benefits) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00084",
+   "assent_date": "2017-08-16"
+  }
+ ]
+}

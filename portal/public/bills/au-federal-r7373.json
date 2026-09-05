@@ -1,0 +1,260 @@
+{
+ "key": "au-federal-r7373",
+ "title": "Treasury Laws Amendment (Payday Superannuation) Bill 2025",
+ "short_title": "Treasury Laws Amendment (Payday Superannuation) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2025-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7373_ems_262bc384-0175-412d-8a8b-61d767b0e5a9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7373_ems_ab5ca04c-ce30-4aa7-adaf-6a21e3fff713%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7373%22",
+   "document_date": "2025-10-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00057",
+   "document_date": "2025-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9805",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/download/legislation/amend/r7373_amend_603f7fc6-7a71-4f28-97b0-41468cb73e83/upload_pdf/25075%202R%20T%20OBrien.pdf;fileType=application%2Fpdf) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill), which means it failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > >> *\"whilst not declining to give the bill a second reading, the House notes that:* >> >> *(1) the Opposition strongly supports the principle of Payday Super;* >> >> *(2) superannuation is part of an employee's wage and must be paid on time;* >> >> *(3) around $5 billion of superannuation goes unpaid every year;* >> >> *(4) the Government has ignored Treasury advice which suggests Digital Service Providers require 18 months from legislating the changes before implementation;* >> >> *(5) the Government is putting small business at risk by rushing the bill's implementation;* >> >> *(6) the Opposition is calling on the Government to delay the start date for small businesses with fewer than 20 employees for 18 months to provide them adequate time to adapt; and* >> >> *(7) the Opposition is calling on the Government to legislate protections for small businesses who have made good faith efforts to comply\".*",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 91,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 87
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-30/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1197497",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197498",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197729",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197776",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198046",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198105",
+   "speaker": "Nick McKim",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-11-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198203",
+   "speaker": "Slade Brockman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-11-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Payday Superannuation) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00057",
+   "assent_date": "2025-11-06"
+  }
+ ]
+}

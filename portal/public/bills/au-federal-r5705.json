@@ -1,0 +1,326 @@
+{
+ "key": "au-federal-r5705",
+ "title": "Customs Tariff Amendment (Tobacco) Bill 2016",
+ "short_title": "Customs Tariff Amendment (Tobacco) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2016-09-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-09-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5705_ems_ffb38f18-96d3-4ba5-8232-3137564f3ffb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5705%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00059",
+   "document_date": "2016-09-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4287",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "question": "Andrew Leigh I move: That all words after 'That' be omitted with a view to substituting the following words: 'whilst not declining to give the bill a second reading, the House condemns the government for failing to implement comprehensive budget measures that are fair and sustainable for Australia.' Cigarettes are the only legal product which, if consumed as directed, will kill half of their users. They are extremely addictive. Ask smokers if they plan to quit and 92 per cent will say yes. Yet Australia has managed over time to significantly decrease the share of people who smoke. Rates since 1980 have approximately halved, with smoking rates now around 18 per cent for men and 14 per cent for women. How did we do it? Part of the answer was information. People are more likely today to know that cigarettes cause cancer, and they are more likely to understand the risks of smoking while pregnant and the risks of smoking around children. We have also made available cheaper nicotine patches. Since 2011 patches that previously cost $4 a day have now been available for $1 a day for anyone with a doctor's prescription. One of the things, too, that has changed smoking rates in Australia is the change in price. Over the past generation the cost of cigarettes after inflation has increased from about 40c a stick to about 70c a stick. Whose behaviour is most changed by that? Well, young people are particularly price responsive. So we have seen a rapid drop in the share of young people taking up smoking. The old days of a bunch of boys getting together behind the toilet block to light up are, thankfully, rarer than they once were. Economists estimate the elasticity is about minus 0.5, meaning that if you increase prices by 10 per cent you will decrease smoking rates by five per cent. Plain packaging also played an important part—a measure which I am proud to say was spearheaded by the Gillard government and ultimately supported by the then coalition opposition. These changes will",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-13/1"
+  },
+  {
+   "key": "federal-representatives-4288",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "question": "Kelly O'Dwyer I seek leave of the House to move the third reading immediately. Leave not granted. Christopher Pyne I move: That so much of the standing orders be suspended as would prevent the motion for the third reading being moved without delay. Tony Smith The question is the motion moved by the Leader of the House be agreed to.",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-13/2"
+  },
+  {
+   "key": "federal-representatives-4289",
+   "date": "2016-09-13",
+   "house": "representatives",
+   "question": "Kelly O'Dwyer I move: That this bill be now read a third time. Andrew Leigh The National Party of Australia continues to accept tobacco donations. The Liberal Party of Australia accepted tobacco donations as recently as— Christopher Pyne I move: That the question be now put. Tony Smith The Leader of the House has moved that the motion be put.",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-13/3"
+  },
+  {
+   "key": "federal-senate-4308",
+   "date": "2016-09-14",
+   "house": "senate",
+   "question": "Excise Tariff Amendment (Tobacco) Bill 2016, Customs Tariff Amendment (Tobacco) Bill 2016 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 46,
+   "noes": 2,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 14,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-14/4"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Tobacco) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00059",
+   "assent_date": "2016-09-23"
+  }
+ ]
+}

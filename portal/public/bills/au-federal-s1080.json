@@ -1,0 +1,354 @@
+{
+ "key": "au-federal-s1080",
+ "title": "Taxation Administration Amendment (Corporate Tax Entity Information) Bill 2018",
+ "short_title": "Taxation Administration Amendment (Corporate Tax Entity Information) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-14",
+ "originating_house": "senate",
+ "sponsor": "GALLAGHER, Sen Katy",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10838",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1080_ems_f900bb10-3d83-4e67-b982-d4f6ca6c74dd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1080%22",
+   "document_date": "2017-08-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-14",
+  "sentences": [
+   "This bill would require private companies to publicly report their tax information if their income reaches $100 million or more.",
+   "It changes the existing law so that the reporting threshold for private corporate entities matches the $100 million threshold already applied to public corporate entities.",
+   "The change would take effect on the day the bill receives Royal Assent."
+  ],
+  "changes": [
+   "Lowers the income reporting threshold for private corporate entities from $200 million to $100 million.",
+   "Aligns the reporting requirement for private companies with that of public companies.",
+   "Restores the original $100 million threshold for large private companies that was previously changed."
+  ],
+  "affected": "Private corporate entities with total income of $100 million or more that were previously not subject to public reporting.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5277",
+   "date": "2018-06-25",
+   "house": "senate",
+   "question": "Taxation Administration Amendment (Corporate Tax Entity Information) Bill 2017 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 35,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-25/1"
+  },
+  {
+   "key": "federal-senate-5278",
+   "date": "2018-06-25",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments 8304 and 8303](https://www.openaustralia.org.au/senate/?id=2018-06-25.11.1), which were introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) (Greens), which means they will now be included as part of the bill. ### What do the amendments do? Senator Whish-Wilson [explained that](https://www.openaustralia.org.au/senate/?gid=2018-06-25.11.2): > *The first amendment on sheet 8304 revised substitutes $50 million for $100 million. This is the threshold at which we want to see disclosure from both private and public companies. Very briefly, the private senator's bill from Labor is to reduce the current disclosure levels from $200 million to $100 million. We'd like to see that go a step further by reducing it to $50 million.* > > *[...]* > > *In relation to the [grandfathering clause](https://en.wikipedia.org/wiki/Grandfather_clause), which the Greens have introduced in an amendment to on sheet 8303—financial reporting obligations are under schedule 2, and the grandfathering exemption is part 2 of that sheet under the Corporations Act 2001. As I said, this is an archaic throwback to Mr Paul Keating's government in 1995, that basically cut a deal to allow 1,500 high net worth individuals to not provide their annual statements to ASIC. There can be no reason for this if we're having a debate around tax transparency. The Greens support removing it. I understand that Labor will too, and I certainly hope the crossbench come on board with this. * ### Amendment text > *Amdt 8304 revised - Taxation Administration Amendment (Corporate Tax Entity Information) Bill 2017* > >> *(1) Schedule 1, item 1, page 3 (line 9) omit \"$100 million\", substitute \"$50 million\".* > > *Amdt 8303 - Taxation Administration Amendment (Corporate Tax Entity Information) Bill 2017* > >> *(1) Page 3 (after line 14), at the end of the Bill, add:* >> >>> *Schedule 2—Financial reporting obligation",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 35,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-25/2"
+  },
+  {
+   "key": "federal-senate-5279",
+   "date": "2018-06-25",
+   "house": "senate",
+   "question": "Taxation Administration Amendment (Corporate Tax Entity Information) Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 35,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-25/3"
+  },
+  {
+   "key": "federal-representatives-5291",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "question": "Taxation Administration Amendment (Corporate Tax Entity Information) Bill 2018 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 76,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-26/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,218 @@
+{
+ "key": "au-federal-r5778",
+ "title": "Airports Amendment Bill 2018",
+ "short_title": "Airports Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Transport",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5778_ems_1c42fb17-0118-469c-86ae-2b9999cf0f8e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5778_ems_3eb505f0-bc4a-465b-b786-9535c6122659%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5778%22",
+   "document_date": "2016-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00107",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "The bill would streamline planning rules at federally leased airports by making master plans and major development plans more flexible and efficient.",
+   "It would change the submission cycle for master plans, raise the cost threshold that triggers a major development plan, and give the minister new powers to adjust that threshold and extend completion deadlines.",
+   "The monetary trigger for major development plans would increase from $20 million to $25 million, and the minister could update it every three years using a legislative instrument."
+  ],
+  "changes": [
+   "Introduces an 8-year master plan cycle for 15 airports while keeping the current 5-year cycle for 5 airports.",
+   "Requires each new master plan to include an Australian Noise Exposure Forecast.",
+   "Raises the major development plan monetary trigger from $20 million to $25 million.",
+   "Allows the minister to issue legislative instruments to increase the monetary trigger every three years and to specify which costs count toward the construction cost.",
+   "Sets a 15-business-day deadline for the minister to decide on applications for reduced consultation periods, with deemed refusal if no decision is made.",
+   "Lets the minister extend the substantial completion period for approved major development plans more than once, and lets airport-lessee companies notify the minister if an approved plan cannot proceed due to exceptional circumstances."
+  ],
+  "affected": "Federally leased airports (excluding Mount Isa and Tennant Creek), their airport-lessee companies, and the Minister for Infrastructure and Transport.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:45:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5409",
+   "date": "2018-09-12",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2018-09-12.29.1) introduced by Greens Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice), which means it failed. The motion would have added the words below to the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) \"that the bill be read a second time\" (meaning \"that the main idea of the bill be agreed to\"). ### Motion text > *At the end of the motion, add \", but the Senate calls on the government to develop and implement better consultation and community engagement standards for federally leased airports, to mitigate the impact of air noise on communities under major flight paths.\"* ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd073): > *The purpose of the Airports Amendment Bill 2016 (the Bill) is to amend the Airports Act 1996 (Cth) to adjust processes relating to the preparation of master plans and major development plans for federally‑leased airports, including to:* > * *enable most federal airports (other than the major airports at Brisbane, Melbourne, Perth and Sydney) to submit new master plans every eight years instead of every five years* > * *ensure that a new Australian Noise Exposure Forecast (ANEF) is required in each new master plan* > * *increase the threshold that triggers the requirement for an airport major development plan from $20 million to $35 million and allow the threshold to be increased in the future via a legislative instrument and* > * *amend certain other processes relating to major development plans, such as imposing a new 15-day timeframe within which the Minister must consider applications for shorter consultation periods for major development plans.*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 22,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-12/2"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Airports Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00107",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

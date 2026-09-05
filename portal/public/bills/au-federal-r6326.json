@@ -1,0 +1,226 @@
+{
+ "key": "au-federal-r6326",
+ "title": "Customs Amendment (Immediate Destruction of Illicit Tobacco) Bill 2019",
+ "short_title": "Customs Amendment (Immediate Destruction of Illicit Tobacco) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-10-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6326_ems_a146a2f1-7f41-490e-82b9-d10eb45121fb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6326%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00076",
+   "document_date": "2019-10-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would let customs officials immediately destroy seized illegal tobacco products instead of storing them for 30 days.",
+   "The Comptroller-General of Customs could order the destruction or other disposal of tobacco seized as prohibited imports, similar to existing rules for psychoactive substances.",
+   "The change starts on 1 July 2019, when tobacco products become prohibited imports requiring a valid permit, except for traveller duty-free allowances and specialty items."
+  ],
+  "changes": [
+   "Empowers the Comptroller-General of Customs to immediately destroy seized tobacco products.",
+   "Removes the 30-day storage requirement for seized tobacco before disposal.",
+   "Aligns tobacco seizure rules with those for other prohibited imports like psychoactive substances."
+  ],
+  "affected": "Tobacco importers, Australian Border Force officials, and the Comptroller-General of Customs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5843",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2019-09-09.108.1) to amend the usual second reading motion, which is \"*that the bill be read a second time*\". Agreeing to read a bill for a second time is the same as agreeing with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House is of the opinion that the Government, by failing to bring forward the appropriate legislation in a timely manner, has undermined the bill’s objective of significantly reducing the operational burden on Australian Border Force of implementing the illicit tobacco reforms\".*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-09/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-379880",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the government failed to pass the Customs Amendment (Immediate Destruction of Illicit Tobacco) Bill 2019 in time for the 1 July deadline, undermining its goal of reducing the operational burden on the Australian Border Force. Labor supported the bill but criticised the government for incompetence, noting it let the bill lapse in the previous parliament."
+  },
+  {
+   "slug": "speech-379886",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Immediate Destruction of Illicit Tobacco) Bill 2019 allows seized illicit tobacco to be destroyed immediately, bypassing the current 30-day storage rule, to combat the black market. Australian cigarette prices are the highest globally at $27 per pack of 20 Marlboros, contributing $12.5 billion annually to government revenue but driving a black market costing up to $3.8 billion a year in lost tax."
+  },
+  {
+   "slug": "speech-379887",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill enabling immediate destruction of seized illicit tobacco but criticised the government's delay in bringing it forward, noting the original bill lapsed and the operational date was missed by over two months. They also highlighted mismanagement in the Department of Home Affairs, including a $300 million ABF budget blowout and a $7 million one-page strategic review, urging support for the opposition's second reading amendment."
+  },
+  {
+   "slug": "speech-379888",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The Customs Amendment (Immediate Destruction of Illicit Tobacco) Bill 2019 removes the 30‑day storage requirement for seized illicit tobacco, allowing the Comptroller‑General of Customs to order immediate destruction to more effectively disrupt criminal supply chains funded by the black economy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Immediate Destruction of Illicit Tobacco) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00076",
+   "assent_date": "2019-10-02"
+  }
+ ]
+}

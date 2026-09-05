@@ -1,0 +1,334 @@
+{
+ "key": "au-federal-alrc-2422",
+ "title": "Migration Amendment (Offshore Resources Activity) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Citizenship",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00117",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1116",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "question": "Tony Zappia I have listened to all of the opposition speakers who have spoken on the Migration Amendment (Offshore Resources Activity) Bill 2013 and all I heard from each and every one of them was an attack on the unions, an attack on the minister, talk about refugee policy, which has nothing to do with this bill whatsoever, and talk about border protection. Not once did any member opposite specifically address the substance and the merits of this bill, which seeks to ensure that Australia's interests in offshore projects are indeed protected. I commend the member for Wills, who pointed that out so well and so clearly in his contribution to this debate. Coalition members would like to see the multinationals that control the resource industry in Australia, both onshore and offshore, continue to operate without any restrictions and responsibilities. It is time that that came to an end. There is no logical reason whatsoever why the resources that are found offshore should be treated differently to the resources found on land in Australia and why workers who work on those resources on land should be treated any differently to the workers who are dealing with the resources found in the oceans. This legislation arises from the Federal Court decision in the Allseas v Minister for Immigration and Citizenship case. The court found that the foreign workers in that case—those on board the two pipe-laying vessels _Lorelay_ and _Solitaire_were not within the Australian migration zone and therefore did not require Australian visas. As a result of that decision, a task force was convened. I make it clear that that was done by the previous minister for immigration, not the current minister, whom members opposite seek to condemn and criticise because of what they refer to as his self-interest in this matter. The task force was asked to consider a response to the Federal Court decision so as to ensure that those projects did in fact fall within Australian jurisdiction. I note that th",
+   "stage": "Second reading",
+   "ayes": 73,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-17/2"
+  },
+  {
+   "key": "federal-senate-2422",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2013-06-27.66.1) to agree with [the bill's](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5086) main idea. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that the Senate can now discuss it in more detail. ### What was the bill's main idea? The [bill was introduced](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5086) *\"to provide that foreign workers who participate in, or support, offshore resources activities are taken to be in the migration zone and are required to hold a visa.\"* Read more about the bill and its background in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd010).",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 64,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/11"
+  },
+  {
+   "key": "federal-senate-2423",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "John Hogg The question now is that the remaining stages of this bill be agreed to and this bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 38,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 63,
+    "member": 3,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-275952",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275953",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275954",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275955",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275958",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275959",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275960",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824233",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825263",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the Migration Amendment (Offshore Resources Activity) Bill 2013 was drafted by former Prime Minister Gillard and Minister O'Connor to benefit the Maritime Union of Australia, not the national interest, and that it would drive international vessels and expertise away from Australian waters. The speaker also claimed the bill was introduced without proper consultation, a regulation impact statement, or consideration of Australia's international law of the sea obligations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Offshore Resources Activity) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00117",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

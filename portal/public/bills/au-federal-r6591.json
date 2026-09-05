@@ -1,0 +1,378 @@
+{
+ "key": "au-federal-r6591",
+ "title": "Higher Education Legislation Amendment (Provider Category Standards and Other Measures) Bill 2020",
+ "short_title": "Higher Education Legislation Amendment (Provider Category Standards and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-09-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6591_ems_a69a4efe-c80a-4761-8d29-5c8562417eb4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6591_ems_764a11f4-4b48-4a58-a2ec-20b3b72fc708%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6591_ems_50cd1c32-ca97-4b93-9c8b-0db28bf0723a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6591_ems_26e0479c-b075-4c85-8217-81c33c5d420a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6591%22",
+   "document_date": "2020-09-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00014",
+   "document_date": "2021-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-09-02",
+  "sentences": [
+   "The bill would amend the Tertiary Education Quality and Standards Agency Act 2003 to implement several reviews and improve higher education regulation.",
+   "The main changes include updating provider category names, allowing TEQSA to manage student records after a provider stops operating, and protecting the word 'university' in internet domain names.",
+   "The bill would also replace 'Indigenous students' with 'Indigenous persons' in the Higher Education Support Act 2003 to clarify the scope of assistance grants."
+  ],
+  "changes": [
+   "Implement recommendations from reviews of provider category standards and the TEQSA Act's impact.",
+   "Enable TEQSA to take control of student records when a provider ceases operations.",
+   "Require ministerial consent to use 'university' in Australian internet domain names.",
+   "Allow TEQSA to extend registration or accreditation periods more than once.",
+   "Reframe references to threshold standards as a single unified framework.",
+   "Introduce a new 'University College' category for high‑quality non‑university providers."
+  ],
+  "affected": "Higher education providers, students, the Tertiary Education Quality and Standards Agency, and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:24:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6716",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-11-12.11.2) to keep the original wording of the [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. A second reading motion is \"*that the bill be read a second time*,\" which is parliamentary jargon for agreeing with the main idea of the bill. The change was proposed by the MP For Moreton [Graham Perrett](https://theyvoteforyou.org.au/people/representatives/moreton/graham_perrett) (Labor). ### Proposed change > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government has:* > > *(1) damaged the quality of Australia's world-class education system;* > > *(2) abandoned university workers during the pandemic;* > > *(3) cut billions in funding and made it harder and more expensive for students to go to university; and* > > *(4) done nothing that will help young people get into priority courses and jobs\".*",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 104
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-11-12/1"
+  },
+  {
+   "key": "federal-senate-6979",
+   "date": "2021-02-18",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2021-02-18.5.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which would have added the text below to the usual second reading motion. The usual second reading motion is that \"*the bill be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*,\" which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes that:* > >> *(i) there is widespread opposition to the Government's proposed use of the category title 'University College' for non-university high-performing higher education providers, and* >> >> *(ii) the Government has not provided sufficient policy rationale for discarding the clear recommendation of the Provider Category Standards (PCS) Review to title the category 'National Institute of Higher Education'; and* > > *(b) calls on the Government to implement the original recommendation of the PCS Review to adopt the title 'National Institute of Higher Education' for the category of non-university high-performing higher education institutions when drafting the instrument giving effect to its changes to provider categories\"*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 25,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-18/1"
+  },
+  {
+   "key": "federal-senate-6987",
+   "date": "2021-02-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-18.13.2) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. Senator Faruqi explained the [reasons for her amendment](https://www.openaustralia.org.au/senate/?gid=2021-02-18.13.2): > *This amendment really seeks to ensure that the higher education regulator, TEQSA [Tertiary Education Quality and Standards Agency], take a variety of qualitative and quantitative factors into account when they set the benchmarks for research quality. It is also to provide clarity on what those factors are. TEQSA would need to specify the factors taken into account for different discipline areas and specify the benchmarks. This amendment would make sure that they do that, and that should include weightings that are given to each specific factor. By including these requirements in the primary legislation, we can have greater confidence that the standards against which the research in universities is judged are appropriate, that these standards are fair and especially that these standards are transparently developed, which the Senate can make sure of today.* ### Amendment text > *(1) Schedule 1, item 15, page 7 (after line 15), after subsection 59A(4), insert:* > > *(4A) A determination under subsection (4) must provide that, in having regard to the quality of the research undertaken by the entity or provider under subsection (1), TEQSA must:* > >> *(a) take into account a variety of qualitative and quantitative factors; and* >> >> *(b) specify the factors taken into account for different discipline areas; and* >> >> *(c) specify the benchmarks, including weightings, given to each specified factor.* > > *(4B) Subsection (4A) does not limit subsection (4).*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 24,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-18/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-394754",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-09-02",
+   "stage_hint": null,
+   "brief": "The bill implements the 2017-18 provider category standards review by Emeritus Professor Peter Coaldrake, reducing domestic university categories to one ('Australian university'), overseas to one ('overseas university'), and adding 'institutes of higher education' and 'university colleges'. It also gives TEQSA power to take control of student records if a provider ceases operations, adds the 'undergraduate certificate' to higher education awards, allows multiple registration extensions, and changes 'Indigenous students' to 'Indigenous persons' in the Higher Education Support Act."
+  },
+  {
+   "slug": "speech-398762",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment criticising the government for damaging education quality, abandoning university workers during the pandemic, cutting billions in funding, and failing to help students into priority courses and jobs. The speaker also noted that the bill largely implements the Coaldrake review recommendations, but with some changes, and that Labor has referred the bill to a Senate inquiry."
+  },
+  {
+   "slug": "speech-398764",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The Morrison government's Higher Education Legislation Amendment (Provider Category Standards and Other Measures) Bill 2020 implements the Coaldrake Review recommendations to simplify university categories, reduce regulation, and protect academic records, while the government has invested over $18 billion in universities in 2020 and plans to create 100,000 new university places by 2030."
+  },
+  {
+   "slug": "speech-398767",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that universities were not excluded from JobKeeper, as they are eligible if they meet turnover tests (30% loss for turnover under $1 billion, 50% for over $1 billion), and supported the Higher Education Legislation Amendment (Provider Category Standards and Other Measures) Bill 2020, which reduces higher education provider categories from six to four and implements recommendations from the Coaldrake review."
+  },
+  {
+   "slug": "speech-398768",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-12",
+   "stage_hint": null,
+   "brief": "The Higher Education Legislation Amendment (Provider Category Standards and Other Measures) Bill 2020 implements recommendations from Emeritus Professor Coaldrake’s review, simplifies higher education standards, protects student records access, restricts use of “university” in Australian domain names, and confirms Indigenous student assistance grants can support prospective and current Indigenous students. The government will introduce an amendment to item 29 to prevent the domain name administrator from breaching the law through automated processing of domain licence applications."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Legislation Amendment (Provider Category Standards and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00014",
+   "assent_date": "2021-03-01"
+  }
+ ]
+}

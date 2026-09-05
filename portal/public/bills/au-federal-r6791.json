@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-r6791",
+ "title": "Social Media (Basic Expectations and Defamation) Bill 2021",
+ "short_title": "Social Media (Basic Expectations and Defamation) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-25",
+ "originating_house": "representatives",
+ "sponsor": "WEBSTER, Anne, MP",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10935",
+ "portfolio": "(s) WEBSTER, Anne, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6791%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6791%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6791%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6791_ems_40723152-0c53-4feb-9e75-313cbc1d2398%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6791%22",
+   "document_date": "2021-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-25",
+  "sentences": [
+   "The bill would let the minister set rules for how social media companies handle defamatory content and make them legally responsible if they do not remove it quickly.",
+   "The eSafety Commissioner could order a provider to report on whether it meets the minister's expectations, and issue defamation notices after a public complaint.",
+   "If a defamation notice is not acted on within 48 hours, both the person who posted the material and the provider could be sued for defamation."
+  ],
+  "changes": [
+   "The minister can determine basic expectations for social media services after consulting the public.",
+   "The eSafety Commissioner can require providers to submit compliance reports and publish statements about contraventions.",
+   "The public can complain to the Commissioner about defamatory material, and the Commissioner can issue defamation notices.",
+   "Providers become jointly liable for defamation if material is not removed within 48 hours of a defamation notice.",
+   "End-users can ask the Administrative Appeals Tribunal to review the Commissioner's decisions."
+  ],
+  "affected": "Social media service providers, end-users who post defamatory material, and the general public who may be defamed.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-413997",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that social media platforms must be held accountable for defamatory content, supporting the Social Media (Basic Expectations and Defamation) Bill 2021 which allows the minister to set basic expectations and makes platforms liable if defamatory material is not removed within 48 hours of a notice. The bill follows a case where the member for Mallee received $875,000 in damages after being defamed online."
+  }
+ ],
+ "acts": []
+}

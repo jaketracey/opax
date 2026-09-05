@@ -1,0 +1,343 @@
+{
+ "key": "au-federal-s1236",
+ "title": "Aged Care Legislation Amendment (New Commissioner Functions) Bill 2019",
+ "short_title": "Aged Care Legislation Amendment (New Commissioner Functions) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-16",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1236_ems_c9a7249e-8709-4f61-8331-7abb51f5df6a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1236%22",
+   "document_date": "2019-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00116",
+   "document_date": "2019-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-16",
+  "sentences": [
+   "The bill would give the Aged Care Quality and Safety Commissioner extra regulatory powers that currently belong to the Department of Health's Secretary.",
+   "The Aged Care Quality and Safety Commission would become the single body that handles provider approvals, compliance checks, enforcement actions and compulsory assault reporting.",
+   "The changes complete a two-year reform program and are meant to reduce fragmentation in aged care regulation."
+  ],
+  "changes": [
+   "The bill transfers aged care regulatory functions from the Secretary to the Commissioner.",
+   "The Commission becomes the main contact for providers and consumers on quality and regulation.",
+   "The bill streamlines how the Commissioner can impose sanctions on non-compliant providers.",
+   "The Commission takes on responsibility for compulsory assault reporting by approved providers.",
+   "The Commission approves providers for residential, home and flexible care services.",
+   "The Commission monitors provider compliance and can impose sanctions."
+  ],
+  "affected": "Approved providers of Australian Government funded aged care and consumers of those services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6152",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2019-12-05.13.1) introduced by West Australian Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens), which means they failed. The amendments related to advocates and community visitors, complaints functions and publicly available reports.",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 26,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/1"
+  },
+  {
+   "key": "federal-senate-6153",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-12-05.49.1) introduced by South Australian Senator [Stirling Griff](https://theyvoteforyou.org.au/people/senate/sa/stirling_griff) (Centre Alliance), which means it failed. ### Amendment text > *(1) Page 82 (after line 21), after Schedule 3, insert:* > > *Schedule 3A—Transparency of approved providers* > > *Aged Care Act 1997* > > *1 After section 9-2* > > *Insert:* > >> *9-2A Obligation to provide Commissioner a report* >> >> *(1) As soon as practicable within 3 months after the end of a financial year, an approved provider must provide the *Quality and Safety Commissioner with a written report for each facility operated by the provider that provided residential care in the financial year.* >> >> *(2) The report must include the following information:* >> >>> *(a) the total income received by the provider from the facility;* >>> >>> *(b) the sources of that income;* >>> >>> *(c) the total amount spent in the financial year;* >>> >>> *(d) the total cost of care expenditure which includes the itemised cost of the following:* >>> >>>> *(i) food and food supplements;* >>>> >>>> *(ii) medical products;* >>>> >>>> *(iii) continence aids;* >>>> >>> *(e) the total cost of accommodation;* >>> >>> *(f) the total cost of staff members for each category of staff member referred to in subsection (3);* >>> >>> *(g) the total cost of staff member training;* >>> >>> *(h) the total amount of other operational expenditure itemised by category;* >>> >>> *(i) any amount paid to a related body corporate within the meaning of section 50 of the Corporations Act 2011.* >>> >>> *Note: Approved providers have a responsibility under Part 4.3 to comply with this obligation. Failure to comply with a responsibility can result in a sanction being imposed under Part 7A of the *Quality and Safety Commission Act. The expenditure report provided under this section is made publicly avail",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 31,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/2"
+  },
+  {
+   "key": "federal-senate-6154",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-12-05.51.1) introduced by South Australian Senator [Stirling Griff](https://theyvoteforyou.org.au/people/senate/sa/stirling_griff) (Centre Alliance), which means it failed. The amendment related to staff-to-care-recipient ratios. ### Amendment text > *Aged Care Act 1997* > > *1 After section 9-2* > > *Insert:* > > *9-2B Obligation to notify Commissioner about staff to care recipient ratios* > >> *(1) An approved provider must notify the Quality and Safety Commissioner in relation to each facility operated by the provider that provided residential care, on each notification day for each rostered shift, ratios of:* >> >>> *(a) care recipients to whom residential care is being provided through that facility; to* >>> >>> *(b) each category of staff member of the provider that provides a service connected with that facility.* >>> >>> *Note: Approved providers have a responsibility under Part 4.3 to comply with this obligation. Failure to comply with a responsibility can result in a sanction being imposed under Part 7A of the Quality and Safety Commission Act. Information notified under this section is made publicly available (see section 96-12).* >> >> *(2) In counting staff members for the purposes of this section, part-time staff members are to be taken into account as an appropriate fraction of a full-time equivalent.* >> >> *(3) For the purposes of subsection (1), a notification day is:* >> >>> *(a) the 4 days, in each year, specified in the regulations; or* >>> >>> *(b) if no days are specified in the regulations for the purposes of paragraph (a)—each 1 January, 1 April, 1 July and 1 October.* >> >> *(4) For the purposes of subsection (1), the categories of staff member are the following:* >> >>> *(a) registered nurses;* >>> >>> *(b) enrolled nurses;* >>> >>> *(c) personal care attendants;* >>> >>> *(d) allied health staff;* >>> >>> *(e) other staff members involved in the de",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 22,
+    "dated": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-386700",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (New Commissioner Functions) Bill 2019 expands the powers of the independent Aged Care Quality and Safety Commissioner from 1 January 2020 to include provider approval, compliance enforcement, and administration of assault reporting, fulfilling the government's 2018-19 budget commitment and responding to the 2017 Carrell-Paterson review."
+  },
+  {
+   "slug": "speech-386701",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-05",
+   "stage_hint": null,
+   "brief": "The speaker argued the Aged Care Legislation Amendment (New Commissioner Functions) Bill 2019 merely transfers existing powers from the Department of Health to the Aged Care Quality and Safety Commission rather than granting new powers, and criticised the government for failing to strengthen transparency, complaints mechanisms, and arbitration. They noted 120,000 older Australians remain on a waitlist for home-care packages despite the government providing 10,000 new packages, and urged faster implementation of the royal commission’s recommendations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Legislation Amendment (New Commissioner Functions) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00116",
+   "assent_date": "2019-12-11"
+  }
+ ]
+}

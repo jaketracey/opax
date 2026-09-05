@@ -1,0 +1,205 @@
+{
+ "key": "au-federal-r5342",
+ "title": "Private Health Insurance Amendment Bill (No. 1) 2014",
+ "short_title": "Private Health Insurance Amendment Bill (No. 1) 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2014-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5342_ems_516b21bb-d52c-4fca-b174-28e090f6c763%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5342%22",
+   "document_date": "2014-09-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00123",
+   "document_date": "2014-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-297860",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300419",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300420",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300426",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300432",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300433",
+   "speaker": "Andrew Southcott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300434",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300618",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-28",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance Amendment Act (No. 1) 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00123",
+   "assent_date": "2014-11-26"
+  }
+ ]
+}

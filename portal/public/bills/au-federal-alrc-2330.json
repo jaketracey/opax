@@ -1,0 +1,349 @@
+{
+ "key": "au-federal-alrc-2330",
+ "title": "Appropriation Bill (No. 3) 2012-2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Deregulation",
+ "status": "passed",
+ "status_as_of": "2013-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-07",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-02-11",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-02-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-03-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00021",
+   "document_date": "2013-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-268567",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-268879",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269385",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269397",
+   "speaker": "Daryl Melham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269399",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269404",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269408",
+   "speaker": "Alan Griffin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269409",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269412",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269413",
+   "speaker": "Mike Symon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269414",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269416",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269418",
+   "speaker": "Ken O'Dowd",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269630",
+   "speaker": "Paul Neville",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269632",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269633",
+   "speaker": "Laura Smyth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269634",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269635",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269637",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269639",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269640",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269644",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269653",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269663",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 3) 2012-2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00021",
+   "assent_date": "2013-03-28"
+  }
+ ]
+}

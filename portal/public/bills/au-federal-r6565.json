@@ -1,0 +1,216 @@
+{
+ "key": "au-federal-r6565",
+ "title": "Health Insurance Amendment (Continuing the Office of the National Rural Health Commissioner) Bill 2020",
+ "short_title": "Health Insurance Amendment (Continuing the Office of the National Rural Health Commissioner) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2020-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6565_ems_1325749f-ef2d-40bc-966b-96327ed880ff%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6565%22",
+   "document_date": "2020-06-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00074",
+   "document_date": "2020-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-12",
+  "sentences": [
+   "This bill would make the Office of the National Rural Health Commissioner permanent beyond its current expiry date of 1 July 2020.",
+   "The Office would advise the Rural Health Minister and other agencies on rural health policy, undertake projects and research, and support implementation of government strategies.",
+   "The Office would be reviewed after five years to assess its effectiveness and identify improvements to its functions and operations."
+  ],
+  "changes": [
+   "The bill continues the Office of the National Rural Health Commissioner under the Health Insurance Act.",
+   "The bill expands the Office's functions to include providing advice, undertaking projects, conducting research, and consulting stakeholders.",
+   "The bill allows additional functions to be conferred on the Commissioner by legislative instrument.",
+   "The bill requires a review of the Office after five years of operation."
+  ],
+  "affected": "Rural communities, rural health professionals, the Rural Health Minister, the Department of Health, and other government agencies are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-391992",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The bill continues the Office of the National Rural Health Commissioner beyond 1 July 2020 and strengthens its functions, including implementing the National Rural Generalist Pathway, supporting the rural COVID-19 response, and providing independent advice on rural health workforce distribution, with a five-year review to assess effectiveness."
+  },
+  {
+   "slug": "speech-392983",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the bill to make the Office of the National Rural Health Commissioner permanent and expand its functions to include allied health, nursing and Indigenous health, but moved an amendment expressing concern over government cuts to rural health—including bulk‑billing incentive reductions affecting 433 areas (a 34% cut) and increased out‑of‑pocket costs in Eden‑Monaro (GP costs up 30%, specialist costs up 50%)—and calling for those measures to be reconsidered."
+  },
+  {
+   "slug": "speech-392985",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Health Insurance Amendment (Continuing the Office of the National Rural Health Commissioner) Bill 2020, emphasising the need for the Rural Health Commissioner to consult with Aboriginal community controlled health organisations and to develop a comprehensive rural and regional healthcare plan. He noted that the Northern Territory had gone 72 days without a COVID-19 case, crediting the partnership between the Commonwealth, the NT government led by Chief Minister Michael Gunner and Minister Natasha Fyles, and Aboriginal health services."
+  },
+  {
+   "slug": "speech-392987",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speech supported the Health Insurance Amendment (Continuing the Office of the National Rural Health Commissioner) Bill 2020, which continues the Office of the National Rural Health Commissioner, and highlighted rural GP shortages with ratios of one GP per 3,700 people in Mildura, one per 6,200 in Swan Hill, and one per 3,400 in Horsham, versus one per 900 in Melbourne. It also commended ministers Mark Coulton and Greg Hunt."
+  },
+  {
+   "slug": "speech-392989",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Continuing the Office of the National Rural Health Commissioner) Bill 2020 makes the Office of the National Rural Health Commissioner a permanent body, with a broader focus including deputy commissioners for nursing, allied health and Indigenous health. The speech also highlighted the Morrison government’s $1.3 billion Community Health and Hospitals Program, $63.4 million for regional radiation oncology, $100 million for regional clinical trials, and the Murray-Darling Medical Schools Network aiming to deliver 3,000 additional specialist GPs and over 3,000 nurses for rural Australia over 10 years, alongside the rapid expansion of telehealth services during COVID-19."
+  },
+  {
+   "slug": "speech-392990",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Health Insurance Amendment (Continuing the Office of the National Rural Health Commissioner) Bill 2020, arguing that rural health requires targeted policy, and highlighted ongoing unmet needs in the New South Wales South Coast: a new level 4 Eurobodalla hospital with acute mental health beds, a Shoalhaven hospital redevelopment, a CT scanner for Ulladulla, a 34% increase in out-of-pocket doctor costs, and $70,000 in funding for the Shoalhaven Women's Health Centre mental health outreach services, which had 13 days left."
+  },
+  {
+   "slug": "speech-392991",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Continuing the Office of the National Rural Health Commissioner) Bill 2020 is supported to make the office permanent, citing a $2.1 billion healthcare deficit in rural and regional areas and chronic underfunding of rural health research—only 1% of NHMRC grants from 2000–2014 focused on rural health."
+  },
+  {
+   "slug": "speech-392992",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speech argued for making the Office of the National Rural Health Commissioner permanent, noting over $62 million in appropriations, the Collingrove Agreement for a national rural generalist pathway, and initiatives such as expanded rural training programs, MRI and radiotherapy services, and the Heart of Australia bus."
+  },
+  {
+   "slug": "speech-392993",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to continue and expand the Office of the National Rural Health Commissioner, but criticised the government's rural health changes for cutting bulk-billing incentives in 433 areas and abolishing the Rural Other Medical Practitioners Program, and urged the government to include mental health in the commissioner's remit."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Continuing the Office of the National Rural Health Commissioner) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00074",
+   "assent_date": "2020-06-25"
+  }
+ ]
+}

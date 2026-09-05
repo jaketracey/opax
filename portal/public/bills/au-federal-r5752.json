@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r5752",
+ "title": "Fairer Paid Parental Leave Bill 2016",
+ "short_title": "Fairer Paid Parental Leave Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2017-05-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5752%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5752%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5752%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5752_ems_aa3b0247-12f2-4869-87b0-6d3c7fed66a3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5752%22",
+   "document_date": "2016-10-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-20",
+  "sentences": [
+   "This bill would replace the earlier paid parental leave proposal with a revised scheme, taking into account public and stakeholder feedback.",
+   "Government-funded parental leave pay would only go to people who get no primary carer leave from their employer, or whose employer leave is shorter than 18 weeks or paid below the full-time minimum wage, with the government topping up the difference up to that limit.",
+   "The changes would start on the first of January, April, July, or October after the law receives royal assent, and the bill also eases the work test for pregnant workers in hazardous jobs and allows a 12-week gap between work days."
+  ],
+  "changes": [
+   "It would limit government parental leave pay based on the amount of employer-provided primary carer leave a person receives.",
+   "It would make the four-week backdating rule more flexible for parents who file their claim more than four weeks after the birth.",
+   "It would extend the permissible break in the work test to 12 weeks between working days.",
+   "It would remove the requirement for employers to distribute government-funded parental leave pay to long-term employees.",
+   "It would have the Department of Human Services pay employees directly, unless an employer opts in and the employee agrees."
+  ],
+  "affected": "Parents, employers, and the Department of Human Services are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:44:16Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

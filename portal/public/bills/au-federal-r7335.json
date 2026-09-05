@@ -1,0 +1,826 @@
+{
+ "key": "au-federal-r7335",
+ "title": "Fair Work Amendment (Protecting Penalty and Overtime Rates) Bill 2025",
+ "short_title": "Fair Work Amendment (Protecting Penalty and Overtime Rates) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2025-08-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-08-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7335_ems_6a80246a-bac9-4c88-af6c-74e6fd56cefb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7335_ems_9d5a1e06-c8dd-4764-a967-f9a5ea2fda32%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7335_ems_3777e262-eed1-446e-8d02-7bb5a2d9ae90%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7335%22",
+   "document_date": "2025-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00037",
+   "document_date": "2025-08-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2025-07-24",
+  "sentences": [
+   "This bill would change the Fair Work Act 2009 to safeguard the extra pay that certain employees receive for working overtime or at unsociable times.",
+   "It would write a rule into law that stops the Fair Work Commission from lowering those specific rates in modern awards and closes a gap that lets employers combine them into one wage without fair compensation.",
+   "The bill would not force a full review of all modern awards, and the rule would apply to the Commission's decisions made after the law starts, even for applications submitted earlier."
+  ],
+  "changes": [
+   "The bill would make it illegal for the Commission to cut the penalty and overtime rates that are listed in modern awards.",
+   "It would close a loophole that currently allows employers to merge penalty and overtime pay into a single rate that does not fairly compensate workers.",
+   "The bill would not affect existing flexibility clauses or the Commission's power to fix errors in awards."
+  ],
+  "affected": "Employees who rely on modern awards for their pay conditions, and the Fair Work Commission which administers those awards.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9653",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2025-07-30.18.1) introduced by Goldstein MP [Tim Wilson](https://theyvoteforyou.org.au/people/representatives/goldstein/tim_wilson) (Liberal), which means it failed. ### Motion text > *That the [Fair Work Amendment (Protecting Penalty and Overtime Rates) Bill 2025](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7335) be referred to the Standing Committee on Education and Employment for consideration and an advisory report by 7 October 2025.*",
+   "stage": "Reference to Committee",
+   "ayes": 42,
+   "noes": 90,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 88
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-07-30/1"
+  },
+  {
+   "key": "federal-representatives-9666",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2025-07-31.12.5) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Cook MP [Simon Kennedy](https://theyvoteforyou.org.au/people/representatives/cook/simon_kennedy) (Liberal). ### Amendment text > *That all words after \"House\" be omitted with a view to substituting the following words:* > > *(1) notes the Government has failed to consult meaningfully with Australian small businesses on the impact of the Bill;* > > *(2) condemns the Government for refusing to allow the Bill to be referred to a parliamentary committee for proper scrutiny and stakeholder input;* > > *(3) expresses concern that:* > >> *(a) no Regulatory Impact Statement has been provided to assess how the Bill will affect small business employment and operating costs;* >> >> *(b) the Government cannot say how many small businesses will be impacted by the proposed changes; and* >> >> *(c) key industry stakeholders, including the Australian Chamber of Commerce and Industry, Australian Industry Group, Australian Retailers Association and the Minerals Council of Australia, have warned the Bill will undermine flexibility, increase compliance complexity and reduce productivity; and* > > *(4) calls on the Government to:* > >> *(a) immediately release a Regulatory Impact Statement;* >> >> *(b) publish modelling of the Bill's economic and employment effects on small businesses;* >> >> *(c) restore a clear consultation pathway for small business stakeholders; and* >> >> *(d) amend the Bill to ensure the Fair Work Commission retains sufficient flexibility to approve award variations that enable higher pay and simpler conditions where supported by both employers and employees\".*",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 89,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 87
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-07-31/1"
+  },
+  {
+   "key": "federal-representatives-9667",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2025-07-31.22.12) introduced by Goldstein MP [Tim Wilson](https://theyvoteforyou.org.au/people/representatives/goldstein/tim_wilson) (Liberal), which means they failed. ### Amendment text > *(1) Schedule 1, item 1, page 3 (line 6) to page 3 (line 18), omit section 135A, substitute:* > >> *135A Special provisions relating to penalty rates and overtime rates* >> >> *(1) In exercising its powers under this Part to make, vary or revoke modern awards, the FWC must be satisfied that:* >> >>> *(a) the rate of a penalty rate or an overtime rate that employees are entitled to receive under the modern award is not reduced; and* >>> >>> *(b) modern awards do not include terms that substitute employees' entitlements to receive penalty rates or overtime rates where those terms would have the effect of reducing the additional remuneration referred to in paragraph 134(1)(da) that an affected employee would otherwise receive under the modern award.* >> >> *(2) Subsection (1) does not apply when the FWC exercises powers under this Part pursuant to:* >> >>> *(a) section 144 (flexibility terms); or* >>> >>> *(b) section 160 (which deals with variation to remove ambiguities or correct errors); or* >>> >>> *(c) paragraph 157 (3)(a) (own initiative).* >> >> *(3) Paragraph (1)(b) does not apply when the FWC exercises powers under this Part in relation to terms of a modern award that substitute employees' entitlements to receive penalty rates or overtime rates where those terms existed immediately prior to commencement of Subsection (1).* >> >> *(4) Paragraph (1)(b) does not apply when the FWC exercises powers under this Part in relation to terms of a modern award that substitute employees' entitlements to receive penalty rates or overtime rates where those terms are expressed to apply only to a small business employer.* >> >> *(5) Subsection (1) does not limit the FWC's ability to make a determination to v",
+   "stage": "Consideration in detail",
+   "ayes": 40,
+   "noes": 93,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 87
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-07-31/2"
+  },
+  {
+   "key": "federal-senate-9702",
+   "date": "2025-08-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7335_amend_0dd73c6d-86dc-47bf-87db-8b33aaf44b1b%22;rec=0) to the usual second reading amendment, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by NSW Senator [Maria Kovacic](https://theyvoteforyou.org.au/people/senate/nsw/maria_kovacic) (Liberal) ### Amendment text > *Omit all words after \"That\", substitute:* > > *\"(a) the Senate notes that:* > >> *(i) Australian small businesses have been hit with a new compliance burden almost every month since the Albanese Labor Government came to office,* >> >> *(ii) evidence shows that small business owners spend 15 hours per week on compliance instead of running their business,* >> >> *(iii) the Albanese Labor Government has refused to prepare a Regulation Impact Statement for this bill and has no idea how many small businesses are going to be affected by this increased burden, and* >> >> *(iv) instead of developing a clear and focussed plan to address the needs of small businesses within the economy, the Albanese Government seems intent on only applying a larger regulatory burden on them; and* > > *(b) further consideration of the bill be made an order of the day for the first sitting day after the Government tables a Regulation Impact Statement assessing the impacts of the bill\".*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-27/1"
+  },
+  {
+   "key": "federal-senate-9703",
+   "date": "2025-08-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-08-27.20.1) to the usual second reading amendment, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by South Australian Senator [Barbara Pocock](https://theyvoteforyou.org.au/people/senate/sa/barbara_pocock) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) reforms to work from home arrangements are long overdue,* >> >> *(ii) all employees should have the right to work from home for up to two days a week where practical; and* > > *(b) calls on the Government to legislate a right to work from home which provides that:* > >> *(i) all employees have the right to request work from home arrangements for up to two days a week,* >> >> *(ii) employers are required to positively consider such requests and may only refuse a request if it would make the performance of the inherent requirements of the role seriously impractical or impossible, and* >> >> *(iii) employers are required to take into account any reasonable adjustments that could be made before refusing the request\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-27/2"
+  },
+  {
+   "key": "federal-senate-9704",
+   "date": "2025-08-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-08-27.22.1) to the usual second reading amendment, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network). ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) the Labor Government has broken its promise to review and standardise the definition of small and medium business across legislation, creating ongoing confusion for industry and adding to compliance burdens; and* > > *(b) small businesses continue to face significant financial pressures, and that a lower company tax rate of 15 per cent for small businesses would provide meaningful relief, strengthen viability, and encourage job creation\".*",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-27/3"
+  },
+  {
+   "key": "federal-senate-9714",
+   "date": "2025-08-28",
+   "house": "senate",
+   "question": "The majority voted against the [amendment on sheet 3408](https://www.openaustralia.org.au/senate/?id=2025-08-27.24.1), which was moved by NSW Senator [Maria Kovacic](https://theyvoteforyou.org.au/people/senate/nsw/maria_kovacic) (Liberal). This means the amendment failed. It related to retaining the Fair Work Commission's discretion to approve award variations. ### Amendment text > *(1) Schedule 1, item 1, page 3 (lines 6 to 20), omit section 135A, substitute:* > > *135A Special provisions relating to penalty rates and overtime rates* > > *(1) In exercising its powers under this Part to make, vary or revoke modern awards, the FWC must be satisfied that:* > >> *(a) the rate of a penalty rate or an overtime rate that employees are entitled to receive under the modern award is not reduced; and* >> >> *(b) modern awards do not include terms that substitute employees' entitlements to receive penalty rates or overtime rates where those terms would have the effect of reducing the additional remuneration referred to in paragraph 134(1)(da) that an affected employee would otherwise receive under the modern award.* > > *(2) Subsection (1) does not apply when the FWC exercises powers under this Part pursuant to:* > >> *(a) section 144 (flexibility terms); or* >> >> *(b) section 160 (which deals with variation to remove ambiguities or correct errors); or* >> >> *(c) paragraph 157(3)(a) (own initiative).* > > *(3) Paragraph (1)(b) does not apply when the FWC exercises powers under this Part in relation to terms of a modern award that substitute employees' entitlements to receive penalty rates or overtime rates where those terms existed immediately prior to commencement of subsection (1).* > > *(4) Paragraph (1)(b) does not apply when the FWC exercises powers under this Part in relation to terms of a modern award that substitute employees' entitlements to receive penalty rates or overtime rates where those terms are expressed to apply only to a small business employer.* > > *(5)",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-28/1"
+  },
+  {
+   "key": "federal-senate-9715",
+   "date": "2025-08-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-08-28.15.1) introduced by NSW Senator [Maria Kovacic](https://theyvoteforyou.org.au/people/senate/nsw/maria_kovacic) (Liberal), which means it failed. ### Amendment text > *(1) Schedule 1, item 1, page 3 (line 9), after \"employees\", insert \"(other than employees of small business employers)\".* > > *(2) Schedule 1, item 1, page 3 (line 15), after \"any employee\", insert \"(other than any employee of a small business employer)\".*",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-28/2"
+  },
+  {
+   "key": "federal-senate-9716",
+   "date": "2025-08-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-08-28.17.1) introduced by NSW Senator [Maria Kovacic](https://theyvoteforyou.org.au/people/senate/nsw/maria_kovacic) (Liberal), which means it failed. ### Amendment text > *(1) Schedule 1, page 4 (after line 6), at the end of the Schedule, add:* > > *3 Regulation impact statement* > >> *(1) The Minister must cause a regulation impact statement to be prepared in relation to the operation of the amendments made by this Act.* >> >> *(2) The persons preparing the regulation impact statement must complete it within 6 months after this Act commences.* >> >> *(3) The persons preparing the regulation impact statement must give the Minister a copy of the statement.* >> >> *(4) The Minister must cause a copy of the regulation impact statement to be tabled in each House of the Parliament within 15 sitting days of that House after the Minister receives a copy of the statement.*",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-28/3"
+  },
+  {
+   "key": "federal-senate-9717",
+   "date": "2025-08-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-08-28.19.1) introduced by South Australian Senator [Barbara Pocock](https://theyvoteforyou.org.au/people/senate/sa/barbara_pocock) (Greens), which means they failed. The amendments would have made it \"*a right for all Australian workers—not just those with a school-age child, not just carers, but anyone—looking for flexibility to ask for it.*\" ### Amendment text > *(1) Schedule 1, heading, page 3 (line 1), omit \"Amendments\", substitute \"Penalty and overtime rates\".* > > *(2) Page 4 (after line 7), at the end of the Bill, add:* > >> *Schedule 3 — Requests for flexible working arrangements* >> >> *Fair Work Act 2009* >> >> *1 Subsections 65(1) and (1A)* >> >>> *Repeal the subsections, substitute:* >>> >>> *Employee may request change in working arrangements* >>> >>> *(1) If an employee would like to change his or her working arrangements then the employee may request the employer for a change in working arrangements.* >>> >>> *Note: Examples of changes in working arrangements include changes in hours of work, changes in patterns of work and changes in location of work.* >> >> *2 Subsection 65A(1)* >> >>> *Omit \"relating to circumstances that apply to the employee\".* >> >> *3 Subparagraph 65A(3)(a)(ii)* >> >>> *Omit \"the circumstances mentioned in subsection (1)\", substitute \"the request\".* >> >> *4 Subparagraph 65A(6)(c)(i)* >> >>> *Omit \"the circumstances mentioned in subsection (1)\", substitute \"the request\".* >> >> *5 Paragraph 65B(1)(a)* >> >>> *Omit \"relating to circumstances that apply to the employee\".* >> >> *6 Subparagraph 65C(1)(f)(ii)* >> >>> *Omit \"the circumstances mentioned in paragraph 65B(1)(a)\", substitute \"the request\".* >> >> *7 In the appropriate position in Schedule 1* >> >>> *Insert:* >>> >>> *Part 21 — Amendments made by Schedule 3 to the Fair Work Amendment (Protecting Penalty and Overtime Rates) Act 2025* >>> >>> *129 Application of amendments* >>> >>> *T",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-28/4"
+  },
+  {
+   "key": "federal-senate-9718",
+   "date": "2025-08-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) and (2) on sheet 3382](https://www.openaustralia.org.au/senate/?gid=2025-08-28.30.1) introduced by South Australian Senator [Barbara Pocock](https://theyvoteforyou.org.au/people/senate/sa/barbara_pocock) (Greens), which means they failed. Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2025-08-28.30.1) this amendment would have: > *clarifie[d] that, where there is an agreement in place, where parties are negotiating for a new one and one party has applied for an intractable bargaining workplace determination, the determination can't take workers backwards. Each term of the determination must be no less favourable than the corresponding term of the agreement. It restores the position that your current agreement stays in place until you negotiate a new one.* See [OAF.org.au](https://www.openaustralia.org.au/senate/?gid=2025-08-28.30.1) for the full amendment text.",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-28/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195329",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195700",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195707",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195727",
+   "speaker": "Tom French",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195869",
+   "speaker": "Carina Garland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195967",
+   "speaker": "Tony Sheldon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196027",
+   "speaker": "Helen Polley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-31",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196220",
+   "speaker": "Maria Kovacic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-08-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196310",
+   "speaker": "Helen Polley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196374",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-08-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196549",
+   "speaker": "Karen Grogan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-08-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Protecting Penalty and Overtime Rates) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00037",
+   "assent_date": "2025-08-29"
+  }
+ ]
+}

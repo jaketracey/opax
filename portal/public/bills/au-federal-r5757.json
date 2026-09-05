@@ -1,0 +1,227 @@
+{
+ "key": "au-federal-r5757",
+ "title": "Civil Nuclear Transfers to India Bill 2016",
+ "short_title": "Civil Nuclear Transfers to India Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2016-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5757_ems_174166dc-edef-47ca-9efc-463c1836806e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5757%22",
+   "document_date": "2016-11-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00101",
+   "document_date": "2016-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-09",
+  "sentences": [
+   "The bill would protect approvals for civil nuclear exports to India from being challenged under Australia's international non-proliferation commitments.",
+   "It would declare that such approvals are not inconsistent with those commitments when certain conditions are satisfied.",
+   "The bill does not specify which international agreements are covered or what the conditions are."
+  ],
+  "changes": [
+   "Makes it clear that civil nuclear transfer decisions are not a breach of nuclear safeguards obligations.",
+   "Protects uranium supply contracts from being blocked by domestic legal challenges.",
+   "Extends the same protection to future trade in other nuclear materials for civil purposes."
+  ],
+  "affected": "Uranium mining companies and other Australian exporters of nuclear material to India.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:05Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-338417",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Civil Nuclear Transfers to India Bill 2016, arguing that it provides certainty for Australian uranium exports to India under strict safeguards, creates Australian jobs, and benefits India's energy needs, while criticising the government for failing to provide timely legal advice on treaty obligations. Labor's backing is based on India's non-proliferation record and the strategic importance of the bilateral relationship, with India planning to buy up to 1,500 tonnes of Australian uranium over five years."
+  },
+  {
+   "slug": "speech-338499",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Civil Nuclear Transfers to India Bill 2016, noting bipartisan backing and the agreement’s origin under Labor, while urging continued safeguards, tracking of nuclear materials, and India’s accession to the Comprehensive Nuclear Test Ban Treaty."
+  },
+  {
+   "slug": "speech-338500",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The Civil Nuclear Transfers to India Bill 2016 enables uranium sales to India with strong safeguards, supported as a bipartisan effort to address India's need for nuclear power to lift 300 million people without electricity out of poverty, with India planning to expand nuclear capacity from 5.3 gigawatts to 150–200 gigawatts by 2050, while Australia's uranium industry could double its workforce to 8,000 and earn up to $1.5 billion by 2030."
+  },
+  {
+   "slug": "speech-338501",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Civil Nuclear Transfers to India Bill 2016 provides legal certainty for uranium exports to India under strict safeguards, supporting jobs and strategic cooperation. The speaker also criticised Brendon Grylls' proposed $5 per tonne iron ore mining tax on BHP Billiton and Rio Tinto in Western Australia, arguing it would undermine investment certainty and job creation."
+  },
+  {
+   "slug": "speech-338502",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Civil Nuclear Transfers to India Bill 2016, which clarifies that civil nuclear transfers to India are consistent with Australia’s non-proliferation treaty obligations as long as IAEA safeguards are met. India plans to increase nuclear power from 6 to 63 gigawatts by 2032 and could require up to 2,000 tonnes of Australian uranium per year."
+  },
+  {
+   "slug": "speech-338508",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that nuclear power is essential for meeting global energy demand and reducing air pollution, citing IEA projections that nuclear will provide 519 million tonnes oil equivalent by 2040—more than wind and solar combined—and that the Civil Nuclear Transfers to India Bill 2016 enables Australia to supply uranium to India, which plans to double coal production and expand its nuclear program."
+  },
+  {
+   "slug": "speech-338509",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Civil Nuclear Transfers to India Bill 2016, stating it would enable Australian uranium exports to India under strict safeguards, enhance trade and bilateral ties, and cited figures such as 450,000 Indian Australians, 53,000 Indian students, $18 billion in bilateral trade, and $5.5 billion in coal exports."
+  },
+  {
+   "slug": "speech-338510",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The member supported the Civil Nuclear Transfers to India Bill 2016, arguing it would strengthen the Australia–India relationship and enable Australian uranium exports to India under IAEA safeguards and the Australia–India nuclear cooperation agreement. He noted India is the world’s third largest and fastest-growing major economy, that exports to India are about one-tenth of those to China, and that the bill clarifies export decisions are consistent with Australia’s NPT and South Pacific Nuclear Free Zone Treaty obligations."
+  },
+  {
+   "slug": "speech-338513",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-24",
+   "stage_hint": null,
+   "brief": "The Civil Nuclear Transfers to India Bill 2016 clarifies that civil nuclear transfers to India are consistent with Australia's nuclear safeguards obligations when conditions such as International Atomic Energy Agency safeguards and the Australia-India civil nuclear cooperation agreement are met, completing the legal framework for Australian uranium exports to India."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Civil Nuclear Transfers to India Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00101",
+   "assent_date": "2016-12-07"
+  }
+ ]
+}

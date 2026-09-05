@@ -1,0 +1,475 @@
+{
+ "key": "au-federal-r6877",
+ "title": "Social Services and Other Legislation Amendment (Lifting the Income Limit for the Commonwealth Seniors Health Card) Bill 2022",
+ "short_title": "Social Services and Other Legislation Amendment (Lifting the Income Limit for the Commonwealth Seniors Health Card) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2022-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6877_ems_d05fd2fd-e7f0-4141-9b68-3f9a2a67c353%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6877_ems_d561249c-cbbd-4c8c-a4a1-11f31e7d2a75%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6877%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00043",
+   "document_date": "2022-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7774",
+   "date": "2022-09-28",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Lifting the Income Limit for the Commonwealth Seniors Health Card) Bill 2022 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 24,
+    "dated": 19,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-28/5"
+  },
+  {
+   "key": "federal-senate-7775",
+   "date": "2022-09-28",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments (3) and (8)](https://www.openaustralia.org.au/senate/?gid=2022-09-28.21.1) on sheet 1643, which was introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means they will now be part of the bill. The amendments related to suspending benefits and entitlements instead of cancelling them. ### Amendment text Due to their length, see [sheet 1643](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6877_amend_c9a0e5e3-c8b8-44e7-9436-c012e5c5e6ca%22;rec=0) for the text of amendments (3) and (8). ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd003), the key points are that: > * *The Bill aims to increase the income limits for eligibility for the Commonwealth Seniors Health Card.* > * *The measure was a Coalition election commitment subsequently matched by Labor.* > * *The changes will primarily benefit high-income and/or asset-rich retirees. Around 44,000 newly eligible CSHC holders are expected to benefit in the first year, rising to an addition 52,000 by 2026-27.* > * *The changes are expected to cost $69.4m over the forward estimates.*",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 24,
+    "dated": 19,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-28/6"
+  },
+  {
+   "key": "federal-senate-7776",
+   "date": "2022-09-28",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments (4) and (9)](https://www.openaustralia.org.au/senate/?gid=2022-09-28.193.1) on sheet 1643, which was introduced by West Australian Senator [Dean Smith](https://theyvoteforyou.org.au/people/senate/wa/dean_smith) (Liberal), which means they will now form part of the bill. The amendments related to the commencement of the provisions related to pensioner concession cards and the inclusion of an extended qualification for pensioner concession cards. ### Amendment text Due to their length, see [sheet 1643](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6877_amend_c9a0e5e3-c8b8-44e7-9436-c012e5c5e6ca%22;rec=0) for the text of amendments (4) and (9). ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd003), the key points are that: > * *The Bill aims to increase the income limits for eligibility for the Commonwealth Seniors Health Card.* > * *The measure was a Coalition election commitment subsequently matched by Labor.* > * *The changes will primarily benefit high-income and/or asset-rich retirees. Around 44,000 newly eligible CSHC holders are expected to benefit in the first year, rising to an addition 52,000 by 2026-27.* > * *The changes are expected to cost $69.4m over the forward estimates.*",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 22,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-28/7"
+  },
+  {
+   "key": "federal-representatives-7784",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [Senate amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6877_sched_328c9eab-c753-4f57-9311-11a7f09d6d08%22;rec=0) (2) to (7) and (14) to (16). This means that the bill will be returned to the Senate where our senators will decide on whether to insist on their amendments or not. Kingston MP [Amanda Rishworth](https://theyvoteforyou.org.au/people/representatives/kingston/amanda_rishworth) (Labor) explained why the Labor party opposed these amendments: > *These amendments that have been put forward are amendments that are completely unrelated to the Commonwealth seniors health card. In fact, the amendments are based on a completely separate private member's bill introduced into the Senate on 3 August 2022 by Senator Dean Smith. The Senate 28 September 2022 amendments to the bill do not concern the Commonwealth seniors health card. They do not concern the income limits that the Commonwealth seniors health card relates to. This is a political tactic by the opposition to delay many seniors access to this important card, and I urge the opposition to stop these shenanigans.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 74,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-10-26/1"
+  },
+  {
+   "key": "federal-senate-7797",
+   "date": "2022-10-26",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2022-10-26.189.1): > *That the committee does not insist on its amendments to which the House of Representatives has disagreed.* The House of Representatives had previously [disagreed with several amendments](https://theyvoteforyou.org.au/divisions/representatives/2022-10-26/1) proposed by the Senate. By not insisting on the amendments, the Senate has agreed to pass the bill without them. This means the bill can now [become part of our law](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/).",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "earliest": 28,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-26/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-421479",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": "The Coalition will support the bill to raise the income limit for the Commonwealth Seniors Health Card, increasing the singles threshold from $57,761 to $90,000 and the couples threshold from $92,416 to $144,000, benefiting an extra 50,000 older Australians. The speaker criticised Labor for adopting the Coalition's policy but delaying the start date from 1 July to 20 September, calling it a broken promise."
+  },
+  {
+   "slug": "speech-421483",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": "The bill raises the income limit for the Commonwealth Seniors Health Card from $57,761 to $90,000 for singles and from $92,416 to $144,000 for couples, making 50,000 self-funded retirees eligible for concessional health benefits. The speaker also urged the government to let pensioners work without penalty and to lift the two-hectare asset test rule to 10 hectares for rural properties."
+  },
+  {
+   "slug": "speech-421484",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-421485",
+   "speaker": "Aaron Violi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to increase Commonwealth Seniors Health Card income limits from $57,000 to $90,000 for singles and from $92,000 to $144,000 for couples, noting it was a coalition election commitment adopted by Labor, but criticised the delay of the start date from July to September."
+  },
+  {
+   "slug": "speech-421486",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": "Labor argued the bill fulfills an election promise to increase the Commonwealth Seniors Health Card income limit, raising the single limit from $57,761 to $90,000 and the couple limit from $92,416 to $144,000, providing new eligibility for 44,000 older Australians to address cost-of-living pressures."
+  },
+  {
+   "slug": "speech-421488",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": "The member supported the bill raising the Commonwealth Seniors Health Card income threshold from $57,761 to $90,000 for singles and from $92,416 to $144,000 for couples, saying it would benefit up to 44,000 new Australians and help many seniors in the Lyne electorate, where over 30,000 receive financial assistance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Lifting the Income Limit for the Commonwealth Seniors Health Card) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00043",
+   "assent_date": "2022-10-28"
+  }
+ ]
+}

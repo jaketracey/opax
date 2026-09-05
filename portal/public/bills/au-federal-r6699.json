@@ -1,0 +1,519 @@
+{
+ "key": "au-federal-r6699",
+ "title": "Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021",
+ "short_title": "Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development and Communications",
+ "status": "passed",
+ "status_as_of": "2021-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6699_ems_0f54c2cd-19b7-4baf-ab89-004608e91640%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6699_ems_dd7f3abb-d554-42ce-9750-3622662fc4c2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6699%22",
+   "document_date": "2021-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00062",
+   "document_date": "2021-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-25",
+  "sentences": [
+   "The bill would make five changes to broadcasting laws to cut red tape and remove outdated rules.",
+   "It would cut the annual spending requirement for Australian drama on subscription TV from 10% to 5% and move captioning rules into a ministerial instrument.",
+   "The bill would also repeal a clause from the digital radio framework, extend transitional arrangements for ACMA population determinations, and give ACMA more time to award grants until June 2021."
+  ],
+  "changes": [
+   "Halve the annual expenditure requirement for Australian drama programming for subscription television broadcasters from 10% to 5%.",
+   "Transfer the subscription television captioning rules from the Broadcasting Services Act 1992 to a disallowable ministerial instrument.",
+   "Remove a redundant provision from the digital radio framework in the Radiocommunications Act 1992.",
+   "Extend grandfathering arrangements for new population determinations by the Australian Communications and Media Authority.",
+   "Extend the timeframe for the Australian Communications and Media Authority to implement grants under June 2021."
+  ],
+  "affected": "Subscription television broadcasters, the Australian Communications and Media Authority, and digital radio licensees.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:23:18Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7179",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "question": "Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021 - Second Reading - Keep the usual motion unchanged",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-02/5"
+  },
+  {
+   "key": "federal-representatives-7180",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "question": "Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 72,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-02/6"
+  },
+  {
+   "key": "federal-representatives-7181",
+   "date": "2021-06-02",
+   "house": "representatives",
+   "question": "Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021 - Consideration in Detail - Australian programming",
+   "stage": "Consideration in detail",
+   "ayes": 72,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-02/7"
+  },
+  {
+   "key": "federal-senate-7302",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021 - Second Reading - Condemn Government policy",
+   "stage": "Second reading",
+   "ayes": 24,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 21,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/34"
+  },
+  {
+   "key": "federal-senate-7303",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [opposition amendments 1334](https://www.openaustralia.org.au/senate/?gid=2021-06-22.301.1), which means they failed. ### Amendment text > *(1) Clause 2, page 2 (table item 4), omit \"5\", substitute \"6\".* > > *(2) Page 14 (after line 7), at the end of the Bill, add:* > >> *Schedule 6 — Community television* >> >> *Part 1 — Amendments* >> >> *Radiocommunications Act 1992* >> >> *1 Subsection 103(2)* >> >>> *After \"Subject to\", insert \"subsection (3A) and\".* >> >> *2 After subsection 103(3)* >> >>> *Insert:* >>> >>> *(3A) Despite subsections (2) and (3), an apparatus licence issued under section 100 with the licence number 1171866 does not have effect after the later of the following dates:* >>> >>>> *(a) 30 June 2024;* >>>> >>>> *(b) the date the spectrum used by the apparatus licence is refarmed or allocated for the implementation of new broadcasting technologies—whichever is the earliest;* >>>> >>>> *(c) the date specified in a written determination by the Minister.* >> >> *3 Paragraph 103(4A)(c)* >> >>> *Omit the paragraph, substitute:* >>> >>> *(c) does not have effect after the later of the following dates, if the related licence is a CTV licence within the meaning of the Broadcasting Services Act 1992:* >>> >>>> *(i) 30 June 2024;* >>>> >>>> *(ii) the date the spectrum used by the CTV licence is refarmed or allocated for the implementation of new broadcasting technologies—whichever is the earliest;* >>>> >>>> *(iii) the date specified in a written determination by the Minister.* >> >> *4 Subsection 103(4B)* >> >>> *Omit \"subparagraph (4A)(c)(ii)\", substitute \"paragraph (3A)(c) or subparagraph (4A)(c)(iii)\".* >> >> *5 Application of amendments* >> >>> *The amendments made by this Schedule apply in relation to licences regardless of when the licences were issued.* >> >> *Part 2 — Repeals* >> >> *[Australian Communications and Media Authority (Community Television) Direction 2020](https://www.legislation.gov.au/Details/F2020L00847/Explana",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "earliest": 20,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/35"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-405395",
+   "speaker": "stage direction",
+   "party": null,
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-405415",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker corrected an error in the second reading speech for the Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021, clarifying that the bill does not remove captioning requirements for regional and remote broadcasters beyond those for metropolitan broadcasters."
+  },
+  {
+   "slug": "speech-407539",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The bill halves Foxtel's Australian drama expenditure obligation from 10% to 5% and extends the Regional and Small Publishers Innovation Fund deadline. Labor will move to delete the schedule reducing Foxtel's obligation, arguing the government is dismantling Australian content rules for broadcasters without imposing corresponding requirements on streaming services like Netflix."
+  },
+  {
+   "slug": "speech-407541",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The bill updates broadcasting regulations to create a level playing field between traditional broadcasters and new streaming services like Netflix and Stan. It extends the Regional and Small Publishers Innovation Fund deadline past June 2021 to ensure regional publishers, including those in the Mid North Coast, can access grants of up to $400,000."
+  },
+  {
+   "slug": "speech-407542",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the halving of Foxtel's Australian screen content expenditure obligation from 10% to 5% in the Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021, arguing it would undermine local content quotas and harm the creative industry. They supported an amendment by the member for Greenway to excise that section from the bill."
+  },
+  {
+   "slug": "speech-407543",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-01",
+   "stage_hint": null,
+   "brief": "The bill addresses regulatory anomalies from digital disruption and population growth, including captioning services, digital radio spectrum, and overlapping radio licensees facing fines of up to $444,000, while also calling for video-on-demand platforms to meet the same content quotas as traditional broadcasters."
+  },
+  {
+   "slug": "speech-407599",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021, arguing that mandated local content requirements are outdated and mainly benefit Sydney and Melbourne. He advocated for a shift toward encouraging high-quality Australian content for global streaming platforms, citing the SA Film Corporation's $50 million production *Mortal Kombat* as an example."
+  },
+  {
+   "slug": "speech-407600",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The member for Indi supported schedule 5 of the bill to extend the Regional and Small Publishers Innovation Fund beyond June 2021, and called on the government to also replenish the fund, noting grant recipients in her electorate including Alexandra Newspapers and the Corryong Courier. She also expressed disappointment over the impending end of the Nine News Border North East nightly bulletin on 30 June."
+  },
+  {
+   "slug": "speech-407601",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The speech opposed the Broadcasting Legislation Amendment (2021 Measures No. 1) Bill, arguing it would halve subscription TV drama investment from $25 million to $12.5 million, impose no obligations on streaming services, and continue cuts to the ABC, which has lost $780 million since 2013 and 250 jobs last year. It also cited PwC projections that eliminating quotas would cut Australian drama by 90% and end children's programs."
+  },
+  {
+   "slug": "speech-407602",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed halving Foxtel's Australian screen content obligations from 10% to 5% while supporting other minor regulatory changes, and criticised the government for lacking a long-term vision for Australian broadcasting and publishing."
+  },
+  {
+   "slug": "speech-407603",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The member for Macnamara argued that the Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021 undermines Australian creative industries by reducing Australian content quotas for Foxtel, and criticised the exclusion of creative workers from JobKeeper. He also called on the City of Port Phillip to reverse its decision to end funding for six local arts organisations—Australian Tapestry Workshop, Phillip Adams BalletLab, Rawcus Theatre Company, Red Stitch Actors Theatre, Theatre Works, and the Torch—and condemned ongoing cuts to the ABC."
+  },
+  {
+   "slug": "speech-407606",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-02",
+   "stage_hint": null,
+   "brief": "The government argued the bill reduces regulatory burdens on Australia's media industry, including recalibrating drama expenditure obligations for subscription broadcasters, simplifying subscription TV captioning rules, clarifying grandfathering powers for regional radio broadcasters, removing redundant digital radio planning requirements, and extending the time frame for the Regional and Small Publishers Innovation Fund grants into 2021-22."
+  },
+  {
+   "slug": "speech-409768",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the minister is incompetent after he gave an incorrect second reading speech on the Broadcasting Legislation Amendment (2021 Measures No. 1) Bill 2021 and was repudiated by the Senate crossbench and his own government. They criticised the minister for halving Foxtel’s Australian content obligations, failing to impose a 5% streaming content quota, suspending commercial TV quotas improperly, and kicking community TV off the air, while also losing the confidence of his own side."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Legislation Amendment (2021 Measures No. 1) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00062",
+   "assent_date": "2021-06-29"
+  }
+ ]
+}

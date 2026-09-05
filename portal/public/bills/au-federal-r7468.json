@@ -1,0 +1,512 @@
+{
+ "key": "au-federal-r7468",
+ "title": "Competition and Consumer Amendment (Unfair Trading Practices) Bill 2026",
+ "short_title": "Competition and Consumer Amendment (Unfair Trading Practices) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-04-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-07-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-07-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7468_ems_f67a492e-01ee-4b22-b61e-bfa097d98194%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7468%22",
+   "document_date": "2026-04-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00064",
+   "document_date": "2026-07-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-04-01",
+  "sentences": [
+   "The bill would create new rules to stop businesses from treating consumers and small businesses unfairly.",
+   "It would ban unfair trading practices, force companies to show all transaction fees upfront, and stop harmful subscription arrangements.",
+   "The changes would start on 1 July 2027."
+  ],
+  "changes": [
+   "Introduces a general ban on unfair trading practices toward consumers.",
+   "Requires businesses to be transparent about transaction-based charges to address drip pricing.",
+   "Adds protections against subscription practices that harm consumers and small businesses."
+  ],
+  "affected": "Consumers and small businesses would be affected by the new protections.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10212",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2026-05-12.8.2) introduced by Page MP [Kevin Hogan](https://theyvoteforyou.org.au/people/representatives/page/kevin_hogan) (Nationals), which means it failed. The amendment would have changed the wording of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) the Opposition supports strong consumer protections and believes Australians should be protected from being misled, pressured, exploited or trapped by unfair business practices;* > > *(2) Australia already has a comprehensive consumer law framework, including prohibitions on misleading or deceptive conduct, unconscionable conduct and unfair contract terms;* > > *(3) the Government has failed to clearly identify the gap in existing law that the bill is intended to address;* > > *(4) the bill's broad new prohibition on 'unfair trading practices' risks creating significant legal uncertainty for businesses, with key concepts likely to be tested through costly litigation over many years;* > > *(5) despite the Government's promises to cut red tape and lift productivity, the bill is expected to impose regulatory costs of more than $124 million per year, including more than $100 million per year on small businesses;* > > *(6) these additional compliance burdens will fall on small businesses already under pressure from high inflation, rising energy costs, higher rents, higher insurance premiums, the Government's new taxes, and a slowing economy;* > > *(7) these costs will be passed on to everyday Australian consumers; and* > > *(8) the bill should be referred to the Senate Economics Legislation Committee to ensure proper scrutiny, stakehol",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 95,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 90
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-14/1"
+  },
+  {
+   "key": "federal-senate-10557",
+   "date": "2026-07-01",
+   "house": "senate",
+   "question": "Matthew Canavan I rise to give qualified, if you like, support to the Competition and Consumer Amendment (Unfair Trading Practices) Bill 2026. We do think there is a need for action here on certain unfair behaviours in the marketplace, and I'll come to the details, but particularly things like subscription traps and drip feed pricing. These things are potentially covered by these changes. On the Liberal and National side, we do support strong consumer protections and have always had a proud history of doing so. However, as I said, there are some qualifiers here that I'll go through this morning, because we think it's very important that changes like this are clearly made so that, of course, the courts can interpret them clearly but more importantly, perhaps, so that businesses know the environment they're operating in, especially small businesses, who don't have and shouldn't have to seek expensive legal advice every time they just want to go about their business. As I said, there is an issue here that we are willing to work with the government on to see some change. As I indicated, the Liberal and National parties have long supported strong consumer protections in our law. We were strong advocates for somewhat of a predecessor to this, the unfair contract terms legislation that passed around 15 years ago in this place. Then, when we were in government, we moved to extend that to protect small businesses as well from the imposition of unfair contract terms. They were things like long-form contracts that hid terms and conditions in it and 'take it or leave it' type contract arrangements—things that would provide some protection for small businesses. This bill here seeks to move further, quite substantial amendments, which would effectively see the prohibition of unfair conduct more fully—that is, unfair trading, not just unfair contract terms per se. The issue here that should be properly discussed and responded to, hopefully, by the government is exactly what is mea",
+   "stage": "Second reading",
+   "ayes": 20,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-01/5"
+  },
+  {
+   "key": "federal-senate-10580",
+   "date": "2026-07-02",
+   "house": "senate",
+   "question": "Maria Kovacic The committee is considering amendments (1) and (2) on sheet 3912, moved by Senator Canavan. Slade Brockman The question is that amendments (1) and (2) on sheet 3912 be agreed to.",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-02/4"
+  },
+  {
+   "key": "federal-senate-10581",
+   "date": "2026-07-02",
+   "house": "senate",
+   "question": "Nick McKim I've got a couple of questions for the minister. Minister, is the government aware that the ACCC, ASIC and a number of organisations in Australia representing consumers, including the Consumer Policy Research Centre and the Consumer Action Law Centre, have all advocated for the government to extend the ban on unfair trading— Slade Brockman Senator McKim, I might get you to pause. Could senators please leave the chamber quietly if they're not participating in debate. Nick McKim Thanks very much for your protection there, Chair. Slade Brockman I couldn't hear what you were saying. Tim Ayres I think it's more in my interest. Nick McKim I'll start again, will I? Minister, is the government aware that the ACCC wants to extend the ban on unfair trading practices to the financial services sector? Is the government aware that ASIC wants to extend the ban on unfair trading practices to the financial services sector? Is the government aware that peak consumer groups, including the Consumer Policy Research Centre and the Consumer Action Law Centre, want to extend the ban on unfair practices to the financial services sector? If you are aware of those things, why haven't you done it? Tim Ayres The government is aware—both from our engagement with the agencies that you've outlined and with those peak councils and more broadly—of that question. It is the government's approach to legislate this tranche of reforms. There will be future reform. Nick McKim Minister, are you saying that future reforms from the government will extend the ban on unfair trading practices to the financial services sector? And, if you are saying that, when will that happen? Tim Ayres I think the best way of describing it is that, while the government will make decisions about that in the normal way, we are examining precisely those issues. Nick McKim What I'm hearing from that is that government is currently considering those issues, but you don't wish to either put a timeframe on any decision po",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-02/5"
+  },
+  {
+   "key": "federal-senate-10582",
+   "date": "2026-07-02",
+   "house": "senate",
+   "question": "Nick McKim Can I just clarify that the amendments that were just negatived by the chamber were about extending unfair trading practices to include lead generation. I want to make a couple of comments about that. We'll come to our amendments to extend the requirements to the financial services sector shortly, and I will move those shortly. Firstly, on lead generation, as I said in my second reading speech, we have just lived through the collapse of First Guardian and Shield. These matters have been explored and examined at length in this chamber and in Senate estimates not just by the Greens but by a range of other senators right across the political spectrum—and so they should have been examined very closely in those contexts, because the collapse of Shield and First Guardian cost about 12,000 Australian people over $1 billion in lost retirement savings. As I said in my second reading speech, the chair of ASIC, Ms Sarah Court, indicated in estimates in October last year that a ban on unfair trading practices in the financial services sector may have assisted ASIC in their investigation and prosecution of the complex web of actors that were involved in the collapse of First Guardian and Shield. The reason that lead generation should be included and explicitly caught in the provisions of this legislation is, if we did so, firstly, it would send an unambiguous signal to the 12,000-odd Australians who were ripped off so egregiously during the collapse of First Guardian and Shield that the Senate has got their backs, that the Senate understands what happened and that the parliament understands what happened. It's an opportunity for the government to show that the government understands how absolutely destructive that experience was for a significant number of Australians. Although it wouldn't necessarily get them their money back or provide the full recourse that they deserve and that justice demands, it would at least show that the Senate, the parliament and the governm",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-02/6"
+  },
+  {
+   "key": "federal-senate-10583",
+   "date": "2026-07-02",
+   "house": "senate",
+   "question": "Slade Brockman I would ask all senators to remain in the chamber. More divisions are imminent. However, I will allow a four-minute bell if there is a change of voting positions. I'm in the hands of the chamber. Matthew Canavan I'll be brief so we can get to those divisions. I seek leave to move the opposition amendments on sheet 3913 together. Leave granted. I move opposition amendments (1), (2) and (3) on sheet 3913 together: (1) Schedule 1, item 22, page 21 (line 10), before \"Section 28B\", insert \"(1)\". (2) Schedule 1, item 22, page 21 (line 11), after \"conduct\", insert \"(other than conduct of a small business operator)\". (3) Schedule 1, item 22, page 21 (after line 14), at the end of section 311, add: (2) Section 28B, inserted by the _Competition and Consumer Amendment (Unfair Trading Practices) Act 2026_, applies in relation to conduct of a small business operator that occurs on or after 1 July 2030, whether in connection with a supply or an offer to supply made before, on or after that day. (3) In this section: _annual turnover_ has the same meaning as in the _Corporations Act 2001_. _related body corporate_ has the same meaning as in the _Corporations Act 2001_. _small business operator_ has the same meaning as in section 58AH. I'll just briefly explain to the chamber that these amendments would seek to defer the application of these new laws till 2030 for small businesses. I explained in my speech on the second reading that, to me and to us in the Liberal Party and the National Party, it seems logical that, given the significant change here, it would be better to see any teething issues be worked out with those larger entities that have the resources to do so, and that small businesses should be given time to adjust. Tim Ayres I indicate that, as outlined, the government will be opposing the amendment. Of course, almost all small businesses are doing absolutely the right thing and treating customers fairly. The government's view is that a blanket exemption fo",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-02/7"
+  },
+  {
+   "key": "federal-senate-10584",
+   "date": "2026-07-02",
+   "house": "senate",
+   "question": "Nick McKim I will be moving the amendments on sheets 3771 and 3772, circulated in the name of Senator Payman, on her behalf. Very quickly, the amendment on 3772 adds: (e) requiring the consumer to provide information not directly relevant to a transaction (including requiring the creation of an account). to the list of examples of conduct which subclause 28B(6) identifies as possibly constituting an unfair trading practice. The aim of that amendment is to prevent companies from requiring consumers to provide all their personal details to buy a single item from an online store—a very meritorious amendment from Senator Payman. The bill allows the government to set, through regulations, what information companies must provide to people with subscription contracts. The amendments on sheet 3771 would ensure that the regulations would require a subscription provider who offers an initial free period that eventually becomes paid to, three days prior to the end of the free trial, notify the consumer that the trial is ending, what the amount is that will be charged if they don't cancel and how they may cancel before being charged. Again, it's a very straightforward amendment that would protect consumers. These amendments are supported by the Australian Greens, and I seek leave to move the amendments together for Senator Payman. Leave granted. At the request of Senator Payman, I move Australia's Voice amendments (1) and (2) on sheet 3771 and amendment (1) on sheet 3772 together: (1) Schedule 1, item 16, page 10 (after line 5), after the definition of _excluded subscription contract_, insert: _initial free period subscription contract_ means a subscription contract that meets the requirement in subsection 48B(5). (2) Schedule 1, item 20, page 15 (after line 25), after subsection 48E(3), insert: (3A) Without limiting subsection 33(3A) of the _Acts Interpretation Act 1901_, subsection 13(3) of the _Legislation Act 2003_ or subsections (1), (2) or (3) of this section, regulations",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 22,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-02/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1202528",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-05-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202798",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202889",
+   "speaker": "Karen Grogan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204572",
+   "speaker": "Matthew Canavan",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-07-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Unfair Trading Practices) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00064",
+   "assent_date": "2026-07-02"
+  }
+ ]
+}

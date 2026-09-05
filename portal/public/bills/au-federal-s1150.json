@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-s1150",
+ "title": "Australian Research Council Amendment (Ensuring Research Independence) Bill 2018",
+ "short_title": "Australian Research Council Amendment (Ensuring Research Independence) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-11-15",
+ "originating_house": "senate",
+ "sponsor": "FARUQI, Sen Mehreen",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10912",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1150%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1150%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1150%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1150%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1150%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1150_ems_c72285ea-587e-409c-b5b3-aee71e45ede3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1150%22",
+   "document_date": "2018-11-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-15",
+  "sentences": [
+   "The bill would stop the Minister from vetoing research grants recommended by the Australian Research Council.",
+   "It would amend the Australian Research Council Act 2001 to require the Minister to approve any research proposal and associated expenditure that the ARC recommends.",
+   "The key provisions changed are sections 51–53 of the ARC Act, which currently give the Minister final approval power."
+  ],
+  "changes": [
+   "Remove the Minister’s discretion to reject ARC-recommended research grants.",
+   "Require the Minister to approve ARC-recommended research proposals and spending.",
+   "Amend sections 51–53 of the Australian Research Council Act 2001."
+  ],
+  "affected": "The Australian Research Council, which awards research grants, and the Minister responsible for it.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

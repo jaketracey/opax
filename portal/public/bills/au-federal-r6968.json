@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r6968",
+ "title": "Treasury Laws Amendment (2022 Measures No. 5) Bill 2022",
+ "short_title": "Treasury Laws Amendment (2022 Measures No. 5) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2023-02-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6968_ems_f9b8f6e0-ea1b-4f02-9488-62d9d4c0271b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6968%22",
+   "document_date": "2022-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00002",
+   "document_date": "2023-02-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7937",
+   "date": "2023-02-07",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2022 Measures No. 5) Bill 2022 - Second Reading - Abandon Stage 3 tax cuts",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 11,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-02-07/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827076",
+   "speaker": "Dean Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The bill grants or extends deductible gift recipient status to several organisations, including Melbourne Business School, the Jewish Education Foundation, and Australians for Indigenous Constitutional Recognition, while removing status for the Mt Eliza Graduate School. The opposition supported the bill but criticised the government's legislative mismanagement, the Greens supported it while calling for a fairer DGR process, and Senator Scarr highlighted a reported 478 antisemitic incidents in Australia over the past year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2022 Measures No. 5) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00002",
+   "assent_date": "2023-02-16"
+  }
+ ]
+}

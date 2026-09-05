@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-s932",
+ "title": "Indigenous Education (Targeted Assistance) Amendment Bill (No. 2) 2013",
+ "short_title": "Indigenous Education (Targeted Assistance) Amendment Bill (No. 2) 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-13",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2013-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-12-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s932_ems_73b5a498-4a5e-42a1-b2e0-be3fd346a568%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s932%22",
+   "document_date": "2013-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00148",
+   "document_date": "2013-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-825463",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": "The speaker moved to introduce and present the Indigenous Education (Targeted Assistance) Amendment Bill (No. 2) 2013, which amends the Indigenous Education (Targeted Assistance) Act 2000, and the bill was read a first time."
+  },
+  {
+   "slug": "speech-825464",
+   "speaker": "Nigel Scullion",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": "The Minister for Indigenous Affairs tabled a bill to amend the Indigenous Education (Targeted Assistance) Act 2000, changing its funding mechanism from special to annual appropriation for greater transparency and allowing new funding agreements from 1 January 2014 to boost school attendance for Aboriginal and Torres Strait Islander students."
+  },
+  {
+   "slug": "speech-281459",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281460",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281461",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281462",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281463",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281682",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Indigenous Education (Targeted Assistance) Amendment Act (No. 2) 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00148",
+   "assent_date": "2013-12-17"
+  }
+ ]
+}

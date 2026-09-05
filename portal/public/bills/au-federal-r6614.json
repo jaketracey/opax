@@ -1,0 +1,493 @@
+{
+ "key": "au-federal-r6614",
+ "title": "Foreign Investment Reform (Protecting Australia’s National Security) Bill 2020",
+ "short_title": "Foreign Investment Reform (Protecting Australia’s National Security) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6614_ems_8e124275-a752-4a63-a028-70ae95c2ff6d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6614%22",
+   "document_date": "2020-10-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00114",
+   "document_date": "2020-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-28",
+  "sentences": [
+   "This bill is part of a package that overhauls Australia's foreign investment screening to better protect national security.",
+   "The package would introduce a national security test for certain investments, give the Treasurer new powers to review and block deals, and create a register of foreign-held assets.",
+   "The national security test would require mandatory notification for direct investments in sensitive national security businesses or land that could harm Australia's security."
+  ],
+  "changes": [
+   "Establishes a national security test for reviewing foreign investments.",
+   "Creates a register of foreign-owned Australian assets.",
+   "Increases penalties for breaching the Foreign Acquisitions and Takeovers Act.",
+   "Expands the Treasurer's powers to impose conditions or force divestment.",
+   "Introduces new fees for certain foreign investment actions.",
+   "Allows the Treasurer to call in non-notified actions for screening."
+  ],
+  "affected": "Foreign investors, businesses in sensitive sectors, and owners of national security land.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6785",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "question": "Foreign Investment Reform (Protecting Australia's National Security) Bill 2020 and another - Second Reading - Foreign acquisition",
+   "stage": "Second reading",
+   "ayes": 59,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 63
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-07/4"
+  },
+  {
+   "key": "federal-representatives-6786",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-12-07.137.1) to keep the question unchanged. In parliamentary jargon, they voted \"*that the words proposed to be omitted stand part of the question.*\" The question was: \"That this bill be now read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/).\" To read a bill for a second time is to agree with its main idea.",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-07/5"
+  },
+  {
+   "key": "federal-representatives-6787",
+   "date": "2020-12-07",
+   "house": "representatives",
+   "question": "Foreign Investment Reform (Protecting Australia's National Security) Bill 2020 and another - Consideration in Detail - Transparency",
+   "stage": "Consideration in detail",
+   "ayes": 45,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-07/6"
+  },
+  {
+   "key": "federal-senate-6828",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "Foreign Investment Reform (Protecting Australia's National Security) Bill 2020 - Second Reading - Publish certain information",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 19,
+    "dated": 20,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/19"
+  },
+  {
+   "key": "federal-senate-6829",
+   "date": "2020-12-08",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6614) introduced by Pauline Hanson's One Nation Party on [Australia's water entitlement](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6614_amend_2e3fe7c1-aeed-490c-a88d-0283593a0efe%22;rec=0), a [benefit to Australia](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6614_amend_20ef88b1-1c4e-4a60-83f9-71abda3893bb%22;rec=0) test and the [publication of the Register](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6614_amend_21842ba6-8690-4e9c-9391-bfcfb08267f5%22;rec=0). This means the amendments failed.",
+   "stage": "Second reading",
+   "ayes": 2,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 19,
+    "dated": 20,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-08/20"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-399727",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "Labor supported the broad intent of the Foreign Investment Reform bills but moved an amendment noting concerns about unclear regulations, insufficient compliance resources, and a lack of review mechanisms, while also criticising the government's past failures on foreign investment, including the Port of Darwin lease and Alinta Energy compliance breaches."
+  },
+  {
+   "slug": "speech-399731",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The Foreign Investment Reform Bill 2020 introduces a mandatory national security test for foreign investments in sensitive businesses or land regardless of value, stronger enforcement penalties and a last resort divestment power, a new register of foreign-owned assets, and will transition the temporary zero-dollar screening threshold to the new system from 1 January 2021. The reforms were argued to be proportionate and not to deter foreign investment."
+  },
+  {
+   "slug": "speech-399734",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to stop all foreign takeovers of agricultural land and ban acquisition of assets of strategic economic or defensive importance, arguing that foreign ownership—particularly by China—of Australia's electricity industry (40%), water and sewerage infrastructure, and major agricultural operations is excessive, and criticised the lack of freehold title deeds for First Australians."
+  },
+  {
+   "slug": "speech-399737",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Foreign Investment Reform (Protecting Australia's National Security) Bill, arguing it balances welcoming foreign capital with stronger national security oversight through measures including a mandatory notification test for sensitive investments, a last-resort Treasurer power, a new register of foreign-owned assets, and increased enforcement powers."
+  },
+  {
+   "slug": "speech-399738",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Foreign Investment Reform Bill 2020 but flagged concerns about the Treasurer's unfettered discretion, intending to table amendments. They criticised foreign control of the Port of Darwin and Van Diemen's Land Company, noted 25.5% of Tasmanian farmland is foreign-owned, and called for stricter scrutiny, a $2 million threshold for agricultural land reviews, leasehold over freehold, and no carve-outs for trade partners."
+  },
+  {
+   "slug": "speech-399739",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Foreign Investment Reform (Protecting Australia's National Security) Bill 2020 and related bill, arguing that foreign investment is needed but must benefit Australian taxpayers and businesses. They noted that 13% of agricultural land (0.9% reduction) and 10.5% of water entitlements are foreign-owned, with top investors including the USA, China, UK and Netherlands, and called for a national interest test, stronger enforcement and merged ownership registers."
+  },
+  {
+   "slug": "speech-399740",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported Labor's amendment to the Foreign Investment Reform Bill, arguing the legislation is more about perception than substance and that the government already had power to block investments like the Port of Darwin lease. They called for a public register of foreign ownership and raised concerns about foreign control of water in the Murray-Darling Basin, noting Chinese investment in Australia fell from $15.8 billion in 2016 to $2.5 billion in 2019."
+  },
+  {
+   "slug": "speech-399742",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the foreign investment screening bill but noted unresolved definitions for \"national security business\" and potential conflicts with trade agreements, while criticising the government's delayed action on critical minerals and its neglect of Australian shipping, where the merchant fleet declined from 100 to 10 ships with no flagged fuel tankers."
+  },
+  {
+   "slug": "speech-400142",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Foreign Investment Reform Bill while arguing that past privatisations of assets like the Port of Darwin and South Australia's electricity grid sold to Hong Kong's CK Infrastructure Holdings pose national security risks, and called for the port to be nationalised."
+  },
+  {
+   "slug": "speech-400143",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-12-07",
+   "stage_hint": null,
+   "brief": "The Foreign Investment Reform (Protecting Australia's National Security) Bill 2020 will strengthen Australia’s foreign investment review framework from 1 January 2021 to address emerging risks while maintaining a nondiscriminatory, case-by-case process for investments not contrary to national interests."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Foreign Investment Reform (Protecting Australia’s National Security) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00114",
+   "assent_date": "2020-12-10"
+  }
+ ]
+}

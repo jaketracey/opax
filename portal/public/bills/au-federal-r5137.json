@@ -1,0 +1,801 @@
+{
+ "key": "au-federal-r5137",
+ "title": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013",
+ "short_title": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2014-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5137_ems_d91b3030-f692-49ad-a9ea-03dbf75c439a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5137%22",
+   "document_date": "2013-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-13",
+  "sentences": [
+   "Part of a 13-bill package, this bill would ban price exploitation and misleading claims about prices after the carbon tax is repealed.",
+   "The bill would create a new offence with fines of up to 6,471 penalty units for companies and 1,295 for individuals, and give the ACCC powers to monitor prices during the transition.",
+   "The ACCC would check whether savings from the repeal are passed on to consumers, especially in markets where competition is limited."
+  ],
+  "changes": [
+   "Introduce a new prohibition on price exploitation related to the carbon tax repeal for key goods like electricity and gas.",
+   "Give the ACCC monitoring powers to assess the effect of the repeal on prices.",
+   "Ban false or misleading representations about how the carbon tax repeal affects prices."
+  ],
+  "affected": "Businesses supplying key goods such as electricity and gas, and their customers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:01Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3022",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 and related bills - Second reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-11-21/1"
+  },
+  {
+   "key": "federal-representatives-3023",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 - Motion to Dissent from Ruling - Put the question",
+   "stage": "Motion to Dissent from Ruling",
+   "ayes": 82,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-11-21/2"
+  },
+  {
+   "key": "federal-representatives-3024",
+   "date": "2013-11-21",
+   "house": "representatives",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 - Motion to Dissent from Ruling",
+   "stage": "Motion to Dissent from Ruling",
+   "ayes": 49,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 122,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-11-21/3"
+  },
+  {
+   "key": "federal-senate-3030",
+   "date": "2013-12-02",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 and related bills — First Reading — Consider the legislation together",
+   "stage": "First Reading",
+   "ayes": 27,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 4,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-12-02/2"
+  },
+  {
+   "key": "federal-senate-3031",
+   "date": "2013-12-02",
+   "house": "senate",
+   "question": "This division relates to the Policies _[For a carbon price](/policies/3)_ and _[For renewable energy](/policies/20)_. The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?gid=2013-12-02.129.1) that: _At the end of the motion that the resumption of debate be made an order of debate for a later hour add: 'and the orders of the day for the resumption of the second reading debate on the Clean Energy Finance Corporation (Abolition) Bill 2013, and subsequently the Climate Change Authority (Abolition) Bill 2013, have precedence over this bill and the other related bills until determined.'_ (You can read the associated debate [here](http://www.openaustralia.org/senate/?id=2013-12-02.127.1). It commenced after 8:38 pm. ) Passing this motion means that the second reading debate about the Clean Energy Finance Corporation (Abolition) Bill 2013 and the Climate Change Authority (Abolition) Bill 2013 will be resumed before the debate about the Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 and other related bills. The motion was introduced by Labor Senator [Penny Wong](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Penny_Wong&mpc=Senate&house=senate). _Background to the bills_ The Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 was introduced into Parliament as part of a package of eleven bills to remove the [carbon pricing mechanism](http://en.wikipedia.org/wiki/Carbon_pricing_in_Australia) and abolish the [Clean Energy Finance Corporation](http://www.cleanenergyfinancecorp.com.au/about-us.aspx) and the [Climate Change Authority](http://climatechangeauthority.gov.au/about). The eleven bills are: - [Clean Energy Legislation (Carbon Tax Repeal) Bill 2013](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5137) - [True-up Shortfall Levy (General) (Carbon Tax Repeal) Bill 2013](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5131)",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 4,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-12-02/3"
+  },
+  {
+   "key": "federal-senate-3169",
+   "date": "2014-03-17",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 and related bills - Second Reading - Protect Australia from climate change",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-03-17/1"
+  },
+  {
+   "key": "federal-senate-3170",
+   "date": "2014-03-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?gid=2014-03-17.17.1) introduced by Labor Senator [Jacinta Collins](http://publicwhip-rails.openaustraliafoundation.org.au/mp.php?mpn=Jacinta_Collins&mpc=Senate&house=senate). The motion was for an amendment to be added to the end of the original motion, which was \"_That these bills be now read a second time._\" The words were: \"_but the Senate calls on the Government to recognise the scientific expert consensus regarding [climate change](http://en.wikipedia.org/wiki/Climate_change) and that the repeal of the carbon tax must be accompanied by the introduction of serious and comprehensive policies to address climate change._\" Since the motion passed, these words will now be added to the original motion. Background to the bills The [Clean Energy Legislation (Carbon Tax Repeal) Bill 2013](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5137) and related bills were introduced as a package to remove the [carbon pricing mechanism](http://en.wikipedia.org/wiki/Carbon_pricing_in_Australia), which was introduced by the Australian Labor Party while in government. The Coalition described the mechanism as a “carbon tax” and removing it was a key policy platform during the 2013 election.(You can read more about the Coalition's policy to remove the carbon price [here](http://www.liberal.org.au/scrapping-carbon-tax-and-reducing-cost-living). ) The carbon pricing mechanism commenced on 1 July 2012.(For more information on the carbon pricing mechanism and how it works, please see the Clean Energy Regulator’s [website](http://www.cleanenergyregulator.gov.au/Carbon-Pricing-Mechanism/About-the-Mechanism/Pages/default.aspx).) It is an emissions trading scheme that puts a price on carbon emissions. It applies to “liable entities” (a group that includes companies that emit a high level of greenhouse gases). Initially the price of carbon is fixed by the mechanism bu",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 59,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-03-17/2"
+  },
+  {
+   "key": "federal-senate-3171",
+   "date": "2014-03-17",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 and related bills - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 54,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 55,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-03-17/3"
+  },
+  {
+   "key": "federal-senate-3182",
+   "date": "2014-03-20",
+   "house": "senate",
+   "question": "Clean Energy Legislation (Carbon Tax Repeal) Bill 2013 and related bills - Third Reading - Read a third time",
+   "stage": "Third reading",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 56,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-03-20/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-278153",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278154",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278597",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278606",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278608",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278611",
+   "speaker": "The SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278760",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278768",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278774",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278775",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278776",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278777",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278857",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278861",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278864",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278867",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279007",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279008",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279303",
+   "speaker": "Bronwyn Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279304",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2013-11-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279359",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279360",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279371",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-11-21",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279383",
+   "speaker": "The SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2013-11-21",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

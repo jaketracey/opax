@@ -1,0 +1,374 @@
+{
+ "key": "au-federal-r5612",
+ "title": "Trade Legislation Amendment Bill (No. 1) 2016",
+ "short_title": "Trade Legislation Amendment Bill (No. 1) 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Trade and Investment",
+ "status": "passed",
+ "status_as_of": "2016-03-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5612_ems_d11893a8-05b5-4158-95a8-b7cd2e9180ee%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5612%22",
+   "document_date": "2016-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00031",
+   "document_date": "2016-03-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-10",
+  "sentences": [
+   "This bill would change export and trade laws, mainly by updating the Export Market Development Grants scheme and renaming the Australian Trade Commission.",
+   "The government would cut some eligible spending categories, cap the free sample category at $15,000, raise the daily overseas allowance from $300 to $350, and let Austrade use money from other sources for scheme administration.",
+   "The bill would also give the Australian Trade Commission a new name that includes 'Investment' and require the next scheme review to be finished by a date the Minister sets."
+  ],
+  "changes": [
+   "Removes communications as an eligible expenditure category.",
+   "Limits free sample expenditure to $15,000, with an exception for claimants combining two years of spending that includes 2015-16.",
+   "Describes promotional literature or other advertising to cover electronic or other forms.",
+   "Repeals reimbursement for in-country travel except air fares and raises the daily allowance for overseas visits from $300 to $350.",
+   "Allows Austrade to direct funds from other sources to cover EMDG administration costs.",
+   "Removes the requirement for an independent review to start on a set date and instead lets the Minister set the completion date for the next review."
+  ],
+  "affected": "Exporters who use the Export Market Development Grants scheme and the Australian Trade Commission (to be renamed the Australian Trade and Investment Commission) would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4110",
+   "date": "2016-03-01",
+   "house": "senate",
+   "question": "Mathias Cormann These bills are being introduced together. After debate on the motion for the second reading has been adjourned, I shall move a motion to have the bills listed separately on the _Notice Paper_. I move: That these bills may proceed without formalities, may be taken together and be now read a first time. _(Quorum formed)_ Question agreed to. Bills read a first time. I seek leave to move a motion to exempt these bills from the bills cut-off order. Leave not granted. Sam Dastyari You get nothing! Mathias Cormann Pursuant to contingent notice standing in the name of the Leader of the Government in the Senate, I move: That so much of the standing orders be suspended as would prevent the moving of a motion to provide for the consideration of a matter, namely, a motion to give precedence to a motion to exempt these bills from the bills cut-off order. What is happening here is one massive filibuster. This is not even in relation to a piece of legislation that Labor has any concerns about. What Labor is doing in this chamber today—we heard Senator Dastyari yell across the chamber, 'You get nothing!'—is playing games. This is Labor not making judgements about what is in the public interest. This is a bill that I suspect Labor might even end up not opposing. I think everyone across Australia well understands what is happening here. We have the union politics and student politics brought back into the chamber by some very juvenile people on the Labor side. I commend to the Senate to support this suspension. Doug Cameron I think that is the most pathetic argument—if you could even call it an argument—as to why the proper process in this place should not go ahead. This is a government that is an absolute chaos. They are an absolute rabble. Really, they should not bring the rabble that is their party room into this place, because that is what this is. They as a government just do not what is going on from day to day. To say that we should not follow process on this,",
+   "stage": "Bill",
+   "ayes": 39,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-01/3"
+  },
+  {
+   "key": "federal-senate-4111",
+   "date": "2016-03-01",
+   "house": "senate",
+   "question": "Mitch Fifield I move: That a motion to exempt these bills from the bills cut-off order may be moved immediately and have precedence over all other business today until determined. Stephen Conroy The rabble that this government have descended into has again been demonstrated right here. We have a government that are in paralysis in their own party room. They cannot even make the case— Ian Macdonald What have you got against disabled people? Stephen Conroy You do not even know the start date for these bills. The government have got no idea so they are desperate for a distraction right now. Unfortunately, to cover their embarrassment they can now call on their new besties the Greens. The government have failed to make the case on these bills. It is a simple fact that not one government member who spoke in this debate in this chamber made the case for why these need to go through the cut-off. We do know that, due to the filthy deal that has been done between the Greens and this government, we are going to a double-D on 2 July, because what we have had is the turkeys vote for an early Christmas. Senator Cormann is smooth. He has actually talked them into voting for their own execution. That is good. Paul Keating once said: in politics always back self-interest. These guys have voted for their own execution. It did take some special expertise by Senator Cormann on this. Ian Macdonald Mr Deputy President, I rise on a point of order. I am wondering if you or Senator Conroy could explain how what Senator Conroy has said so far has anything to do with the subject of the motion. All he has talked about is the Greens and deals. This, as I understand it, is a very formal motion. I would like you to rule on whether Senator Conroy is being relevant to the motion. Stephen Conroy Mr Deputy President, on the point of order: Senator Macdonald is deludedly sitting over there ignoring the fact that this debate and what I have been saying go to the heart of why we oppose this motion—beca",
+   "stage": "Bill",
+   "ayes": 37,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 41,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-01/4"
+  },
+  {
+   "key": "federal-senate-4113",
+   "date": "2016-03-01",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 40,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-01/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-329468",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "Labor supported the Trade Legislation Amendment Bill (No.1) 2016, which renames Austrade to the Australian Trade and Investment Commission and makes technical changes to the Export Market Development Grants scheme, including removing sunset clauses and updating expenditure categories. The speaker also criticised the government's foreign investment policies, citing Business Council of Australia concerns that new FIRB thresholds and fees deter investment."
+  },
+  {
+   "slug": "speech-329471",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Trade Legislation Amendment Bill (No. 1) 2016, which makes minor amendments to the Export Market Development Grants scheme to improve its operation, including removing sunset provisions, capping free sample expenditure at $15,000, and requiring an independent review by 2021. The speaker cited success stories such as Xelon Entertainment ($1.5 million in export sales) and SAGE Automation ($40 million revenue), and noted KPMG modelling that each dollar of grants generates $7 in benefits."
+  },
+  {
+   "slug": "speech-329473",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The Trade Legislation Amendment Bill (No. 1) 2016 should be passed to make the Export Market Development Grants scheme evergreen, removing its four-yearly sunset provisions to reduce uncertainty for exporters. In 2013-14, over 3,100 recipients received $141 million in grants, averaging $44,270 each, with the scheme enjoying bipartisan support since 1974."
+  },
+  {
+   "slug": "speech-329474",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Export Market Development Grants scheme should be made permanent without sunset clauses, noting that the government increased funding to $137.9 million and highlighting the scheme's $7 return per dollar invested. He criticised Labor for previously cutting the scheme from $200 million to $125 million and for proposing a 50% capital gains tax increase."
+  },
+  {
+   "slug": "speech-329475",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The Trade Legislation Amendment Bill (No. 1) 2016 extends the Export Market Development Grants scheme beyond 30 June 2016, with over 3,100 recipients receiving $141 million in grants averaging $44,270 each. The bill implements minor policy and technical amendments, including removing communications as an eligible expense, capping free sample expenditure at $15,000, and renaming the Australian Trade Commission to the Australian Trade and Investment Commission."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Trade Legislation Amendment Act (No. 1) 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00031",
+   "assent_date": "2016-03-23"
+  }
+ ]
+}

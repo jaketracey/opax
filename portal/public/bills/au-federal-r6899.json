@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-r6899",
+ "title": "Income Tax Amendment (Labour Mobility Program) Bill 2022",
+ "short_title": "Income Tax Amendment (Labour Mobility Program) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-12-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6906_ems_074fdc71-4956-405c-8de0-616e65b0979a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6899%22",
+   "document_date": "2022-09-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00074",
+   "document_date": "2022-12-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-422512",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The Income Tax Amendment (Labour Mobility Program) Bill 2022 ensures foreign resident workers under the Pacific Australia Labour Mobility (PALM) scheme pay a final withholding tax of 15 per cent on scheme income, broadening the definition from the old Seasonal Labour Mobility Program to cover PALM and future similar visa schemes from the 2022-23 income year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Income Tax Amendment (Labour Mobility Program) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00074",
+   "assent_date": "2022-12-05"
+  }
+ ]
+}

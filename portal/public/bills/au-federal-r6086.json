@@ -1,0 +1,220 @@
+{
+ "key": "au-federal-r6086",
+ "title": "Treasury Laws Amendment (ASIC Governance) Bill 2018",
+ "short_title": "Treasury Laws Amendment (ASIC Governance) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-05-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6086_ems_4ec15ed4-d3f6-4a27-a6be-327199d46595%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6086%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00042",
+   "document_date": "2018-05-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361931",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (ASIC Governance) Bill with an amendment, noting the government's $120 million cut to ASIC funding in 2014 and the need for stronger regulation following the banking royal commission, which uncovered over $200 million in improper fees from the big four banks and AMP."
+  },
+  {
+   "slug": "speech-361933",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-362220",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (ASIC Governance) Bill 2018, which creates a second deputy chairperson role at ASIC, and noted the government's nomination of Daniel Crennan QC for the position. They criticised the government for past funding cuts to ASIC and the Commonwealth Director of Public Prosecutions, delays in updating ASIC's statement of expectations, and failure to introduce tougher corporate penalties despite ASIC's requests since 2013."
+  },
+  {
+   "slug": "speech-362221",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to add a second deputy chair to ASIC, arguing it would strengthen regulation, and criticised the coalition for cutting ASIC’s resources, delaying a banking royal commission for 601 days, and proposing an $80 billion tax cut that includes $17 billion for the banks."
+  },
+  {
+   "slug": "speech-362223",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (ASIC Governance) Bill 2018 but criticised the government for cutting $120 million from ASIC's budget since 2014, which led to 751 fewer surveillance activities and a 57% drop in actions against misleading promotions, and for resisting a banking royal commission for 601 days."
+  },
+  {
+   "slug": "speech-362230",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government delayed the banking royal commission for 600 days, prioritising banks over Australians, while ASIC failed to prevent widespread misconduct including fees for dead customers, false document witnessing, and inappropriate financial advice."
+  },
+  {
+   "slug": "speech-362235",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (ASIC Governance) Bill 2018, which adds a second deputy chairperson to ASIC, but criticised it as a minimalist reform given the royal commission's revelations of widespread corporate misconduct. They highlighted specific abuses: NAB's introducer program lending $24 billion in home loans, liar loans potentially comprising a third of Australian home borrowings, AMP's fees-for-no-service scandal, and CBA's inadequate submissions to the commission."
+  },
+  {
+   "slug": "speech-362236",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government and ASIC for prioritising small firms over large ones, citing low fin-tech uptake in the regulatory sandbox (fewer than half a dozen firms), a five-year delay in finalising equity crowdfunding legislation, and a baked-in six-month delay after royal assent, while ASIC levied $5,000 fees on crowdfunding companies before the regime took effect."
+  },
+  {
+   "slug": "speech-362237",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "The bill amends the ASIC Act to allow a second deputy chairperson, which Labor supported to improve governance and stakeholder engagement. The speaker also argued that stronger regulation is needed after the banking royal commission."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (ASIC Governance) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00042",
+   "assent_date": "2018-05-22"
+  }
+ ]
+}

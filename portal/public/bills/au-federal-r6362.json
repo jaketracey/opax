@@ -1,0 +1,454 @@
+{
+ "key": "au-federal-r6362",
+ "title": "Counter-Terrorism (Temporary Exclusion Orders) (Consequential Amendments) Bill 2019",
+ "short_title": "Counter-Terrorism (Temporary Exclusion Orders) (Consequential Amendments) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-07-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6362_ems_074cf4e0-de8f-45f2-b731-df63683b3a6d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6362%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00054",
+   "document_date": "2019-07-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5765",
+   "date": "2019-07-23",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2019-07-23.116.1) introduced by MP for Isaacs [Mark Dreyfus](https://theyvoteforyou.org.au/people/representatives/isaacs/mark_dreyfus) (Labor), which means they failed. These amendments would have implemented recommendations made by the Joint Parliamentary Committee on Intelligence and Security. MP Dreyfus [explained the recommendation](https://www.openaustralia.org.au/debates/?id=2019-07-23.116.1). ### Amendment texts > *(1) Schedule 1, page 3 (after line 9), after item 1, insert:* > > *1A At the end of Part 4* > > *Add:* > > *30A Certain reports and briefings* > > *(1) If:* > >> *(a) a report by the Independent National Security Legislation Monitor referred to in subsection 29(1) or 30(1) relates to a review of the Counter-Terrorism (Temporary Exclusion Orders) Act 2019, or a report relating to that Act is otherwise prepared in the course of the Independent National Security Legislation Monitor carrying out the functions in subsection 6(1); and* >> >> *(b) the Committee on Intelligence and Security requests, in writing given to the Independent National Security Legislation Monitor, a copy of the report;* > > *the Independent National Security Legislation Monitor must give the Committee a copy of the report, or a copy of extracts from the report that deal with that Act.* > > *(2) If the Committee on Intelligence and Security requests a briefing in relation to the report or extracts, the Independent National Security Legislation Monitor must give the Committee such a briefing.* ### What do the bills do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd006): > *The [Counter-Terrorism (Temporary Exclusion Orders) Bill 2019](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6361) (the TEO Bill) will introduce two new orders, each of which could be made by the Minister for Home Aff",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-23/3"
+  },
+  {
+   "key": "federal-senate-5801",
+   "date": "2019-07-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-07-25.86.2) *that clauses 14 and 30 stand as printed*. In other words, they voted to keep those clauses unchanged.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-25/9"
+  },
+  {
+   "key": "federal-senate-5802",
+   "date": "2019-07-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-07-25.110.1) introduced by NSW Senator [Kristina Keneally](https://theyvoteforyou.org.au/people/senate/nsw/kristina_keneally) (Labor), which means it failed. Senator Keneally [explained that](https://www.openaustralia.org.au/senate/?gid=2019-07-25.110.1): > *This amendment, like the ones I just moved, seeks to give full implementation to the recommendations made by the Parliamentary Joint Committee on Intelligence and Security on the legislation currently before the House.* ### Amendment text > *(1) Schedule 1, page 3 (after line 9), after item 1, insert:* > > *1A At the end of Part 4* > > *Add:* > > *30A Certain reports and briefings* > > *(1) If:* > >> *(a) a report by the Independent National Security Legislation Monitor referred to in subsection 29(1) or 30(1) relates to a review of the Counter-Terrorism (Temporary Exclusion Orders) Act 2019, or a report relating to that Act is otherwise prepared in the course of the Independent National Security Legislation Monitor carrying out the functions in subsection 6(1); and* >> >> *(b) the Committee on Intelligence and Security requests, in writing given to the Independent National Security Legislation Monitor, a copy of the report;* > > *the Independent National Security Legislation Monitor must give the Committee a copy of the report, or a copy of extracts from the report that deal with that Act.* > > *(2) If the Committee on Intelligence and Security requests a briefing in relation to the report or extracts, the Independent National Security Legislation Monitor must give the Committee such a briefing.* > > *[reports and briefings]*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-25/10"
+  },
+  {
+   "key": "federal-senate-5803",
+   "date": "2019-07-25",
+   "house": "senate",
+   "question": "Counter-Terrorism (Temporary Exclusion Orders) Bill 2019, Counter-Terrorism (Temporary Exclusion Orders) (Consequential Amendments) Bill 2019 - in Committee - Oversight",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 20,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-25/11"
+  },
+  {
+   "key": "federal-senate-5804",
+   "date": "2019-07-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-07-25.242.1) introduced by by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. Senator McKim [explained that](https://www.openaustralia.org.au/senate/?gid=2019-07-25.242.1): > *These amendments, importantly, would provide for crossbench membership on the Parliamentary Joint Committee on Intelligence and Security and help that committee to do its job, to scrutinise the ongoing march of this country down the road to a police state.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 21,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-25/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377407",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The Counter-Terrorism (Temporary Exclusion Orders) (Consequential Amendments) Bill 2019 was introduced to add accountability and transparency measures to the temporary exclusion order scheme, implementing recommendations from the Parliamentary Joint Committee on Intelligence and Security. It amends the Intelligence Services Act 2001 to give the committee monitoring and review powers, requires a review of the scheme within three years, and allows the Independent National Security Legislation Monitor to review the scheme on their own initiative."
+  },
+  {
+   "slug": "speech-378134",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-23",
+   "stage_hint": null,
+   "brief": "The speaker stated that the government has not implemented nine bipartisan Intelligence and Security Committee recommendations, and that amendments now before the chamber would implement them in full, with a separate amendment for recommendation 16 of the committee."
+  },
+  {
+   "slug": "speech-378136",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-23",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment requiring the Independent National Security Legislation Monitor to provide reports and briefings to the Parliamentary Joint Committee on Intelligence and Security upon request, noting that this was recommendation 16 unanimously supported by all six Liberal and five Labor committee members but rejected by the government without explanation. The speaker criticised the government's failure to accept the recommendation, which was consistent with the 2017 Independent Intelligence Review by Michael L'Estrange and Stephen Merchant."
+  },
+  {
+   "slug": "speech-378140",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Counter-Terrorism (Temporary Exclusion Orders) (Consequential Amendments) Bill 2019 must be passed to introduce accountability and transparency measures for the temporary exclusion order scheme, including monitoring by a committee and the Independent National Security Legislation Monitor within three years."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Counter-Terrorism (Temporary Exclusion Orders) (Consequential Amendments) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00054",
+   "assent_date": "2019-07-30"
+  }
+ ]
+}

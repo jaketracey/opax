@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-s1020",
+ "title": "Crimes Legislation Amendment (Harming Australians) Bill 2015",
+ "short_title": "Crimes Legislation Amendment (Harming Australians) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-15",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General and Senator Xenophon",
+ "status": "passed",
+ "status_as_of": "2015-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1020_ems_125d2b6d-7795-4fde-8813-93af293ab4ce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4190744%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1020%22",
+   "document_date": "2015-10-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00163",
+   "document_date": "2015-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-323534",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The Crimes Legislation Amendment (Harming Australians) Bill 2015 was introduced to allow retrospective prosecution in Australia of murder and manslaughter of Australian citizens or residents committed overseas before 2002, with safeguards including dual criminality, the lowest applicable penalty, and Attorney-General consent. The bill was prompted by the case of Anthea Bradshaw-Hall, murdered in Brunei 21 years ago, and was co-sponsored by the Attorney-General and Senator Nick Xenophon."
+  },
+  {
+   "slug": "speech-323535",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The Crimes Legislation Amendment (Harming Australians) Bill 2015 extends the retrospective application of murder and manslaughter offences for Australians killed overseas, with safeguards to ensure fair prosecutions. Labor supported the bill, which arose from advocacy by the family of Anthea Bradshaw-Hall."
+  },
+  {
+   "slug": "speech-323537",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Crimes Legislation Amendment (Harming Australians) Bill 2015, arguing that direct involvement in terrorist activities severs the bond of allegiance and justifies loss of citizenship for dual nationals. The speaker also defended Australia’s refugee and humanitarian record, citing 163,017 new citizens in 2013-14, 13,500 refugees resettled last year, an increase to 18,750 places by 2018-19, and 12,000 extra refugees from Syria and Iraq."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Harming Australians) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00163",
+   "assent_date": "2015-11-30"
+  }
+ ]
+}

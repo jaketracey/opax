@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r5787",
+ "title": "Migration Legislation Amendment (Code of Procedure Harmonisation) Bill 2016",
+ "short_title": "Migration Legislation Amendment (Code of Procedure Harmonisation) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5787%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5787%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5787%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5787_ems_7e88e41e-e00f-449e-a807-b56483eaa2be%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5787%22",
+   "document_date": "2016-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339321",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The Migration Legislation Amendment (Code of Procedure Harmonisation) Bill 2016 merges the separate codes of procedure for protection and migration decisions in the Migration Act into a single consolidated part, following the merger of the Migration Review Tribunal and Refugee Review Tribunal into the Administrative Appeals Tribunal. The bill also clarifies notification requirements for oral decisions and allows the Immigration Assessment Authority to review fast track decisions for family members together."
+  }
+ ],
+ "acts": []
+}

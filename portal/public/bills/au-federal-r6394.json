@@ -1,0 +1,184 @@
+{
+ "key": "au-federal-r6394",
+ "title": "Paid Parental Leave Amendment (Work Test) Bill 2019",
+ "short_title": "Paid Parental Leave Amendment (Work Test) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2019-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6394_ems_92eff3f6-c285-48fb-a4ad-075927c0b3a2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6394%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00084",
+   "document_date": "2019-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-380401",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment (Work Test) Bill 2019 increases the permissible break between working days from eight to twelve weeks from 1 January 2020, and adjusts the work test to begin 392 days before a mother stops work due to job hazards, aiming to improve access for working mothers, including casual teachers and those in dangerous industries."
+  },
+  {
+   "slug": "speech-381967",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Paid Parental Leave Amendment (Work Test) Bill 2019 and moved a second reading amendment calling on the government to guarantee no cuts to Paid Parental Leave, increase paid family violence leave to 10 days, and work with business to close the gender pay gap. The bill expands the work test to help an extra 180 mothers per year, including those in hazardous jobs like jockeys and those with irregular work patterns."
+  },
+  {
+   "slug": "speech-381969",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Work Test) Bill, which increases the permissible work break from eight to 12 weeks for casual teachers and adjusts the work test for women in unsafe occupations like mining or construction, enabling up to 180 more mothers annually to access the scheme from 1 January 2020."
+  },
+  {
+   "slug": "speech-381972",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Paid Parental Leave Amendment (Work Test) Bill 2019 but argued it failed to address the gender imbalance in caregiving, noting the persistent 14% gender pay gap and calling for policies such as use-it-or-lose-it parental leave for fathers, citing successful models in Scandinavia."
+  },
+  {
+   "slug": "speech-381973",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Paid Parental Leave Amendment (Work Test) Bill 2019, criticising the six-year delay in extending eligibility to women in dangerous occupations or irregular employment. They argued that Australia lags behind other countries and called for greater employer support, better return-to-work plans, and increased funding, citing examples like the Australian Jockeys Association and a court case involving a pregnant bottle-shop worker."
+  },
+  {
+   "slug": "speech-381974",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "Supported the Paid Parental Leave Amendment (Work Test) Bill 2019 but called for increased childcare subsidies (85–100% of the hourly fee cap for households earning $70,000–$100,000, and 60–85% for $100,000–$175,000) and longer, more equitable paid parental leave (at least 26 weeks, with dedicated leave for fathers, citing Iceland and Canada)."
+  },
+  {
+   "slug": "speech-381975",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-19",
+   "stage_hint": null,
+   "brief": "The Paid Parental Leave Amendment (Work Test) Bill 2019 expands access to paid parental leave by increasing the allowable break between work days from eight to 12 weeks within a 13-month test period from 1 January 2020, and allows mothers in hazardous occupations—such as construction workers, miners or jockeys—to use an earlier work test period if forced to cease work due to danger."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Paid Parental Leave Amendment (Work Test) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00084",
+   "assent_date": "2019-10-28"
+  }
+ ]
+}

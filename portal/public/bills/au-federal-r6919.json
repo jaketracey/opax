@@ -1,0 +1,233 @@
+{
+ "key": "au-federal-r6919",
+ "title": "Offshore Electricity Infrastructure Legislation Amendment Bill 2022",
+ "short_title": "Offshore Electricity Infrastructure Legislation Amendment Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2022-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6919_ems_42883be5-cb08-4479-81f9-2e2e18f4e41c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6919%22",
+   "document_date": "2022-09-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00071",
+   "document_date": "2022-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7785",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with the following amendment: > *That the [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6919_amend_8823d541-accf-4d25-9516-075b44cd5834%22;rec=0) moved by the honourable [member for Fairfax](https://theyvoteforyou.org.au/people/representatives/fairfax/ted_o'brien) be disagreed to:* > > *(1) Schedule 2, item 7, page 13 (lines 10 and 11), omit the item.* In other words, they were in favour of keeping [item 7 of Schedule 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6919_first-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr6919_first-reps%2F0000%22;rec=0) in the bill. ### Text of item 7, Schedule 2 > *7 Paragraphs 117(3)(a) and (3)(c) and (4)(d)* > > *Omit “the Regulator”, substitute “the Minister”.* ### What does item 7 of Schedule 2 do? According to the [bills digest](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=BillId_Phrase%3A%22r6919%22%20Dataset%3Abillsdgs;rec=0): > *Item 7 inserts ‘the Minister’ in place of ‘the Regulator’ as the decision maker in terms of the form of financial security any licence holder must provide (paragraph 117(3)(a)), when the financial security is no longer required (paragraph 117(3)(c)) and the circumstances under which a reduced financial security can be accepted (paragraph 117(4)(d)). As set out in the Explanatory Memorandum to the Bill:* > >> *Given that financial security must be provided to and is held by the Commonwealth, and can only be recovered by the Commonwealth [section 119 of the Offshore Electricity Infrastructure Act 2021 (OEI Act)] it is more appropriate that the Commonwealth (rather than the Regulator [National Offshore Petroleum Safety and Environmental Management Authority (NOPSEMA)], which as a corporate Commonwealth entity is not formal",
+   "stage": "Report from Federation Chamber",
+   "ayes": 87,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-10-26/2"
+  },
+  {
+   "key": "federal-senate-7852",
+   "date": "2022-11-23",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-23.18.19) to the usual second reading motion, which is \"that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)\" - parliamentary jargon for agreeing with the main idea of the bill. If it had been successful, the amendment would have added the words below. ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) is of the opinion that:* > >> *(i) building a circular economy is a key component of climate action,* >> >> *(ii) decommissioning of infrastructure must be undertaken in a way that is environmentally sustainable, and* >> >> *(iii) the technology to recycle and reuse the components of wind turbines exists now; and* > > *(b) calls on the Government to:* > >> *(i) develop robust regulations for the safe and sustainable decommissioning of offshore wind turbine infrastructure, and* >> >> *(ii) ensure that future regulations prevent the decommissioning of wind turbine infrastructure to landfill\".*",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 24,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-23/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Offshore Electricity Infrastructure Legislation Amendment Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00071",
+   "assent_date": "2022-11-30"
+  }
+ ]
+}

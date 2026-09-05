@@ -1,0 +1,358 @@
+{
+ "key": "au-federal-r6624",
+ "title": "Export Control Amendment (Miscellaneous Measures) Bill 2020",
+ "short_title": "Export Control Amendment (Miscellaneous Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2021-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6624_ems_d1f5abd7-45e3-42f5-b87c-3890cdba3999%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6624_ems_134b0b9e-51b6-499f-9238-f16fe81dfa4e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7750969%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6624%22",
+   "document_date": "2020-11-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00011",
+   "document_date": "2021-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2020-11-11",
+  "sentences": [
+   "The bill adjusts the Export Control Act 2020 to make regulatory checks proportionate and flexible.",
+   "It changes when the fit and proper person test applies, clarifies notice of intention requirements, expands export permit considerations, and allows rules to incorporate external documents.",
+   "The fit and proper person test would only apply to variation applications involving a new manager or controller, and the bill does not specify a start date."
+  ],
+  "changes": [
+   "The bill limits the fit and proper person test to variation applications where a new person starts managing or controlling export operations.",
+   "The bill clarifies that a notice of intention is only required if the rules provide for it.",
+   "The bill allows the Secretary to approve or refuse a notice of intention as set out in the rules.",
+   "The bill lets the Secretary consider other requirements prescribed by the rules when deciding on export permits.",
+   "The bill permits the rules to incorporate documents as in force from time to time."
+  ],
+  "affected": "Exporters, occupiers of registered establishments, and the Department of Agriculture, Water and the Environment.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6889",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-02.119.5) to keep the usual second reading motion unchanged. The usual second reading motion is \"*that the bill be read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill. This vote was put after the MP for Franklin [Julie Collins](https://theyvoteforyou.org.au/people/representatives/franklin/julie_collins) (Labor) proposed an [amendment](https://www.openaustralia.org.au/debate/?id=2021-02-02.114.1). ### Proposed amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes the Coalition Government's continued failure to prioritise agriculture legislation and its inaction to address the agriculture workforce shortage.\"*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-02/6"
+  },
+  {
+   "key": "federal-senate-6947",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-02-15.162.1) introduced by West Australian Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means it failed. ### Amendment text > *(1) Schedule 1, items 9 to 13, page 4 (line 27) to page 5 (line 6), omit the items, substitute:* > > *9 Subsection 383(4) (note)* > > *Repeal the note.* > > *10 Subsection 385(3) (note)* > > *Repeal the note.* > > *11 Section 386* > > *Repeal the section.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 18,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/8"
+  },
+  {
+   "key": "federal-senate-6948",
+   "date": "2021-02-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-02-15.167.1) to read the bill a third time - parliamentary jargon for passing the bill in the Senate. Because it has already passed in the House of Representatives, it will now become law. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd040), the bill was introduced to: > * *clarify the operation of the fit and proper person test when varying the registration of export establishments* > * *provide greater flexibility in the requirements for lodging a Notice of Intention to export* > * *enable the Rules to provide guidance in relation to the approval of export permits* > * *enable the Rules to modify provisions of the 2020 Act and the Administrative Appeals Tribunal Act 1975 in relation to review of tariff rate quota certificate decisions and* > * *provide that the Rules may incorporate matters contained in agreements between Australia and other countries that relate to tariff rate quotas.*",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 18,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-15/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-401303",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The shadow minister criticised the government for amending its own export control legislation shortly after enactment and for failing to deliver a promised agricultural workers code and 22,000 overseas workers, resulting in $42 million in crop losses due to labour shortages. An amendment was moved noting the government's continued failure to prioritise agriculture legislation and address the workforce shortage."
+  },
+  {
+   "slug": "speech-401305",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Miscellaneous Measures) Bill 2020 was argued to streamline and consolidate port controls, coming into effect on 28 March, with five amendments addressing the fit-and-proper-person test, notice of intention to export, export permit approvals, and quota certificates. The government has allocated $328 million to modernise the trading environment, $10 million for plant export services, and $669 million for air freight shortages during COVID."
+  },
+  {
+   "slug": "speech-401307",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Miscellaneous Measures) Bill 2020 aims to improve regulatory settings for export growth and productivity, but Labor argues the government is not doing enough to support the National Farmers Federation's goal of $100 billion in agricultural value by 2030."
+  },
+  {
+   "slug": "speech-401309",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Labor Party's 2011 ban on live cattle exports was a disastrous mistake, later corrected by the coalition, and supported the Export Control Amendment (Miscellaneous Measures) Bill 2020, noting that cattle now sell for $1,500 per head and the industry has become professional."
+  },
+  {
+   "slug": "speech-401315",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker urged the shadow minister to engage in robust debate on agriculture during question time, particularly in an election year, and argued that the Export Control Amendment (Miscellaneous Measures) Bill 2020 provides an opportunity to discuss the importance of the live cattle and sheep trade, streamline export opportunities, and challenge the Labor Party on policy objectives, including making Australia the seedbed of a major international agricultural company like New Zealand's Fonterra."
+  },
+  {
+   "slug": "speech-401317",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The Export Control Amendment (Miscellaneous Measures) Bill 2020 amends the Export Control Act 2020 to clarify fit-and-proper-person tests, enable rules for export notices, modify tariff rate quota provisions, and reduce administrative burden for agricultural exporters. The bill supports the Morrison-McCormack government's deregulation agenda and aims to boost agricultural industries post-COVID."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Control Amendment (Miscellaneous Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00011",
+   "assent_date": "2021-03-01"
+  }
+ ]
+}

@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-r7098",
+ "title": "Health Insurance Amendment (Professional Services Review Scheme No. 2) Bill 2023",
+ "short_title": "Health Insurance Amendment (Professional Services Review Scheme No. 2) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-11-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7098_ems_a4f97ca2-7dcf-4528-bea5-24ad1890d791%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7098%22",
+   "document_date": "2023-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00097",
+   "document_date": "2023-11-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-10-19",
+  "sentences": [
+   "This bill would strengthen how the Professional Services Review (PSR) investigates and addresses inappropriate Medicare practice.",
+   "It would change rules for committee members' qualifications, clarify that the PSR can review unregistered practitioners, and let the PSR Director extend the 12-month decision timeframe when a person under review leaves Australia or court proceedings are ongoing.",
+   "The bill responds to the Philip Review's April 2023 recommendation to update the Medicare legislative framework."
+  ],
+  "changes": [
+   "Align requirements for committee members' qualifications with the Health Insurance Act and clarify how to apply them.",
+   "Make it clear that references to a practitioner include those not currently registered.",
+   "Require a person under review to provide a medical certificate if they cannot attend a hearing for medical reasons.",
+   "Give the PSR Director power to extend the 12-month statutory timeframe for deciding a matter when the person under review leaves Australia or there are ongoing court proceedings."
+  ],
+  "affected": "Health practitioners under review by the PSR, PSR committee members, and the PSR Director.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Professional Services Review Scheme No. 2) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00097",
+   "assent_date": "2023-11-24"
+  }
+ ]
+}

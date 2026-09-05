@@ -1,0 +1,184 @@
+{
+ "key": "au-federal-s1208",
+ "title": "Health Insurance Amendment (Bonded Medical Programs Reform) Bill 2019",
+ "short_title": "Health Insurance Amendment (Bonded Medical Programs Reform) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-09-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1208_ems_20ea4241-19fb-49bb-b30f-b258a54dded2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1208%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00070",
+   "document_date": "2019-09-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would create a single statutory scheme to replace the current Bonded Medical Places and Medical Rural Bonded Scholarship schemes.",
+   "The scheme would require participants to work in regional, rural, remote or workforce shortage areas in return for a government-supported medical school place.",
+   "From 1 January 2020, new participants could voluntarily join the scheme, and existing participants could opt in if the Secretary agrees."
+  ],
+  "changes": [
+   "Consolidates the Bonded Medical Places and Medical Rural Bonded Scholarship schemes under one legislative framework.",
+   "Reduces the return of service obligation to three years for most new participants.",
+   "Introduces a web-portal for administrative management of the program.",
+   "Provides for internal review and Administrative Appeals Tribunal review of certain decisions.",
+   "Gives the Minister power to make Bonded Medical Program rules to keep the program up-to-date."
+  ],
+  "affected": "Medical students and doctors who accept bonded Commonwealth supported places in Australian medical courses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-380607",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Bonded Medical Programs) Reform Bill 2019 introduces a statutory Bonded Medical Program from 1 January 2020, consolidating existing schemes under a single legislative framework with $20.2 million in funding, to address doctor shortages in regional, rural and remote Australia by requiring participants to work in underserviced areas in return for a university place."
+  },
+  {
+   "slug": "speech-380610",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Bonded Medical Programs Reform) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00070",
+   "assent_date": "2019-09-19"
+  }
+ ]
+}

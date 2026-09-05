@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-s990",
+ "title": "Tribunals Amalgamation Bill 2015",
+ "short_title": "Tribunals Amalgamation Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-03",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s990_ems_4c2722f2-fe09-4c2d-a0ff-bcec10ced040%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s990_ems_e888e092-d5e5-42f7-87e9-e56ce47329a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s990_ems_8ce70c53-d761-45a8-8d60-c17637058733%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s990%22",
+   "document_date": "2014-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00060",
+   "document_date": "2015-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-12-03",
+  "sentences": [
+   "This bill would merge several tribunals into one by changing the Administrative Appeals Tribunal Act.",
+   "It would set up a new governance structure, streamline procedures, and modernise the law, including new rules for divisions, appointments, and reviews.",
+   "The bill would also change how migration and refugee reviews are handled, with most of the usual rules not applying to them."
+  ],
+  "changes": [
+   "Provide a new objective for the combined tribunal.",
+   "Establish the tribunal's membership, including the President, Deputy Presidents, senior members, and others, with qualifications and conditions for appointment.",
+   "Set up divisions, assign members to them, and allow the President to make practice directions.",
+   "Introduce procedural rules for reviews, with special arrangements for migration and refugee cases.",
+   "Make minor changes to appeals to federal courts on legal questions.",
+   "Modernise machinery provisions, including offences and a new publication rule for decisions."
+  ],
+  "affected": "The amalgamated Tribunal, its members, and people involved in reviews before it, especially those in migration and refugee cases.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309850",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The Tribunals Amalgamation Bill merges the Administrative Appeals Tribunal, Migration Review Tribunal–Refugee Review Tribunal, and Social Security Appeals Tribunal into a single AAT, saving $7.2 million over the forward estimates. The Hon. Justice Duncan Kerr will remain as the first president of the amalgamated tribunal."
+  },
+  {
+   "slug": "speech-309851",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tribunals Amalgamation Bill 2015 to merge four Commonwealth tribunals into a single body, with Labor amendments preserving the AAT's independence, creating a specialist FOI division, and retaining seven-year member terms and removal by address of parliament. The speaker opposed the government's plan to abolish the Administrative Review Council and objected to a provision moving child support appeals from the Family Court to the Federal Court."
+  },
+  {
+   "slug": "speech-309852",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tribunals Amalgamation Bill 2015, arguing it simplifies merits review by merging key tribunals into the AAT, saving $7.2 million, and redirecting child support appeals from the Family Court to the Federal Court, as the Family Court hears only one or two such appeals annually."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tribunals Amalgamation Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00060",
+   "assent_date": "2015-05-26"
+  }
+ ]
+}

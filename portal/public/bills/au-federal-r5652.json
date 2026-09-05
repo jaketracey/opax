@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-r5652",
+ "title": "Fair Work (Registered Organisations) Amendment Bill 2014 [No. 3]",
+ "short_title": "Fair Work (Registered Organisations) Amendment Bill 2014 [No. 3]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-04-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5652%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5652%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5652%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5652_ems_063c4c52-af85-48d7-9b64-a0cb92e0996c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5652%22",
+   "document_date": "2016-04-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-04-18",
+  "sentences": [
+   "This bill is part of a package with the Fair Work (Registered Organisations) Amendment Bill 2014, which aims to tighten governance of registered organisations by amending the Fair Work (Registered Organisations) Act 2009 and the Fair Work Act 2009.",
+   "The package would establish an independent regulator called the Registered Organisations Commission, headed by a Commissioner, to oversee registered organisations, with investigation and information-gathering powers similar to those in the Australian Securities and Investments Commission Act 2001.",
+   "It would also require officers to disclose personal interests, strengthen financial transparency rules, raise civil penalties, and create criminal offences for severe breaches of officers' duties, mirroring company law obligations."
+  ],
+  "changes": [
+   "Establishes the Registered Organisations Commission as an independent watchdog with enhanced investigation powers.",
+   "Imposes new disclosure duties on officers regarding material personal interests and alters disqualification and ineligibility grounds.",
+   "Strengthens financial reporting and transparency requirements by making certain rule obligations civil remedy provisions.",
+   "Increases civil penalties and introduces criminal offences for serious breaches of officers' duties.",
+   "Creates new offences related to conducting investigations under the RO Act."
+  ],
+  "affected": "Registered organisations, their branches, and their officers, as well as the new Registered Organisations Commission and the Fair Work Commission's General Manager.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-331155",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "The House was asked to suspend standing orders to allow the immediate introduction and debate of the Fair Work (Registered Organisations) Amendment Bill 2014 [No. 3], the Road Safety Remuneration Repeal Bill 2016, and the Road Safety Remuneration Amendment (Protecting Owner Drivers) Bill 2016. The speaker argued the Fair Work bill, passed three times by the House, targets dishonest union leaders, while the Road Safety bills address the impact on owner drivers from Labor’s previous legislation."
+  }
+ ],
+ "acts": []
+}

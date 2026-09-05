@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5820",
+ "title": "Parliamentary Entitlements Amendment (Ending the Rorts) Bill 2017",
+ "short_title": "Parliamentary Entitlements Amendment (Ending the Rorts) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-27",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "&#34;Independent Members&#34;",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-09-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5820%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5820%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5820%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5820_ems_d60db485-9d38-4a37-8da4-acbfdde1bd65%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5820%22",
+   "document_date": "2017-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-27",
+  "sentences": [
+   "This bill would tighten the rules for how parliamentarians spend public money on travel and other work expenses.",
+   "It would require all travel claims since the 2013 election to be checked after the fact, with similar checks every year going forward.",
+   "Politicians would have to publish details of work and personal activities during official travel, and the bill would let authorities be told if expenses are misused."
+  ],
+  "changes": [
+   "requires past and future annual audits of travel claims",
+   "requires parliamentarians to describe the activities undertaken on each official trip",
+   "creates a process for notifying law enforcement agencies of misuse"
+  ],
+  "affected": "All members of parliament and senators.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:39:14Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

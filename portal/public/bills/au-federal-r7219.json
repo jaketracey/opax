@@ -1,0 +1,915 @@
+{
+ "key": "au-federal-r7219",
+ "title": "Future Made in Australia Bill 2024",
+ "short_title": "Future Made in Australia Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-07-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7219_ems_62724c50-eb45-411a-9383-11e0448f331f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7219_ems_5fcf8b5b-df14-42f0-b5f8-71009184d832%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7219_ems_60223796-414c-43c5-93a8-bcfb1c56ce44%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7219_ems_d688a950-e85d-4e5a-84ad-8f7915d58a92%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7219%22",
+   "document_date": "2024-07-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00119",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9346",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7219_amend_8545ea0c-51bf-457b-8b5c-15e48c6aeab4%22;rec=0) introduced by Hume MP [Angus Taylor](https://theyvoteforyou.org.au/people/representatives/hume/angus_taylor) (Liberal), which means it failed. The amendment would have amended the usual second reading motion, which is *\"that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“the House declines to give the bill a second reading, and:* > > *(1) notes:* > >> *(a) the failure of billions of dollars of the Government’s Future Made in Australia spending to meet the standards and processes laid out in this Bill and the significant integrity concerns around these investments;* >> >> *(b) the Government’s Future Made in Australia policy has been criticised by many eminent economists including the Productivity Commission’s Danielle Wood; former Productivity Commissioner Gary Banks; Australian National University visiting fellow Steven Hamilton; and University of New South Wales’ Professor Richard Holden; and* >> >> *(c) this policy does not make up for the Government’s failures on economic management that are driving up the costs of manufacturing and have caused a tripling of manufacturing insolvencies since June 2022; and* > > *(2) calls on the Government to get Australia’s economy back on track and back to basics by fighting inflation and reducing wasteful spending, reducing complexity and red tape for business, supporting affordable, reliable energy, and delivering lower, simpler, fairer taxes”.*",
+   "stage": "Second reading",
+   "ayes": 54,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-22/2"
+  },
+  {
+   "key": "federal-representatives-9347",
+   "date": "2024-08-22",
+   "house": "representatives",
+   "question": "Future Made in Australia Bill 2024 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 83,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-08-22/3"
+  },
+  {
+   "key": "federal-representatives-9091",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "Future Made in Australia Bill 2024 - Consideration in Detail - Decarbonisation",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 67,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/3"
+  },
+  {
+   "key": "federal-representatives-9092",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-09-09.36.1) introduced by Kooyong MP [Monique Ryan](https://theyvoteforyou.org.au/people/representatives/kooyong/monique_ryan) (Independent), which means they failed. Dr Ryan [explained that](https://www.openaustralia.org.au/debate/?id=2024-09-09.36.1): > *The government has already started to allocate funds under the scheme, and, in some cases, there are real questions around the integrity of the decision-making with those grant decisions. So the amendments I've moved today to this bill will increase clarity regarding sectoral assessments and the extent to which they will consider such questions as relevant to international trade agreements, current national stockpiles and resources and the need for diversification of our resources.* ### Amendment text > *(1) Clause 7, page 9 (line 14), at the end of subclause (4), add:* > >> *; and (c) the circumstances set out in the rules apply in relation to the sector, such as to justify investment in the sector.* > > *(2) Clause 8, page 9 (after line 30), after subclause (1), insert:* > >> *(1A) A sector assessment must also consider each of the following matters:* >> >>> *(a) the impact of any relevant international trade agreements;* >>> >>> *(b) current Australian stockpiles and supply of sector goods and resources;* >>> >>> *(c) the need for Australia to maintain a diversity of resources.* > > *(3) Clause 8, page 10 (lines 18 to 22), omit subclause (6), substitute:* > >> *(6) For the purposes of conducting a sector assessment, the Secretary:* >> >>> *(a) must consult with each of the following:* >>> >>>> *(i) the Productivity Commission;* >>>> >>>> *(ii) the Commonwealth Scientific and Industrial Research Organisation;* >>>> >>>> *(iii) the Australian Competition and Consumer Commission;* >>>> >>>> *(iv) Infrastructure Australia;* >>>> >>>> *(v) the Climate Change Authority;* >>>> >>>> *(vi) the Net Zero Economy Authority;* >>>> >>>>",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 66,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/4"
+  },
+  {
+   "key": "federal-representatives-9093",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-09-09.38.1) introduced by Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent), which means they failed. ### What do these amendments do? Ms Chaney [explained that](https://www.openaustralia.org.au/debate/?id=2024-09-09.38.1): > *One of the amendments I'm proposing makes it clear that, if support is labelled as being part of the government's Future Made in Australia package, it must be linked to a sector that has actually been assessed as part of the National Interest Framework. In other words, the government can't say, 'We've got this great rigorous sector assessment process, but we don't have to use it.' Currently the bill requires the government to identify sectors that align with the National Interest Framework and would benefit from government investment to address barriers to private investment, but there's no requirement for the government to only provide support in sectors that have been identified in this way. So the government can stick a Future Made in Australia label on anything it wants, even if it's not in a sector that's been assessed as being worthy of government investment.* > > *Allowing government to use taxpayer funds for industry policy requires a leap of faith that the government will make good investment decisions. Unfortunately, governments don't have a great track record of making good investment decisions in situations of uncertainty. I recognise that, with the way other countries are responding to rapid economic transition towards decarbonisation, we do have to take some risks, but this amendment is designed to reduce that risk and prevent stupid things from getting through. If the government backs the process it has designed for sector assessments, it should be willing to commit to using it.* > > *My other amendment recognises that this is a rapidly changing space. In setting industry policy, w",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 61,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/5"
+  },
+  {
+   "key": "federal-representatives-9094",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "Future Made in Australia Bill 2024 - Consideration in Detail - National Interest Framework",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/6"
+  },
+  {
+   "key": "federal-representatives-9095",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-09-09.42.1) introduced by Goldstein MP [Zoe Daniel](https://theyvoteforyou.org.au/people/representatives/goldstein/zoe_daniel) (Independent), which means they will not be included in the bill. ### What do the amendments do? Ms Daniel [explained that](https://www.openaustralia.org.au/debate/?id=2024-09-09.42.1): > *My first amendment proposes a new standalone community development principle to guide the implementation of FMIA supports towards the inclusion of women in our future net zero workforce, which is critical to our net zero transition. I'm concerned that the absence of such a principle to drive the participation of women in our net zero economy will leave 50 per cent of our population uninvolved and unempowered and create yet another high-vis male workforce.* > > *My second amendment would empower the Department of the Treasury itself to initiate sector assessments. One need only look to the Productivity Commission—indeed, in the Treasurer's own portfolio—to a model which possesses an element of independence and protection against ministerial interference. The Productivity Commission, while taking direction for assessments by its minister, can determine areas of the economy to conduct research in, as it deems appropriate. I can't see anything in this bill to prevent a future minister from simply not directing the Department of the Treasury to conduct sector assessments at all should it not be in the political interests of the government of the day.* > > *My third amendment would add an additional eligibility criteria to the net zero transformation stream to ensure that FMIA supports are committed only to projects which would substantially contribute to climate change mitigation and net zero. Projects that receive Commonwealth support must be able to substantiate precisely how they would implement this funding towards what should be the primary goal of this legislation—tha",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 40
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/7"
+  },
+  {
+   "key": "federal-representatives-9096",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-09-09.44.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means they failed. ### What do the amendments do? Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2024-09-09.44.1): > *In the current legislation, the sector assessment process is essentially optional. This creates the potential for the framework to be bypassed by a future government and for taxpayer money to be invested in industries and pet projects without clear justification. This point has been highlighted by stakeholders as diverse as the BCA and the ACF—and by many parliamentarians during the second reading debate.* > > *My amendment will help close this loophole. It will require that the sector assessment is conducted and that the results are considered by the minister before support for the sector can be made available under the Future Made in Australia. This is a commonsense amendment which strengthens the guardrails around government spending under this bill and is aligned with how the Treasurer has said the process is meant to work. It does not unnecessarily constrain government investing. It does not prevent the government from acting quickly. It does not create an unrealistic expectation that every sector which is assessed will get government support. It simply seeks to legislation the guardrails the government has already told us they want to follow.* ### Amendment texts > *(3) Page 12 (before line 4), before clause 10, insert:* > >> *9A Requirements before providing Future Made in Australia support* >> >> *Future Made in Australia support must not be provided to a person in relation to a sector unless:* >> >>> *(a) a sector assessment for the sector is conducted in accordance with section 8; and* >>> >>> *(b) the Minister has considered the sector assessment report and has recommended",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/8"
+  },
+  {
+   "key": "federal-representatives-9097",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "Future Made in Australia Bill 2024 - Consideration in Detail - Prioritising domestic food processing and agriculture industries",
+   "stage": "Consideration in detail",
+   "ayes": 11,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 5
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/9"
+  },
+  {
+   "key": "federal-representatives-9098",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/debate/?id=2024-09-09.116.1) introduced by Rankin MP [Jim Chalmers](https://theyvoteforyou.org.au/people/representatives/rankin/jim_chalmers) (Labor), which means they will now be part of the bill. ### What do the amendments do? Mr Chalmers [explained that](https://www.openaustralia.org.au/debate/?id=2024-09-09.116.1): > *The five amendments from the government that are before the House are largely about three things. Firstly, they make projects supported by the Future Made in Australia even more transparent. The companies delivering the support will have to publish the value of that and list their beneficiaries each year. Secondly, the amendments will make the sector assessments more rigorous. They will put in legislation the recommendation for Treasury to consult expert bodies when making these assessments, and this will help Treasury consider what impact or benefit individual industries will have on our net zero transformation. Thirdly, they clarify the importance of First Nations Australians participating in and sharing the benefits of our transition to net zero, with an extra community benefit principle ensuring the benefits of projects on those communities are always properly considered. We're also proposing a minor amendment to the omnibus bill to ensure that the Australian Renewable Energy Agency is considered a public authority of the Commonwealth.* ### Amendment texts > *(1) Clause 3, page 4 (after line 28), after subparagraph (c)(iii), insert:* > >> *(iiia) supporting First Nations communities and traditional owners to participate in, and share in the benefits of, the transition to net zero; and* > > *(2) Clause 8, page 10 (after line 22), at the end of subclause (6), add:* > >> *Note: The Commonwealth entities the Secretary may consult with for the purposes of paragraph (a) include (without limitation) the following:* >> >> *(a) the Australian Competition and Consumer Commissio",
+   "stage": "Consideration in detail",
+   "ayes": 87,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/10"
+  },
+  {
+   "key": "federal-representatives-9099",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "Future Made in Australia Bill 2024 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/11"
+  },
+  {
+   "key": "federal-representatives-9100",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "Future Made in Australia Bill 2024 - Consideration in Detail - Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 82,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/12"
+  },
+  {
+   "key": "federal-representatives-9101",
+   "date": "2024-09-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-09-09.134.1) \"*That so much of the standing orders be suspended as would prevent the motion for the third reading being moved without delay.*\" In other words, they voted to end debate and instead vote on whether to pass the bill right away. Standing orders are the usual procedural rules of parliament. ### What does this bill do? The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd006) (which is a document prepared by the parliamentary library) explained that: > *The Future Made in Australia Bill 2024 establishes a new principal Act under the Government’s Future Made in Australia agenda, including:* > > * *creating the National Interest Framework as the means by which sectors will be identified as potential candidates for support under Future Made in Australia* > > * *setting out community benefit principles which aim to ensure investments deliver benefits to the Australian community and grow priority sectors.* > > *The Future Made in Australia (Omnibus Amendments No. 1) Bill 2024 amends:* > > * *the Export Finance and Insurance Corporation Act 1991 to enable Export Finance Australia (EFA) to perform national economy and net zero functions, and to fund domestic projects that align with these functions.* > > * *the Australian Renewable Energy Agency Act 2011 to expand the role and functions of the Australian Renewable Energy Agency so it can support industries under the Future Made in Australia Innovation Fund and other programs.* > > *The Bills give effect to key aspects of the Albanese Government’s Future Made in Australia industrial policy agenda: a plan for explicit public investment at scale to attract private finance in sectors that have a comparative advantage in a net zero global economy, or where domestic capability could deliver economic resilience and supply chain security.* > > *The plan aims to ensure that Australia can",
+   "stage": "Third reading",
+   "ayes": 85,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-09-09/13"
+  },
+  {
+   "key": "federal-senate-10476",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines Prior to today, Senator David Pocock moved a second reading amendment relating to the Future Made in Australia Bill 2024 and the Future Made in Australia (Omnibus Amendments No. 1) Bill 2024: At the end of the motion, add \", but the Senate: (a) notes that: (i) the electrification of households and small businesses would result in thousands of dollars of savings a year and significantly reduce Australia's domestic emissions, (ii) the United States' Inflation Reduction Act of 2022, to which this bill is partially a response, included significant measures to encourage household electrification and those measures are considered a success, and (iii) the failure to include electrification in the Future Made in Australia framework is a significant missed opportunity; and (b) calls on the Government to urgently provide an ambitious package to encourage the electrification of Australian households and small businesses with a focus on low-income households, rental properties and apartments\". The question is that the second reading amendment moved by Senator David Pocock on sheet 2870 be agreed to. Question negatived. The next question is that the second reading amendment circulated by Senator Van on sheet 2868 be agreed to. _Senator Van's circulated amendment__in respect of the_ _Future Made in Australia Bill 2024 and the Future Made in Australia (Omnibus Amendments No. 1) Bill 2024_ At the end of the motion, add \", but the Senate calls on the Government to: (a) provide for the Australian Defence Force (ADF) to enter into offtake agreements for low-carbon fuel sources to ensure that at least 30% of the ADF's fuel consumption by 2028 is sourced from biodiesel, sustainable aviation fuel, or other low-carbon alternatives, with priority given to domestic producers; (b) establish Renewable Energy Industrial Precincts in areas with high renewable energy generation capacity which: (i) give priority access to government grants and infrastructure subsidies to industries that",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/38"
+  },
+  {
+   "key": "federal-senate-10477",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Committee of the Whole amendments to the Future Made in Australia Bill 2024, starting with the amendments circulated by the government. I understand the minister has documents to table. Katy Gallagher I table supplementary explanatory memoranda relating to the government amendments to the Future Made in Australia Bill 2024 and the Future Made in Australia (Omnibus Amendments No. 1) Bill 2024. Sue Lines The question is that the government amendments on sheet SK126 be agreed to. _Government's circulated amendments__to the_ _Future Made in Australia Bill 2024_ (1) Clause 4, page 5 (after line 21), after the paragraph beginning \"A person or body deciding\", insert: Future Made in Australia support must not be provided for any of the following activities: (a) the extraction of coal, crude oil or natural gas; (b) the construction of infrastructure for the primary purpose of extracting coal, crude oil or natural gas; (c) directly financing investments for the sole purpose of the use of coal, crude oil or natural gas. (2) Clause 8, page 9 (after line 30), after subclause (1), insert: (1A) Each sector assessment must also consider the following matters: (a) the sector's impacts on demand for fossil fuels (such as coal, crude oil or natural gas), and how those impacts can be managed in a way that is consistent with an orderly path to net zero transformation; (b) the decarbonisation potential in relevant global supply chains for the sector, including how those supply chains can contribute to the reduction of global greenhouse gas emissions. (3) Page 13 (after line 24), after clause 10, insert: 10A Future Made in Australia support not to be provided for coal, crude oil or natural gas etc. Future Made in Australia support must not be provided by the Commonwealth, a Commonwealth entity or a Commonwealth company for any of the following activities: (a) the extraction of coal, crude oil or natural gas; (b) the construction of infrastructure for the",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/39"
+  },
+  {
+   "key": "federal-senate-10478",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/40"
+  },
+  {
+   "key": "federal-senate-10479",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bills be agreed to and the bills be now passed.",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/41"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Future Made in Australia Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00119",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

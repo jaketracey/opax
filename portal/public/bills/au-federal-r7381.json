@@ -1,0 +1,161 @@
+{
+ "key": "au-federal-r7381",
+ "title": "Home Affairs Legislation Amendment (2025 Measures No. 2) Bill 2025",
+ "short_title": "Home Affairs Legislation Amendment (2025 Measures No. 2) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2025-12-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7381_ems_7d55913a-af9e-4e5f-a72c-fcd3455d852a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7381%22",
+   "document_date": "2025-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00070",
+   "document_date": "2025-12-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-10-08",
+  "sentences": [
+   "The bill would change the Migration Act 1958 and the Australian Citizenship Act 2007.",
+   "It would update rules for collecting facial images to match current technology and international standards, and would also make it easier for some people doing work that helps Australia to become citizens despite time spent overseas.",
+   "The bill would also approve facial images already taken by the Department of Home Affairs before the changes start."
+  ],
+  "changes": [
+   "Clarify and modernise provisions for collecting facial images from people.",
+   "Validate facial images collected before the amendments commence.",
+   "Address residency barriers to Australian citizenship for people engaged in activities of benefit to Australia."
+  ],
+  "affected": "The Department of Home Affairs, including the Australian Border Force, and people providing facial images or seeking Australian citizenship.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1197428",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-08",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Home Affairs Legislation Amendment (2025 Measures No. 2) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00070",
+   "assent_date": "2025-12-01"
+  }
+ ]
+}

@@ -1,0 +1,493 @@
+{
+ "key": "au-federal-r5269",
+ "title": "Business Services Wage Assessment Tool Payment Scheme Bill 2014",
+ "short_title": "Business Services Wage Assessment Tool Payment Scheme Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2015-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5269_ems_ca31919a-7c06-49d9-afc2-02783e5a199d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5269_ems_3906e343-b8c6-4b3f-bc50-0a7ba418ceb7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5269_ems_b0a60890-1654-4fc1-bd57-b981edd03786%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5269_ems_d647e321-2675-4781-b46a-41995f82fc55%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5269%22",
+   "document_date": "2014-06-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00111",
+   "document_date": "2015-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3601",
+   "date": "2014-11-24",
+   "house": "senate",
+   "question": "Mitch Fifield I table a supplementary explanatory memorandum relating to the government amendments and requests for amendments to be moved to the Business Services Wage Assessment Tool Payment Scheme Bill 2014. I seek leave to move together the amendments and requests for amendments circulated by the government, in my name, on sheet EH127. Leave granted. I move: (1) Clause 3, page 2 (line 10), omit \"1 May 2015\", substitute \"1 July 2015\". (2) Page 3 (after line 6), after clause 3, insert: 3A Constitutional basis Without limitation, this Act relies on: (a) the Commonwealth's legislative powers under paragraphs 51(xxiiiA) and (xxxix) of the Constitution; and (b) any implied legislative powers of the Commonwealth. (3) Clause 4, page 4 (line 8), omit \"subsection 6(2)\", substitute \"subsections 6(2) and (2A)\". (4) Clause 6, page 6 (line 19), omit \"28 May 2014\", substitute \"31 January 2015\". (5) Clause 6, page 7 (after line 5), after subclause (2), insert: (2A) Despite subsection (2), a person does not meet the condition in that subsection, and there is no _eligible day_ for the person, if the day that (apart from this subsection) would have been the earliest eligible day for the person is later than 28 May 2014. (6) Clause 12, page 11 (line 7), omit \"1 May 2015\", substitute \"1 July 2015\". (7) Clause 13, page 13 (line 5), omit \"1 May 2015\", substitute \"1 July 2015\". (8) Clause 13, page 13 (line 15), omit \"1 May 2015\", substitute \"1 July 2015\". (9) Clause 14, page 13 (line 21), omit \"1 May 2015\", substitute \"1 July 2015\". (10) Clause 16, page 14 (line 11), omit \"1 May 2015\", substitute \"1 July 2015\". (11) Clause 37, page 30 (line 1), omit \"or by\", substitute \", the person or\". (12) That the House of Representatives be requested to make the following amendment: Page 64 (after line 23), after clause 98, insert: 98A Certain administrative matters (1) The Commonwealth may do any or all of the following: (a) inform people about the BSWAT payment scheme; (b) engage one or more per",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 12,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-11-24/1"
+  },
+  {
+   "key": "federal-senate-3609",
+   "date": "2014-11-24",
+   "house": "senate",
+   "question": "Glenn Lazarus by leave—I move amendments (1) to (3) on sheet 7625: (1) Clause 8, page 8 (line 4), after \"wage\", insert \", indexed in accordance with the method in section 8A\". (2) Clause 8, page 8 (lines 15 to 22), omit subclause (5), substitute: (5) In this Act: _ actual wage_ means the total wages, worked out in accordance with the rules, that a person was paid in respect of all eligible days for the person. _ productivity_ _-scored wage_ means the total wages, worked out in accordance with the rules, that the person could reasonably have been expected to have been paid in respect of all eligible days for the person if the productivity component of a BSWAT assessment had comprised the whole of the BSWAT assessment. (3) Page 8 (after line 22), after clause 8, insert: 8A Indexation (1) This is how to index the excess of a productivity-scored wage over an actual wage for the purposes of paragraph 8(3)(a): _Method statement_ Step 1. Work out how much of the excess is attributable to wages in respect of eligible days for the person concerned in each financial year. Each such amount is the _annual portion_ for the financial year. Step 2. Multiply the oldest annual portion by the indexation factor specified in subsection (2) for the financial year to which that portion is attributable. If the result is not an amount of whole dollars, round the result up to the nearest whole dollar. Step 3. Take the result of step 2. Add to it any annual portion for the next financial year (unless it is the 2014-2015 financial year, in which case go to step 4). Multiply: (a) the total; or (b) if there is no annual portion for the next financial year—the result of step 2; by the indexation factor specified in subsection (2) for that next financial year. If the result is not an amount of whole dollars, round the result up to the nearest whole dollar. Reapply this step for each subsequent financial year up to and including the 2013-2014 financial year, substituting the result of the previous",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-11-24/9"
+  },
+  {
+   "key": "federal-senate-3797",
+   "date": "2015-06-15",
+   "house": "senate",
+   "question": "Gavin Marshall On 17 March 2015, the Senate agreed to recommit these bills and that the committee would resume consideration of the bills in the form in which they stood immediately prior to their being negatived in committee on 24 November 2014. Mitch Fifield I table a further supplementary explanatory memorandum relating to further government amendments to be moved to the Business Services Wage Assessment Tool Payment Scheme Bill 2014. Claire Moore The opposition has a number of amendments, which we have circulated this morning. They follow through the same procedure and the policy position we had the last time this bill was before us. Long debate text truncated.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 14,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-15/1"
+  },
+  {
+   "key": "federal-senate-3798",
+   "date": "2015-06-15",
+   "house": "senate",
+   "question": "Gavin Marshall The question now is that clause 39 stand as printed.",
+   "stage": "In committee",
+   "ayes": 38,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 14,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-15/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-290684",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291698",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291699",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291700",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291704",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Business Services Wage Assessment Tool Payment Scheme Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00111",
+   "assent_date": "2015-06-30"
+  }
+ ]
+}

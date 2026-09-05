@@ -1,0 +1,1058 @@
+{
+ "key": "au-federal-r6596",
+ "title": "Australia’s Foreign Relations (State and Territory Arrangements) Bill 2020",
+ "short_title": "Australia’s Foreign Relations (State and Territory Arrangements) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-09-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2020-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6596_ems_d3fd0486-c0d5-430e-83d7-5c2de5644e99%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6596_ems_38dd0648-8a20-4efe-baf8-e406b081a219%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6596_ems_64a50bbe-7531-443b-a79e-7934507d8cde%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6596%22",
+   "document_date": "2020-09-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00116",
+   "document_date": "2020-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-09-03",
+  "sentences": [
+   "This bill would create a federal system to oversee agreements between state or territory bodies and foreign governments.",
+   "The minister would need to approve certain core arrangements before they could be negotiated or signed, and must be notified of others.",
+   "A 30-day deadline applies for the minister's decision on core arrangements, with automatic approval if no decision is made within that time."
+  ],
+  "changes": [
+   "Requires state and territory bodies to notify the minister before entering most foreign arrangements.",
+   "Bans state and territory bodies from negotiating or signing core foreign arrangements without the minister's approval.",
+   "Makes arrangements invalid or unenforceable if entered in breach of the prohibition."
+  ],
+  "affected": "State and territory governments, their departments and agencies, local councils, and Australian public universities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:56Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6705",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the wording of the usual second reading motion unchanged. The usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is \"*That the bill be read for a second time*,\" which is parliamentary jargon for agreeing with the main idea of the bill. The MP for Corio [Richard Marles](https://theyvoteforyou.org.au/people/representatives/corio/richard_marles) (Labor) had proposed to delete the words after 'that' and replace them with the words below. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the desirability of greater oversight and review mechanisms for decisions made under the bill; and* >> >> *(b) the lack of clarity in the definition of 'arrangements' and 'institutional autonomy' in the bill; and* > > *(2) calls on the Government to:* > >> *(a) address the regulatory gap of private universities;* >> >> *(b) provide clarity on the treatment of the Port of Darwin in the bill before the bill proceeds;* >> >> *(c) make clear how this regime will interact with the existing legislation and guidelines that work to safeguard Australia's sovereignty, and provide confidence that the bill does not present a sovereign risk that will undermine investment and cost Australian jobs; engage in genuine consultation with Australian entities covered by the bill on the design of the regime; and* >> >> *(d) redraft the bill and re-present it to the Parliament at the earliest opportunity\"*",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 44,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 101
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-11-11/2"
+  },
+  {
+   "key": "federal-senate-6750",
+   "date": "2020-12-01",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bills be reads [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bills). This means the amendment failed. ### Amendment text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes:* > >> *(i) the absence of an oversight mechanism for decisions made under the Bill;* >> >> *(ii) the desirability, subject to appropriate arrangements to protect national security, of requiring the Minister to provide reasons for decisions, and a process for review of a minister's decision; and* >> >> *(iii) the lack of clarity in the definition of 'arrangements' in the Bill;* >> >> *(iv) the Minister should make an annual report to the Parliament outlining engagement with entities covered by the Bill, if enacted, to articulate and explain Australia's foreign policy and how entities should engage with foreign entities in Australia's national interest; and* > > *(b) calls on the Government to:* > >> *(i) address the regulatory gap of private universities;* >> >> *(ii) provide clarity on the treatment of the Port of Darwin in the Bill before the Bill proceeds;* >> >> *(iii) make clear how this regime will interact with the existing legislation and guidelines that work to safeguard Australia's sovereignty, including Foreign Investment Review Board processes, University Foreign Interference Taskforce Guidelines and the Foreign Influence Transparency Scheme, and provide confidence that the Bill does not present a sovereign risk that will undermine investment and cost Australian jobs;* >> >> *(v) engage in genuine consultation with Australian entities covered by the Bill on the design of the regime; and* ### What do these bills do? According to the bill homepage, the [Australia’s Foreign Relations (State and Territory Arrangements)",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 23,
+    "dated": 28,
+    "member": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-01/1"
+  },
+  {
+   "key": "federal-senate-6751",
+   "date": "2020-12-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-12-01.13.1) to the usual second reading motion, which is \"*that the bills be reads [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bills). This means the amendment failed. ### Amendment text > *Omit all words after \"That\", insert:* > > *\", the bill be withdrawn; and* > > *(a) The Senate notes that:* > >> *(i) the bill as drafted creates a significant new scheme with wide-ranging implications;* >> >> *(ii) no public consultation process was undertaken on an exposure draft bill and there was no regulatory impact statement prepared prior to the introduction of the bill; and* >> >> *(iii) stakeholders have raised a range of concerns about lack of consultation, the compliance burden and impact of this bill; and* > > *(b) The Senate calls on the Government to undertake more extensive consultation with the wide range of stakeholders impacted by this proposed legislation\".* ### What do these bills do? According to the bill homepage, the [Australia’s Foreign Relations (State and Territory Arrangements) Bill 2020](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6596) was: > *Introduced with the [Australia’s Foreign Relations (State and Territory Arrangements) (Consequential Amendments) Bill 2020](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6595), the bill establishes a legislative scheme for Commonwealth engagement with arrangements between State or Territory governments and foreign governments, and their associated entities.*",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 21,
+    "dated": 24,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-01/2"
+  },
+  {
+   "key": "federal-senate-6760",
+   "date": "2020-12-02",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-12-02.102.5) that will include a requirement for the Minister to prepare an annual report in the bill. The amendment was introduced by South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor). ### Amendment text > *(1) Page 66 (after line 19), after Division 4, insert:* > > *Division 4A—Annual report* > > *53A Annual report* > >> *(1) The Minister must cause to be prepared, as soon as practicable after the end of each calendar year, an annual report on the exercise of the Minister's decision-making powers under this Act during the year.* >> >> *(2) Without limiting subsection (1), the report must include the following:* >> >>> *(a) statistical information about the decisions made by the Minister under the Act during the year, including the total number of decisions, the total number of decisions in each class of decision, and the outcomes of the decisions;* >>> >>> *(b) a summary of the details of each of the decisions made by the Minister under the Act during the year;* >>> >>> *(c) an outline of the engagement that has occurred during the year with entities covered by the Act to articulate and explain to those entities Australia's foreign policy and how they should engage with foreign entities in Australia's national interest.* >> >> *(3) A copy of the report must be given to the Leader of the Opposition in the House of Representatives, but it is the duty of the Leader of the Opposition to treat as secret any part of the report that is not tabled in a House of the Parliament.* >> >> *(4) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the end of the year to which the report relates.* >> >> *(5) However, before tabling the report the Minister may make such redactions to the report as the Minister considers necessary in order to avoid preju",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 23,
+    "dated": 25,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-02/3"
+  },
+  {
+   "key": "federal-senate-6761",
+   "date": "2020-12-02",
+   "house": "senate",
+   "question": "The majority voted against [amendment (1) on sheet 1078](https://www.openaustralia.org.au/senate/?gid=2020-12-02.106.1), moved by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice (Greens), which means it failed. ### What did this amendment do? Senator Rice [explained that](https://www.openaustralia.org.au/senate/?gid=2020-12-02.106.1): > *This amendment is to define what 'foreign relations' means in the bill. A consistent theme throughout all the discussion and debate we have had on this bill is that key terms and definitions are undefined or poorly defined. This is a very simple amendment. We think it would have been a pretty obvious thing to include a definition of foreign relations. We hope that it's a useful one that will provide clarity in the legislation about, indeed, the extent of what is covered by this legislation.* ### Amendment text > *(1) Clause 4, page 5 (after line 3), after the definition of Australia's foreign policy, insert:* > > *Australia ' s foreign relations means the relationship between Australia and foreign countries arising out of their dealings with each other.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 23,
+    "dated": 26,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-02/4"
+  },
+  {
+   "key": "federal-senate-6762",
+   "date": "2020-12-02",
+   "house": "senate",
+   "question": "Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 and another - in Committee - Reasons and review",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-02/5"
+  },
+  {
+   "key": "federal-senate-6769",
+   "date": "2020-12-02",
+   "house": "senate",
+   "question": "Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 and another - in Committee - Reasons and review",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "earliest": 24,
+    "dated": 26
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-02/12"
+  },
+  {
+   "key": "federal-senate-6771",
+   "date": "2020-12-03",
+   "house": "senate",
+   "question": "Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 - in Committee - Procedural fairness",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "earliest": 20,
+    "dated": 27
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-03/1"
+  },
+  {
+   "key": "federal-senate-6772",
+   "date": "2020-12-03",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (4)](https://www.openaustralia.org.au/senate/?gid=2020-12-03.14.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means they failed. These amendments would have excluded universities from the bills. ### Amendment text > *(1) [Clause 7](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6596_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6596_first-reps%2F0000%22;rec=0), page 9 (lines 6 and 7), omit paragraph (7) (e).* > > *(2) Clause 7, page 9 (after line 12), after paragraph (h), insert:* > >> *(ha) a university established by, or under, a law of a State or a Territory; or* > > *(3) [Clause 10](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6596_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6596_first-reps%2F0000%22;rec=0), page 11 (line 28), omit \"paragraph 7(d), (e) or (f)\", substitute \"paragraph 7(d) or (f)\".* > > *(4) [Clause 50](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6596_first-reps%2F0005;query=Id%3A%22legislation%2Fbills%2Fr6596_first-reps%2F0000%22;rec=0), page 60 (lines 19 and 20), omit \"Generally, this Act applies to the Australian National University as if it were a State/Territory entity.\"* ### What do these bills do? According to the bill homepage, the [Australia’s Foreign Relations (State and Territory Arrangements) Bill 2020](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6596) was: > *Introduced with the [Australia’s Foreign Relations (State and Territory Arrangements) (Consequential Amendments) Bill 2020](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6595), the bill establishes a legislative scheme for Commonwealth engagement with arrangement",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 22,
+    "dated": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-03/2"
+  },
+  {
+   "key": "federal-senate-6773",
+   "date": "2020-12-03",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-12-03.20.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. ### What does this amendment do? Senator Faruqi [explained that](https://www.openaustralia.org.au/senate/?gid=2020-12-03.20.1): > *I was hoping that I wouldn't have to move this amendment, because really universities should be excluded, but now that's not the case. This amendment really is about at least making sure that the larger projects or agreements are the ones that allow the government's broad scope to be looked at by the government. This amendment has a threshold amount of $250,000 for the government to be able to do what they want to do. Like I said: sadly, in the absence of universities being excluded from this legislation, at least this will minimise some of the damage and the harm done to universities and the people who work there.* ### Amendment text > *(1) Clause 9, page 11 (after line 10), after subclause (1), insert:* > >> *(1A) However, if a party to the arrangement is a university within the meaning of subsection 7(e), an arrangement has a value equal to, or more than, the threshold amount per financial year.* >> >> *(1B) The threshold amount for the financial year starting on 1 July 2020 is $250,000. The amount is to be indexed in accordance with Part 5-6 (Indexation) of the Higher Education Support Act 2003.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "earliest": 20,
+    "dated": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-03/3"
+  },
+  {
+   "key": "federal-senate-6774",
+   "date": "2020-12-03",
+   "house": "senate",
+   "question": "Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 and another - in Committee - Port of Darwin",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 23,
+    "dated": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-03/4"
+  },
+  {
+   "key": "federal-senate-6775",
+   "date": "2020-12-03",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-12-03.30.1) to the motion \"*That the report be adopted,*\" which South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor) introduced. Senator Wong [explained that](https://www.openaustralia.org.au/senate/?gid=2020-12-03.30.1) this amendment: > *...simply relates to ensuring that the annual report, which we have previously inserted into the legislation, will be referred to the Senate Foreign Affairs, Defence and Trade Legislation Committee for inquiry and report.* ### Amendment text > *At the end of the motion add:* > > *\"and that, in relation to amendment (1) on sheet 1112:* > >> *(a) each annual report tabled by the Minister for Foreign Affairs pursuant to section 53A of the Australia's Foreign Relations (State and Territory Arrangements) Act 2020 ('the Act'),stand referred to the Senate Foreign Affairs, Defence and Trade Legislation Committee for inquiry and report in accordance with standing order 25(20);* >> >> *(b) should the committee, as part of its inquiry into each annual report, request and receive information from the Minister related to the exercise of the Minister's decision-making powers under the Act that is information of the kind referred to in subsection 53(3) of the Act, the committee is to examine that information in confidence, including hearing any evidence in relation to such material in camera; and* >> >> *(c) this order is of continuing effect.*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "earliest": 22,
+    "dated": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-03/5"
+  },
+  {
+   "key": "federal-senate-6776",
+   "date": "2020-12-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-12-03.41.1) to read the bills for a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). In other words, they voted in favour of passing the bills in the Senate. The bill will now return to the House of Representatives, where our MPs will decide on whether to agree with the Senate's [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6596_sched_a84e4701-2e07-461d-aac1-92025e32f802%22;rec=0). ### What do these bills do? According to the bill homepage, the [Australia’s Foreign Relations (State and Territory Arrangements) Bill 2020](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6596) was: > *Introduced with the [Australia’s Foreign Relations (State and Territory Arrangements) (Consequential Amendments) Bill 2020](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6595) ... [to establish] a legislative scheme for Commonwealth engagement with arrangements between State or Territory governments and foreign governments, and their associated entities.*",
+   "stage": "Third reading",
+   "ayes": 41,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 21,
+    "dated": 20,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-03/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-394987",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The Foreign Relations (State and Territory Arrangements) Bill 2020 requires state, territory and local governments and Australian public universities to notify or seek approval from the Minister for Foreign Affairs before entering or negotiating arrangements with foreign governments, to ensure consistency with Australia's foreign policy and national interest."
+  },
+  {
+   "slug": "speech-394996",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The minister introduced the Australia's Foreign Relations (State and Territory Arrangements) (Consequential Amendments) Bill 2020, which amends the Foreign Acquisitions and Takeovers Act 1975 to allow information sharing for foreign relations purposes and exempts the foreign relations bill from judicial review under the Administrative Decisions (Judicial Review) Act 1977, while preserving access to the Federal Court, Federal Circuit Court, or High Court."
+  },
+  {
+   "slug": "speech-398278",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to the Australia's Foreign Relations Bill 2020, arguing the bill was rushed, poorly drafted, and lacked consultation, oversight, and clarity on definitions, interaction with existing laws, and treatment of the Port of Darwin and private universities. The speaker supported the bill's intent but called for its withdrawal, redrafting, and genuine consultation with affected entities."
+  },
+  {
+   "slug": "speech-398393",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill is necessary to require state and local governments to notify and seek approval for foreign agreements, ensuring they align with Australia's national interests, security and sovereignty. He criticised the opposition for defending Victoria's secretive Belt and Road Initiative agreement with China, which he said subverted federal authority."
+  },
+  {
+   "slug": "speech-398395",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 is necessary to give the Commonwealth government oversight and the power to invalidate state and territory agreements with foreign governments that are inconsistent with national interests, citing the Victorian government's Belt and Road Initiative deal with China as a key example. The bill includes a public register of notifications and decisions, a definition of institutional autonomy, and a three-year statutory review."
+  },
+  {
+   "slug": "speech-398396",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the principle of the Australia's Foreign Relations Bill 2020, arguing that foreign affairs must remain a federal power, but criticised its hasty announcement—citing Apple's $2 trillion valuation as the world's eighth-largest economy—and accused Scott Morrison of using the bill to divert attention from aged care neglect and a minister's Senate walkout."
+  },
+  {
+   "slug": "speech-398400",
+   "speaker": "Ted O'Brien",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 is necessary to ensure state, territory and university agreements with foreign governments align with national foreign policy, citing the Victorian government's Belt and Road Initiative deal with China as an example of inconsistency. The bill would give the Minister for Foreign Affairs power to prevent or invalidate such arrangements if they conflict with Australia's foreign policy or harm foreign relations."
+  },
+  {
+   "slug": "speech-398401",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor supports the bill's objective of greater federal oversight of foreign arrangements by sub-national governments, but criticised the rushed, poorly drafted legislation for lacking consultation, procedural fairness, clear definitions of 'foreign policy' and 'foreign relations', and for creating sovereign risk and administrative burdens for universities; they called for the bill to be rewritten."
+  },
+  {
+   "slug": "speech-398402",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 is essential to protect national sovereignty and counter foreign interference, citing the Victorian Labor government’s Belt and Road Memorandum of Understanding with China as a key example; they also supported including public universities under the bill to prevent risks from partnerships with foreign governments."
+  },
+  {
+   "slug": "speech-398405",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-10",
+   "stage_hint": null,
+   "brief": "The Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 gives the foreign minister power to review, prevent or terminate arrangements between state/territory governments, local governments, public universities and foreign entities that may undermine Australia's foreign policy. The bill establishes an approval regime for high-risk \"core\" arrangements and a notification regime for lower-risk \"non-core\" ones, with the speaker supporting amendments to define \"institutional autonomy\" for universities and add a three-year statutory review."
+  },
+  {
+   "slug": "speech-398503",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 requires state and territory governments to obtain federal approval for agreements with foreign national governments and to notify the minister for other arrangements, with a public register of all such deals. The bill cites concerns over specific agreements, including Victoria's Belt and Road MOU with China, Queensland's MOU with the US Navy on biofuels, and Queensland's MOU with Papua New Guinea."
+  },
+  {
+   "slug": "speech-398504",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the intent of the Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 to prevent foreign influence but argued it was poorly drafted, creating uncertainty and risking costly disputes. They criticised the government for targeting China, leaving Australian exporters of wine, seafood, sugar, timber, coal, copper, and barley as \"sacrificial lambs,\" and noted the Port of Darwin was leased to China's Landbridge Group for 99 years under the current government."
+  },
+  {
+   "slug": "speech-398506",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The Australia's Foreign Relations (State and Territory Arrangements) Bill 2020 requires states and territories to consult the Commonwealth on arrangements with foreign governments, ensuring consistency with national foreign policy and protecting national interests. No specific names or figures were cited."
+  },
+  {
+   "slug": "speech-398628",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The opposition supported two government amendments to the Australia's Foreign Relations (State and Territory Arrangements) Bill 2020: one requiring a review three years after commencement, and another defining institutional autonomy for universities. The opposition argued the bill was hastily introduced due to the Prime Minister's political interests, is flawed, and needs substantial further improvement before passage."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australia’s Foreign Relations (State and Territory Arrangements) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00116",
+   "assent_date": "2020-12-10"
+  }
+ ]
+}

@@ -1,0 +1,343 @@
+{
+ "key": "au-federal-r6688",
+ "title": "Treasury Laws Amendment (2021 Measures No. 2) Bill 2021",
+ "short_title": "Treasury Laws Amendment (2021 Measures No. 2) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-09-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6688_ems_43173957-6856-4d97-a2e7-f2abbe15aed3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6688%22",
+   "document_date": "2021-03-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00110",
+   "document_date": "2021-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7401",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is *That the bill be read for a second time* (parliamentary jargon for agreeing with the main idea of a bill). This means that the amendment failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) despite promising to streamline reporting in the charity sector, this government is instead pursuing changes to charity law that could stop charities and churches from speaking up for core principles and articles of faith in civil society, limiting their freedom of political communication and participation in our democratic system; and* > > *(2) while the Government boasts about its multinational tax measures, it has failed to curtail the use of tax havens and tax avoidance schemes by multinational corporations\".*",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-08-11/1"
+  },
+  {
+   "key": "federal-senate-7433",
+   "date": "2021-09-02",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2021 Measures No. 2) Bill 2021 - in Committee - Publication of COVID-19 payment info",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 12,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 12,
+    "member": 5,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-09-02/1"
+  },
+  {
+   "key": "federal-senate-7434",
+   "date": "2021-09-02",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2021 Measures No. 2) Bill 2021 - in Committee - Live Performance Federal Insurance Guarantee Fund",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 14,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 12,
+    "member": 5,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-09-02/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-404190",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-17",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 2) Bill 2021 requires non-government entities seeking deductible gift recipient (DGR) status to be registered charities, with a 12-month transition period and an additional three-year option, while also removing preferential tax treatment for offshore banking units (OBUs) by 2022-23 to address OECD concerns about harmful tax practices."
+  },
+  {
+   "slug": "speech-411163",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's proposed changes to charity regulation are an unwarranted crackdown on activism, noting that only two of 59,000 charities have been deregistered for illegal activism in 3.5 years. The speaker opposed extending the charities commissioner's power to deregister charities for minor summary offences like blocking a footpath, and cited opposition from groups including Anglicare, St Vincent de Paul, and the Law Council, who warned the changes would silence advocacy and harm democracy."
+  },
+  {
+   "slug": "speech-411166",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill, which requires non-government deductible gift recipients to be registered charities, but criticised the Morrison government for attacking charities and for failing to address multinational tax avoidance, including the preferential tax treatment for offshore banking units."
+  },
+  {
+   "slug": "speech-411168",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued the Morrison government is waging a war on charities by proposing powers to deregister charities for anticipated summary offences, which would silence advocacy on issues like climate change and poverty. The speaker welcomed the bill's removal of preferential tax treatment for offshore banking units but criticised the government for failing to crack down on multinational tax avoidance, noting one in four large companies pay no tax in Australia."
+  },
+  {
+   "slug": "speech-411169",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker welcomed changes removing preferential tax treatment for offshore banking units but criticised the government for lost time and revenue. They strongly opposed the proposal to give the commissioner power to deregister charitable organisations based on an assumed summary offence, calling it undemocratic, and called for a national anticorruption commission."
+  },
+  {
+   "slug": "speech-411170",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that while the government’s minor Treasury law changes are welcome, they do not compensate for attacks on charities, which need support and freedom to speak publicly—citing Bendigo Foodshare distributing over 6,000 meals and Forest Street service delivering over 3,000 parcels during the pandemic. They also asserted that the government has failed on multinational tax reform, noting one-third of large companies pay no tax, and called for bolder action to ensure fair tax contributions for post-COVID recovery."
+  },
+  {
+   "slug": "speech-411171",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment Bill would unfairly allow the government to silence charities, citing examples such as Catholic Palm Sunday processions and daily rallies for detained asylum seekers in Darwin. They noted that only 0.003% of charities have been disqualified for law-breaking and that the Northern Territory charity sector contributes over $615 million annually to the local economy."
+  },
+  {
+   "slug": "speech-411174",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The bill requires non-government deductible gift recipients to be registered charities (with exemptions for ancillary funds and specifically listed entities), including a 12-month transition period and an optional additional three years, and removes preferential tax treatment for offshore banking units (OBUs) with a two-year transition, addressing OECD concerns and closing the regime to new entrants since October 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2021 Measures No. 2) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00110",
+   "assent_date": "2021-09-13"
+  }
+ ]
+}

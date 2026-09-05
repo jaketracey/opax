@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-s1302",
+ "title": "Electric Vehicles Accountability Bill 2021",
+ "short_title": "Electric Vehicles Accountability Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2021-06-16",
+ "originating_house": "senate",
+ "sponsor": "RICE, Sen Janet",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10836",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1302%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1302%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1302%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1302%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1302%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1302_ems_29097d90-97e6-4f72-8285-656637627524%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1302%22",
+   "document_date": "2021-06-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-16",
+  "sentences": [
+   "This bill would make the government tell Parliament what its electric vehicle policy is.",
+   "The Energy and Emissions Reduction Minister would have to table a yearly statement by 1 August, and the Productivity Minister would ask the Productivity Commission to produce an annual report comparing Australia's approach with other countries.",
+   "The bill would start the day after it receives royal assent."
+  ],
+  "changes": [
+   "The government must provide a strategy statement to Parliament each year.",
+   "The Productivity Commission must produce a yearly international comparison report.",
+   "The bill sets 1 August as the deadline for tabling the strategy statement."
+  ],
+  "affected": "The Energy and Emissions Reduction Minister, the Productivity Minister, and the Productivity Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

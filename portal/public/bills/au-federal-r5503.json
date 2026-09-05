@@ -1,0 +1,184 @@
+{
+ "key": "au-federal-r5503",
+ "title": "Excise Tariff Amendment (Fuel Indexation) Bill 2015",
+ "short_title": "Excise Tariff Amendment (Fuel Indexation) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5503_ems_6b2d7107-adec-45a4-8463-ee812f35a5c4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5503%22",
+   "document_date": "2015-06-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00101",
+   "document_date": "2015-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-314596",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-23",
+   "stage_hint": null,
+   "brief": "Labor supported the fuel excise indexation bills after securing a deal to direct the first two years of revenue ($1.1 billion) into the Roads to Recovery program, arguing this would boost jobs and local economies, particularly in regional and outer suburban areas. The speaker also criticised the government for cutting infrastructure investment and freezing financial assistance grants to councils, while committing Labor to future public transport investment."
+  },
+  {
+   "slug": "speech-314598",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-23",
+   "stage_hint": null,
+   "brief": "The Excise Tariff Amendment (Fuel Indexation) Bill 2015 was supported as a compromise directing some fuel excise revenue to Roads to Recovery, offsetting the $147 million cut to Western Australian local government Financial Assistance Grants. The speech also called for constitutional recognition of local government and for a future Labor government to make substantial commitments to urban rail."
+  },
+  {
+   "slug": "speech-314605",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-314610",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-23",
+   "stage_hint": null,
+   "brief": "Labor argued that the government's reintroduction of fuel excise indexation was bad policy, but Labor secured a compromise directing $1.1 billion to the Roads to Recovery program for regional roads instead of returning the money to oil companies. The speaker criticised the Abbott government for doubling the deficit, cutting local government assistance grants by $925 million, and failing to invest in regional infrastructure and small businesses."
+  },
+  {
+   "slug": "speech-314611",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Excise Tariff Amendment (Fuel Indexation) Bill 2015 after securing a $1.1 billion commitment for Roads to Recovery funding for regional roads. They argued the fuel excise indexation would disproportionately harm remote Indigenous communities in the Northern Territory, where fuel prices already exceed $2 per litre, and urged that roads funding be allocated based on need rather than political clout."
+  },
+  {
+   "slug": "speech-314613",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-23",
+   "stage_hint": null,
+   "brief": "Labor announced an additional $1.1 billion for the Roads to Recovery program, funded by fuel excise indexation revenue that would otherwise have been returned to oil companies. The speaker also criticised the Abbott government for cutting $925 million from local government assistance grants and for broken tax promises."
+  },
+  {
+   "slug": "speech-314619",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Excise Tariff Amendment (Fuel Indexation) Bill 2015, arguing it directs petrol excise revenue directly into road funding and restores cuts to local government, including $1 billion in financial assistance grants, $200 million in community services, and $1.3 billion in pensioner concessions. For South Australia, he noted only 4% of national infrastructure spending was allocated and detailed cuts of $130 million to rail, $126 million to South Road, $62 million to other roads, $4 million to bridges, and $2.5 million to heavy vehicle safety, while the bill would deliver an extra $100 million via the Roads to Recovery program."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excise Tariff Amendment (Fuel Indexation) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00101",
+   "assent_date": "2015-06-30"
+  }
+ ]
+}

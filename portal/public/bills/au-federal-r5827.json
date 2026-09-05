@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r5827",
+ "title": "Personal Property Securities Amendment (PPS Leases) Bill 2017",
+ "short_title": "Personal Property Securities Amendment (PPS Leases) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2017-05-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-05-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5827_ems_bc184c1d-324d-48e4-8785-8aee160dcec6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5184248%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5827%22",
+   "document_date": "2017-03-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00039",
+   "document_date": "2017-05-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-342653",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The government moved the Personal Property Securities Amendment (PPS Leases) Bill 2017 to reduce regulatory burdens on small and medium businesses, particularly the hire and rental industry, by changing the definition of a PPS lease so that only leases exceeding two years require registration, down from 12 months. The bill aims to relieve administrative costs and risks for businesses with high volumes of short-term leases, affecting an industry with $6.6 billion turnover and over 18,000 employees."
+  },
+  {
+   "slug": "speech-344778",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-28",
+   "stage_hint": null,
+   "brief": "The 2017 bill fixes two flaws in the 2009 Personal Property Securities Act: it restores the effectiveness of retention-of-title (Romalpa) clauses for small suppliers and protects the property rights of businesses in the rental and hire industry, reversing a requirement that forced them to register such clauses to avoid losing goods to secured creditors or liquidators in insolvency."
+  },
+  {
+   "slug": "speech-344854",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition member for Hughes misrepresented the Personal Property Securities Amendment (PPS Leases) Bill 2017, which actually extends the minimum lease duration from more than one year to more than two years. The speaker also defended the original 2009 Personal Property Securities Act, introduced by Labor's Robert McClelland, as a reform that consolidated over 70 registers into one."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Personal Property Securities Amendment (PPS Leases) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00039",
+   "assent_date": "2017-05-19"
+  }
+ ]
+}

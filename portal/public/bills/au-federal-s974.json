@@ -1,0 +1,514 @@
+{
+ "key": "au-federal-s974",
+ "title": "National Water Commission (Abolition) Bill 2015",
+ "short_title": "National Water Commission (Abolition) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2015-06-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s974_ems_138a9c83-c3d9-4356-bcc4-f6a26900372a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s974_ems_73d6c50a-f7fb-4f72-aa0b-61f08e7df004%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s974_ems_78fafb45-2992-4d17-83a2-5eb809f9481d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s974_ems_2a9aa88b-bf31-4a7a-9f4b-c2a94ec09efa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s974%22",
+   "document_date": "2014-09-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00063",
+   "document_date": "2015-06-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-09-25",
+  "sentences": [
+   "The bill would abolish the National Water Commission and move its key duties to existing federal agencies.",
+   "The Productivity Commission would take over the triennial assessments of the National Water Initiative and the five-yearly audits of the Basin Plan, and would have to consult a stakeholder working group for each inquiry.",
+   "The bill would start the day after it receives royal assent, and the commission's final annual report would cover a different period."
+  ],
+  "changes": [
+   "The bill abolishes the National Water Commission.",
+   "The bill transfers the commission's key functions to existing Commonwealth agencies.",
+   "The bill requires the Productivity Commission to consult a stakeholder working group for each inquiry.",
+   "The bill requires at least one Productivity Commissioner to have relevant water management expertise.",
+   "The bill makes minor technical changes to the commencement date and the final annual report period."
+  ],
+  "affected": "The National Water Commission, the Productivity Commission, and stakeholders in water management, including agricultural, environmental, industry, Indigenous, and urban water bodies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:54:34Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3774",
+   "date": "2015-05-13",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-05-13/1"
+  },
+  {
+   "key": "federal-senate-3775",
+   "date": "2015-05-13",
+   "house": "senate",
+   "question": "Simon Birmingham by leave—I move government amendments on sheet ZA379 as revised: (1) Clause 2, page 1 (line 8), omit \"1 January 2015\", substitute \"the day after this Act receives the Royal Assent\". (2) Schedule 1, page 4 (after line 1), insert: _Productivity Commission Act 1998_ 1A Section 25 Before \"The\", insert \"(1)\". 1B At the end of section 25 Add: (2) Despite subsection (1), the Minister must appoint an Associate Commissioner for the purposes of an inquiry on the matter mentioned in subsection 87(1) or (2) or 88(1) or (2) of the _Water Act 2007_. (3) An Associate Commissioner appointed under subsection (2) must have extensive skills and experience in water resource management. (3) Schedule 1, item 6, page 5 (line 17), at the end of the heading to subsection 87(3), add \"_etc._\". (4) Schedule 1, item 6, page 5 (after line 26), after subsection 87(3), insert: (3A) Once the matter has been referred to the Productivity Commission for inquiry, the Chair of the Productivity Commission must establish a stakeholder working group in accordance with section 89. (5) Schedule 1, item 6, page 6 (line 23), at the end of the heading to subsection 88(3), add \"_etc._\". (6) Schedule 1, item 6, page 7 (after line 3), after subsection 88(3), insert: (3A) Once the matter has been referred to the Productivity Commission for inquiry, the Chair of the Productivity Commission must establish a stakeholder working group in accordance with section 89. _Regard to be had to objectives of National Water Initiative_ (3B) When conducting an inquiry, the Productivity Commission must have regard to the objectives provided for in clause 23 of the National Water Initiative. (7) Schedule 1, item 6, page 7 (after line 14), at the end of Part 3, add: 89 Stakeholder working group (1) A stakeholder working group is to be established for each matter referred to the Productivity Commission for inquiry (a _referred matter_). (2) A stakeholder working group for a referred matter: (a) is to exchange informa",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-05-13/2"
+  },
+  {
+   "key": "federal-senate-3776",
+   "date": "2015-05-13",
+   "house": "senate",
+   "question": "Simon Birmingham I move: That this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-05-13/3"
+  },
+  {
+   "key": "federal-representatives-3784",
+   "date": "2015-05-26",
+   "house": "representatives",
+   "question": "Sharman Stone The National Water Commission (Abolition) Bill 2015 is, as far as I am concerned, a no-brainer. We are not going to abolish all the functions that the commission once had. We are simply sending them across to other agencies, like the Productivity Commission, the Bureau of Meteorology and ABARES. We are saying that what it used to do was important but we do not need to have a stand-alone entity to undertake the monitoring of Australia's progress on water reform. So I think it is a good move. If it saves us $21 million over the forward estimates, that is a good thing. If it saves us a few extra bits of regulation, red tape, that is to be applauded. I therefore want to move beyond this contest about whether or not we should have abolished the National Water Commission to talk about the significance of water itself: why we didn't simply put an axe through this agency and walk away; why we in fact retasked other important agencies to do the work. Before getting to that point, I want to correct a few things that a previous speaker, the member for Bendigo, said. I know she is new to Bendigo. She is my neighbour in the electorate next door. I am very pleased that she is now engaging with this water issue. She has been north beyond Bendigo and has visited my irrigators. I applaud her for doing that. She quoted Kagomi as saying that their biggest problem was the management of water in the system and therefore they want to keep the National Water Commission. No. I have to make that clear. Kagomi's report—which I too have a copy of, and I have spoken at length to their MD—makes the point that they no longer have enough access to water in the Goulburn-Murray Water's system, which is part of the Murray-Darling Basin. Their access is now very much restricted, given half of the water has been removed from the irrigation system. The price of the water in the temporary market is often beyond what their tomato growers can pay. That is the No. 1 issue for this company, wh",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-05-26/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-310546",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Water Commission (Abolition) Bill 2015, arguing that transferring its functions to the Productivity Commission and the Department of the Environment is an efficiency measure that maintains National Water Initiative principles. He also criticised the previous Tasmanian Labor government for mismanaging $500 million allocated for urban water infrastructure under Premier Bartlett and Treasurer Aird, and highlighted public-private irrigation schemes in Tasmania, including the Midlands Water Scheme and South East Irrigation Scheme, with water entitlements costing up to $2,400 per megalitre."
+  },
+  {
+   "slug": "speech-310547",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Water Commission Abolition Bill, arguing it would eliminate an independent expert agency vital for urban water services and Murray-Darling Basin management, and warned that transferring its audit and assessment functions to the Productivity Commission would lose crucial water expertise and harm environmental and Indigenous water rights."
+  },
+  {
+   "slug": "speech-310548",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The member supported the National Water Commission (Abolition) Bill 2015, arguing that the commission's functions should be transferred to the Productivity Commission and the Department of the Environment, saving nearly $21 million. He defended the Productivity Commission's independence and capability, and noted that national performance reporting for urban water would continue through the Bureau of Meteorology."
+  },
+  {
+   "slug": "speech-310549",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "Opposed the abolition of the National Water Commission, arguing its independent assessment of the Murray-Darling Basin Plan is unfinished and essential; cited Kagome Australia’s $50 million revenue and 45% domestic tomato supply, rice farmers, and the Murray Darling Association as stakeholders needing continued independent oversight."
+  },
+  {
+   "slug": "speech-310681",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that abolishing the National Water Commission and transferring its functions to other agencies will save $21 million and reduce red tape. They also criticised the Murray-Darling Basin Plan for prioritising the environment over the triple bottom line of environment, community and economy, and condemned water buybacks by the Commonwealth Environmental Water Holder and the South Australian government for devastating irrigators and food production in the Goulburn-Murray region, calling for a 1,500 gigalitre cap on further buybacks and a royal commission into Goulburn-Murray Water's mismanagement."
+  },
+  {
+   "slug": "speech-310683",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued for the abolition of the National Water Commission, transferring its functions to the Productivity Commission, and supported the National Water Commission (Abolition) Bill 2014. The speaker highlighted water reform progress, praised Harvey Water’s piping project in Western Australia, and noted that irrigated land produces $13.4 billion annually while using less than 1% of agricultural land."
+  },
+  {
+   "slug": "speech-310684",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Water Commission (Abolition) Bill 2015, arguing the commission’s independent oversight is essential for implementing and enforcing the Murray-Darling Basin Plan, and that transferring its functions to the Productivity Commission would reduce scrutiny and risk water security, particularly for South Australia, while the government’s cuts to water buybacks (capped at 1,500 gigalitres) jeopardise the 3,200 gigalitre target."
+  },
+  {
+   "slug": "speech-310685",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Water Commission's work can be better carried out by the Productivity Commission and through state, territory and federal government consultation, asserting the coalition government's commitment to protecting water resources and developing new water infrastructure."
+  },
+  {
+   "slug": "speech-310709",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-26",
+   "stage_hint": null,
+   "brief": "The government argued for abolishing the National Water Commission while transferring its monitoring and auditing functions to the Productivity Commission, ABARES, the Bureau of Meteorology, and the Department of Environment, and noted support from the National Farmers' Federation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Water Commission (Abolition) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00063",
+   "assent_date": "2015-06-16"
+  }
+ ]
+}

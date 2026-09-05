@@ -1,0 +1,1514 @@
+{
+ "key": "au-federal-r7076",
+ "title": "Water Amendment (Restoring Our Rivers) Bill 2023",
+ "short_title": "Water Amendment (Restoring Our Rivers) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Water",
+ "status": "passed",
+ "status_as_of": "2023-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7076_ems_7f0dde63-302a-4dd7-99e6-2b7e1c4bdc4c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7076_ems_45b07519-d98b-4ce3-9990-600060a956d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7076_ems_304cecd4-167a-499c-84d5-837584859c67%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7076_ems_00571692-d027-43a3-8459-5a03d8645b1f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7076_ems_19e9c15c-d06b-4e4f-837a-85c2f575e1d5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7076_ems_f4c5761e-5e7c-4018-b996-7f65ebea41df%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7076%22",
+   "document_date": "2023-09-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00111",
+   "document_date": "2023-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2023-09-06",
+  "sentences": [
+   "This bill would amend the Water Act 2007 and the Basin Plan to fully implement the Murray-Darling Basin Plan and reform water markets.",
+   "It would remove the 1,500 gigalitre cap on Commonwealth water purchases, allow flexible use of Water for the Environment Special Account funds, and extend deadlines for Basin States to deliver projects.",
+   "The bill sets a 31 December 2027 deadline for final contracts to recover 450 gigalitres of additional environmental water, with a reconciliation by 31 December 2026."
+  ],
+  "changes": [
+   "Removes the statutory 1,500 gigalitre limit on Commonwealth water purchases.",
+   "Allows the Water for the Environment Special Account funds to be used for water purchase programs for the 450 gigalitre target.",
+   "Extends the deadline for Basin States to deliver Sustainable Diversion Limit Adjustment Mechanism projects to December 2026.",
+   "Gives the Inspector-General of Water Compliance power to determine if a Basin State has a reasonable excuse for exceeding a Sustainable Diversion Limit by 20% or more.",
+   "Delays the Water Act review until 2027.",
+   "Requires Basin States to provide action plans and progress reports to the Inspector-General for any Sustainable Diversion Limit exceedances."
+  ],
+  "affected": "Basin communities, agriculture, industry, First Nations, irrigation, tourism, recreation, cultural users, drinking water consumers, the Murray-Darling Basin Authority, the Commonwealth Environmental Water Holder, Basin States, and water market participants in the Murray-Darling Basin.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:30:22Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8341",
+   "date": "2023-09-07",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-09-07.29.1) to an original amendment. Because no majority was reached, the vote failed. ### Amendment text > *At the end of the motion, add:* > > *\"and, in respect of the provisions of the [Water Amendment (Restoring our Rivers) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7076), the Environment and Communications Legislation Committee report by 14 November 2023\".* ### Original amendment text > *At the end of the motion, add: \"and, in respect of the Water Amendment (Restoring Our Rivers) Bill 2023, the Environment and Communications Legislation Committee report on 8 November 2023.\"*",
+   "stage": "Committee motion",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-07/4"
+  },
+  {
+   "key": "federal-senate-8342",
+   "date": "2023-09-07",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-09-07.28.1) that: > *At the end of the motion, add: \"and, in respect of the [Water Amendment (Restoring Our Rivers) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7076), the Environment and Communications Legislation Committee report on 8 November 2023.\"* This means that vote was successful and that the bill we be referred to the committee for [an inquiry and report](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Environment_and_Communications/MDBAWaterBill2023).",
+   "stage": "Committee motion",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-07/5"
+  },
+  {
+   "key": "federal-senate-8354",
+   "date": "2023-09-12",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2023-09-12.110.2) introduced by NSW Senator [Perin Davey](https://theyvoteforyou.org.au/people/senate/nsw/perin_davey) (Nationals), which means it failed. This vote was a recommittal. South Australian Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens) asked for the vote to be taken again because, the first time around, she \"thought we were voting on the amendment and not the substantive motion\". ### Motion text > *That, in respect of the inquiry by the Environment and Communications Legislation Committee into the provisions of the Water Amendment (Restoring Our Rivers) Bill 2023, the Senate directs the committee to hold public hearings in the Murray-Darling Basin communities of Deniliquin, Griffith, Mildura, Renmark and Shepparton before the committee reports, and invite representatives of these communities to give evidence over a period of a minimum of 4 hours for each community.*",
+   "stage": "Committee motion",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-12/5"
+  },
+  {
+   "key": "federal-representatives-8385",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-10-17.91.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Lyne MP [David Gillespie](https://theyvoteforyou.org.au/people/representatives/lyne/david_gillespie) (Nationals). ### Motion text > *That all words after \"whilst\" be omitted with a view to substituting the following words:* > > *\"declining to give the Bill a second reading, the House:* > > *(1) is concerned that the legislation represents the worst solution on national water reform;* > > *(2) notes that the following is needed for national water reforms in the Basin to be successful:* > >> *(a) a cooperative and constructive approach with all Basin State Governments to assist water reform and investment in urban and rural water infrastructure;* >> >> *(b) bipartisan support;* >> >> *(c) proper face to face consultation with key stakeholders in the Murray Darling Basin, including all water users, farmers, water scientists, environment groups and the broader community to ensure the adoption of a Basin Plan which has at its heart a triple bottom line approach which optimises social, economic, and environmental outcomes.* > > *(3) criticises the Government for failing to consult the Basin Communities Committee which is the legislated voice for people living in the Murray Darling Basin, on the Water Amendment (Restoring our Rivers) Bill 2023\".* ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd18) (which is prepared by the non-partisan parliamentary library): > * *The Water Amendment (Restoring Our Rivers) Bill 2023 seeks to amend the Water Act 2007 and the Basin Plan 2012 to implement legislative aspects of the Agreement of Murray-Darling Basin Ministers to deliver the Basin Plan in full agreed by th",
+   "stage": "Second reading",
+   "ayes": 50,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 127,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/1"
+  },
+  {
+   "key": "federal-representatives-8386",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "Water Amendment (Restoring Our Rivers) Bill 2023 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/2"
+  },
+  {
+   "key": "federal-representatives-8387",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/debate/?id=2023-10-18.21.1) introduced by Mayo MP [Rebekha Sharkie](https://theyvoteforyou.org.au/people/representatives/mayo/rebekha_sharkie), which means it will be included in the bill. ### What does the amendment do? Ms Sharkie [explained that](https://www.openaustralia.org.au/debate/?id=2023-10-18.21.1): > *The reason for this amendment is really around transparency and accountability. This amendment will require the minister to come into the parliament each financial year and explain to the parliament and to the nation exactly where we are with respect to the 450 gigalitres and the Murray-Darling Basin Plan in general.* ### Amendment text > *(1) Schedule 1, page 10 (after line 29), after item 20, insert:* > > *21 After Division 4 of Part 2* > > *Insert:* > > *Division 4A — Annual progress reports relating to water recovery targets* > > *85AB Secretary to prepare annual reports* > > *(1) The Secretary must prepare an annual report on the activities undertaken for the purpose of making progress towards the following:* > >> *(a) increasing the volume of the Basin water resources that is available for environmental use by 450 gigalitres;* >> >> *(b) the Commonwealth's water recovery target in relation to SDL resource units (as defined in the Basin Plan);* >> >> *(c) projects that relate to adjustments of long-term average sustainable diversion limits under section 23A;* >> >> *(d) any other matter specified by the Minister in writing.* > > *(2) The Secretary must prepare a report under subsection (1) in relation to:* > >> *(a) the financial year beginning on 1 July 2023; and* >> >> *(b) each subsequent financial year up to and including the financial year beginning on 1 July 2027.* > > *(3) The Secretary must provide each report under subsection (1) in relation to a financial year to the Minister by 30 October in the following financial year.* > > *(4) The Minister must cause a copy of",
+   "stage": "Consideration in detail",
+   "ayes": 81,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/3"
+  },
+  {
+   "key": "federal-representatives-8388",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/debate/?id=2023-10-18.34.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means it will now be included in the bill. ### What does the amendment do? Dr Haines [explained that](https://www.openaustralia.org.au/debate/?id=2023-10-18.34.1): > *This amendment relates to the terms of reference for the statutory review of the Water for the Environment Special Account, otherwise known as the WESA. The Water Amendment (Restoring Our Rivers) Bill opens the possibility of the WESA being used to support communities affected by water purchases. However, the bill does not go far enough towards ensuring the adequacy of support for impacted communities. It's here that I want to acknowledge the words of the member for Nicholls in the prior debate about this. We need to make sure, with this new element of the bill, that at every stage we put communities at the centre of compensation.* > > *My amendment would provide a review of government support to affected communities. It would absolutely scrutinise the government's support of communities, ensuring that it's commensurate with impacts experienced, and meaningfully address their needs. The amendment would achieve this by ensuring that the statutory review of WESA considers the effectiveness of payments made using WESA funds to adequately address any social or economic detriment that is associated with purchasing water access rights.* ### Amendment text > *(2) Schedule 1, page 7, after line 16, after item 11, insert:* > >> *11A After subsection 86AJ(3)* >> >> *Insert:* >> >> *(3A) In conducting a review under subsection (1), a panel must also consider the effectiveness of payments made, or expected to be made, under paragraph 86AD(2)(c) in relation to a purchase referred to in paragraph 86AD(2)(b).*",
+   "stage": "Consideration in detail",
+   "ayes": 81,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/4"
+  },
+  {
+   "key": "federal-representatives-8389",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "The majority voted in favour of [amendments (4) to (6)](https://www.openaustralia.org.au/debate/?id=2023-10-18.40.1), which means they will now become part of the bill. They were introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent). ### What do the amendments do? Dr Haines [explained that](https://www.openaustralia.org.au/debate/?id=2023-10-18.40.1): > *Under the 2012 Basin Plan, basin states and the Commonwealth agreed to recover 2,750 gigalitres of water for the environment. To achieve this goal, the Basin Plan allows states to propose projects that will deliver an equivalent environmental outcome to buying back water licences without removing water from the consumptive pool. This is known as the sustainable diversion limit adjustment mechanism, and projects are referred to as sustainable diversion limit adjustment mechanism projects, or SDLAM projects. In total, the proposed SDLAM projects promise to deliver 605 gigalitres of equivalent environmental benefits, yet we're seeing delays. There are significant questions about whether the projects will deliver the promised benefits...* > > *Independent and transparent scrutiny of these projects is absolutely necessary to ensure the Australian public and the environment are not being short-changed on taxpayer money for projects to return water to the basin. This scrutiny is the role of the Inspector-General of Water Compliance. The inspector-general must have appropriate powers to hold basin states accountable and to determine compliance with sustainable diversion limits and the promised outcomes of projects.* > > *My amendments further strengthen the inspector-general's powers to make sure the states and projects are delivering. They enable the inspector to undertake an independent audit of the Murray-Darling Basin Authority's sustainable diversion limit, or SDL, calculations. These audits can be undertaken by the inspector-general or an independent",
+   "stage": "Consideration in detail",
+   "ayes": 82,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/5"
+  },
+  {
+   "key": "federal-representatives-8390",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/debate/?id=2023-10-18.47.1) introduced by Sydney MP [Tanya Plibersek](https://theyvoteforyou.org.au/people/representatives/sydney/tanya_plibersek) (Labor), which means they will now be included in the bill. ### What do these amendments do? Ms Plibersek [explained that](https://www.openaustralia.org.au/debate/?id=2023-10-18.47.1): > *The government is introducing amendments to the bill to: firstly, strengthen transparency and accountability in the Basin Plan, including for the role of the Inspector-General of Water Compliance; secondly, ensure the Australian Competition and Consumer Commission can enforce its new information-gathering powers by making the ACCC the appropriate enforcement agency and adding a civil penalty provision for contraventions; thirdly, ensure the Inspector-General for Water Compliance does not have oversight of the ACCC or the Commonwealth or basin agencies that the ACCC regulates in relation to the integrity and conduct obligations in the bill; and, fourthly, to make minor and technical amendments in response to feedback from Commonwealth and basin state agencies and to ensure the bill would operate as intended.*",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/6"
+  },
+  {
+   "key": "federal-representatives-8391",
+   "date": "2023-10-18",
+   "house": "representatives",
+   "question": "Water Amendment (Restoring Our Rivers) Bill 2023 - Consideration in Detail - Agree with bill as amended",
+   "stage": "Consideration in detail",
+   "ayes": 85,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-18/7"
+  },
+  {
+   "key": "federal-senate-8429",
+   "date": "2023-11-06",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2023-11-06.121.2) introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means it failed. ### Motion text > *That further consideration of the [Water Amendment (Restoring Our Rivers) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7076) be made an order of the day for the next day of sitting after the Chair of the Murray-Darling Basin Ministerial Council notifies the President in writing that the Council has, by unanimous resolution, approved the legislation.*",
+   "stage": "Business motion",
+   "ayes": 25,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-06/1"
+  },
+  {
+   "key": "federal-senate-8536",
+   "date": "2023-11-28",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion (which is \"that the bill be read a second time\" - parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by NSW Senator [Perin Davey](https://theyvoteforyou.org.au/people/senate/nsw/perin_davey) (Nationals). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that environmental outcomes could be enhanced by expanding the purposes of the Water for the Environment Special Account to include funding for projects which could contribute to the 450 GL increase of water for environment use through complementary measures and incidental water savings, such as rule-based changes and changing infrastructure to support fish movement; and* > > *(b) calls on the Government to work with the Basin States to deliver enhanced environmental outcomes through complementary measures\".*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-28/4"
+  },
+  {
+   "key": "federal-senate-8537",
+   "date": "2023-11-28",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-11-28.19.1) to the usual second reading motion (which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation). ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) notes:* > >> *(i) that water recovered by the South East Flows Restoration Project is included in the South Australian Government's water accounting as a sustainable diversion limit adjustment, and* >> >> *(ii) the figure used is not accurately measured for surface water and aquifer flow into the Coorong and Lake Albert; and* > > *(b) calls on the Minister for the Environment and Water to ensure the surface water and aquifer flow from this project is measured and accounted for accurately\".*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-28/5"
+  },
+  {
+   "key": "federal-senate-8538",
+   "date": "2023-11-28",
+   "house": "senate",
+   "question": "Water Amendment (Restoring Our Rivers) Bill 2023 - Second Reading - First Peoples",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-28/6"
+  },
+  {
+   "key": "federal-representatives-8544",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "question": "Water Amendment (Restoring Our Rivers) Bill 2023 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 77,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-30/4"
+  },
+  {
+   "key": "federal-representatives-8545",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-11-30.34.2) to agree with the Senate amendments, which means the bill has now been passed in both house of parliament in its final form and so can now become law. ### What are the Senate amendments? Several amendments were agreed in the Senate, with the text of these amendments [available here](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7076_sched_52200819-0eeb-476b-bdcb-5960892c8f5c%22;rec=0). Some of these amendments have a relevant explanatory memorandum, which is a political document that is prepared by the proposing party. You can find these memoranda on the [bills homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7076) by matching the title of the amendment with the relevant explanatory memorandum. For example, the [first amendment listed](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7076_sched_52200819-0eeb-476b-bdcb-5960892c8f5c%22;rec=0) is labelled \"sheet ZC243 revised\" and can be matched with the [Supplementary explanatory memorandum relating to sheet ZC243](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7076_ems_00571692-d027-43a3-8459-5a03d8645b1f%22;rec=0). ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd18) (which is prepared by the non-partisan parliamentary library): > * *The Water Amendment (Restoring Our Rivers) Bill 2023 seeks to amend the Water Act 2007 and the Basin Plan 2012 to implement legislative aspects of the Agreement of Murray-Darling Basin Ministers to deliver the Basin Plan in full agreed by the Commonwealth and Ba",
+   "stage": "Consideration of Senate message",
+   "ayes": 86,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-30/5"
+  },
+  {
+   "key": "federal-senate-8549",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-11-30.9.1) introduced by South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor), which means it succeeded. This means the parliament will now deal with the remaining questions about the [Water Amendment (Restoring Our Rivers) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7076) immediately. ### Motion text > *That—* > > *(a) the questions on all remaining stages of the Water Amendment (Restoring Our Rivers) Bill 2023 be put immediately; and* > > *(b) paragraph (a) operate as a limitation of debate under standing order 142.* #### Error in this entry Senator [David Van](https://theyvoteforyou.org.au/people/senate/victoria/david_van) is currently showing up as a rebel in this division (as of 31 May 2024). However, this is an error. Senator Van became an Independent senator on 14 September 2023, so was no longer part of the Liberal Party during this vote.",
+   "stage": "Business motion",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/4"
+  },
+  {
+   "key": "federal-senate-8550",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of amendments introduced by Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means they will now become part of the bill. ### Amendment text SHEET 2275 > *(1) Schedule 1, page 11 (after line 24), at the end of the Schedule, add:* > >> *Part 6 — Indigenous members of the Authority* >> >> *Water Act 2007* >> >> *22A Paragraph 177(b)* >> >>> *Repeal the paragraph, substitute:* >>> >>> *(b) 2 Indigenous persons recognised in the Indigenous community as having a high level of expertise in Indigenous matters relevant to Basin water resources, each of whom is a standing Indigenous Authority member for the purposes of this Subdivision;* >> >> *22B Subsection 178(2)* >> >>> *Omit \"the standing\", substitute \"as a standing\".* >> >> *22C Subsection 178(2A)* >> >>> *Omit \"the standing\", substitute \"a standing\".* >> >> *22D Subsection 180(3)* >> >>> *Omit \"the standing\", substitute \"a standing\".* >> >> *22E Subsection 180(3A)* >> >>> *Omit \"the standing Indigenous Authority member unless the individual is an Indigenous person who has\", substitute \"a standing Indigenous Authority member unless the individual is recognised in the Indigenous community as having\".* >> >> *22F In the appropriate position in Schedule 10* >> >>> *Insert:* >>> >>> *Part 3 — Application provision relating to the Water Amendment (Restoring Our Rivers) Act 2023* >>> >>> *1 Application of amendments* >>> >>> *The amendments of sections 177, 178 and 180 made by Part 6 of Schedule 1 to the Water Amendment (Restoring Our Rivers) Act 2023 apply in relation to appointments made on or after the commencement of that Schedule.* _____ SHEET 2278 > *(1) Schedule 1, page 11 (after line 24), at the end of the Schedule, add:* > >> *Part 7 — Review of the Act to consider United Nations Declaration on the Rights of Indigenous Peoples* >> >> *Water Act 2007* >> >> *23 After subsection 253(1)* >> >> *Insert:* >> >> *(1A) The review mus",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/5"
+  },
+  {
+   "key": "federal-senate-8551",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "Water Amendment (Restoring Our Rivers) Bill 2023 - Keep bill items as they are; held environmental water",
+   "stage": "Keep bill items as they are; held environmental water",
+   "ayes": 35,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/6"
+  },
+  {
+   "key": "federal-senate-8552",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "The majority voted against the following amendments: amendment (2) and (4) on [sheet 2145](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7076_amend_13ab384f-c757-47cf-86ff-f62c25017bed%22;rec=0); (1), (7)-(12), (15)-(19), (21) and (23) on [sheet 2146](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7076_amend_cf131fe1-1f1a-4bce-8631-dbd672bd5c17%22;rec=0); and the amendments on [sheet 2147](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7076_amend_731a8eea-2a28-4015-8c8c-911e6234ec20%22;rec=0). This means they failed. The amendment were on water buybacks, additional [held environmental water](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd18) (HEW) entitlements and socio-economic outcomes. #### Jacqui Lambie Network Note that Tasmanian Senator Jacqui Lambie (JLN) asked that is be \"*noted that the Jacqui Lambie Network opposed the amendments on sheet 2145.*\" #### Rebellion? Note that Victorian Senator David Van (Independent) is currently showing up as a rebel voter from the Liberal Party in this division (as of 13/12/2023). This is inaccurate, as Senator Van is no longer in the Liberal Party.",
+   "stage": "Held water and socio-economic outcomes",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/7"
+  },
+  {
+   "key": "federal-senate-8553",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "The majority voted against amendments introduced under the name of NSW Senator [Perin Davey](https://theyvoteforyou.org.au/people/senate/nsw/perin_davey) (Nationals), which means they failed. The amendments related to complementary measures and incidental water savings. #### Rebellion? Note that Victorian Senator David Van (Independent) is currently showing up as a rebel voter from the Liberal Party in this division (as of 13/12/2023). This is inaccurate, as Senator Van is no longer in the Liberal Party. ### Amendment text [SHEET 2148 REVISED](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7076_amend_6309efea-744d-4203-b3a6-7ea90593fd1d%22;rec=0) > *(1) Schedule 1, page 5 (after line 7), after item 2, insert:* > > *2A After paragraph 86AD(2)(a)* > > *Insert:* > >> *(aa) making payments in relation to projects whose aim is to enhance environmental outcomes through complementary measures and incidental water savings;* [SHEET 2242 REVISED 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7076_amend_5428a6a2-15d9-475b-acaa-4882126affa9%22;rec=0) > *(1) Schedule 1, Part 2, page 7 (after line 30), at the end of the Part, add:* > > *13A At the end of Part 2AA* > > *Add:* > >> *86AK Review of complementary measures etc.* >> >> *(1) The Minister must cause an independent review to be undertaken to develop a mechanism to take into account enhanced environmental outcomes, achieved through complementary measures and incidental water savings, for the purposes of this Act or the Basin Plan.* >> >> *(2) The person or persons who conduct the review must give a written report of the review to the Minister by 31 December 2024.* >> >> *(3) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after the day the",
+   "stage": "Complementary measures",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/8"
+  },
+  {
+   "key": "federal-senate-8554",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of three sets of amendment introduced by the Australian Greens Party and labelled sheet 2239, sheet 2237 revised and sheet 2238 revised. This means the amendments were successful and will now form part of the bill. ### What did these amendments do? [Sheet 2239](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7076_amend_2233c2e8-a30c-4c5c-bed9-68ba897ec368%22;rec=0) referred to withdrawal of [Sustainable Diversion Limit Adjustment Mechanism](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd18) (SDLAM) projects. [Sheet 2237 revised](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7076_amend_b86466c0-ad7f-4d5f-9169-841d7f7f7524%22;rec=0) required that reviews of the Basin Plan include information about matters relevant to Indigenous people. [Sheet 2238 revised](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7076_amend_bd6efdfc-4de0-495c-9cf0-6407a7beb1ee%22;rec=0) introduced a new requirement to provide an annual report in relation to activities relating to Indigenous people. ### Rebellion? Note that Victorian Senator David Van (Independent) is currently showing up as a rebel voter from the Liberal Party in this division (as of 13/12/2023). This is inaccurate, as Senator Van is no longer in the Liberal Party.",
+   "stage": "Indigenous people and SDLAM project withdrawal",
+   "ayes": 34,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/9"
+  },
+  {
+   "key": "federal-senate-8555",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "Water Amendment (Restoring Our Rivers) Bill 2023 - Indigenous peoples",
+   "stage": "Indigenous peoples",
+   "ayes": 13,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/10"
+  },
+  {
+   "key": "federal-senate-8556",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "Water Amendment (Restoring Our Rivers) Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 9,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/11"
+  },
+  {
+   "key": "federal-senate-8606",
+   "date": "2023-12-06",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2023-12-04.235.1) introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means it failed. ### Motion text > *(1) That the Senate notes that:* > >> *(a) the [Water Amendment (Restoring our Rivers) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7076) was passed with substantial amendments; and* >> >> *(b) the amendments were not reviewed by a committee and have not been approved by the Murray Darling Basin Ministerial Council.* > > *(2) That the following matters relating to the Water Amendment (Restoring our Rivers) Bill 2023 be referred to the Rural and Regional Affairs and Transport References Committee for review and report by the 30 March 2024:* > >> *(a) the operation, effectiveness and implications of the amendments made;* >> >> *(b) matters relating to the approval of the amendments by the Murray Darling Basin Ministerial Council; and* >> >> *(c) any related matters.*",
+   "stage": "Committee motion",
+   "ayes": 24,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-06/9"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Water Amendment (Restoring Our Rivers) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00111",
+   "assent_date": "2023-12-07"
+  }
+ ]
+}

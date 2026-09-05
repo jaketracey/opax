@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5966",
+ "title": "Renewable Fuel Bill 2017",
+ "short_title": "Renewable Fuel Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-11",
+ "originating_house": "representatives",
+ "sponsor": "KATTER, Bob, Jnr, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10352",
+ "portfolio": "(s) KATTER, Bob, Jnr, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5966%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5966%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5966%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5966_ems_9650936b-7823-49ef-a778-a84b282bb625%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5966%22",
+   "document_date": "2017-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-11",
+  "sentences": [
+   "The bill would require petrol sold in Australia to contain a minimum percentage of renewable fuel, starting at 5% from 1 July 2019 and rising to 10% from 1 July 2022.",
+   "It would create a regulatory system for renewable fuels and establish an office called the Renewable Fuel Program Administrator to oversee the rules.",
+   "The explanatory memorandum says the mandate would cut vehicle emissions, create jobs in regional Australia, and reduce reliance on imported oil, but it does not specify how the office would enforce the mandate."
+  ],
+  "changes": [
+   "Sets minimum renewable fuel content in petrol at 5% from 1 July 2019 and 10% from 1 July 2022.",
+   "Establishes a regulatory regime for renewable fuels in motor vehicle fuel.",
+   "Creates the office of Renewable Fuel Program Administrator and outlines its functions."
+  ],
+  "affected": "Fuel suppliers, motorists, and industries such as grain, wheat, and sugar in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:38Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

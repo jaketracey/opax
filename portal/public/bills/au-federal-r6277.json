@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-r6277",
+ "title": "Excise Tariff Amendment (Supporting Craft Brewers) Bill 2019",
+ "short_title": "Excise Tariff Amendment (Supporting Craft Brewers) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6278_ems_e877613b-934f-4daf-b38e-ec7fb4eaf74c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6277_ems_6da69080-1dec-488e-81fc-42faec0fd747%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6277%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00048",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-374822",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "This bill increases the maximum members in self-managed superannuation funds from four to six, extends concessional draught beer excise rates to kegs of eight litres or more, extends the Global Infrastructure Hub's tax-exempt status until 2023, and makes various amendments to Treasury laws including the First Home Super Saver Scheme."
+  },
+  {
+   "slug": "speech-376624",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Craft Beer) Bill 2019 extends concessional excise rates to brewers supplying draft beer in containers of eight litres or more, and increases the maximum annual tax rebate from $30,000 to $100,000. The speaker criticised the government for initially bundling the bill with unrelated superannuation legislation, but welcomed its separation, and noted the craft brewing sector's 547 independent breweries, 4,000 jobs, and $518 million value in 2018."
+  },
+  {
+   "slug": "speech-376627",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "Labor supported the bills extending concessional excise rates to domestic craft brewers supplying draught beer in kegs of eight litres or more, but opposed schedule 1, which would increase the maximum number of members in self‑managed superannuation funds from four to six, calling it an unrelated and unnecessary addition."
+  },
+  {
+   "slug": "speech-376630",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The government will support craft brewers through Schedule 2 and the Excise Tariff Amendment, extend the G20 Global Infrastructure Hub income exemption for four years, and make minor Treasury amendments, while removing Schedule 1—which would have raised the maximum self-managed super fund members from four to six—due to opposition blocking, with plans to revisit it later."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excise Tariff Amendment (Supporting Craft Brewers) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00048",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

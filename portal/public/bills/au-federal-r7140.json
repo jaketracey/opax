@@ -1,0 +1,621 @@
+{
+ "key": "au-federal-r7140",
+ "title": "Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024",
+ "short_title": "Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7140_ems_f51c76c0-555b-4aff-b345-9c70f361cfc7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7140%22",
+   "document_date": "2024-02-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00003",
+   "document_date": "2024-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8683",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "question": "The majority voted against an amendment introduced by Brisbane MP [Stephen Bates](https://theyvoteforyou.org.au/people/representatives/brisbane/stephen_bates) (Greens) to an [original amendment](https://theyvoteforyou.org.au/divisions/representatives/2024-02-15/2), which means the original amendment will remain unchanged. ### Amendment > *That all words after \"House\" be omitted with a view to substituting the following words: \"* > > *(1) notes that these revised tax cuts will still make economic inequality in Australia worse by:* > >> *(a) giving politicians and CEOs on incomes more than $200,000 three times the value of tax cuts compared to the average worker;* >> >> *(b) only providing the poorest 20 per cent of society with 0.4 per cent of the share of tax cuts next financial year, compared to the wealthiest 20 per cent of society who will enjoy half the total value of the tax cuts;* >> >> *(c) exacerbating the gender pay gap, with 42 per cent of the tax cuts going to women and 58 per cent to men; and* >> >> *(d) starving the budget by a jaw-dropping $318 billion over the decade, removing revenue that could support people who rely on aged care services, disability support, income support and families who depend on the public education and health systems; and* > > *(2) calls on the government to redesign the tax cuts to not give the wealthiest in society $4,529 a year and instead redirect this largesse to expanding public services like mental health and dental into Medicare and financial support for those earning below the tax free threshold in this cost of living crisis\".* ### Original amendment > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes:* > > *(1) this Government has mismanaged the economy and made a deliberate decision to break promises and raise taxes;* > > *(2) the Coalition is committed to lower, simpler and fairer taxes;* > > *(3) b",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 88,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 93
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-15/1"
+  },
+  {
+   "key": "federal-representatives-8684",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-02-07.147.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Hume MP [Angus Taylor](https://theyvoteforyou.org.au/people/representatives/hume/angus_taylor) (Liberal). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes:* > > *(1) this Government has mismanaged the economy and made a deliberate decision to break promises and raise taxes;* > > *(2) the Coalition is committed to lower, simpler and fairer taxes;* > > *(3) because Australians are hurting from the Government's mismanagement of the economy, the Coalition will not oppose the reduction in the 19c tax rate to 16c;* > > *(4) the Coalition is committed to going to the next election with a tax reform package that is in keeping with the stage 3 tax cuts; and* > > *(5) the Coalition's package will:* > >> *a. deliver lower, simpler, and fairer taxes;* >> >> *b. fight bracket creep and enshrine aspiration in our tax system;* >> >> *c. reward hard work and support a strong economy where every Australian can get ahead; and* >> >> *d. unite, rather than pit Australians against each other\".*",
+   "stage": "Second reading",
+   "ayes": 52,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-15/2"
+  },
+  {
+   "key": "federal-representatives-8685",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-02-15.20.1) introduced by Groom MP [Garth Hamilton](https://theyvoteforyou.org.au/people/representatives/groom/garth_hamilton) (LNP), which means it failed. The amendment would have changed the name of the bill. ### Motion text > *(1) Clause 1, page 1 (lines 5 and 6), omit \"Treasury Laws Amendment (Cost of Living Tax Cuts) Act 2024\", substitute \"Treasury Laws Amendment (Broken Promise) Act 2024\".*",
+   "stage": "Consideration in detail",
+   "ayes": 52,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-15/3"
+  },
+  {
+   "key": "federal-representatives-8686",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-02-15.23.1) introduced by Menzies MP [Keith Wolahan](https://theyvoteforyou.org.au/people/representatives/menzies/keith_wolahan) (Liberal), which means it failed. The amendment would have changed the name of the bill. ### Motion text > *(2) Clause 1, page 1 (lines 5 and 6), omit \"Treasury Laws Amendment (Cost of Living Tax Cuts) Act 2024 \", substitute \"Treasury Laws Amendment (Entrenching Bracket Creep) Act 2024\".*",
+   "stage": "Consideration in detail",
+   "ayes": 52,
+   "noes": 83,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-15/4"
+  },
+  {
+   "key": "federal-representatives-8687",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-02-15.26.1) introduced by Forde MP [Bert Van Manen](https://theyvoteforyou.org.au/people/representatives/forde/bert_van_manen) (Liberal), which means it failed. The amendment would have changed the name of the bill. ### Amendment text > *(1) Clause 1, page 1 (lines 5 and 6), omit \"Treasury Laws Amendment (Cost of Living Tax Cuts) Act 2024\", substitute \"Treasury Laws Amendment (Cost of Living Tax Cuts but Not Actually Dealing with the Cost of Living) Act 2024\".*",
+   "stage": "Consideration in detail",
+   "ayes": 52,
+   "noes": 83,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-15/5"
+  },
+  {
+   "key": "federal-senate-8692",
+   "date": "2024-02-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-02-27.108.1) to an [original motion](https://theyvoteforyou.org.au/divisions/senate/2024-02-27/5) introduced by South Australian Senator [Simon Birmingham](https://theyvoteforyou.org.au/people/senate/sa/simon_birmingham) (Liberal) ### Amendment text > *Omit paragraphs (b) to (d), substitute:* > > *(a) the bills be called on immediately;* > > *(b) the questions on all remaining stages of the bills be put at 6.30 pm;* > > *(c) paragraph (c) operate as a limitation of debate under standing order 142;* > > *(d) divisions may take place after 6.30 pm for the purposes of the bills only; and* > > *(e) following consideration of the bills being completed, the Senate return to its routine of business.* ### Original motion text > *(a) the Senate notes that:* > >> *(i) during Question Time today, Prime Minister Albanese said \"what the Senate can do with the support of the Liberals and the Greens is to vote for these tax cuts and vote for them today\"; and* >> >> *(ii) the Government has not put forward a proposal to ensure the Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024 and Treasury Laws Amendment (Cost of Living—Medicare Levy) Bill 2024 are passed today; and* > > *(b) on Tuesday, 27 February 2024, the hours of meeting be 12 pm till adjournment and the routine of business from 7.30 pm be consideration of the bills;* > > *(c) divisions may take place after 6.30 pm for the purposes of the bills only; and* > > *(d) following consideration of the bills being completed, the Senate return to its routine of business.*",
+   "stage": "Business motion",
+   "ayes": 20,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-27/3"
+  },
+  {
+   "key": "federal-senate-8693",
+   "date": "2024-02-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-02-27.112.1) introduced by Tasmanian Senator [Anne Urquhart](https://theyvoteforyou.org.au/people/senate/tasmania/anne_urquhart) (Labor), which means it failed. ### Amendment text > *That—* > > *(a) the Senate notes that:* > >> *(i) during Question Time today, Prime Minister Albanese said 'what the Senate can do with the support of the Liberals and the Greens is to vote for these tax cuts and vote for them today', and* >> >> *(ii) the Government has not put forward a proposal to enable the Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024 and Treasury Laws Amendment (Cost of Living—Medicare Levy) Bill 2024 are passed today; and* > > *(b) today, the hours of meeting be midday till adjournment and the routine of business from 7.30 pm be consideration of the bills;* > > *(c) divisions may take place after 6.30 pm for the purposes of the bills only; and* > > *(d) following consideration of the bills being completed, the Senate return to its routine of business.*",
+   "stage": "Business motion",
+   "ayes": 21,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-27/4"
+  },
+  {
+   "key": "federal-senate-8694",
+   "date": "2024-02-27",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-02-27.105.2) introduced by Senator [Simon Birmingham](https://theyvoteforyou.org.au/people/senate/sa/simon_birmingham) (Liberal), which means it passed. ### Motion text > *1) the Senate notes that:* > >> *a) during Question Time today, Prime Minister Albanese said \"what the Senate can do with the support of the Liberals and the Greens is to vote for these tax cuts and vote for them today\"; and* >> >> *b) the Government has not put forward a proposal to ensure the Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024 and Treasury Laws Amendment (Cost of Living—Medicare Levy) Bill 2024 are passed today; and* > > *2) on Tuesday, 27 February 2024, the hours of meeting be 12 pm till adjournment and the routine of business from 7.30 pm be consideration of the bills;* > > *3) divisions may take place after 6.30 pm for the purposes of the bills only; and* > > *4) following consideration of the bills being completed, the Senate return to its routine of business.*",
+   "stage": "Business motion",
+   "ayes": 39,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-27/5"
+  },
+  {
+   "key": "federal-senate-8703",
+   "date": "2024-02-27",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024 and Treasury Laws Amendment (Cost of Living — Medicare Levy) Bill 2024 - Second Reading - Criticism of Government",
+   "stage": "Medicare Levy) Bill 2024",
+   "ayes": 22,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-27/14"
+  },
+  {
+   "key": "federal-senate-8704",
+   "date": "2024-02-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-02-27.186.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that these revised tax cuts will still make economic inequality in Australia worse by:* > >> *(i) giving politicians and CEOs on incomes of more than $200,000 three times the value of tax cuts compared to the average worker,* >> >> *(ii) only providing the poorest 20 per cent of society with 0.4 per cent of the share of tax cuts next financial year, compared to the wealthiest 20 per cent of society who will enjoy 50 per cent of the total value of the tax cuts,* >> >> *(iii) exacerbating the gender pay gap, with 42 per cent of the tax cuts going to women and 58 per cent to men, and* >> >> *(iv) starving the budget by a jaw-dropping $318 billion over the decade, removing revenue that could support people who rely on aged care services, disability support, income support and families who depend on the public education and health systems; and* > > *(b) calls on the Government to redesign the tax cuts to not give the wealthiest in society $4,529 a year and instead redirect this largesse to expanding public services like more mental health and dental into Medicare and financial support for those earning below the tax-free threshold in this cost of living crisis\".*",
+   "stage": "Medicare Levy) Bill 2024",
+   "ayes": 10,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 4,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-27/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-830121",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2024-02-06",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Cost of Living Tax Cuts) Bill 2024 was introduced to give every Australian taxpayer a tax cut from 1 July, with 84% receiving a larger cut than under the previous plan. The bill reduces the lowest tax rate from 19% to 16%, lowers the second rate from 32.5% to 30%, and raises the 37% and 45% thresholds to $135,000 and $190,000 respectively, delivering an average worker tax cut of over $1,500 per year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Cost of Living Tax Cuts) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00003",
+   "assent_date": "2024-03-05"
+  }
+ ]
+}

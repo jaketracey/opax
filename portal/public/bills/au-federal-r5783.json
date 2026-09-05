@@ -1,0 +1,168 @@
+{
+ "key": "au-federal-r5783",
+ "title": "Customs Tariff Amendment Bill 2016",
+ "short_title": "Customs Tariff Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2017-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5783_ems_3755ddf8-608c-43a2-b4ba-cf29cd044262%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5783%22",
+   "document_date": "2016-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00020",
+   "document_date": "2017-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-30",
+  "sentences": [
+   "This bill would make small changes to the Customs Tariff Act 1995.",
+   "It would remove Schedule 1 from the Act and let its content be set by regulations instead, and would repeal an expired safeguard provision for certain Thai imports.",
+   "The Enhanced Project By-law Scheme would be closed to new applicants, with the last active determination expiring by 31 December 2017."
+  ],
+  "changes": [
+   "Repeals Schedule 1 of the Customs Tariff Act 1995, allowing country lists for preferential duty rates to be updated more easily through regulations.",
+   "Repeals section 16A, which contained expired safeguard provisions for tuna and pineapple products from Thailand.",
+   "Inserts new Additional Notes into Chapters 7, 8 and 19 of Schedule 3 to correct the classification of preserved fruits, vegetables and certain pastas.",
+   "Amends item 44 of Schedule 4 to set an end date of 31 December 2017 for the Enhanced Project By-law Scheme."
+  ],
+  "affected": "Importers of goods from countries listed in Schedule 1, importers of certain tuna and pineapple products from Thailand, and applicants to the Enhanced Project By-law Scheme would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339323",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-30",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment Bill 2016 proposes four changes: moving preferential rate details to regulations for faster updates; removing expired Thailand-Australia Free Trade Agreement safeguards; adding tariff classification notes for fruits, vegetables and pastas following tribunal decisions; and closing the Enhanced Project By-law Scheme to new applicants by 31 December 2017."
+  },
+  {
+   "slug": "speech-341102",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Tariff Amendment Bill 2016, which repeals schedule 1 and section 16A of the Customs Tariff Act, adds classification notes for fruits, vegetables and pasta, and amends item 44 for an end date, projecting $220 million in additional revenue. The bill clarifies tariff classification for gherkins and seafood won tons following Administrative Appeals Tribunal decisions."
+  },
+  {
+   "slug": "speech-341103",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment Bill 2016 includes four amendments to the Customs Act 1901, the first of which repeals schedule 1 of the act and relocates it to the Customs Tariff Regulations 2004."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00020",
+   "assent_date": "2017-04-04"
+  }
+ ]
+}

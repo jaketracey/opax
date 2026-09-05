@@ -1,0 +1,425 @@
+{
+ "key": "au-federal-r6977",
+ "title": "Migration Amendment (Australia’s Engagement in the Pacific and Other Measures) Bill 2023",
+ "short_title": "Migration Amendment (Australia’s Engagement in the Pacific and Other Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2023-10-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6977_ems_32bce521-e17d-4b68-a671-46c7d5e25c96%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6977%22",
+   "document_date": "2023-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00086",
+   "document_date": "2023-10-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-16",
+  "sentences": [
+   "This bill is part of a package that would allow the Minister to run a random selection process, called a ballot, to choose who can apply for certain visas.",
+   "The bill would insert a new section into the Migration Act 1958 giving the Minister power to set up a ballot and make rules about who can enter it, with those rules subject to parliamentary disallowance.",
+   "The primary purpose is to support a new Pacific Engagement Visa for citizens of Pacific countries and Timor-Leste, with an annual quota and eligibility criteria including a job offer, to be set later in regulations."
+  ],
+  "changes": [
+   "Creates a legislative framework for the Minister to conduct a ballot to select eligible visa applicants.",
+   "Allows regulations to require a person to have been selected in a ballot before they can make a valid visa application.",
+   "Supports the creation of the Pacific Engagement Visa, a new permanent residence visa for citizens of Pacific countries and Timor-Leste."
+  ],
+  "affected": "Citizens of certain Pacific countries and Timor-Leste who may apply for the Pacific Engagement Visa, and potentially applicants for other visas if the government decides to use the ballot process for them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7986",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion \"*that the amendment be disagreed to*\". The amendment (below) would have refused to give the bill a [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), meaning that it would have been rejected and not considered any further. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst welcoming moves to establish a Pacific Engagement Visa, the House:* > > *(1) declines to give the bill a second reading because:* > >> *(a) permanent residency and citizenship of Australia should not be decided by a lottery; and* >> >> *(b) Australia's immigration system should be nation-building with a key focus on the economic contribution immigrants make to our country; and* > > *(2) calls on the Government to develop a new approach to implement the Pacific Engagement Visa.\"*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 86,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-09/5"
+  },
+  {
+   "key": "federal-representatives-7987",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2023-03-09.40.1) to agree with the bill's main idea. In other words, they voted to read it for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). They can now discuss it in greater detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/Migration_Amendment_Australia_Engagement_in_the_Pacific_and_Other_Measures_Bill_2023): > *The purpose of the Migration Amendment (Australia’s Engagement in the Pacific and Other Measures) Bill 2023 (the Amendment Bill) is to amend the Migration Act 1958 to provide for a visa pre-application process to be conducted as part of the application validity criteria for a particular visa.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 86,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-09/6"
+  },
+  {
+   "key": "federal-senate-8398",
+   "date": "2023-10-18",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Victorian Senator [James Paterson](https://theyvoteforyou.org.au/people/senate/victoria/james_paterson) (Liberal). ### Amendment text > *Omit all words after \"That\", substitute \", whilst welcoming moves to establish a Pacific Engagement Visa, the bills be withdrawn and the Senate:* > > *(a) notes that:* > >> *(i) permanent residency and citizenship of Australia should not be decided by a lottery,* >> >> *(ii) Australia's immigration system should be nation-building with a key focus on the economic contribution immigrants make to our country; and* > > *(b) calls on the Government to develop a new approach to implement the Pacific Engagement Visa\".*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-18/5"
+  },
+  {
+   "key": "federal-representatives-8407",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-10-19.14.2): > *That the [Senate amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6977_sched_698c70dd-21a2-461c-a31a-81b1c0c34a24%22) be agreed to.* This means that both the House of Representatives and the Senate have now agreed to the final wording of the bill, and so it can now become law. ### What does this bill do? [The bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6977) was introduced alongside the [Migration (Visa Pre-application Process) Charge Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6978). According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/Migration_Amendment_Australia_Engagement_in_the_Pacific_and_Other_Measures_Bill_2023), which is a document prepared by the non-partisan parliamentary library: > * *The Bills provide for a visa pre-application process – a ballot – to be conducted as part of the application validity criteria for a specified visa. This is a process which does not currently exist in the Migration Act 1958 and its introduction would be a new approach for visa processing in Australia.* > > * *The visa pre-application process would be distinct from the visa application though ‘eligibility requirements for registration in a ballot will reflect some of the key objective criteria for the grant of the relevant visa’.* > > * *The insertion of the visa pre-application process is in order to support the Government’s election commitment to introduce a new permanent Pacific Engagement Visa, which is intended to strengthen ties with the Pacific region. The new visa would be introduced into the Migration Regulations 1994 following passage of the Bills.* > > * *The provisions would allow a visa pre-application process to appl",
+   "stage": "Consideration of Senate message",
+   "ayes": 84,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-10-19/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827777",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-16",
+   "stage_hint": null,
+   "brief": "The bill establishes a ballot-based visa pre-application process for the Pacific engagement visa, which will provide up to 3,000 permanent residency places annually for nationals of participating Pacific island countries and Timor-Leste from July 2023, without impacting existing skilled migration program places."
+  },
+  {
+   "slug": "speech-827778",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-16",
+   "stage_hint": null,
+   "brief": "The Migration (Visa Pre-application Process) Charge Bill 2023 imposes a nominal charge (up to A$100) on registered participants in visa pre-application processes, with a $25 fee for the Pacific engagement visa ballot to deter non-genuine applicants. The bill supports a new permanent Pacific engagement visa program to boost Pacific migration and strengthen regional ties."
+  },
+  {
+   "slug": "speech-828022",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "Five bills were referred to the Federation Chamber for further consideration: the Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023, the Migration (Visa Pre-application Process) Charge Bill 2023, the Australia Council Amendment (Creative Australia) Bill 2023, the Royal Commissions Amendment (Enhancing Engagement) Bill 2023, and the Treasury Laws Amendment (2023 Measures No. 1) Bill 2023."
+  },
+  {
+   "slug": "speech-828028",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The coalition moved a second reading amendment to the Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023, arguing that permanent residency and citizenship should not be decided by a lottery and calling on the government to develop a new approach to the Pacific Engagement Visa. They opposed the ballot process, citing risks of skilled worker drain from Pacific nations, reduced remittances compared to the Pacific Australia Labour Mobility scheme (which they noted has 35,000 workers), and a perceived break with the non-discriminatory immigration principle since the White Australia Policy."
+  },
+  {
+   "slug": "speech-828243",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The government announced the Pacific Engagement Visa, which will allocate up to 3,000 permanent residency places annually through a random ballot for nationals of Pacific countries and Timor-Leste, arguing it strengthens regional ties and avoids brain drain by not selecting on skills."
+  },
+  {
+   "slug": "speech-828419",
+   "speaker": "Anne Urquhart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "Presented the Selection of Bills Committee's second report for 2023, referring the Governor-General Amendment (Cessation of Allowances in the Public Interest) Bill 2023, the Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023, and the Social Security (Administration) Amendment (Income Management Reform) Bill 2023 to committees for inquiry, with amendments setting reporting dates including 6 June 2023 for the income management bill and 13 June 2023 for the migration bill."
+  },
+  {
+   "slug": "speech-828479",
+   "speaker": "David Van",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The Senate discharged and appointed senators to committees, including new members for the Select Committee on Dental Services in Australia and substitute members for the Finance and Public Administration Legislation Committee and the Legal and Constitutional Affairs Legislation Committee."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Australia’s Engagement in the Pacific and Other Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00086",
+   "assent_date": "2023-10-26"
+  }
+ ]
+}

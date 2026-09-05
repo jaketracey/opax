@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6158",
+ "title": "Family Law Amendment (Review of Government Support for Single Parents) Bill 2018",
+ "short_title": "Family Law Amendment (Review of Government Support for Single Parents) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-20",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6158%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6158%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6158%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6158_ems_e0d09e60-5d7f-40e8-b327-4745ae8342ae%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6158%22",
+   "document_date": "2018-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-367536",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-08-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2012 Gillard government decision to move single parents from parenting payment ($683.50 per fortnight) to Newstart ($537.80 per fortnight) when their youngest child turned eight was a mistake causing widespread hardship, and introduced the Family Law Amendment (Review of Government Support for Single Parents) Bill 2018, which would require the Australian Institute of Family Studies to conduct a six-month review of the cuts' impact, poverty rates among single-parent households, and ways to improve support."
+  }
+ ],
+ "acts": []
+}

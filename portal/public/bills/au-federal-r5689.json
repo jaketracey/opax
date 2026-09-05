@@ -1,0 +1,579 @@
+{
+ "key": "au-federal-r5689",
+ "title": "Transport Security Amendment (Serious or Organised Crime) Bill 2016",
+ "short_title": "Transport Security Amendment (Serious or Organised Crime) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5689_ems_3cdd2f42-0f61-44e5-8e1b-53ba3c88e737%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5689_ems_1b91c151-e31a-468c-9a9f-8ba5302d1afd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5689%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-08-31",
+  "sentences": [
+   "The bill would add a new goal to aviation and maritime security laws: stopping serious or organised crime at airports, seaports, and offshore oil and gas facilities.",
+   "It would change the background check rules for aviation and maritime security identification cards to consider serious criminal offences, not just security threats.",
+   "The bill also clarifies the legal basis for background checks and allows regulations to set penalties for offences related to serious or organised crime."
+  ],
+  "changes": [
+   "Gives the Aviation Transport Security Act 2004 and the Maritime Transport and Offshore Facilities Security Act 2003 an extra purpose to reduce criminal influence.",
+   "Strengthens the eligibility criteria for ASICs and MSICs to target serious criminal offences.",
+   "Allows regulations to prescribe penalties for breaking the new serious or organised crime requirements.",
+   "Clarifies the legislative basis for background checks under the Maritime Act.",
+   "Inserts a severability provision to guide a court on Parliament's intention."
+  ],
+  "affected": "Anyone who must hold an aviation security identification card (ASIC) or a maritime security identification card (MSIC) to access secure zones at airports, seaports, and offshore oil and gas facilities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:31:00Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4535",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debate/?id=2017-02-13.29.3) introduced by Labor MP [Anthony Albanese](https://theyvoteforyou.org.au/people/representatives/grayndler/anthony_albanese), which means it failed. ### Motion text > *That all the words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the Bill a [second reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html), the House:* > *(1) notes that the Government failed to articulate a policy for the aviation or maritime sectors at the 2016 Federal election;* > *(2) notes the Turnbull Government's failed WorkChoices On Water legislation would have seriously undermined the Australian maritime sector;* > *(3) notes in particular that the Government has:* >> *(a) failed to rule out further laws in coastal shipping that would aid the displacement of Australian crews on the Australian coast with foreign crews doing the same work for reduced wages and conditions;* >> *(b) failed to outline its response to the High Court's decision to overturn the Government's attempt to circumvent Parliament's intention to give priority to Australian jobs in our offshore oil and gas sector;* >> *(c) actively worked to facilitate the replacement of Australian maritime crews by foreign crews for permanent work in Australia, by arranging rapid visas, skills recognition and access to ports in cases such as the MV Portland in January 2016; and* >> *(d) previously considered relaxing air cabotage arrangements that could have the effect of displacing Australian flight and cabin crews with foreign crews on lower wages and conditions while working in Australia; and* > *(4) notes that the Government and its expert agencies have repeatedly acknowledged the obvious point that criminal and security vetting of foreign aviation and maritime workers is much harder than for Australian workers; and* > *(5) calls on the Federal Government to develop",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-13/4"
+  },
+  {
+   "key": "federal-representatives-4536",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "question": "Anthony Albanese by leave—I move amendments (1) to (6) and (8) to (11) as circulated in my name together: (1) Clause 1, page 1 (lines 5 and 6), omit \"Serious or Organised\", substitute \"Serious and Organised\". (2) Schedule 1, item 2, page 3 (lines 9 and 10), omit \"serious or organised\", substitute \"serious and organised\". (3) Schedule 1, item 3, page 3 (line 15), omit \"serious or organised\", substitute \"serious and organised\". (4) Schedule 1, item 4, page 3 (line 18), omit \"Serious or organised\", substitute \"Serious and organised\". (5) Schedule 1, item 4, page 3 (line 21), omit \"serious or organised\", substitute \"serious and organised\". (6) Schedule 1, item 4, page 3 (line 24), omit \"serious or organised\", substitute \"serious and organised\". (8) Schedule 1, item 7, page 5 (line 3), omit \"serious or organised\", substitute \"serious and organised\". (9) Schedule 1, item 12, page 5 (line 22), omit \"Serious or organised\", substitute \"Serious and organised\". (10) Schedule 1, item 12, page 5 (lines 25 and 26), omit \"serious or organised\", substitute \"serious and organised\". (11) Schedule 1, item 12, page 6 (line 4), omit \"serious or organised\", substitute \"serious and organised\". The amendments that I have moved in this first section are amendments relating to the distinction between 'serious or organised' and 'serious and organised'. This is not just a question of language; it is a question of language translating into action when it comes to legislation. The significance of this is that the amendments that I have moved are consistent with the recommendations of the National Ice Taskforce and the Joint Committee on Law Enforcement report from 2011. That is the basis of the Transport Security Amendment (Serious or Organised Crime) Bill 2016. These amendments would replace the statement—including the title, it must be said—of the bill throughout this legislation. It is a uniform change and will impact the aviation and maritime bills in the same manner. It is important that we",
+   "stage": "Consideration in detail",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-13/5"
+  },
+  {
+   "key": "federal-senate-4608",
+   "date": "2017-03-27",
+   "house": "senate",
+   "question": "Don Farrell By leave—as has been circulated on the grey, I move opposition amendments (1) to (6) and (8) to (11) on sheet 8060: (1) Clause 1, page 1 (lines 5 and 6), omit \"Serious or Organised\", substitute \"Serious and Organised\". (2) Schedule 1, item 2, page 3 (lines 9 and 10), omit \"serious or organised\", substitute \"serious and organised\". (3) Schedule 1, item 3, page 3 (line 15), omit \"serious or organised\", substitute \"serious and organised\". (4) Schedule 1, item 4, page 3 (line 18), omit \"Serious or organised\", substitute \"Serious and organised\". (5) Schedule 1, item 4, page 3 (line 21), omit \"serious or organised\", substitute \"serious and organised\". (6) Schedule 1, item 4, page 3 (line 24), omit \"serious or organised\", substitute \"serious and organised\". (8) Schedule 1, item 7, page 5 (line 3), omit \"serious or organised\", substitute \"serious and organised\". (9) Schedule 1, item 12, page 5 (line 22), omit \"Serious or organised\", substitute \"Serious and organised\". (10) Schedule 1, item 12, page 5 (lines 25 and 26), omit \"serious or organised\", substitute \"serious and organised\". (11) Schedule 1, item 12, page 6 (line 4), omit \"serious or organised\", substitute \"serious and organised\". Amendments (1) to (6) and (8) to (11) change the phrase 'serious or organised' crime to 'serious and organised' crime throughout the bill. It is a uniform change and will impact the aviation and maritime bills in exactly the same manner. It is important that we get the language right when we are adding new purposes to important legislation. We need to ensure that we are targeting identified problems in a precise manner. As Labor members in this place said in the last parliament when an identical bill was put forward, we are concerned that the mission of transport security remains tightly focused around managing the post-9/11 security environment. Currently that is about safeguarding unlawful interference at our regulated airports and seaports, and really focuses on terror-relat",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 39,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-27/3"
+  },
+  {
+   "key": "federal-senate-4609",
+   "date": "2017-03-27",
+   "house": "senate",
+   "question": "Don Farrell by leave—I move opposition amendments (7) and (12) on sheet 8060 together: (7) Schedule 1, page 4 (after line 17), after item 4, insert: 4A At the end of Part 9 Add: 126A Review of decisions relating to security checking under the regulations (1) This section applies if regulations are made, under any of the following sections, dealing with the security checking (including background checking) of persons who have access to an area or zone: (a) section 35; (b) section 36; (c) section 36A; (d) section 37; (e) section 38; (f) section 38A; (g) section 38AB. (2) The regulations must include provisions allowing a person in relation to whom a security check is carried out to seek: (a) reconsideration by the Secretary or the Secretary AGD of a decision in relation to a security identification card; and (b) review by the Secretary or the Secretary AGD of a decision in relation to a security identification card; and (c) review by the Administrative Appeals Tribunal of a decision by the Secretary or the Secretary AGD on review of a decision in relation to a security identification card. (3) To avoid doubt, nothing in this section permits: (a) the Secretary or the Secretary AGD to review an adverse security assessment or a qualified security assessment; or (b) the Administrative Appeals Tribunal to review an adverse security assessment or a qualified security assessment other than in accordance with the provisions of the _Australian Security Intelligence Organisation Act 1979_ and the _Administrative Appeals Tribunal Act 1975_. (4) In this section: _ adverse security assessment_ and _qualified security assessment_ have the same meanings as in the _Australian Security Intelligence Organisation Act 1979_. _ Secretary AGD_ means the Secretary who is responsible for administering the scheme prescribed for the purposes of section 8 of the _AusCheck Act 2007_ (the AusCheck scheme). (12) Schedule 1, page 6 (after line 19), after item 12, insert: 12A At the end of Part 12 A",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 39,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-27/4"
+  },
+  {
+   "key": "federal-senate-4610",
+   "date": "2017-03-27",
+   "house": "senate",
+   "question": "David Leyonhjelm by leave—I move amendments (1) and (2) on sheet 8067 together: (1) Schedule 1, item 4, page 4 (after line 17), at the end of section 38AB, add: (4) For the purposes of subsection (1), offences which consist of the following are not serious or organised crime unless the offence is connected to terrorism: (a) being a member of a particular organisation; (b) consorting with a convicted offender. (2) Schedule 1, item 12, page 6 (after line 19), at the end of section 113F, add: (3) For the purposes of subsection (1), offences which consist of the following are not serious or organised crime unless the offence is connected to terrorism: (a) being a member of a particular organisation; (b) consorting with a convicted offender. If this bill should pass and these amendments not be passed, the ban on employing people should not cover those ex-criminals whose conviction was solely for a nonterrorist crime of association. Having been a member of a bikie gang or having regularly visited a friend in prison should not forever block your prospects of cleaning toilets or unloading luggage at an airport or port. I commend the amendments. Fiona Nash The government will not be supporting the proposed amendments from Senator Leyonhjelm. The existing ASIC and MSIC schemes protect against unlawful interference with aviation and maritime transport and offshore facilities. The purpose of the bill is to broaden the ASIC and MSIC schemes to also capture persons convicted of serious or organised crime offences, to improve the government's ability to combat serious or organised crime. Limiting any serious or organised crime offences to a connection with terrorism minimises the improvement to the ASIC and MSIC schemes. It prevents the government from implementing the recommendations of the parliamentary Joint Committee on Law Enforcement and the National Ice Taskforce to address serious or organised crime in the aviation and maritime sectors. The various Australian criminal code",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 39,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-27/5"
+  },
+  {
+   "key": "federal-representatives-4662",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "question": "The majority voted against Senate amendments, known as [amendment nos (7), (8), (13) and (14)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr5689_sched_35672e6a-5395-4e13-a7e9-28afb9c8286a%22;rec=0). This means that those amendments are rejected by the House of Representatives and that they'll now need to be sent back to the Senate, where the senators will need to decide whether or not they insist on them. If they do insist, then [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5689) won't pass. The bill relates to the ASIC And MSIC schemes. The [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd028) explains that: > *A security card, known as an Aviation Security Identification Card (**ASIC**) or a Maritime Security Identification Card (**MSIC**), is required by individuals in Australia if they require regular access to secure areas of Australia’s airports, seaports, Australian flagged ships, and offshore oil and gas facilities.* ### What were the Senate amendments about? These amendments related to two different issues. First, they would have required that that certain serious or organised crime offences only be relevant to the ASIC and MSIC schemes if the offences were connected to terrorism. Deputy Leader of the House [Darren Chester](https://theyvoteforyou.org.au/people/representatives/gippsland/darren_chester) explained that [the Government rejected this change](http://www.openaustralia.org.au/debate/?id=2017-03-30.37.3) because: > *Limiting the application of criminal organisation legislation to a connection with terrorism will severely restrict the ability to exclude people convicted of serious offences related to criminal organisations from gaining an ASIC or a MSIC.* The second change made by the amendments is that they would have included the ASIC and MSIC appeals",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-30/1"
+  },
+  {
+   "key": "federal-representatives-4663",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "question": "The majority voted to reject the [amendments](http://www.openaustralia.org.au/debates/?id=2017-03-30.37.2) made in the Senate and replace them with other government amendments. This means that [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5689) will now have to go back to the Senate, where the senators will have to decide whether they agree with the new government amendments. If not, the bill won't be passed. The bill relates to the ASIC And MSIC schemes. The [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd028#_Toc464652435) explains that: > *A security card, known as an Aviation Security Identification Card (**ASIC**) or a Maritime Security Identification Card (**MSIC**), is required by individuals in Australia if they require regular access to secure areas of Australia’s airports, seaports, Australian flagged ships, and offshore oil and gas facilities.* ### What were the Senate amendments? The Senate amendments (known as [amendments (1) to (6) and (9) to (12)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr5689_sched_35672e6a-5395-4e13-a7e9-28afb9c8286a%22;rec=0)), would have replaced the words “serious **or** organised” with the words “serious **and** organised”. Deputy Leader of the House [Darren Chester](https://theyvoteforyou.org.au/people/representatives/gippsland/darren_chester) [explained that the Government rejected](http://www.openaustralia.org.au/debate/?id=2017-03-30.41.1) this change: > *because it would only capture individuals who have been convicted of a serious and organised crime. Both elements would be required. Committing just a serious crime would not be captured in this case ... It would mean that someone who has a conviction for a serious crime but who acted alone in committing the crime would likely be able to successfully appeal a refusal of an",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-30/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332757",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The bill strengthens aviation and maritime security by introducing new eligibility criteria for security identification card schemes, targeting serious or organised crime. It adds offences such as firearms trafficking and foreign incursion to background checks, and shifts focus from minor offences to higher-risk convictions, with organised crime costing Australia $36 billion annually."
+  },
+  {
+   "slug": "speech-340946",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The opposition moved an amendment to the Transport Security Amendment (Serious or Organised Crime) Bill 2016, arguing the government’s policies inconsistently toughen background checks on Australian aviation and maritime workers while allowing foreign crews with weaker vetting to replace them, undermining security and Australian jobs. The amendment notes the government’s failure to articulate a policy at the 2016 election, its WorkChoices On Water legislation, the MV Portland case, and calls for urgent development of aviation and maritime policies that prioritise Australian jobs and reliable background checks."
+  },
+  {
+   "slug": "speech-340949",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued the Transport Security Amendment (Serious or Organised Crime) Bill 2016 would strengthen eligibility criteria for aviation and maritime security identification cards to prevent serious or organised crime, including implementing a National Ice Taskforce recommendation. He also noted a national 8.4% increase in car thefts over the past 12 months, with a 31.4% rise in Victoria and 31% of stolen vehicles never recovered, and highlighted export loopholes for stolen cars."
+  },
+  {
+   "slug": "speech-340952",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Transport Security Amendment (Serious or Organised Crime) Bill 2016 is unclear, may unfairly discriminate against workers, and leaves major security gaps, while criticising the government’s weakening of Australian coastal shipping and port privatisation—citing Fremantle’s 34.91 million tonnes of trade worth $26.1 billion and nearly $40 billion in state debt."
+  },
+  {
+   "slug": "speech-341068",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Serious or Organised Crime) Bill 2016 expands the Aviation Transport Security Act 2004 and Maritime Transport and Offshore Facilities Security Act 2003 to prevent individuals linked to serious or organised crime from accessing airports, seaports, and offshore facilities. It introduces harmonised eligibility criteria for ASIC and MSIC schemes, fulfills a government election commitment and a key action from the National Ice Taskforce response, and was previously introduced on 11 February 2016, passing the House on 16 March 2016 before lapsing."
+  },
+  {
+   "slug": "speech-341070",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker moved amendments to replace \"serious or organised\" with \"serious and organised\" throughout the Transport Security Amendment (Serious or Organised Crime) Bill 2016, arguing the original wording was broader than recommended by the National Ice Taskforce and the Joint Committee on Law Enforcement. The amendments aim to keep the definition precisely targeting serious and organised crime, particularly drug trafficking, rather than diluting it."
+  },
+  {
+   "slug": "speech-345219",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "Labor opposed the government's rejection of Senate amendments to the Transport Security Amendment (Serious or Organised Crime) Bill 2016, arguing the government should accept the amendments—moved by Senator Leyonhjelm—to pass the legislation rather than let it fail."
+  }
+ ],
+ "acts": []
+}

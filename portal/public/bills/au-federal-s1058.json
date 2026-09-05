@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-s1058",
+ "title": "Competition and Consumer Legislation Amendment (Small Business Access to Justice) Bill 2017",
+ "short_title": "Competition and Consumer Legislation Amendment (Small Business Access to Justice) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-16",
+ "originating_house": "senate",
+ "sponsor": "GALLAGHER, Sen Katy",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10838",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2018-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1058_ems_3440e8df-7285-43a9-a559-6c0fcbce7fd3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1058%22",
+   "document_date": "2017-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4770",
+   "date": "2017-08-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2017-08-10.4.2) to read the bill for a second time. In other words, they agreed with the main idea of the bill and can now discuss it in more detail. ### Main idea of the bill According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1058), the bill: > *Amends the: Australian Small Business and Family Enterprise Ombudsman Act 2015 to: allow the Australian Small Business and Family Enterprise Ombudsman to provide assistance in advising and preparing a person’s case for a no adverse costs order in proceedings in relation to contraventions of Part IV of the Competition and Consumer Act 2010; and require the number of requests for assistance in relation to an application for a no adverse costs order to be included in the Ombudsman’s annual report; and Competition and Consumer Act 2010 to: allow for a no adverse costs order to be sought, at any time during proceedings, by a person bringing an action in relation to loss or damage by conduct of another person that was done in contravention of Part IV of the Act; and specify the circumstances in which the court is able to make a no adverse costs order.*",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 16,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-10/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

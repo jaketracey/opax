@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-r7026",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2023-2024",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2023-2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2023-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7026_ems_0e98cf93-100b-40b9-a3f4-5458e618a9f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7026%22",
+   "document_date": "2023-05-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00030",
+   "document_date": "2023-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-05-09",
+  "sentences": [
+   "This bill would take money from the Consolidated Revenue Fund to pay for the Parliamentary Departments in 2023-24.",
+   "It does this by setting out the specific appropriations in the bill's schedules, which are detailed in the Portfolio Budget Statements.",
+   "The bill is one of several Budget Bills that together fund new measures and ongoing government programs for the financial year."
+  ],
+  "changes": [
+   "Appropriates money for the Parliamentary Departments for 2023-24.",
+   "Provides the legal authority to spend from the Consolidated Revenue Fund.",
+   "Works with other Budget Bills to cover ordinary annual services and other appropriations."
+  ],
+  "affected": "The Parliamentary Departments and the government programs they administer.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-829849",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The Appropriation (Parliamentary Departments) Bill (No. 1) 2023-2024 seeks over $314 million from the Consolidated Revenue Fund, including $250 million for the Department of Parliamentary Services to address accommodation pressures and ICT services, and a $1.9 million advance to the responsible Presiding Officer."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation (Parliamentary Departments) Act (No. 1) 2023-2024",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00030",
+   "assent_date": "2023-06-28"
+  }
+ ]
+}

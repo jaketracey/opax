@@ -1,0 +1,500 @@
+{
+ "key": "au-federal-r5263",
+ "title": "Trade Support Loans (Consequential Amendments) Bill 2014",
+ "short_title": "Trade Support Loans (Consequential Amendments) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2014-07-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-07-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5263_ems_faa8a549-2392-4f0b-8f6c-75e4ec4e3b48%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5263%22",
+   "document_date": "2014-06-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00082",
+   "document_date": "2014-07-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-04",
+  "sentences": [
+   "This bill is part of a package that creates the Trade Support Loans Programme, which offers apprentices concessional loans.",
+   "The package establishes loans that are income-contingent, repayable once a person's earnings reach the HELP repayment threshold, and provides a 20 per cent discount for completing an apprenticeship.",
+   "This bill specifically updates existing laws to support the new loan programme, without stating which Acts are changed or when amendments start."
+  ],
+  "changes": [
+   "Amends principal legislation to support the Trade Support Loans Programme.",
+   "Links the loan repayment to the HELP repayment threshold.",
+   "Provides a 20 per cent discount on the loan for apprentices who finish their apprenticeship."
+  ],
+  "affected": "Australian Apprentices and the agencies administering the Trade Support Loans Programme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:06:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3252",
+   "date": "2014-06-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/debate/?id=2014-06-24.19.1) proposed by Liberal Minister [Christopher Pyne](https://theyvoteforyou.org.au/people/representatives/sturt/christopher_pyne). The motion would've 'gagged' debate by speeding up the consideration of the bills. ### Wording to the motion > *That, in relation to proceedings on the [Trade Support Loans Bill 2014](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5264) and the [Trade Support Loans (Consequential Amendments) Bill 2014](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5263), so much of the [standing orders](http://www.peo.gov.au/learning/fact-sheets/standing-orders.html) be suspended as would prevent the following from occurring:* > *(1) the resumption of debate on the [second readings](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html) of the bills being called on together;* > *(2) at the conclusion of the [second reading debate](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html), not including a Minister speaking in reply, or 45 minutes after the resumption of the second reading debate, whichever is the earlier, a Minister being called to sum up the second reading debate and then without delay (a) one question being put on any amendments moved to motions for the second readings by opposition Members, (b) any necessary questions being put on amendments moved by any other Member, and (c) one question being put on the second readings of the bills together;* > *(3) if the second readings of the bills have been agreed to, a message from the Governor-General recommending an appropriation for the Trade Support Loans Bill 2014 being announced;* > *(4) the [consideration in detail stages](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html), if required, on the bills being taken together for a period not exceeding 20 minutes at which time an",
+   "stage": "Business motion",
+   "ayes": 78,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-24/6"
+  },
+  {
+   "key": "federal-senate-3335",
+   "date": "2014-07-14",
+   "house": "senate",
+   "question": "The majority agreed to add Labor Senator [Kim Carr](https://theyvoteforyou.org.au/people/senate/victoria/kim_carr)'s [proviso](http://www.openaustralia.org.au/senate/?gid=2014-07-14.25.2) to the [motion](https://theyvoteforyou.org.au/divisions/senate/2014-07-14/10) to agree with the bills' main idea. ### What was Senator Kim Carr's proviso? Senator Carr proposed to add the [following proviso](http://www.openaustralia.org.au/senate/?gid=2014-07-14.25.2), which was agreed to by the Senate: > *At the end of the motion [to agree to the main idea of the bills], add:* > *but the Senate notes that the Government has failed to:* >> *(a) advise apprentices before the election that they would be abolishing the [Tools for Your Trade](http://www.australianapprenticeships.gov.au/program/tools-your-trade-payment) program, thus leaving [Trade Support Loans](http://www.australianapprenticeships.gov.au/trade-support-loans) as the only form of assistance for the purchase of tools;* >> *(b) adequately ensure that clear and easily understood explanations of the loan, the indexing and the repayment requirements are provided to all apprentices in a consistent format, in particular for school-based apprentices;* >> *(c) put in place adequate privacy protections for the large volumes of information that will be acquired through the Trade Support Loans Program; and* >> *(d) offer:* >>> *(i) fair and reasonable transition arrangements for current apprentices; and* >>> *(ii) apprentices the option of lump sum payments in order to purchase expensive items.* ### Main idea of the bills The bills create the Trade Support Loans Programme that will give apprentices access to a $20,000 loan, like the loans already available for university students under [HECS](http://en.wikipedia.org/wiki/Tertiary_education_fees_in_Australia#HECS). ### Background to the bills Prime Minister [Tony Abbott](https://theyvoteforyou.org.au/people/representatives/warringah/tony_abbott) [promised to create](http://www.abc.n",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 12,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-14/9"
+  },
+  {
+   "key": "federal-senate-3336",
+   "date": "2014-07-14",
+   "house": "senate",
+   "question": "Trade Support Loans Bill 2014, Trade Support Loans (Consequential Amendments) Bill 2014 - Second Reading - Agree to the main idea (with two provisos)",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 10,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-14/10"
+  },
+  {
+   "key": "federal-senate-3337",
+   "date": "2014-07-14",
+   "house": "senate",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/senate/?gid=2014-07-14.167.1) introduced by Greens Senator [Lee Rhiannon](https://theyvoteforyou.org.au/people/senate/nsw/lee_rhiannon). ### What were the amendments? Senator Rhiannon [explained](http://www.openaustralia.org.au/senate/?gid=2014-07-14.167.1) that the amendments would have \"increase[d] the repayment income threshold and provide[d] for lower repayment rates\". ### Main idea of the bills The bills create the Trade Support Loans Programme that will give apprentices access to a $20,000 loan, like the loans already available for university students under [HECS](http://en.wikipedia.org/wiki/Tertiary_education_fees_in_Australia#HECS). ### Background to the bills Prime Minister [Tony Abbott](https://theyvoteforyou.org.au/people/representatives/warringah/tony_abbott) [promised to create](http://www.abc.net.au/news/2014-07-27/apprentice-loan-promise-check/5519824) this new loan programme during the [2013 election campaign](http://en.wikipedia.org/wiki/Australian_federal_election,_2013).",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 11,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-07-14/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-290390",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292922",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292924",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292925",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292960",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292972",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-292973",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293119",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293315",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293317",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-293320",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Trade Support Loans (Consequential Amendments) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00082",
+   "assent_date": "2014-07-17"
+  }
+ ]
+}

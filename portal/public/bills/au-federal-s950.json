@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-s950",
+ "title": "Native Title Amendment (Reform) Bill 2014",
+ "short_title": "Native Title Amendment (Reform) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-04",
+ "originating_house": "senate",
+ "sponsor": "SIEWERT, Sen Rachel",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10584",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s950%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s950%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s950%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s950%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s950%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s950_ems_75b26c58-1693-40f4-95a2-635d873de331%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s950%22",
+   "document_date": "2014-03-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-04",
+  "sentences": [
+   "The bill would make it easier for Aboriginal and Torres Strait Islander peoples to prove native title rights over land.",
+   "It would create a presumption that native title has continued unless the other side proves significant disruption, and redefine 'traditional' laws and customs as those that remain identifiable over time.",
+   "The bill would also disregard prior extinguishment of native title by agreement or automatically for national, state or territory parks, and clarify the requirement to negotiate in good faith."
+  ],
+  "changes": [
+   "Shifts the burden of proof from claimants to respondents to show disruption of native title.",
+   "Redefines 'traditional' so laws and customs need only remain identifiable through time, not largely unchanged.",
+   "Allows prior extinguishment to be disregarded by agreement or automatically for parks.",
+   "Clarifies the meaning of 'negotiating in good faith' and puts the onus on the party asserting good faith to prove it."
+  ],
+  "affected": "Aboriginal and Torres Strait Islander peoples who are native title claimants, and respondents in native title proceedings.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

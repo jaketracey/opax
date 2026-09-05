@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r6513",
+ "title": "Excise Tariff Amendment Bill 2020",
+ "short_title": "Excise Tariff Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6514_ems_050e2be3-ea00-4779-ae2f-ab40aab46461%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6513%22",
+   "document_date": "2020-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00085",
+   "document_date": "2020-09-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-14",
+  "sentences": [
+   "This bill is part of a package that responds to a court decision that broadened the definition of oils under the Product Stewardship (Oil) Act 2000.",
+   "It would change the Excise Tariff Act 1921 so that excise duty on petroleum-based oils and synthetic equivalents no longer covers diesel and other fuels for the scheme's purposes.",
+   "Diesel and other fuels would still be taxed under other items in the same Act."
+  ],
+  "changes": [
+   "Narrow the list of petroleum-based oils and synthetic equivalents subject to excise duty for the Product Stewardship for Oil Scheme.",
+   "Exclude diesel and other fuels from the scope of item 15 of the Schedule to the Excise Tariff Act.",
+   "Align the excise duty base with the original intention of the scheme."
+  ],
+  "affected": "Manufacturers and importers of oils, greases and their synthetic equivalents in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-393577",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for closing a loophole in the Product Stewardship for Oil Scheme that allowed Caltex (now Ampol) to claim $8 million in benefit payments for diesel used in pipe cleaning, which was outside the scheme's intent, and criticised the company's conduct as contrary to corporate responsibility and the public interest."
+  },
+  {
+   "slug": "speech-393586",
+   "speaker": "The SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-393595",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The government argued that the Product Stewardship (Oil) Amendment Bill 2020 and Excise Tariff Amendment Bill 2020 are needed to close a loophole created by a Federal Court decision in Caltex Petroleum v Commissioner of Taxation, ensuring the oil recycling scheme applies to lubricants and greases but excludes diesel and other fuels. The scheme collects and recycles about 300 million litres of waste oil annually from nearly 50,000 businesses, supports 11 recycling facilities, employs 600 Australians directly, and received $7 million in COVID-19 relief funding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excise Tariff Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00085",
+   "assent_date": "2020-09-07"
+  }
+ ]
+}

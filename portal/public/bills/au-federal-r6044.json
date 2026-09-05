@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r6044",
+ "title": "Migration Amendment (Clarification of Jurisdiction) Bill 2018",
+ "short_title": "Migration Amendment (Clarification of Jurisdiction) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6044%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6044%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6044_ems_cdc6ee14-9d68-4d95-a24d-fb69545e12d1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6044%22",
+   "document_date": "2018-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-14",
+  "sentences": [
+   "This bill would change which court hears challenges to migration decisions.",
+   "It would make the Migration Act treat certain types of decisions, including those that appear invalid, the same way for jurisdiction purposes.",
+   "The bill would also confirm that a range of administrative actions count as decisions for the Federal Circuit Court and Federal Court."
+  ],
+  "changes": [
+   "The bill would clarify that a migration decision includes decisions that appear to be outside the court's power.",
+   "It would extend the same treatment to decisions made under the Administrative Appeals Tribunal Act.",
+   "The bill would ensure that the Federal Circuit Court and Federal Court have consistent jurisdiction over these decisions."
+  ],
+  "affected": "People and organisations involved in migration cases, and the Federal Circuit Court and Federal Court.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:29:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359400",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-359403",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-14",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Clarification of Jurisdiction) Bill 2018 amends the Migration Act to clarify that all relevant migration decisions are subject to a uniform judicial review scheme, with first-instance challenges heard in the Federal Circuit Court. The bill responds to the Federal Court decision in *Minister for Immigration and Border Protection v ARJ 17*, which had excluded certain erroneous decisions from the definition of a migration decision."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r5431",
+ "title": "Charter of Budget Honesty Amendment (Regional Australia Statements) Bill 2015",
+ "short_title": "Charter of Budget Honesty Amendment (Regional Australia Statements) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-24",
+ "originating_house": "representatives",
+ "sponsor": "MCGOWAN, Cathy, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10798",
+ "portfolio": "(s) MCGOWAN, Cathy, MP",
+ "status": "lapsed",
+ "status_as_of": "2015-09-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5431%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5431%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5431%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5431_ems_8c51e43a-819c-47e1-8ea2-ba3f06c884de%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5431%22",
+   "document_date": "2015-03-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-308825",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The member moved the Charter of Budget Honesty Amendment (Regional Australia Statements) Bill 2015, requiring the Treasurer to table Regional Australia Statements with each budget and Mid-Year Economic and Fiscal Outlook. The bill aims to ensure government policies assess their economic, social, cultural and environmental impacts on regional Australia, citing the 2014-15 budget's omission of such a statement and its disproportionate effects on areas like Wodonga, Wangaratta, Benalla and Alexandra."
+  }
+ ],
+ "acts": []
+}

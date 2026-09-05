@@ -1,0 +1,642 @@
+{
+ "key": "au-federal-r7117",
+ "title": "Administrative Review Tribunal Bill 2024",
+ "short_title": "Administrative Review Tribunal Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-12-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-06-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7117_ems_776b21f8-b9fa-4028-a9a1-b8e582e6d857%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7117_ems_a25c2b98-0786-405a-b1d7-dbac99b3220e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7117_ems_fc7f6772-77e4-4cf1-b4dc-4148c8cb8f4b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7117_ems_64e825d0-c0ca-464d-a3b2-ec38ce988b49%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7117_ems_2ef721bc-a24b-4903-90bd-df4396d61bb2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7117_ems_acf3bc5f-29ec-4be5-86c8-17e047db654f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7117%22",
+   "document_date": "2023-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00040",
+   "document_date": "2024-06-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2023-12-07",
+  "sentences": [
+   "The bill would replace the Administrative Appeals Tribunal with a new federal body called the Administrative Review Tribunal.",
+   "The new tribunal would have a simple membership structure, merit-based appointments, and powers to manage performance and conduct.",
+   "The bill would create eight jurisdictional areas including Migration, Social Security, and Taxation and Business."
+  ],
+  "changes": [
+   "Establishes a new Administrative Review Tribunal to replace the Administrative Appeals Tribunal.",
+   "Introduces a transparent, merit-based appointment process for tribunal members.",
+   "Creates eight jurisdictional areas within the tribunal.",
+   "Provides the President with powers to manage member performance and conduct.",
+   "Enables the President to issue practice directions to improve accessibility.",
+   "Sets up a guidance and appeals panel to address systemic issues."
+  ],
+  "affected": "Individuals and organisations seeking review of federal administrative decisions, particularly vulnerable community members.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8664",
+   "date": "2024-02-08",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-02-08.11.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it succeeded. ### Motion text > *At the end of the motion, add:* > > *\"and, in respect of the [Administrative Review Tribunal Bill 2023, the Administrative Review Tribunal (Consequential and Transitional Provisions No. 1) Bill 2023 and the Administrative Review Tribunal (Consequential and Transitional Provisions No. 2) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd054), the provisions of the bills be referred immediately to the Legal and Constitutional Affairs Legislation Committee for [inquiry and report by 24 July 2024](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Legal_and_Constitutional_Affairs/ARTBills2447).\"*",
+   "stage": "Committee motion",
+   "ayes": 40,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-08/2"
+  },
+  {
+   "key": "federal-representatives-8759",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2024-03-19.99.1) introduced by Riverina MP [Michael McCormack](https://theyvoteforyou.org.au/people/representatives/riverina/michael_mccormack) (Nationals): > *That the member be no longer heard.* \"The member\" in question is Wills Smith MP [Peter Khalil](https://theyvoteforyou.org.au/people/representatives/wills/peter_khalil) (Labor).",
+   "stage": "Second reading",
+   "ayes": 50,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 73
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-19/2"
+  },
+  {
+   "key": "federal-representatives-8760",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "question": "Administrative Review Tribunal Bill 2023 and two others - Second Reading - Stop the member from speaking",
+   "stage": "Second reading",
+   "ayes": 50,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 71
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-19/3"
+  },
+  {
+   "key": "federal-representatives-8770",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-03-21.3.2) to agree with the main idea. In parliamentary jargon, they voted to read the bill for a second time. This means they can now consider it in greater detail. ### What is this bill's main idea? The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd054) set out the following information on the bill: > *The purpose of the Administrative Review Tribunal Bill 2023 (ART Bill) is to establish the [Administrative Review Tribunal](https://en.wikipedia.org/wiki/Administrative_Review_Tribunal) (the Tribunal), which will replace the [Administrative Appeals Tribunal](https://en.wikipedia.org/wiki/Administrative_Appeals_Tribunal) (AAT). The ART Bill also details the Tribunal’s membership, structure, review procedures and other matters. It also re-establishes the Administrative Review Council.*",
+   "stage": "Second reading",
+   "ayes": 86,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-21/1"
+  },
+  {
+   "key": "federal-senate-8912",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-05-16.194.1) to read the bills for a second time (parliamentary jargon for agreeing with the main idea of the bills). This means our senators can now consider the bill in more detail. ### What do the bills do? The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd054) set out the following key points: * *The purpose of the [Administrative Review Tribunal Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7117) is to establish the [Administrative Review Tribunal](https://en.wikipedia.org/wiki/Administrative_Review_Tribunal) (the Tribunal), which will replace the Administrative Appeals Tribunal. The Bill details the Tribunal’s membership, structure, review procedures and other matters. It also re‑establishes the Administrative Review Council.* * *The [Administrative Review Tribunal (Consequential and Transitional Provisions No. 1) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7127) repeals the Administrative Appeals Tribunal Act 1975 and makes consequential amendments to a number of Commonwealth Acts.* * *These Bills were introduced into Parliament on 7 December 2023 and were referred to the [House of Representatives Standing Committee on Social Policy and Legal Affairs](https://www.aph.gov.au/Parliamentary_Business/Committees/House/Social_Policy_and_Legal_Affairs/~/link.aspx?_id=AA0D2BD8399A43CEB91DEBEFD405391F&_z=z) for inquiry and report. The Committee recommended that the House pass the Bills. Submissions to the inquiry, while generally supportive of the purpose of the Bills include recommendations for further amendment.* * *Both the Senate Standing Committee for the Scrutiny of Bills and the Parliamentary Joint Committee on Human Rights have raised concerns with elements of the Bills.* * *The Bills Digest at a gl",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/19"
+  },
+  {
+   "key": "federal-senate-8913",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2024-05-16.198.3) introduced by the government, which means they will now be included in the bill. ### What did this amendment do? According to the [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7117_ems_2ef721bc-a24b-4903-90bd-df4396d61bb2%22;rec=0): > *The purpose of these amendments to the Administrative Review Tribunal Bill 2024 (the Bill) is to:* > > * *clarify the circumstances in which proceedings can be continued where an applicant dies, or is bankrupt, wound up or in liquidation or administration,* > > * *reinstate the approach to secrecy and non-disclosure obligations that currently applies to staff and members of the AAT,* > > * *strengthen reporting requirements and transparency in relation to systemic issues in the making of reviewable decisions identified in the Tribunal's caseload, by requiring Commonwealth entities and Ministers to inform the Council of actions taken in relation to such issues.*",
+   "stage": "Committee of the whole",
+   "ayes": 35,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/20"
+  },
+  {
+   "key": "federal-senate-8914",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted against amendments moved by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens) on behalf of the Australian Greens, which means they failed. ### Amendment text > *ADMINISTRATIVE REVIEW TRIBUNAL BILL 2024* > > *(1) Clause 237, page 203 (after line 17), at the end of the clause, add:* > >> *Registrar in each State, in the Australian Capital Territory and in the Northern Territory* >> >> *(3) The Principal Registrar must ensure that at least one registrar is appointed in each State, in the Australian Capital Territory and in the Northern Territory.* > > *(2) Clause 243, page 208 (lines 2 to 4), omit the clause, substitute:* > >> *243 Registries* >> >> *The Minister must cause such registries of the Tribunal to be established as the Minister thinks fit, but so that at least one registry shall be established in each State, in the Australian Capital Territory and in the Northern Territory.*",
+   "stage": "Committee of the Whole",
+   "ayes": 13,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/21"
+  },
+  {
+   "key": "federal-senate-8915",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-05-16.202.1) that the remaining stages of the bills be agreed to and the bills be now passed. This means the bills will now return to the House of Representatives, where our MPs will consider the Senate's amendments. ### What do the bills do? The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd054) set out the following key points: * *The purpose of the [Administrative Review Tribunal Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7117) is to establish the [Administrative Review Tribunal](https://en.wikipedia.org/wiki/Administrative_Review_Tribunal) (the Tribunal), which will replace the Administrative Appeals Tribunal. The Bill details the Tribunal’s membership, structure, review procedures and other matters. It also re‑establishes the Administrative Review Council.* * *The [Administrative Review Tribunal (Consequential and Transitional Provisions No. 1) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7127) repeals the Administrative Appeals Tribunal Act 1975 and makes consequential amendments to a number of Commonwealth Acts.* * *These Bills were introduced into Parliament on 7 December 2023 and were referred to the [House of Representatives Standing Committee on Social Policy and Legal Affairs](https://www.aph.gov.au/Parliamentary_Business/Committees/House/Social_Policy_and_Legal_Affairs/~/link.aspx?_id=AA0D2BD8399A43CEB91DEBEFD405391F&_z=z) for inquiry and report. The Committee recommended that the House pass the Bills. Submissions to the inquiry, while generally supportive of the purpose of the Bills include recommendations for further amendment.* * *Both the Senate Standing Committee for the Scrutiny of Bills and the Parliamentary Joint Committee on Human Rights have raised concerns with elements of the Bi",
+   "stage": "Third reading",
+   "ayes": 34,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/22"
+  },
+  {
+   "key": "federal-representatives-8937",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7117_sched_e3e12b03-2d23-4dac-8399-794369507971%22;rec=0) \"That the amendment be agreed to.\" This means the amendment was successful and that it will now become part of the bill. ### Amendment text > *(1) Clause 84, page 69 (line 15), omit \"the applicant\".* > > *(2) Clause 84, page 69 (lines 16 to 22), omit paragraphs (1)(a) and (b), substitute:* > >> *(a) the applicant:* >> >>> *(i) dies; or* >>> >>> *(ii) becomes bankrupt; or* >>> >>> *(iii) is wound up or otherwise ceases to exist; or* >>> >>> *(iv) becomes subject to any form of liquidation or administration (however described); and* >> >> *(b) the Tribunal considers that the applicant cannot continue with the substantive application because of the event mentioned in paragraph (a).* > > *(3) Clause 84, page 69 (lines 23 to 25), omit subclause (2), substitute:* > >> *Another person may apply to continue with substantive application* >> >> *(2) The following persons may apply to the Tribunal to continue with the substantive application:* >> >>> *(a) a legal personal representative, executor, administrator, liquidator or trustee of the applicant for the substantive application;* >>> >>> *(b) a person whose interests are affected by the decision.* > > *(4) Clause 84, page 70 (lines 3 and 4), omit \"the decision does not affect any person's interests other than the applicant\", substitute \"there is no person mentioned in subsection (2) who can continue with the substantive application\".* > > *(5) Clause 84, page 70 (lines 7 and 8), omit \"or (b) occurring in relation to the applicant for the substantive application\".* > > *(6) Clause 264, page 220 (lines 6 to 20), omit subclauses (2) and (3), substitute:* > >> *(2) The report for a financial year must include:* >> >>> *(a) a description of any systemic issues related to the making of rev",
+   "stage": "Consideration of Senate message",
+   "ayes": 86,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-28/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Administrative Review Tribunal Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00040",
+   "assent_date": "2024-06-03"
+  }
+ ]
+}

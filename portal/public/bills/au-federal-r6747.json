@@ -1,0 +1,399 @@
+{
+ "key": "au-federal-r6747",
+ "title": "Dental Benefits Amendment Bill 2021",
+ "short_title": "Dental Benefits Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2021-12-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6747_ems_0de70b3d-ecc1-4d85-a4ad-fb9c3a59e9f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6747%22",
+   "document_date": "2021-08-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00118",
+   "document_date": "2021-12-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-04",
+  "sentences": [
+   "This bill would remove the lower age limit for the Child Dental Benefits Schedule, letting children under 18, including those under two, get dental benefits.",
+   "It amends the Dental Benefits Act 2008 to allow eligible people under 18 to access the schedule, as recommended by a review of that Act.",
+   "The change aims to help parents establish good dental habits early and prevent serious tooth decay later, though the source does not specify a start date."
+  ],
+  "changes": [
+   "Removes the lower eligibility age restriction for the Child Dental Benefits Schedule.",
+   "Allows eligible persons aged under 18, including children under two, to access the schedule.",
+   "Implements recommendation 6 of the Fourth Review of the Dental Benefits Act 2008."
+  ],
+  "affected": "Children under 18, including those under two, and their parents.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7519",
+   "date": "2021-11-24",
+   "house": "senate",
+   "question": "The majority voted against a request for an [amendment](https://www.openaustralia.org.au/senate/?id=2021-11-24.38.1) introduced by West Australian [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means it failed. ### Request text > *That the House of Representatives be requested to make the following amendment:* > > *(1) Schedule 1, items 1 and 2, page 3 (lines 4 to 11), omit the items, substitute:* > > *1 Section 4 (definition of ABSTUDY scheme )* > >> *Repeal the definition.* > > *2 Section 4 (definition of FTB(A) person )* > >> *Repeal the definition.* > > *3 Section 4 (definition of satisfies the means test )* > >> *Repeal the definition.* > > *4 Section 4 (definition of youth allowance )* > >> *Repeal the definition.* > > *5 Subsection 5(1)* > >> *Omit \"(1)\".* > > *6 Subsection 5(2)* > >> *Repeal the subsection.* > > *7 Section 22* > >> *Omit:* >> >>> *• A person qualifies for a voucher for a calendar year if he or she is aged between 2 and 18 years at any time during the calendar year, is an eligible person and satisfies the means test.* >>> >>> *• The Dental Benefit Rules may also provide that an eligible person qualifies for a voucher for a calendar year.* >> >> *substitute:* >> >>> *• A person qualifies for a voucher for a calendar year if the person is an eligible person.* >>> >>> *• The Dental Benefit Rules may provide for certain matters relating to vouchers.* > > *8 Section 23* > >> *Repeal the section, substitute:* >> >> *23 Qualification for a voucher* >> >> *Persons to whom this section applies* >> >>> *(1) This section applies to a person, in relation to a calendar year, if the person is an eligible person.* >> >> *Point in time at which person qualifies for a voucher* >> >>> *(2) The person qualifies for a voucher for the calendar year, in relation to a dental service specified in the Dental Benefits Rules for the purposes of this section, at the first time in the calendar year when the person",
+   "stage": "In committee",
+   "ayes": 8,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 11,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-24/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-410390",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The Dental Benefits Amendment Bill 2021 removes the lower age eligibility restriction to allow children under two years old to access the Child Dental Benefits Schedule, expanding eligibility by around 300,000 children per year at a cost of $5.4 million over four years."
+  },
+  {
+   "slug": "speech-411310",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The Dental Benefits Amendment Bill 2021 removes the lower age restriction for the Child Dental Benefits Schedule, extending coverage to children from birth to 17 years, and is estimated to make an additional 300,000 children aged zero to two eligible each year. The speaker also moved an amendment urging the government to address access to dental and other health services in outer-metropolitan, rural and regional Australia, as well as out-of-pocket costs."
+  },
+  {
+   "slug": "speech-411312",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Dental Benefits Amendment Bill 2021 should be passed to remove the minimum eligibility age of two years, extending the Child Dental Benefits Schedule to all children under 18, citing that 20% of two-year-olds already experience tooth decay and that the change will support 45,000 families annually."
+  },
+  {
+   "slug": "speech-411314",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021, which extends the Child Dental Benefits Schedule to children from birth to 17 years, removing the previous lower age limit. They noted the scheme has provided $2.3 billion in benefits and over 38 million services to three million children since its introduction by the Gillard Labor government in 2012, and criticised the Abbott government for attempting to abolish it in 2016 and cutting $390 million from adult public dental services."
+  },
+  {
+   "slug": "speech-411315",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The Dental Benefits Amendment Bill 2021 removes the lower age eligibility restriction of two years so all children under 18 can access the Child Dental Benefits Scheme, expanding eligibility by an estimated 300,000 children per year at a cost of $5.4 million over four years."
+  },
+  {
+   "slug": "speech-411339",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021 to remove the minimum age of two for the Child Dental Benefits Schedule, expanding eligibility to all children under 18 and adding around 300,000 children per year at a cost of $5.4 million over four years."
+  },
+  {
+   "slug": "speech-411340",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The Dental Benefits Amendment Bill 2021 lowers the eligibility age for the Child Dental Benefits Schedule from two years to zero years, extending coverage to children from birth. The scheme has provided over $2.3 billion in benefits to more than three million children since 2008, and the speaker also highlighted Australia's shortage of dentists and called for increased training."
+  },
+  {
+   "slug": "speech-411342",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The Labor Party supports the Dental Benefits Amendment Bill 2021, which extends the Child Dental Benefits Scheme and removes the lower age eligibility threshold so children can access dental services from birth. The speaker noted the scheme provides up to $1,013 over two years for eligible families, has delivered nearly 40 million services to over three million children, and covers more than 70% of Indigenous children."
+  },
+  {
+   "slug": "speech-411343",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021, which expands the child dental benefits scheme to children aged 0–2, noting the scheme has provided over $2.3 billion in benefits and 38 million services to over three million Australian children. They also criticised the government’s past attempts to cut the program and universal healthcare, and highlighted constituent stories of long waits and high costs for dental care."
+  },
+  {
+   "slug": "speech-411344",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021, which extends the Child Dental Benefits Schedule to children from birth (previously age two), making around 300,000 additional children eligible. They argued dental care should be included in Medicare, citing deteriorating oral health, high costs, and that Australia lags comparable countries."
+  },
+  {
+   "slug": "speech-411345",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021, noting it will extend dental vouchers to children aged zero to two years, adding an estimated 300,000 children from 1 January next year, and urged the government to also establish a Senior Dental Benefits Scheme for older Australians, as recommended by the Royal Commission into Aged Care Quality and Safety."
+  },
+  {
+   "slug": "speech-411346",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported removing the lower age eligibility for the Child Dental Benefits Schedule to include infants aged zero to two, estimating an additional 300,000 children would become eligible. The speaker also criticised the government for cuts to adult public dental services and a GP shortage in the Gilmore electorate, citing constituent cases and urging action on access and out-of-pocket costs."
+  },
+  {
+   "slug": "speech-411347",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The Dental Benefits Amendment Bill 2021 removes the lower age restriction for the Child Dental Benefits Schedule, making children from birth eligible from 1 January 2022, which the speaker supported as a sensible reform that builds on Labor's dental health legacy; an estimated 300,000 additional children aged zero to two will become eligible each year."
+  },
+  {
+   "slug": "speech-411348",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "Supported the Dental Benefits Amendment Bill 2021 to eliminate the lower age limit on the Child Dental Benefits Schedule, extending access to children from birth to 17, predicted to benefit 45,000 children annually; also argued the government has failed to provide adequate funding and access to health care in regional, rural and remote communities."
+  },
+  {
+   "slug": "speech-411349",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021, which removes the minimum age of two to allow children from birth to access the Child Dental Benefits Schedule, benefiting about 300,000 children nationally and over 2,000 in the Blair electorate. The speaker also criticised the coalition government’s past dental funding cuts and called on the new Minister for Regional Health to fix the Distribution Priority Area classification system, which is causing doctor shortages in Ipswich and surrounding areas."
+  },
+  {
+   "slug": "speech-411350",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021, which expands the Child Dental Benefits Schedule to children from birth to two years old, removing the previous lower age limit of two. The speaker argued for a national, means-tested dental scheme for low-income Australians, noting that dental care is not covered by Medicare despite being essential for overall health, and cited that only about half of eligible children currently use the scheme."
+  },
+  {
+   "slug": "speech-411351",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021, which will remove the lower age limit for the child dental benefits scheme, extending coverage to children from birth and making an estimated additional 300,000 children per year eligible from January 2022. The speaker also criticised ongoing GP shortages in rural and regional areas, particularly on the Central Coast of NSW, and noted that a Senate inquiry has been established to investigate the issue."
+  },
+  {
+   "slug": "speech-411352",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that coalition governments have consistently undermined Medicare through freezes and cuts, costing Newcastle $7 million in bulk-billing incentives, and supported the Dental Benefits Amendment Bill 2021 while stressing the need to protect universal healthcare. They welcomed the expansion of the Child Dental Benefits Schedule to children from birth, adding 300,000 eligible children annually."
+  },
+  {
+   "slug": "speech-411353",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Dental Benefits Amendment Bill 2021 and an amendment by Catherine King to expand dental coverage from birth, but criticised the government for failing to address GP shortages in rural and regional areas, citing the Modified Monash Model as flawed. They named Dr Chris Boyle, Dr Sarah Bayley, Dr Damian Welbourne, and practices in Raymond Terrace, Shoal Bay, and Anna Bay, and highlighted that some practices turn away over 100 patients daily, with COVID test results taking up to seven days in the Paterson electorate."
+  },
+  {
+   "slug": "speech-411354",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The Dental Benefits Amendment Bill 2021, delayed to 1 January 2022, will remove the minimum age restriction so children from birth become eligible for the Child Dental Benefits Schedule, adding an estimated 300,000 children per year to the program. The speaker also criticised the New South Wales Berejiklian government for lacking a clear plan for HSC students during COVID-19."
+  },
+  {
+   "slug": "speech-412072",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The Dental Benefits Amendment Bill 2021 removes the lower age restriction to allow all children under 18 to access the Child Dental Benefits Schedule, expanding eligibility by around 300,000 children per year at a cost of $5.4 million over four years."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Dental Benefits Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00118",
+   "assent_date": "2021-12-02"
+  }
+ ]
+}

@@ -1,0 +1,185 @@
+{
+ "key": "au-federal-s1265",
+ "title": "Competition and Consumer Amendment (Australian Consumer Law—Country of Origin Representations) Bill 2020",
+ "short_title": "Competition and Consumer Amendment (Australian Consumer Law—Country of Origin Representations) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-17",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science, Energy and Resources",
+ "status": "passed",
+ "status_as_of": "2020-11-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1265_ems_15829a65-629e-41e9-b49f-79cd0a2829d5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1265%22",
+   "document_date": "2020-06-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00094",
+   "document_date": "2020-11-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-17",
+  "sentences": [
+   "This bill would let the government define certain manufacturing steps that count as 'substantially transformed' for country of origin claims.",
+   "It would amend the Competition and Consumer Act 2010 to allow the minister to prescribe these steps in regulations, and goods made using them would be covered by safe harbour rules.",
+   "The change is the first of three steps, with later steps involving changes to regulations and a new information standard for Australian-made complementary medicines."
+  ],
+  "changes": [
+   "Creates a power to prescribe processes that satisfy the 'substantially transformed' definition.",
+   "Allows traders using prescribed processes to make country of origin claims without breaching certain sections of the Act.",
+   "Extends safe harbour coverage to goods undergoing prescribed processes for complementary medicines."
+  ],
+  "affected": "Manufacturers and brand owners of complementary medicines made in Australia, and traders making country of origin claims.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-397228",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker introduced the Competition and Consumer Amendment (Australian Consumer Law—Country of Origin Representations) Bill 2020, which aims to establish robust country-of-origin labelling for Australian-made complementary medicines. The bill follows a task force review led by Minister Karen Andrews and will allow new regulations to prescribe manufacturing processes meeting the 'substantially transformed' definition, with compliance only required for businesses choosing to use the new safe-harbour provision."
+  },
+  {
+   "slug": "speech-397229",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill but moved an amendment citing concerns about ministerial powers without proper parliamentary scrutiny, delays causing uncertainty for Australian manufacturers, and a proposed bar chart requirement for complementary medicines that would harm a $5 billion industry and put 30,000 jobs at risk, citing opposition from Blackmores and others."
+  },
+  {
+   "slug": "speech-397230",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Australian Consumer Law-Country of Origin Representations) Bill 2020 would unfairly penalise Australia’s complementary medicines industry, a $5 billion sector employing 30,000 people, by preventing products made in Australia with some imported raw ingredients from using the Australian Made logo, citing Holden and Arnott’s Tim Tams as analogous examples."
+  },
+  {
+   "slug": "speech-397324",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the proposed country-of-origin labelling requirements for pharmaceutical goods could harm Australian industries like Blackmores, Arnott's Biscuits, and Rossi Boots, which rely on some imported ingredients but are largely Australian-made, and that the bill should be lenient to protect the $5 billion industry and over 30,000 jobs."
+  },
+  {
+   "slug": "speech-397325",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The bill amends the Competition and Consumer Act to provide a safe harbour for Australian origin claims by complementary medicines, allowing use of the 'Australian Made, Australian Grown' logo; it aims to support the sector's $1 billion exports and 29,000 jobs, with new regulations applying only to businesses that choose to make such claims."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Australian Consumer Law—Country of Origin Representations) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00094",
+   "assent_date": "2020-11-10"
+  }
+ ]
+}

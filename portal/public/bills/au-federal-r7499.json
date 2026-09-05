@@ -1,0 +1,129 @@
+{
+ "key": "au-federal-r7499",
+ "title": "Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026",
+ "short_title": "Major Sporting Events (Indicia and Images) Protection Amendment Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications, Sport and the Arts",
+ "status": "before_parliament",
+ "status_as_of": "2026-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7499_ems_6abf2ca3-3c8d-4528-9cec-4886bd5b3008%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7499%22",
+   "document_date": "2026-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-25",
+  "sentences": [
+   "This bill updates the law that protects commercial rights tied to major sporting events in Australia.",
+   "It would let event organisers be recognised through a government instrument rather than a new Act each time, with rules set for the Olympic and Paralympic Games.",
+   "The bill also sets out what an event must meet to gain protection and how long that protection lasts, and it removes schedules for past events."
+  ],
+  "changes": [
+   "The bill replaces the schedule-based recognition model with an instruments-based approach.",
+   "The bill introduces requirements for an event to be recognised and limits the protection period.",
+   "The bill allows for events to be added and removed by legislative instrument.",
+   "The bill repeals schedules for historical events."
+  ],
+  "affected": "Organisers of major sporting events in Australia, particularly those of international significance, and the government bodies that recognise them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:11Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1204311",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204391",
+   "speaker": "Matt Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

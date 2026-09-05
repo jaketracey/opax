@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-r6352",
+ "title": "Migration Amendment (Streamlining Visa Processing) Bill 2019",
+ "short_title": "Migration Amendment (Streamlining Visa Processing) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration, Citizenship, Migrant Services and Multicultural Affairs",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6352_ems_6c5ae527-a454-499f-b97f-9d093effea86%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6352%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would let the minister decide which visa applicant groups must submit biometric data for their application to be accepted.",
+   "An application would be invalid if a required person does not supply a facial image, fingerprints or another personal identifier, and the minister could also allow other ways to provide them.",
+   "The government says the change is needed because checks of biometrics against law enforcement and partner-country databases have found hidden criminal histories and identity discrepancies."
+  ],
+  "changes": [
+   "Give the minister power to specify groups of visa applicants who must provide one or more personal identifiers for a valid application.",
+   "Make a visa application invalid if the applicant does not supply the required personal identifiers.",
+   "Allow personal identifiers to be given through an identification test or another method the minister sets."
+  ],
+  "affected": "Visa applicants in groups specified by the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5870",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "question": "Migration Amendment (Streamlining Visa Processing) Bill 2019 - Second Reading - Stop privatisation",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-11/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-380426",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Streamlining Visa Processing) Bill 2019 makes the collection of personal identifiers a prerequisite for a valid visa application, supports electronic lodgement and efficient processing, and aims to enhance visa program integrity and protect Australians from criminal and national security threats."
+  }
+ ],
+ "acts": []
+}

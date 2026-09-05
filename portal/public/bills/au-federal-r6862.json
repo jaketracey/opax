@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6862",
+ "title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2022-2023",
+ "short_title": "Appropriation (Parliamentary Departments) Bill (No. 1) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6862%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6862%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6862%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6862_ems_e61e1ccc-b326-4ca4-b6f4-e77cf6a0a83c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6862%22",
+   "document_date": "2022-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-03-29",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "The funding would cover about seven-twelfths of the estimated annual appropriations for 2022-23, plus any Budget measures for that year.",
+   "The remaining five-twelfths, minus Budget measures, would be provided by a separate supply bill to ensure adequate funds for the early part of the financial year."
+  ],
+  "changes": [
+   "The bill proposes appropriations from the Consolidated Revenue Fund for the Parliamentary Departments.",
+   "The bill sets the appropriation amount at about seven-twelfths of the estimated 2022-23 annual appropriations, plus Budget measures.",
+   "The bill separates these appropriations from those for ordinary annual services, as required by the Constitution."
+  ],
+  "affected": "The Parliamentary Departments and their expenditure are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419519",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Appropriation (Parliamentary Departments) Bill (No. 1) 2022-2023 seeks $171 million for the last seven months of the financial year for four parliamentary departments, including $10.3 million for enhanced security infrastructure at Parliament House."
+  }
+ ],
+ "acts": []
+}

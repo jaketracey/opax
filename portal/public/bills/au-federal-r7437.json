@@ -1,0 +1,622 @@
+{
+ "key": "au-federal-r7437",
+ "title": "Treasury Laws Amendment (Building a Stronger and Fairer Super System) Bill 2026",
+ "short_title": "Treasury Laws Amendment (Building a Stronger and Fairer Super System) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-03-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-03-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-03-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7437_ems_ca5dcd95-fbcc-4d6e-8e70-378c07a75670%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7437%22",
+   "document_date": "2026-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00008",
+   "document_date": "2026-03-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-11",
+  "sentences": [
+   "This bill is part of a package that reduces tax breaks for people with very large superannuation balances.",
+   "The package would cut concessions for those with balances over $3 million, with a further cut for those over $10 million, starting in the 2026-27 income year.",
+   "The government estimates the package will raise $2.15 billion over five years from 2024-25."
+  ],
+  "changes": [
+   "The package reduces tax concessions for individuals with superannuation balances above $3 million.",
+   "It applies a further reduction for balances above $10 million.",
+   "The changes take effect from income years starting on 1 July 2026."
+  ],
+  "affected": "Individuals with superannuation balances exceeding $3 million or $10 million.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10005",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "question": "Milton Dick In accordance with standing order 133, I shall now proceed to put the question on the motion moved on the second reading of the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Bill 2026, on which a division was called for and deferred in accordance with the standing order. No further debate is allowed. The question before the House is that this bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 95,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 86,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-05/1"
+  },
+  {
+   "key": "federal-representatives-10006",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "question": "Terry Young by leave—I move opposition amendments (1) and (2) as circulated in my name: (1) Schedule 1, item 14, page 11 (line 5), after \"that you\", insert \"acquired after the commencement of this section and that you\". (2) Schedule 1, item 14, page 11 (line 7), after \"superannuation interest\", insert \"acquired after the commencement of this section\". Like everyone, I was pleased to see that the government bowed to coalition pressure to remove the unrealised gains measure in this bill, along with introducing indexing of the $3 million threshold. Australians rightly raised serious concerns about the proposal to tax unrealised gains—in other words, taxing people on money before it was even earned. The title of this bill speaks of a stronger and fairer super system, but the key questions Australians will ask is: what exactly is fair about changing the rules after people have already made long-term decisions based on the rules that existed at the time? Australians plan their financial futures over decades. They work hard, save diligently and structure their retirement based on the frameworks set by the government. When governments change those rules after the fact, it undermines confidence in the system. Let me be clear about one thing. Most Australians will never have $3 million in superannuation. Sadly, that includes me. That is not really the point of this debate. The point is whether Australians can trust that the rules they plan their lives around will remain stable. Stability creates certainty for investors which inspires confidence. Ask any fair dinkum Australian how fair it is to move the goal posts after people have structured their entire financial future under one set of rules only to have those rules changed later on. We have a bill here that penalises hard-working and aspirational Australians—farmers, small-business owners and others who have worked for decades to build their retirement savings. Many of these people have made financial decisions— Hon. Membe",
+   "stage": "Consideration in detail",
+   "ayes": 37,
+   "noes": 92,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-05/2"
+  },
+  {
+   "key": "federal-representatives-10007",
+   "date": "2026-03-05",
+   "house": "representatives",
+   "question": "Allegra Spender I move: (1) Schedule 1, item 14, page 8 (after line 19), after section 296-25, insert: 296-26 Exemption — one-off amnesty If your superannuation balance for the 2026-27 income year exceeds the \\*large superannuation balance threshold and you are in the accumulation phase, you may make a one-off withdrawal from the account up to the \\*large superannuation balance threshold. I want to acknowledge the government's piece of legislation, the Treasury Laws Amendment (Building a Stronger and Fairer Super System) Bill 2026, which I support. I particularly want to acknowledge the changes to the legislation which I think have made it a very positive piece of legislation that is appropriately addressing intergenerational inequity at the same time as being, on balance, fair to existing super holders. However, in the current piece of legislation, there are people with high balances who are under 60, so they cannot remove their super from their current accounts. I think that is of concern. The great challenge of changing super laws is that the money is locked up. You can't touch it unless you're at least over 60 and retired. If you made decisions based on previous conditions in terms of a tax statement and then it is changed materially, I think it is fair to give people the chance to say: 'I wouldn't have made that decision. I'd like to now withdraw these funds.' It doesn't affect a lot of people, but I think, on principle, giving people that choice is important. I do think it's worth noting that the government has doubled the tax rate, and in some cases it has gone from 15 per cent to 40 per cent. That is a material change in the taxation arrangements of superannuation with these high balances. I think that it is appropriate in that case to offer options for removing this. I know that the government has in previous conversations with the Assistant Treasurer noted that there may be constitutional issues in relation to pensions. My question to the government then w",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 83,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 75
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 92
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-03-05/3"
+  },
+  {
+   "key": "federal-senate-10038",
+   "date": "2026-03-10",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to the order agreed to earlier today, the time allotted for debate on the bills has expired. I will now put the question before the chair and then put the questions on the remaining stages of the bills. I will begin with the second reading amendment circulated by One Nation. _One Nation's circulated amendment_ At the end of the motion, add \", but the Senate: (a) notes that: (i) Australians have been incentivised to accumulate large balances in superannuation because of extremely punitive income tax rates, (ii) the Government's spending crisis has led them to raid Australians' retirement savings, (iii) the debate on these bills has been guillotined and fast-tracked in a dirty deal between Labor and the Greens, (iv) One Nation agrees with the low income super tax offset threshold being raised to help low income earners and One Nation's vote against these bills is not in opposition to this measure, (v) superannuation belongs to Australians, it's their money and they should be able to direct it where they see fit, (vi) One Nation policy calls on Australians to be able to invest their superannuation in a person's primary residence, (vii) the Government is attempting to tax its way out of its own economic mismanagement instead of tackling spending blowouts and productivity, (viii) superannuation was brought in to incentivise retirement and changes create uncertainty for long-term planning, (ix) fees charged by union aligned superannuation funds that donate to Labor are exorbitant and decrease Australians' superannuation investments, and (x) raising punitive taxes incentivises wealth leaving Australia; and (b) calls on the Government to: (i) implement comprehensive tax reform and reduce income tax paid by all Australians, (ii) ensure any revenue raised from new taxes under these bills is directed to reducing income tax paid by Australians, and (iii) get its spending under control, instead of raiding Australians' retirement savings\". Claire Chandler I ask",
+   "stage": "Limitation of debate",
+   "ayes": 4,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-10/16"
+  },
+  {
+   "key": "federal-senate-10039",
+   "date": "2026-03-10",
+   "house": "senate",
+   "question": "Sue Lines The question is that the remainder of the second reading amendment circulated by One Nation be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 20,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-10/17"
+  },
+  {
+   "key": "federal-senate-10040",
+   "date": "2026-03-10",
+   "house": "senate",
+   "question": "Sue Lines The question is that these bills be now read a second time.",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-10/18"
+  },
+  {
+   "key": "federal-senate-10041",
+   "date": "2026-03-10",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Building a Stronger and Fairer Super System) Bill 2026 - Limitation of Debate - Keep schedules 1-3 as they are",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-10/19"
+  },
+  {
+   "key": "federal-senate-10042",
+   "date": "2026-03-10",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Building a Stronger and Fairer Super System) Bill 2026 and another - Limitation of Debate - Pass the bills",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 22,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-10/20"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1200099",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200100",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200517",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200518",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200519",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-03-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200702",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1200846",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201101",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-10",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Building a Stronger and Fairer Super System) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00008",
+   "assent_date": "2026-03-13"
+  }
+ ]
+}

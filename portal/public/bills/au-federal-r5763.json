@@ -1,0 +1,84 @@
+{
+ "key": "au-federal-r5763",
+ "title": "Renew Australia Bill 2016",
+ "short_title": "Renew Australia Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-21",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "&#34;Australian Greens&#34;",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-06-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5763%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5763%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5763%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5763_ems_57925f26-aa24-4afc-837e-91d2f475c154%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5763%22",
+   "document_date": "2016-11-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-21",
+  "sentences": [
+   "This bill is part of a package that would set up Renew Australia, a new body tasked with steering the nation's shift to cleaner energy.",
+   "The authority would be created by statute, and its operation would begin once Parliament allocates funds for it.",
+   "The package also aims to cut greenhouse gas emissions, overhaul the electricity grid, and ensure coal plants shut down in an orderly fashion, with support for communities affected by the transition."
+  ],
+  "changes": [
+   "Establishes the Renew Australia authority.",
+   "Sets the start date for the authority's operations as the day a budget appropriation is made.",
+   "Requires a transition plan for affected communities.",
+   "Requires the closure of coal-fired power stations to be managed in a planned way."
+  ],
+  "affected": "The authority itself, communities affected by the energy transition, and the electricity system.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:16Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-337654",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Greens introduced the Renew Australia Bill 2016 to establish a $500 million statutory authority, Renew Australia, tasked with planning a transition to at least 90% renewable electricity by 2030, doubling energy productivity, and creating a $250 million clean energy transition fund for coal workers and communities. The bill also proposes pollution intensity standards to phase out coal-fired power stations, citing a US warning that sea levels could rise 1.5 metres by 2050 even if all pollution stopped tomorrow."
+  }
+ ],
+ "acts": []
+}

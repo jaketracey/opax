@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-r5217",
+ "title": "Export Legislation Amendment Bill 2014",
+ "short_title": "Export Legislation Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture",
+ "status": "passed",
+ "status_as_of": "2014-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5217_ems_29d5bc04-37d3-4ad0-a0a5-aecbed95fedb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5217%22",
+   "document_date": "2014-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00037",
+   "document_date": "2014-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-27",
+  "sentences": [
+   "This bill is part of a package that would fix technical defects in export laws and allow the Department of Agriculture to recover costs for export services.",
+   "The package would align definitions in the Export Inspection and Meat Charges Collection Act 1985 with those in the Export Control Act 1982.",
+   "The bill would also amend the Australian Meat and Live-stock Industry Act 1997 to let the department recover costs for quota arrangements run by other countries."
+  ],
+  "changes": [
+   "Remedies technical defects in the Export Control Act 1982, Export Inspection and Meat Charges Collection Act 1985, and the Imported Food Control Act 1992.",
+   "Aligns definitions in the Export Inspection and Meat Charges Collection Act 1985 with the Export Control Act 1982.",
+   "Amends the Australian Meat and Live-stock Industry Act 1997 to enable cost recovery for quota arrangements administered by other countries."
+  ],
+  "affected": "The Department of Agriculture and exporters using its services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:19Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-287395",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287396",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287397",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289193",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289196",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289197",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289198",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-289201",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-05-28",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Legislation Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00037",
+   "assent_date": "2014-06-25"
+  }
+ ]
+}

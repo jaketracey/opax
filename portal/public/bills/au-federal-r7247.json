@@ -1,0 +1,434 @@
+{
+ "key": "au-federal-r7247",
+ "title": "Wage Justice for Early Childhood Education and Care Workers (Special Account) Bill 2024",
+ "short_title": "Wage Justice for Early Childhood Education and Care Workers (Special Account) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7247_ems_b341c331-b407-4d6e-9835-44c244fe74b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7247_ems_f98f61e1-0bb8-4f10-8cc8-da11d1730b3d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7247%22",
+   "document_date": "2024-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00140",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-09-12",
+  "sentences": [
+   "This bill would set up a dedicated government fund to pay for wage increases for early childhood education and care workers.",
+   "The fund would give grants to approved childcare providers, who must apply and limit fee rises so families do not pay more.",
+   "The fund would close on 30 June 2028, and grants would initially start in December 2024 under existing laws before moving to the new system in mid-2025."
+  ],
+  "changes": [
+   "Creates a special account to hold money for wage grants.",
+   "Empowers the Secretary of the Department to make grants to approved providers.",
+   "Ties grants to a condition that providers limit fee increases.",
+   "Sets a sunset date of 30 June 2028 for the account.",
+   "Provides transitional arrangements for funding agreements before 1 July 2025.",
+   "Allows the Minister to make rules and the Secretary to delegate powers."
+  ],
+  "affected": "Early childhood education and care workers and approved providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:54Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9211",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7247_amend_57377882-19e6-4df8-b761-42cf178d9220%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the usual motion will remain as it is. ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House notes:* > >> *(1) the Government’s economic mismanagement and cost-of-living crisis has led to higher wage bills, and higher utility, rent and grocery bills for providers;* >> >> *(2) the bill will place further administrative burden on providers, particularly small and medium providers;* >> >> *(3) the bill will put further financial pressure on providers who will have to cover the majority of the on costs, cannot increase their fees and have to pay the wages upfront, whilst receiving reimbursement in arrears;* >> >> *(4) the Government has done nothing to address child care deserts and thin markets around the country, and this bill will not increase access for parents who currently have none; and* >> >> *(5) the bill is a one-off sugar hit, which will only increase inflation further contributing to current cost-of-living pressures”.*",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-04/1"
+  },
+  {
+   "key": "federal-senate-9274",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2024-11-26.294.1) to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Victorian Senator [Sarah Henderson](https://theyvoteforyou.org.au/people/senate/victoria/sarah_henderson) (Liberal). ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) the Government's economic mismanagement and cost-of-living crisis has led to higher wage bills, and higher utility, rent and grocery bills for providers;* > > *(b) the bill will place further administrative burden on providers, particularly small and medium providers;* > > *(c) the Government's decision to include a workplace instrument in this bill is unnecessary and puts pressure on service providers to unionise their workforce;* > > *(d) the bill will put further financial pressure on providers who will have to cover the majority of the on-costs, cannot increase their fees and have to pay the wages upfront, whilst receiving reimbursement in arrears;* > > *(e) the Government has still not provided all relevant details of the grant program to service providers, which has put further undue stress on service providers, and created confusion within the sector;* > > *(f) the Government has done nothing to address child care deserts and thin markets around the country, and this bill will not increase access for parents who currently have none; and* > > *(g) the bill is a one-off sugar hit, which will only increase inflation and further contribute to current cost-of-living pressures\".*",
+   "stage": "Second reading",
+   "ayes": 24,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/22"
+  },
+  {
+   "key": "federal-senate-9275",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-11-26.300.1) to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Victorian Senator [Steph Hodgins-May](https://theyvoteforyou.org.au/people/senate/victoria/steph_hodgins-may) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to:* > >> *(a) ensure that early childhood education and care is universal, free and high-quality across Australia; and* >> >> *(b) commit to fully funding the outcomes of the Fair Work Commission's gender pay equity research project, including ensuring that educators continue to receive funded pay rises after the 2-year period of the grant program proposed in this bill\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/23"
+  },
+  {
+   "key": "federal-senate-9276",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-11-26.302.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes:* > >> *(i) more than 22,900 Aboriginal and Torres Strait Islander children and young people are in out-of-home care,* >> >> *(ii) the child protection system, which was built to remove children from their families, continues to inflict harm on First Nations families,* >> >> *(iii) the Productivity Commission's inquiry report, A path to universal early childhood education and care, has found that governments continue to fail on their commitments to shared decision making and supporting the community-controlled sector,* >> >> *(iv) improving outcomes for First Nations communities starts with supporting children and allowing First Nations communities to self-determine their own solutions for caring for young people; and* > > *(b) calls on the Government to:* > >> *(i) commit to shared decision making and handing over control of services for First Nations young people and families to the community-controlled sector,* >> >> *(ii) ensure accountability in funding for early years by prioritising community-controlled organisations delivering services and outcomes for families, and* >> >> *(iii) provide additional supports for smaller early years organisations to develop their own enterprise agreements\".*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/24"
+  },
+  {
+   "key": "federal-senate-9277",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted against [Greens amendments](https://www.openaustralia.org.au/senate/?gid=2024-11-26.318.1), which were introduced by Victorian Senator [Steph Hodgins-May](https://theyvoteforyou.org.au/people/senate/victoria/steph_hodgins-may) (Greens). The amendments would have increased the wage increase to 25%. ### Amendment text > *(1) Clause 11, page 6 (lines 20 to 23), omit paragraph (3)(a), substitute:* > >> *(a) include provisions to permit amounts paid to the recipient under the grant to be used in relation to the remuneration of workers, who are within a class specified in the agreement for this purpose, that is at least 25% above the worker's current remuneration; and*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/25"
+  },
+  {
+   "key": "federal-senate-9278",
+   "date": "2024-11-26",
+   "house": "senate",
+   "question": "The majority voted against [Greens amendments (1) and (2)](https://www.openaustralia.org.au/senate/?gid=2024-11-26.322.1), which were introduced by Victorian Senator [Steph Hodgins-May](https://theyvoteforyou.org.au/people/senate/victoria/steph_hodgins-may) (Greens). The amendments would have introduced a [sunset provision](https://en.wikipedia.org/wiki/Sunset_provision). ### Amendment text > *(1) Clause 5, page 3 (after line 19), after the definition of approved provider , insert:* > >> *Fair Work Commission has the same meaning as in the Fair Work Act 2009.* > > *(2) Clause 17, page 9 (lines 22 and 23), omit the clause, substitute:* > >> *17 Sunset provision* >> >> *This Act ceases to have effect at the later of the following times:* >> >>> *(a) the end of 30 June 2028;* >>> >>> *(b) the end of the period of six months beginning on the day the Fair Work Commission makes a determination in relation to each of the following modern awards (within the meaning of the Fair Work Act 2009 ) as part of the review known as the Gender undervaluation - priority awards review:* >>> >>>> *(i) AM 2024/19 ( Pharmacy Industry Award 2020 );* >>>> >>>> *(ii) AM 2024/20 ( Health Professionals and Support Services Award 2020 );* >>>> >>>> *(iii) AM 2024/21 ( Social, Community, Home Care and Disability Services Industry Award 2010 );* >>>> >>>> *(iv) AM 2024/22 ( Aboriginal and Torres Strait Islander Health Workers and Practitioners and Aboriginal Community Controlled Health Services Award 2020 );* >>>> >>>> *(v) AM 2024/23 ( Children’s Services Award 2010 );* >>>> >>>> *(vi) AM 2024/25 ( Social, Community, Home Care and Disability Services Industry Award 2010 );* >>>> >>>> *(vii) AM 2024/27 ( Social, Community, Home Care and Disability Services Industry Award 2010).*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-26/26"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Wage Justice for Early Childhood Education and Care Workers (Special Account) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00140",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

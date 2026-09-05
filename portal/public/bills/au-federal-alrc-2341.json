@@ -1,0 +1,118 @@
+{
+ "key": "au-federal-alrc-2341",
+ "title": "Higher Education Support Amendment (Asian Century) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Tertiary Education, Skills, Science and Research",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00112",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-825312",
+   "speaker": "Brett Mason",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-28",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (Asian Century) Bill 2013 expands OS-HELP loan eligibility for Australian students to study in Asia from 1 January 2014. The coalition supports the bill but advocates a wait-and-see approach and its own New Colombo Plan, while criticising the government's use of the guillotine to limit debate, noting 216 bills were forced through the Senate in the 43rd parliament."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (Asian Century) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00112",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

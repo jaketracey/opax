@@ -1,0 +1,81 @@
+{
+ "key": "au-federal-s1151",
+ "title": "Parliamentary Joint Committee on the Australia Fund Bill 2018",
+ "short_title": "Parliamentary Joint Committee on the Australia Fund Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-14",
+ "originating_house": "senate",
+ "sponsor": "BURSTON, Sen Brian",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10848",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1151%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1151%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1151%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1151%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1151_ems_82af6a36-477f-4a28-b367-6559a0e658c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1151%22",
+   "document_date": "2018-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-14",
+  "sentences": [
+   "This bill would create a parliamentary committee to look into setting up an Australia Fund.",
+   "The fund would be able to give emergency relief, lend money, guarantee loans, waive interest, buy bank loans, and take over businesses' property for a set time.",
+   "The committee would hold public meetings in every state capital and many country towns."
+  ],
+  "changes": [
+   "Establishes a joint parliamentary committee to investigate an Australia Fund.",
+   "The fund would support and rebuild rural and manufacturing industries during crises like natural disasters or financial shocks.",
+   "The committee would examine the impact of drought and global price changes on farming.",
+   "The committee would review bankruptcy and insolvency laws to help companies survive hard times.",
+   "The committee would also review tax laws related to bankruptcy."
+  ],
+  "affected": "Australian rural and manufacturing industries, businesses, and communities hit by natural disasters or financial crises.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

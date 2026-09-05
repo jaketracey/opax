@@ -1,0 +1,822 @@
+{
+ "key": "au-federal-r5826",
+ "title": "Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017",
+ "short_title": "Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "passed",
+ "status_as_of": "2017-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5826_ems_e0207b3c-41de-45b8-9631-4d08f9f88e23%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5826_ems_50b06630-f0ba-4529-8bdf-d662e7fb7140%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5826%22",
+   "document_date": "2017-03-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00101",
+   "document_date": "2017-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-01",
+  "sentences": [
+   "The bill would increase penalties for serious workplace law breaches and make franchisors and parent companies liable for underpayments in their networks.",
+   "It would give the Fair Work Ombudsman stronger powers to gather evidence and investigate exploitation.",
+   "The bill would also ban employers from forcing workers to return wages in cash."
+  ],
+  "changes": [
+   "Introduces higher penalties for serious contraventions of workplace laws.",
+   "Increases penalties for record-keeping failures.",
+   "Makes franchisors and holding companies responsible for underpayments where they knew or should have known and failed to act.",
+   "Bans employers from unreasonably requiring employees to make payments.",
+   "Strengthens the Fair Work Ombudsman's evidence-gathering powers.",
+   "Gives the Fair Work Ombudsman new powers to pursue those who obstruct investigations or provide false information."
+  ],
+  "affected": "Vulnerable workers, including migrant workers, and franchisors, holding companies, and their franchisees or subsidiaries.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:34Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4683",
+   "date": "2017-05-11",
+   "house": "representatives",
+   "question": "Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 - Second Reading - Keep penalty rates",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-05-11/2"
+  },
+  {
+   "key": "federal-senate-4788",
+   "date": "2017-08-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a motion to agree with the [bill's](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5826) main idea. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means the Senate can now discuss the bill in more detail. ### What is the bill's main idea? According to the [bill's homepage](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5826), the bill will: > *increase maximum civil penalties for certain serious contraventions of the Act [that is, the [Fair Work Act 2009](https://en.wikipedia.org/wiki/Fair_Work_Act_2009)]; hold [franchisors](https://en.wikipedia.org/wiki/Franchising) and [holding companies](https://en.wikipedia.org/wiki/Holding_company) responsible for certain contraventions of the Act by their franchisees or [subsidiaries](https://en.wikipedia.org/wiki/Subsidiary) where they knew or ought reasonably to have known of the contraventions and failed to take reasonable steps to prevent them; clarify the prohibition on employers unreasonably requiring their employees to make payments in relation to the performance of work; provide the [Fair Work Ombudsman](https://en.wikipedia.org/wiki/Fair_Work_Ombudsman) (FWO) with evidence-gathering powers similar to those available to corporate regulators such as the [Australian Securities and Investment Commission](https://en.wikipedia.org/wiki/Australian_Securities_and_Investments_Commission) and the [Australian Competition and Consumer Commission](https://en.wikipedia.org/wiki/Australian_Competition_and_Consumer_Commission); and prohibit the hindering or obstructing of the FWO and or an inspector in the performance or his or her functions or powers, or the giving of false or misleading information or documents.*",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 38,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-15/4"
+  },
+  {
+   "key": "federal-senate-4871",
+   "date": "2017-09-04",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-04.22.1) introduced by NSW Senator [David Leyonhjelm](https://theyvoteforyou.org.au/people/senate/nsw/david_leyonhjelm) (Liberal Democratic Party), which means they failed. Senator Leyonhjelm [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-04.22.1): > *... item (1) limits the penalty provisions so that they apply to franchisors only if the franchisor influences the franchisee's compliance with employment laws. Items (2) to (6) limit the penalty provisions so that they only apply to franchisors and bodies corporate who knew, or ought to have known, in the ordinary course of business that their franchisees and subsidiaries would fail to comply with employment laws and that the franchisor has a material impact on the franchisee entity's compliance or ability to comply.* ### Amendment text > *(1) Schedule 1, item 17, page 9 (line 16), omit \"affairs.\", substitute \"affairs; and\".* > > *(2) Schedule 1, item 17, page 9 (after line 16), at the end of subsection 558A(2), add:* > >> *(c) that influence or control has a material impact on the franchisee entity's compliance or ability to comply with one or more of the civil remedy provisions referred to in subsection 558B(7).* > > *(3) Schedule 1, item 17, page 9 (line 32), after \"known\", insert \", in the ordinary course of business,\".* > > *(4) Schedule 1, item 17, page 10 (line 5), after \"known\", insert \", in the ordinary course of business,\".* > > *(5) Schedule 1, item 17, page 10 (line 18), after \"known\", insert \", in the ordinary course of business,\".* > > *(6) Schedule 1, item 17, page 10 (line 23), after \"known\", insert \", in the ordinary course of business,\".*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 39,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-04/2"
+  },
+  {
+   "key": "federal-senate-4872",
+   "date": "2017-09-04",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?id=2017-09-04.19.2) introduced by NSW Senator [Doug Cameron](https://theyvoteforyou.org.au/people/senate/nsw/doug_cameron) (Labor), which means they passed. ### Amendment text See [sheet 8144](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr5826_amend_50985f82-84eb-4874-9a22-63d3a25b3cbc%22;rec=0) for the text of amendments (28) to (30), (32) to (34) and (39) and [sheet 8218](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr5826_amend_2aea85f9-68bf-41ba-a60c-725bbec6a2d6%22;rec=0) for the text of amendment (1).",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 37,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-04/3"
+  },
+  {
+   "key": "federal-senate-4875",
+   "date": "2017-09-04",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-04.53.1) introduced by NSW Senator [Doug Cameron](https://theyvoteforyou.org.au/people/senate/nsw/doug_cameron) (Labor), which means they failed. Senator Cameron [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-04.53.1): > *These amendments do three things. Firstly, they limit the definition of 'responsible franchisor' so that a franchisor has to have 'a degree of influence or control, not a significant degree'. Secondly, they extend the new civil liability provisions where labour hire companies are used and across the supply chain. They reverse the onus of proof to make it harder for franchisors and big companies to escape liability.*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 39,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-04/6"
+  },
+  {
+   "key": "federal-senate-4876",
+   "date": "2017-09-04",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-04.206.1) introduced by NSW Senator [Lee Rhiannon](https://theyvoteforyou.org.au/people/senate/nsw/lee_rhiannon) (Greens), which means they failed. Senator Rhiannon [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-04.206.1): > *One thing that's really come out in this debate is that the government are making out that they're looking after vulnerable workers, but that argument has fallen over time and time again. If they were really sincere, this is where they would support these amendments, because these amendments are a simple package dealing with how we can recover the unpaid amounts for franchise employees. That's the essence, surely, of what this legislation is about. We're talking about vulnerable workers and we're talking about them being ripped off. Surely we should be doing something about it. This doesn't just put some airy-fairy measures in place; it gets to the heart of the issue—getting the money back to them.* ### Amendment text See OpenAustralia.org.au for a [copy of the amendment text](https://www.openaustralia.org.au/senate/?gid=2017-09-04.206.1).",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-04/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-342636",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Protecting Vulnerable Workers) Bill was introduced, increasing penalties tenfold for serious and deliberate underpayments, banning \"cash back\" demands, and making franchisors liable for underpayments if they turned a blind eye. It also strengthens the Fair Work Ombudsman's evidence-gathering powers and restores $20.1 million in funding."
+  },
+  {
+   "slug": "speech-345654",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 as a deficient but necessary step, and called on the government to legislate to prevent the Fair Work Commission’s penalty rate cuts, which would reduce pay for nearly 700,000 Australians by up to $77 a week, and to broaden the bill to address wider exploitation including sham contracting, labour hire licensing, and phoenixing."
+  },
+  {
+   "slug": "speech-345656",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017, arguing it strengthens penalties and franchisor accountability to curb exploitation of vulnerable workers, especially foreign visa holders, while criticising the opposition for previously cutting the Fair Work Ombudsman’s budget by 17% (200 staff) and for opposing the bill’s measures."
+  },
+  {
+   "slug": "speech-345657",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 but argued it was insufficient and half‑baked, calling for broader reforms including action on sham contracting, phoenixing and penalty rates, and noted 7‑Eleven’s remediation of tens of millions of dollars to over 2,000 underpaid employees."
+  },
+  {
+   "slug": "speech-345771",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 would better protect workers from exploitation, citing Taskforce Cadena's 267 allegations and $3 million recovered for visa holders in 2015-16. The bill introduces higher penalties for serious workplace law breaches, strengthens Fair Work Ombudsman evidence-gathering powers, and makes franchisors liable for underpayments by franchisees if they knew or should have known of the contraventions."
+  },
+  {
+   "slug": "speech-345774",
+   "speaker": "John McVeigh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The Turnbull government's Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 introduces higher penalties for deliberate and systemic underpayment, prohibits cash-back demands, and strengthens accountability for franchisors and holding companies. The bill also expands the Fair Work Ombudsman's powers and builds on the Migrant Workers' Taskforce, targeting exploitation in franchises like 7-Eleven and in horticulture."
+  },
+  {
+   "slug": "speech-345775",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The coalition government argued the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 targets unscrupulous employers who underpay workers, imposing stiff penalties and giving the Fair Work Ombudsman new evidence-gathering powers. The speaker contrasted this with the opposition, accusing the Leader of the Opposition of approving agreements that reduced workers' pay and the Labor Party of protecting union corruption."
+  },
+  {
+   "slug": "speech-345777",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017, which introduces higher penalties for serious workplace law contraventions, increased penalties for record-keeping failures, franchisor and holding company liability for underpayments, a ban on employers requiring rebate payments, and stronger evidence-gathering powers for the Fair Work Ombudsman. He also argued that union deals reducing Sunday penalty rates for workers at KFC, McDonald's, Pizza Hut, and David Jones are comparable to the 7-Eleven exploitation case, and condemned unconscionable conduct by Coles and Woolworths towards suppliers."
+  },
+  {
+   "slug": "speech-345778",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 is a welcome start but does not go far enough, criticizing the government for using it as a union-bashing exercise instead of addressing widespread worker exploitation, sham contracting, phoenixing, and the impact of penalty rate cuts affecting up to 700,000 workers by $77 per week. They announced Labor’s support for the bill while pushing for stronger measures, including their own Fair Work Amendment (Protecting Take-Home Pay) Bill 2017 to stop penalty rate reductions."
+  },
+  {
+   "slug": "speech-345779",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017, which increases penalties for deliberate and systemic underpayment, outlaws cashback schemes, and clarifies franchisor liability. They contrasted the government's actions—including Taskforce Cadena, a $20 million funding boost to the Fair Work Ombudsman, and previous reforms—with Labor's record of cutting the Ombudsman's budget by 17% and having no policy on vulnerable workers while in government."
+  },
+  {
+   "slug": "speech-345780",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 is a positive but insufficient step, criticising the Turnbull government for failing to protect low-paid workers, opposing penalty rate cuts, and prioritising $50 billion in corporate tax cuts. The speaker supported the bill but called for improvements, including extending protections to prospective employees, adding procedural safeguards for the Fair Work Ombudsman’s compulsory questioning powers, and reversing the onus of proof for franchisors."
+  },
+  {
+   "slug": "speech-345782",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The Turnbull government's Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 introduces tougher laws to protect vulnerable workers from cashback scams and exploitation, addressing widespread underpayment at franchises including 7-Eleven, Muffin Break, Gloria Jeans, Subway, Caltex, Dominoes and Pizza Hut."
+  },
+  {
+   "slug": "speech-345939",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 would increase penalties for serious, deliberate underpayment to 10 times current levels, strengthen penalties for record-keeping and pay slip breaches, and outlaw cashback schemes. The speech also highlighted $20 million in additional funding for the Fair Work Ombudsman and the Migrant Workers' Taskforce chaired by Allan Fels."
+  },
+  {
+   "slug": "speech-345944",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017, arguing it would hold exploitative employers accountable and level the playing field for compliant businesses, while highlighting the 7-Eleven franchise case as an example of systemic abuse. They also called for stronger whistleblower protections and better enforcement of unpaid superannuation, citing constituents in the electorate of Mayo who were owed thousands of dollars."
+  },
+  {
+   "slug": "speech-345945",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 is a long-overdue but inadequate start, falling short of Labor’s proposed reforms on sham contracting, labour hire licensing, phoenixing, and penalty rate protections. They criticised the Turnbull government for supporting penalty rate cuts affecting over 8,800 retail and 4,600 hospitality workers in the electorate of Lalor, and for failing to address systemic wage theft, casualisation, and the need for stronger union representation."
+  },
+  {
+   "slug": "speech-345947",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 is necessary to address systemic worker exploitation, as shown by the 7-Eleven scandal where 60% of stores underpaid staff, franchisees demanded cash"
+  },
+  {
+   "slug": "speech-345949",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 is a welcome but inadequate start, and criticised the Turnbull government for failing to protect penalty rates affecting 700,000 workers (13,000 in Herbert) or address sham contracting, labour hire licensing, and phoenixing, while urging support for Labor’s bill to stop penalty rate cuts."
+  },
+  {
+   "slug": "speech-345950",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's internal incoherence and its four-year record of cutting workers' conditions through the ABCC, registered organisations bill and penalty rate reductions, quoting the Treasurer's admission in the budget speech that \"it's been a fair while since most hardworking Australians have had a decent pay rise.\""
+  },
+  {
+   "slug": "speech-345957",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 but argued it was a shallow, missed opportunity that fails to meaningfully address systemic worker exploitation, particularly of temporary visa holders. They criticised the government for opposing collective bargaining and unions, citing examples of exploitation at Myer, 7-Eleven and Pizza Hut."
+  },
+  {
+   "slug": "speech-345959",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 as a start but argued it falls short of needed reforms, criticising the government for not adopting Labor's stronger measures such as reversing the burden of proof on franchisors, criminalising coercion of temporary overseas workers, and licensing labour hire companies. The speaker cited exploitation at Myer, 7-Eleven, Pizza Hut, and Baiada, and opposed the cut to penalty rates affecting up to 700,000 workers."
+  },
+  {
+   "slug": "speech-345961",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-10",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017, but argued it is insufficient and fails to address sham contracting, phoenixing, coercion of overseas workers, wage recovery, or penalty rate cuts. The speaker stated that up to 700,000 Australians will lose up to $77 per week due to penalty rate cuts, and criticised Prime Minister Turnbull, Minister Michaelia Cash, and other government members for supporting such cuts, while promoting Labor's private member's bill to protect take-home pay."
+  },
+  {
+   "slug": "speech-346035",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 but argued it was insufficient, citing exploitation of workers by major companies like Myer, 7-Eleven, and Pizza Hut, and raising concerns about gaps in provisions for pre-arrival visa payments, the right to silence, and the evidential burden of proof on workers."
+  },
+  {
+   "slug": "speech-346036",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017 as a weak, ineffective response to widespread exploitation of vulnerable workers, particularly temporary migrants, and argued it fails to address sham contracting, labour hire licensing, phoenixing, or wage recovery. The speaker also condemned the government's immigration and citizenship changes for entrenching a guest-worker class and driving down wages for all Australians, and called for stronger enforcement by the Fair Work Ombudsman."
+  },
+  {
+   "slug": "speech-346037",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-11",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Fair Work Amendment (Protecting Vulnerable Workers) Bill 2017, which increases penalties for employer exploitation and holds franchisors accountable, and criticised the government for spending $46 million on union investigations rather than protecting workers. He cited widespread underpayment of young and migrant workers in the Illawarra, including specific cases like Ashleigh Mounser and Dave McLachlan, a union delegate allegedly sacked by South32 for a peaceful protest."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Protecting Vulnerable Workers) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00101",
+   "assent_date": "2017-09-14"
+  }
+ ]
+}

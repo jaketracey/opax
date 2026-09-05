@@ -1,0 +1,645 @@
+{
+ "key": "au-federal-s1042",
+ "title": "Criminal Code Amendment (Firearms Trafficking) Bill 2017",
+ "short_title": "Criminal Code Amendment (Firearms Trafficking) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-15",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Justice",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1042_ems_1c470fdc-eadf-493d-a1f6-1faa66c14b3e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1042_ems_a1921b82-3151-4511-827d-03677c763518%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1042_ems_75ef9d90-f885-41fa-91a1-5673d2b4c0e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1042%22",
+   "document_date": "2016-09-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2016-09-15",
+  "sentences": [
+   "The bill would introduce a mandatory jail term for firearm trafficking offences.",
+   "Courts would be required to impose a five-year minimum sentence on offenders convicted of trafficking firearms or their parts within or across Australian borders.",
+   "Judges could reduce that minimum if the offender pleaded guilty or helped law enforcement agencies."
+  ],
+  "changes": [
+   "Creates a mandatory minimum penalty of five years' imprisonment for domestic firearms trafficking.",
+   "Creates the same mandatory minimum for international firearms trafficking.",
+   "Allows courts to lower the mandatory sentence for a guilty plea or cooperation with authorities."
+  ],
+  "affected": "People convicted of trafficking firearms or firearm parts within or into and out of Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:11Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4546",
+   "date": "2017-02-13",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "In committee",
+   "ayes": 43,
+   "noes": 4,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-13/10"
+  },
+  {
+   "key": "federal-senate-4547",
+   "date": "2017-02-13",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the bill, as amended, stand as printed. Penny Wong by leave—I move opposition amendments (1) and (2) on sheet 8036: (1) Schedule 1, item 2, page 3 (lines 9 to 16), to be opposed. (2) Schedule 1, items 4 and 5, page 3 (line 22) to page 4 (line 7), to be opposed. I do not propose to re-traverse the argument in relation to these amendments. I think I canvassed it in detail in my speech on the second reading. George Brandis These amendments relate to the removal of the mandatory minimum sentence provision. The government has put its position in relation to that. I will not canvass the arguments either. The amendments do weaken the legislation. Given the point of the legislation is to send a very strong signal to firearms traffickers, that is a great shame. The government will be opposing these two opposition amendments. The CHAIR: The question is that items 2, 4 and 5 on schedule 1 stand as printed.",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 40,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-13/11"
+  },
+  {
+   "key": "federal-senate-4548",
+   "date": "2017-02-13",
+   "house": "senate",
+   "question": "George Brandis I move: That this bill be now read a third time. Gavin Marshall The question is that the bill be now read a third time. Sitting suspended from 18:43 to 19:43",
+   "stage": "In committee",
+   "ayes": 54,
+   "noes": 4,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 36,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-13/12"
+  },
+  {
+   "key": "federal-representatives-4967",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of [amendments](http://www.openaustralia.org.au/debate/?id=2017-10-25.124.2) to the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1042). These amendments were introduced by Justice Minister [Michael Keenan](https://theyvoteforyou.org.au/people/representatives/stirling/michael_keenan). ### What does this bill do? The bill creates mandatory minimum sentences and increases maximum penalties for the offences of trafficking firearms or parts of firearms both within Australia and between Australia and the rest of the world. Read the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd029) for more information.",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/9"
+  },
+  {
+   "key": "federal-representatives-4968",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/debates/?id=2017-10-25.124.1) to agree with the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1042) as amended. This vote ends the [consideration in detail](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) stage of the bill and means that the House can now decide on whether they want to pass the bill so it can become law. ### What does this bill do? The bill creates mandatory minimum sentences and increases maximum penalties for the offences of trafficking firearms or parts of firearms both within Australia and between Australia and the rest of the world. Read the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd029) for more information.",
+   "stage": "Consideration in detail",
+   "ayes": 74,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/10"
+  },
+  {
+   "key": "federal-representatives-4969",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "Criminal Code Amendment (Firearms Trafficking) Bill 2017 - Third Reading - Suspend the rules",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/11"
+  },
+  {
+   "key": "federal-representatives-4970",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "Criminal Code Amendment (Firearms Trafficking) Bill 2017 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/12"
+  },
+  {
+   "key": "federal-representatives-4971",
+   "date": "2017-10-25",
+   "house": "representatives",
+   "question": "The majority voted to pass the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1042) in the House of Representatives. In parliamentary jargon, they voted to read the bill [for a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). Since the bill has already passed in the Senate, it will now become law. ### What does this bill do? The bill creates mandatory minimum sentences and increases maximum penalties for the offences of trafficking firearms or parts of firearms both within Australia and between Australia and the rest of the world. Read the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd029) for more information.",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-25/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-356063",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "The opposition argued the government delayed passing the Criminal Code Amendment (Firearms Trafficking) Bill 2017 for eight months despite bipartisan support, accusing the minister of playing petty politics over gun safety. Labor supported the Senate-amended bill with life sentences for serious traffickers and opposed the government's reintroduction of mandatory minimum sentences, citing evidence they reduce jury convictions and police cooperation."
+  },
+  {
+   "slug": "speech-356066",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-24",
+   "stage_hint": null,
+   "brief": "Argued against mandatory minimum sentences in the Criminal Code Amendment (Firearms Trafficking) Bill 2017, supporting increased maximum penalties instead, and noted opposition from the Law Council of Australia and Australian Human Rights Commission while referencing their own service as a former director of the Law Council and President of the Law Society of Tasmania."
+  },
+  {
+   "slug": "speech-356139",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed mandatory minimum sentences in the Criminal Code Amendment (Firearms Trafficking) Bill 2017, arguing they fetter judicial discretion, lead to unjust or disproportionate sentences, and are inconsistent with Australia's human rights obligations, citing submissions from the Australian Human Rights Commission and criticism from Chief Justice Wayne Martin."
+  },
+  {
+   "slug": "speech-356141",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill introducing mandatory minimum sentences for firearms trafficking is ineffective and politically motivated, noting that similar provisions have been rejected three times before. Labor instead proposes new aggravated offences with maximum life imprisonment, and cited estimates of 260,000 to 600,000 illicit firearms in Australia."
+  },
+  {
+   "slug": "speech-356142",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "Federal Labor supported the Criminal Code Amendment (Firearms Trafficking) Bill 2017 but raised concerns about its mandatory sentencing provisions, arguing they could hinder prosecution of serious child sex offences and urging the government to stop suggesting Labor is soft on crime. The speaker highlighted their past work as a minister enacting child sex offence laws in 2009 and workers screening legislation."
+  },
+  {
+   "slug": "speech-356143",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "Labor supported the Criminal Code Amendment (Firearms Trafficking) Bill 2017 as amended by the Senate, which introduces life sentences and aggravated offences for trafficking more than 50 firearms, and opposed the government's amendment inserting mandatory minimum sentences. The speaker argued mandatory minimums are ineffective and unjust, citing an estimated 600,000 illegal weapons in Australia and 3,542 firearms stolen last year, and stressed that judicial discretion is essential for sentencing."
+  },
+  {
+   "slug": "speech-356146",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Firearms Trafficking) Bill 2017 but opposed mandatory minimum sentences, arguing they are ineffective and opposed by experts including the Law Council and Australian Human Rights Commission, and noted an estimated 600,000 illicit firearms in Australia."
+  },
+  {
+   "slug": "speech-356297",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (Firearms Trafficking) Bill 2017 introduces mandatory minimum sentences and increased maximum penalties for firearms trafficking, with discounts available for guilty pleas or cooperation with law enforcement. The speaker argued that Labor’s opposition contradicts their own 2010 support for mandatory sentencing on people smuggling, and urged bipartisan support to deter gun crime."
+  },
+  {
+   "slug": "speech-356299",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill originally contained ineffective mandatory minimum sentences, which Labor and the Senate replaced with aggravated offences allowing life imprisonment for firearm traffickers. They accused the minister of delaying the improved bill for eight months and refusing to split it to pass the tougher laws immediately."
+  },
+  {
+   "slug": "speech-356336",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Criminal Code Amendment (Firearms Trafficking) Bill 2017, arguing the government had delayed it for eight months and criticizing its preference for mandatory sentencing over maximum sentences and its disregard for the separation of powers."
+  }
+ ],
+ "acts": []
+}

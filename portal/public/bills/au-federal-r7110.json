@@ -1,0 +1,559 @@
+{
+ "key": "au-federal-r7110",
+ "title": "Australian Human Rights Commission Amendment (Costs Protection) Bill 2023",
+ "short_title": "Australian Human Rights Commission Amendment (Costs Protection) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-10-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7110_ems_e83e5b49-1a08-484a-97d2-ee6f3ce685bc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7110_ems_202d6fcb-bc72-4f84-95c3-0dfabf39870b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7110%22",
+   "document_date": "2023-11-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00089",
+   "document_date": "2024-10-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-15",
+  "sentences": [
+   "This bill would change how costs are awarded in federal unlawful discrimination cases to remove a barrier to justice for people who have experienced discrimination.",
+   "It would insert a modified 'equal access' cost protection provision into the Australian Human Rights Commission Act 1986, generally preventing applicants from being ordered to pay a respondent's costs except in specific circumstances.",
+   "An applicant could still be ordered to pay costs if they brought the case vexatiously or without reasonable cause, or if the respondent won on all grounds and has no significant power or resource advantage over the applicant."
+  ],
+  "changes": [
+   "Amends the Australian Human Rights Commission Act 1986 and makes consequential amendments to the Federal Court of Australia Act 1976.",
+   "Provides that a court must order a respondent to pay an applicant's costs if the applicant succeeds on one or more grounds, unless the applicant's unreasonable act or omission caused those costs.",
+   "Allows a court to order an applicant to pay a respondent's costs only in limited circumstances, such as when the applicant acted vexatiously or the respondent won on all grounds and lacks a significant advantage."
+  ],
+  "affected": "Parties in federal unlawful discrimination proceedings, including applicants (victim-survivors) and respondents.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8641",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "question": "Australian Human Rights Commission Amendment (Costs Protection) Bill 2023 - Report from Federation Chamber - Agree with the bill's main idea",
+   "stage": "Report from Federation Chamber",
+   "ayes": 88,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-06/2"
+  },
+  {
+   "key": "federal-senate-9143",
+   "date": "2024-09-19",
+   "house": "senate",
+   "question": "Australian Human Rights Commission Amendment (Costs Protection) Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-19/2"
+  },
+  {
+   "key": "federal-senate-9149",
+   "date": "2024-09-19",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-09-19.99.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. ### Amendment text > *(1) Page 2 (after line 12), after clause 3, insert:* > > *4 Review of operation of amendments* > >> *(1) The Minister must cause an independent review to be undertaken of the operation of the amendments made by this Act.* >> >> *(2) The review must commence no later than 2 years after the day on which this Act receives the Royal Assent.* >> >> *(3) The persons who conduct the review must give the Minister a written report of the review within 6 months of the commencement of the review.* >> >> *(4) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.*",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-19/8"
+  },
+  {
+   "key": "federal-senate-9150",
+   "date": "2024-09-19",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-09-19.104.1) introduced by Queensland Senator [Paul Scarr](https://theyvoteforyou.org.au/people/senate/queensland/paul_scarr) (Liberal), which means they failed. ### Amendment text > *(1) Schedule 1, item 3, page 3 (line 10) to page 4 (line 20), omit [section 46PSA](https://parlinfo.aph.gov.au/parlInfo/download/legislation/bills/r7110_first-reps/toc_pdf/23143b01.pdf;fileType=application%2Fpdf), substitute:* > >> *46PSA Costs only if proceedings instituted vexatiously etc.* >> >> *(1) A party to proceedings (including an appeal) in a court in relation to a matter arising under section 46PO may be ordered by the court to pay costs incurred by another party to the proceedings only in accordance with subsection (2).* >> >> *(2) The party may be ordered to pay the costs only if:* >> >>> *(a) the court is satisfied that the party instituted the proceedings vexatiously or without reasonable cause; or* >>> >>> *(b) the court is satisfied that the party's unreasonable act or omission caused the other party to incur the costs; or* >>> >>> *(c) the court is satisfied of both of the following:* >>> >>>> *(i) the party unreasonably refused to participate in a matter before the Commission;* >>>> >>>> *(ii) the matter arose from the same facts as the proceedings.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-19/9"
+  },
+  {
+   "key": "federal-senate-9156",
+   "date": "2024-09-19",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-09-19.111.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. ### Amendment text > *(1) Schedule 1, item 3, page 4 (after line 15), at the end of subsection 46PSA(6), add:* > >> *; or (d) the other party is a small business.* > > *(2) Schedule 1, item 3, page 4 (after line 15), after subsection 46PSA(6), insert:* > >> *(6A) For the purposes of this section, small business means a business with fewer than 20 full-time equivalent employees.*",
+   "stage": "Committee of the Whole",
+   "ayes": 26,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-19/15"
+  },
+  {
+   "key": "federal-senate-9157",
+   "date": "2024-09-19",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansards/28053/&sid=0000) introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means they failed. ### Amendment text > *(1) Schedule 1, item 3, page 4 (after line 8), after paragraph 46PSA(6)(b), insert:* > >> *(ba) all of the following apply:* >> >>> *(i) the other party is a respondent to the terminated complaint;* >>> >>> *(ii) the court is satisfied that the respondent has made a reasonable offer to the applicant to settle the matter the subject of the complaint;* >>> >>> *(iii) the court is satisfied that the applicant rejected the offer; or*",
+   "stage": "Committee of the Whole",
+   "ayes": 27,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-19/16"
+  },
+  {
+   "key": "federal-senate-9158",
+   "date": "2024-09-19",
+   "house": "senate",
+   "question": "Australian Human Rights Commission Amendment (Costs Protection) Bill 2023 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-19/17"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Australian Human Rights Commission Amendment (Costs Protection) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00089",
+   "assent_date": "2024-10-01"
+  }
+ ]
+}

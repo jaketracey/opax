@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r6711",
+ "title": "Migration Amendment (Tabling Notice of Certain Character Decisions) Bill 2021",
+ "short_title": "Migration Amendment (Tabling Notice of Certain Character Decisions) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration, Citizenship, Migrant Services and Multicultural Affairs",
+ "status": "passed",
+ "status_as_of": "2021-05-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-05-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6711_ems_af6199c4-0e24-4bcc-a9c1-8cc0d1440da6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6711%22",
+   "document_date": "2021-05-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00036",
+   "document_date": "2021-05-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-12",
+  "sentences": [
+   "The bill would require the Minister to tell Parliament about certain visa decisions made personally on character grounds.",
+   "It does this by adding a new rule to the Migration Act 1958 that forces the Minister to table a notice in each House within 15 sitting days of the decision.",
+   "The requirement would not apply if the decision was based on a reasonable suspicion about the character test or if the person had an adverse security assessment from ASIO."
+  ],
+  "changes": [
+   "Requires the Minister to table notice of certain character decisions under subsection 501(3) of the Migration Act 1958 in Parliament within 15 sitting days.",
+   "Exempts decisions based on a reasonable suspicion about the character test under paragraphs 501(6)(a), (e) or (g).",
+   "Exempts decisions where the person had an adverse or qualified security assessment under the Australian Intelligence Organisation Act 1979."
+  ],
+  "affected": "The Minister and people who are subject to personal character decisions to refuse or cancel a visa on national interest grounds.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-405894",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Clarifying International Obligations for Removal) Bill 2021 and the Migration Amendment (Tabling Notice of Certain Character Decisions) Bill 2021 are necessary to prevent refoulement of 21 people in immigration detention who have been found to owe protection obligations but fail character or security tests. Labor supports the bills after securing amendments including merits review for ministerial decisions, tabling of certain character decisions, and a statutory review by the Parliamentary Joint Committee on Intelligence and Security within 24 months."
+  },
+  {
+   "slug": "speech-405900",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the two bills clarify section 197C of the Migration Act to ensure removal does not breach non-refoulement obligations, and require the minister to table notice of certain character decisions under section 501(3) for greater transparency, except in cases of serious criminal offending or national security concerns."
+  },
+  {
+   "slug": "speech-405902",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-12",
+   "stage_hint": null,
+   "brief": "The government argued the bills are needed to prevent Australia from breaching non‑refoulement obligations while managing a small cohort of serious criminals owed protection, and announced amendments requiring parliamentary notice for certain character decisions except in national security cases."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Tabling Notice of Certain Character Decisions) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00036",
+   "assent_date": "2021-05-24"
+  }
+ ]
+}

@@ -1,0 +1,242 @@
+{
+ "key": "au-federal-r6417",
+ "title": "Higher Education Support (HELP Tuition Protection Levy) Bill 2019",
+ "short_title": "Higher Education Support (HELP Tuition Protection Levy) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment, Skills, Small and Family Business",
+ "status": "passed",
+ "status_as_of": "2020-02-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6417_ems_67840204-2b60-4136-ad6b-ba02eb1c1987%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6417_ems_a3e8e7d9-cd1d-4818-af10-1456282bf014%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6417_ems_265fb6b3-0502-4941-bcbf-98d50037523b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6417%22",
+   "document_date": "2019-09-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00004",
+   "document_date": "2020-02-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "This bill would create a levy on education providers to fund tuition protection for students using HELP loans at private providers or TAFEs.",
+   "The levy has three components: an administrative fee set by the Minister, a risk-rated premium set by the HELP Tuition Protection Director, and a special component for shortfalls, all reviewed annually.",
+   "The new arrangements would take effect from 1 January 2020, with TAFEs and government-owned providers exempt from the risk-rated and special components."
+  ],
+  "changes": [
+   "Imposes the HELP tuition protection levy on providers.",
+   "Specifies the levy components and how they are determined each year.",
+   "Establishes the HELP Tuition Protection Fund as a special account.",
+   "Requires the Minister to determine the administrative fee component.",
+   "Requires the HELP Tuition Protection Director to determine the risk-rated premium and special components.",
+   "Provides for annual review of the levy."
+  ],
+  "affected": "Private education providers and TAFEs offering VET Student Loans, FEE-HELP, or HECS-HELP assistance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-381653",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the Higher Education Support (HELP Tuition Protection Levy) Bill 2019, which introduces a levy on private and TAFE higher education providers offering HELP loans to protect students, taxpayers, and the sector in case of provider closures."
+  },
+  {
+   "slug": "speech-384038",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the bills are a minor tweak while the government has cut $3 billion from TAFE, underspent nearly $1 billion on training, and let apprentice numbers fall by 150,000, and moved an amendment condemning the government for damaging higher education and vocational training."
+  },
+  {
+   "slug": "speech-384041",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the three tuition protection bills but will refer them to committee over concerns that fee-paying students are not covered and costs may be passed on, while arguing the government has cut $3 billion from TAFE and training, leading to 150,000 fewer apprentices and 200,000 fewer university places."
+  },
+  {
+   "slug": "speech-384042",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The Labor member welcomed the Education Legislation Amendment bills, which create a tuition protection scheme for VET and non-university higher education students using student loans, but criticised the Abbott-Turnbull-Morrison government for taking too long to act and for cutting $3 billion from TAFE and training. Labor will not oppose the bills but supports referral to committee over concerns about excluding upfront fee-paying students and potential levy pass-through to students."
+  },
+  {
+   "slug": "speech-384047",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "Labor will not oppose bills creating tuition protection schemes for VET and higher education students but will refer them to a Senate committee over concerns about excluding full-fee paying students, while the speaker criticised the government's vocational education record citing a 56.7% apprenticeship completion rate, 22,000 fewer VET students, a 30% drop in full-year training equivalents, and a $919 million underspend."
+  },
+  {
+   "slug": "speech-384048",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The Labor member supported the three education bills but argued they are insufficient, highlighting a $919 million federal underspend on TAFE and contrasting it with the Victorian Labor government's $46.9 million contribution to Chisholm TAFE's redevelopment. She called for proper federal investment in public TAFE and vocational training, citing local skills shortages and the success of free TAFE courses in Victoria."
+  },
+  {
+   "slug": "speech-384102",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The Higher Education Support (HELP Tuition Protection Levy) Bill 2019 imposes a levy to protect HELP loans, the VET Student Loans (VSL Tuition Protection Levy) Bill 2019 does the same for VET student loans, and the Education Legislation Amendment (Tuition Protection and Other Measures) Bill 2019 expands tuition protection services from international students to domestic students with VET, FEE-HELP, or HECS-HELP loans."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support (HELP Tuition Protection Levy) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00004",
+   "assent_date": "2020-02-17"
+  }
+ ]
+}

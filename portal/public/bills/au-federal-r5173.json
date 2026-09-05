@@ -1,0 +1,702 @@
+{
+ "key": "au-federal-r5173",
+ "title": "Land Transport Infrastructure Amendment Bill 2014",
+ "short_title": "Land Transport Infrastructure Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-02-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "passed",
+ "status_as_of": "2014-09-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5173_ems_c2cf6e90-5cb5-436e-a3d3-86868c99fd88%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5173%22",
+   "document_date": "2014-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00101",
+   "document_date": "2014-09-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3183",
+   "date": "2014-03-24",
+   "house": "representatives",
+   "question": "Long debate text truncated.",
+   "stage": "Consideration in detail",
+   "ayes": 54,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 51,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-24/1"
+  },
+  {
+   "key": "federal-representatives-3184",
+   "date": "2014-03-24",
+   "house": "representatives",
+   "question": "Anthony Albanese I move amendment opposition (5) as circulated in my name: (5) Schedule 1, item 14, page 7 (after line 21), after section 4A, insert: 4B Consultation with Infrastructure Australia (1) Before approving the provision of Commonwealth funding for a Black Spot Project, Heavy Vehicle Safety and Productivity Project, Investment Project or Transport Development and Innovation Project, the Minister must: (a) have regard to: (i) Infrastructure Priority Lists and Infrastructure Plans developed by Infrastructure Australia under the _Infrastructure Australia Act 2008_ to the extent relevant to the project; and (ii) any other advice provided by Infrastructure Australia that relates to the project; and (b) if capital expenditure on the project is $100 million or more—require Infrastructure Australia to give the Minister an evaluation of the project so that the Minister can decide whether to approve the project. (2) Infrastructure Australia's evaluation of a project mentioned in paragraph (1)(b) must: (a) contain a cost benefit analysis of the project; and (b) specify the priority that Infrastructure Australia would give the project in relation to priorities specified in its current Infrastructure Plan; and (c) set out any other matter that Infrastructure Australia considers relevant to the project. 4C Cost benefit analyses to be made public If Commonwealth funding is provided for a Black Spot Project, Heavy Vehicle Safety and Productivity Project, Investment Project or Transport Development and Innovation Project, the Minister must ensure that the following information about the project is made available on the Department's website: (a) a description of the project; (b) when the project is to start and is likely to be completed; (c) Infrastructure Australia's views on the project, including any evaluation provided to the Minister under section 4B. This amendment requires the minister to require an evaluation by Infrastructure Australia prior to approving funds for",
+   "stage": "Consideration in detail",
+   "ayes": 53,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 50,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-24/2"
+  },
+  {
+   "key": "federal-representatives-3185",
+   "date": "2014-03-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debate/?id=2014-03-24.136.8) that the bill be agreed to, which ends the consideration and detail stage.(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) That the House of Representatives can now decide on whether to read the bill a third time and therefore pass it in the House. _Background to the bill_ In the [2013 election](http://en.wikipedia.org/wiki/Australian_federal_election,_2013) campaign, the [Coalition](http://en.wikipedia.org/wiki/Coalition_%28Australia%29) said that it would be an infrastructure-focused government and committed to finding ways to encourage the private sector to become more involved in infrastructure financing. This bill reflects that commitment by amending the _Nation Building Program (National Land Transport) Act 2009_ ('the Act') to allow partnerships and non-corporate Commonwealth entities, such as public private partnerships, to be funded. The bill also renames the Act to the _National Land Transport Act 2014_ and continues the [Roads to Recovery Programme](http://investment.infrastructure.gov.au/funding/r2r/) after 30 June 2014, when it is currently scheduled to end.(Read more about the bill in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd091).)",
+   "stage": "Consideration in detail",
+   "ayes": 81,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-03-24/3"
+  },
+  {
+   "key": "federal-senate-3385",
+   "date": "2014-08-28",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/senate/?gid=2014-08-28.7.23) that the bill be read a second time.(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) This means that the majority agree with the main idea of the bill and that the Senate can now consider the bill in more detail. _Background to the bill_ In the [2013 election](http://en.wikipedia.org/wiki/Australian_federal_election,_2013) campaign, the [Coalition](http://en.wikipedia.org/wiki/Coalition_%28Australia%29) said that it would be an infrastructure-focused government and committed to finding ways to encourage the private sector to become more involved in infrastructure financing. This bill reflects that commitment by amending the _Nation Building Program (National Land Transport) Act 2009_ ('the Act') to allow partnerships and non-corporate Commonwealth entities, such as public private partnerships, to be funded. The bill also renames the Act to the _National Land Transport Act 2014_ and continues the [Roads to Recovery Programme](http://investment.infrastructure.gov.au/funding/r2r/) after 30 June 2014, when it is currently scheduled to end.(Read more about the bill in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1314a/14bd091).)",
+   "stage": "Second reading",
+   "ayes": 54,
+   "noes": 4,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-08-28/1"
+  },
+  {
+   "key": "federal-senate-3386",
+   "date": "2014-08-28",
+   "house": "senate",
+   "question": "Janet Rice by leave—I move Greens amendments (5) and (6) on sheet 7495 revised: (5) Subsection (4) does not limit the matters to which the Minister may have regard in determining whether to approve the provision of Commonwealth funding for the project. 4C Cost benefit analyses to be made public (1) The Minister must ensure that the following information about a Black Spot Project, Heavy Vehicle Safety and Productivity Project, Investment Project or Transport Development and Innovation Project is made available on the Department's website, if Commonwealth funding is provided for the project: (a) a description of the project; (b) when the project is to start and is likely to be completed; (c) Infrastructure Australia's evaluation of the project under subsection 4B(2) (if applicable); (d) any advice given by Infrastructure Australia in relation to the project as mentioned in paragraph 4B(4)(c). (2) The information must be published no later than 14 days after the Commonwealth first informs a recipient of the funding that Commonwealth funding will be provided for the project. (6) Schedule 1, item 14, page 7, after proposed section 4C, insert: 4D Cost benefit analyses of other projects (1) Infrastructure Australia must give to the Minister a cost benefit analysis of a land transport infrastructure project if: (a) Commonwealth funding is provided for the project (under this Act or any other law) on or after the commencement of this section (whether the provision of the funding was agreed to, approved or announced before, on or after that commencement); and (b) capital expenditure on the project is $50 million or more; and (c) Infrastructure Australia is not required to give a cost benefit analysis of the project to the Minister under another provision of this Act. (2) The Minister must ensure that the cost benefit analysis is made available on the Department's website. These amendments amend the bill so that for any project of $50 million or more in capital expenditure, t",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "earliest": 5,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-08-28/2"
+  },
+  {
+   "key": "federal-senate-3387",
+   "date": "2014-08-28",
+   "house": "senate",
+   "question": "Doug Cameron by leave—I move opposition amendment (6) on sheet 7477 as revised: (6) Schedule 1, item 20, page 9 (line 8), after “efficiency,”, insert “integration,”. This is a minor amendment to the matters that the minister may have regard to in deciding to approve an investment project. It will add an integration of transport operations as a factor in approving transport infrastructure projects. We acknowledge Senator Rice's role in this amendment and we believe this amendment improves the criteria without complicating it or confusing it. We prefer this to the amendment that the Australian Greens moved on amendment (7). Peter Whish-Wilson The question is that amendment (6) moved by Senator Cameron on sheet 7477 revised be agreed to. Question agreed to. Long debate text truncated.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-08-28/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-283529",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285946",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285948",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285953",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285954",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286011",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286012",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286013",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286015",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286029",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286031",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286032",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286033",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286034",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286036",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286041",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286047",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286049",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286051",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286054",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286359",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286360",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286366",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286367",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-03-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Land Transport Infrastructure Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00101",
+   "assent_date": "2014-09-11"
+  }
+ ]
+}

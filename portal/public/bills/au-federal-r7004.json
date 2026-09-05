@@ -1,0 +1,244 @@
+{
+ "key": "au-federal-r7004",
+ "title": "Inspector-General of Aged Care Bill 2023",
+ "short_title": "Inspector-General of Aged Care Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7004_ems_3aef6360-fe17-4adc-b349-f4fe6fadcf3f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7004_ems_135900aa-9c5d-4bff-8758-447e0934a343%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7004%22",
+   "document_date": "2023-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00055",
+   "document_date": "2023-08-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-22",
+  "sentences": [
+   "This bill is part of a package that would create an Inspector-General of Aged Care to independently oversee the aged care system.",
+   "The Inspector-General would be a statutory office holder appointed by the Governor-General for up to five years, with powers to compel information and access premises.",
+   "The bill would establish secrecy provisions making it an offence to disclose protected information unless for an authorised purpose."
+  ],
+  "changes": [
+   "Establishes the Office of the Inspector-General of Aged Care as a statutory body.",
+   "Gives the Inspector-General functions to monitor, investigate and report on systemic issues in aged care.",
+   "Provides coercive information-gathering powers, including to compel documents and answers.",
+   "Creates secrecy provisions for protected information.",
+   "Establishes criminal offences and civil penalties for hindering the Inspector-General."
+  ],
+  "affected": "The Inspector-General, Commonwealth entities involved in aged care, and older Australians.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8225",
+   "date": "2023-08-08",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-08.7.1) to the usual second reading motion, which is \"*that the bill be read a second time*\". To read a bill for a second time is to agree with its main idea. Note that amendments like these don't make any legal changes on their own, but can be politically influential as they represent the will of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Inspector-General of Aged Care to consider the current workforce constraints facing the aged care sector as a priority\".*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 9,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-08/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828797",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The mover argued that the Inspector-General of Aged Care Bill will establish an independent body to monitor, review, and report on the Commonwealth's administration of the aged-care system, with coercive information-gathering powers. The bill aims to restore public trust by addressing systemic issues identified by the Royal Commission into Aged Care Quality and Safety, and includes annual progress reports on implementing the commission's recommendations."
+  },
+  {
+   "slug": "speech-830042",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The Inspector-General of Aged Care Bill 2023 and its consequential bill were introduced to establish an independent Inspector-General with coercive powers to monitor, review, and report on the Commonwealth’s administration and regulation of aged care, including annual progress reports on the Royal Commission’s recommendations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Inspector-General of Aged Care Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00055",
+   "assent_date": "2023-08-17"
+  }
+ ]
+}

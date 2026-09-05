@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-r6002",
+ "title": "National Integrity Commission Bill 2017",
+ "short_title": "National Integrity Commission Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-23",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6002%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6002%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6002%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6002_ems_f846a49f-f003-416c-882e-b9cb4d7eb473%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6002%22",
+   "document_date": "2017-10-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-10-23",
+  "sentences": [
+   "The bill would create a single federal anti-corruption agency that combines several existing oversight roles.",
+   "The new body, an independent statutory agency, would have a National Integrity Commissioner with full investigative powers, including public hearings and the ability to summon documents and witnesses.",
+   "The agency would not replace state bodies, but the Australian Capital Territory and Northern Territory could ask it to operate in their jurisdictions."
+  ],
+  "changes": [
+   "Establishes the National Integrity Commission as an independent statutory agency.",
+   "Gives the National Integrity Commissioner full investigative powers, including public hearings and the power to summon people and documents.",
+   "Creates the Independent Parliamentary Advisor to give confidential advice on conflict of interest and ethics.",
+   "Allows the ACT and Northern Territory to contract the Commission to operate in their territory."
+  ],
+  "affected": "Commonwealth departments, agencies, federal parliamentarians, their staff, the Australian Federal Police, the Australian Crimes Commission, and national law enforcement agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:28:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

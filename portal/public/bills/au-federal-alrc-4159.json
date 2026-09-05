@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-alrc-4159",
+ "title": "Infrastructure (Priority Funding) Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2013-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-24",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-277174",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277175",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-277176",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

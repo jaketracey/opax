@@ -1,0 +1,334 @@
+{
+ "key": "au-federal-r5319",
+ "title": "Labor 2013-14 Budget Savings (Measures No. 1) Bill 2014",
+ "short_title": "Labor 2013-14 Budget Savings (Measures No. 1) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-07-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5319_ems_708d57fc-3b8b-45e0-b3f2-1dc75f6912e2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5319%22",
+   "document_date": "2014-07-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00072",
+   "document_date": "2015-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-294689",
+   "speaker": "Joe Hockey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294771",
+   "speaker": "Joe Hockey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-311465",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The bill repeals the second round of carbon tax-related personal income tax cuts to achieve $2.8 billion in savings, implementing a measure originally announced by Labor but now blocked by the opposition; the speaker also highlighted the $123 billion cumulative deficit and $667 billion debt trajectory inherited from the previous government."
+  },
+  {
+   "slug": "speech-311466",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The bill repeals Labor's planned personal income tax cuts for low- and middle-income earners, which would have raised the tax-free threshold and adjusted offsets. The speaker argued the Abbott government broke pre-election promises, increased taxes and cut services, citing NATSEM modelling that low- and middle-income families in his electorate of Blair would lose about $406 per year."
+  },
+  {
+   "slug": "speech-311467",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor left a $123 billion deficit over four years and a projected $667 billion debt, and that Labor is hypocritically opposing its own previously announced savings, including a $2.8 billion budget-repair measure. The speaker also noted the coalition has reduced the deficit to $82 billion and removed the carbon tax, saving households $550 per year."
+  },
+  {
+   "slug": "speech-311468",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the Abbott government is hypocritical and untrustworthy, having broken election promises, increased debt and doubled the deficit while cutting health and education funding, and imposing unfair taxes like the GP tax and petrol tax that will cost families $6,000 a year."
+  },
+  {
+   "slug": "speech-311469",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "Labor has a $58.6 billion budget black hole, is blocking $17.2 billion in savings, and plans to reintroduce the carbon tax and impose new taxes on superannuation and negative gearing, while the coalition's 2015 budget cuts taxes, creates jobs and returns to surplus by 2019‑20."
+  },
+  {
+   "slug": "speech-311472",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill implements a Labor commitment from the 2013 budget to defer personal income tax cuts, originally estimated to save $1.5 billion, but that Labor failed to enact it; the cost has since risen to $2.2 billion over the forward estimates to 2018, and Labor should support the measure."
+  },
+  {
+   "slug": "speech-311474",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor is obstructing its own 2013-14 budget savings measure, which would defer personal income tax cuts worth $2.8 billion, and that Labor has voted against the bill twice despite it being their own policy."
+  },
+  {
+   "slug": "speech-311477",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the bill to remove a second round of personal income tax cuts linked to the carbon tax, stating it would save $2.2 billion and honour a Labor election promise, while warning of a structural deficit inherited from the previous government that projected $123 billion in deficits. He cited support from businesses and local government in his electorate of O'Connor for the carbon tax repeal."
+  },
+  {
+   "slug": "speech-311479",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The bill implements a Labor budget savings measure; the speaker criticised Labor for opposing their own policy and detailed Labor's past spending, including a $123 billion deficit inheritance, $667 billion projected debt, and wasteful programs like the $42 billion stimulus and pink batts scheme."
+  },
+  {
+   "slug": "speech-311480",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's opposition to its own savings measures is contradictory, citing a $58.6 billion black hole left by Labor, including a $29 billion blow-out of the NBN."
+  },
+  {
+   "slug": "speech-311483",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Labor 2013-14 Budget Savings (Measures No. 1) Bill 2014, arguing it contains savings measures originally proposed by Labor, including $2.8 billion from income tax cuts tied to the carbon tax, $2.1 billion from changes to Start-up scholarships and HECS, and a $1.2 billion university efficiency dividend. He claimed Labor’s policies hurt productivity and left a $123 billion debt over the forward estimates."
+  },
+  {
+   "slug": "speech-311484",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Labor 2013-14 Budget Savings Bill implements necessary budget repair by deferring the second round of personal income tax cuts linked to the carbon tax, saving $2.8 billion over four years, and keeping the tax-free threshold at $18,200. The speaker also highlighted government measures including a $550 annual household saving from carbon tax repeal, a $20,000 instant asset write-off for small businesses, and a $4.4 billion Jobs for Families package, while criticising Labor for opposing these measures and planning to reintroduce the carbon tax."
+  },
+  {
+   "slug": "speech-311486",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Labor opposition is hypocritically voting against the Labor 2013–14 Budget Savings Bill, which would repeal a planned income tax cut tied to the now-repealed carbon tax and save $2.8 billion over the forward estimates, and that Labor’s record of debt and deficits shows inconsistency."
+  },
+  {
+   "slug": "speech-311487",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker urged support for the Labor 2013-14 Budget Savings (Measures No. 1) Bill 2014, arguing that the Labor Party is blocking $2.8 billion in savings it took to the last election, and cited $667 billion in projected debt and $123 billion in cumulative deficits left by the previous government."
+  },
+  {
+   "slug": "speech-311488",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Labor 2013-14 Budget Savings (Measures No. 1) Bill 2014, which repeals second-round carbon tax related personal income tax cuts, stating that Labor opposed its own measure and that the bill is part of budget repair, reducing the inherited deficit from $123 billion to $82 billion over four years and daily debt interest from $133 million to $96 million."
+  },
+  {
+   "slug": "speech-311489",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-01",
+   "stage_hint": null,
+   "brief": "The bill repeals the second round of carbon tax related personal income tax cuts, saving $2.8 billion, and the speaker argued it holds the Labor Party to its own pre-election promise—keeping the tax-free threshold at $18,200, the second marginal rate at 32.5%, and the low-income tax offset at $445."
+  },
+  {
+   "slug": "speech-312556",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Labor 2013-14 Budget Savings Bill, which repeals the second round of carbon tax-related personal income tax cuts, saving $2.8 billion over four years. They stated the government reduced inherited deficits from $123 billion to $82 billion, created 250,000 new jobs, and cut the small business tax rate to its lowest in 50 years."
+  },
+  {
+   "slug": "speech-312557",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-312559",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The Labor Party will support the Labor 2013-14 Budget Savings (Measures No. 1) Bill 2014 to prevent a further blow-out in the budget deficit, which is forecast at $35 billion for 2015-16. The opposition claims the Abbott government doubled the deficit in 12 months and offers alternative savings of $21 billion over a decade, including a multinational tax package and superannuation package."
+  },
+  {
+   "slug": "speech-312560",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that governments must live within their means and run budget surpluses, welcomed the withdrawal of an amendment to the Labor 2013-14 Budget Savings Bill and the shadow Treasurer’s more conciliatory approach, and called on the Senate to represent state interests rather than narrow constituencies."
+  },
+  {
+   "slug": "speech-312561",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The bill repeals the second round of carbon tax related personal income tax cuts scheduled for 1 July 2015, originally announced by the former Labor government, which they never legislated; the speaker argued Labor should support their own budget repair measure, noting it would improve the budget bottom line by $2.8 billion."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Labor 2013-14 Budget Savings (Measures No. 1) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00072",
+   "assent_date": "2015-06-25"
+  }
+ ]
+}

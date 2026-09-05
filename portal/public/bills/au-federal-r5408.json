@@ -1,0 +1,410 @@
+{
+ "key": "au-federal-r5408",
+ "title": "Australian Border Force Bill 2015",
+ "short_title": "Australian Border Force Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-02-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-05-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5408_ems_b699cc7e-7aeb-451b-8725-c9ce0e065f12%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5408%22",
+   "document_date": "2015-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00040",
+   "document_date": "2015-05-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-02-25",
+  "sentences": [
+   "The bill would create the Australian Border Force as a single frontline border control and enforcement agency within the Department of Immigration and Border Protection.",
+   "It would establish the statutory office of the Australian Border Force Commissioner, who would control operations and also serve as Comptroller-General of Customs.",
+   "The bill includes integrity measures such as alcohol and drug screening, secrecy provisions, and serious misconduct management, and would take effect from 1 July 2015."
+  ],
+  "changes": [
+   "Establishes the Australian Border Force Commissioner as a statutory officer with operational control of the Australian Border Force.",
+   "Allows the Secretary and the Commissioner to issue binding written directions to immigration and border protection workers.",
+   "Introduces alcohol and prohibited drug screening tests for immigration and border protection workers.",
+   "Creates secrecy and disclosure provisions.",
+   "Provides for resignation and termination of employees involved in serious misconduct."
+  ],
+  "affected": "Immigration and Border Protection workers, including Australian Public Service employees, contractors, consultants, and employees of state, territory and other Commonwealth agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3782",
+   "date": "2015-05-14",
+   "house": "senate",
+   "question": "Australian Border Force Bill 2015 and related bill - in Committee - Public interest amendment",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-05-14/3"
+  },
+  {
+   "key": "federal-senate-3783",
+   "date": "2015-05-14",
+   "house": "senate",
+   "question": "Australian Border Force Bill 2015 and related bill - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "earliest": 4,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-05-14/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-305987",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-305988",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-308809",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Border Force Bill 2015 and related legislation, arguing it fulfills a former Labor government commitment to create a single integrated border entity with no greater powers than existing agencies, and includes integrity measures such as drug testing and serious misconduct provisions."
+  },
+  {
+   "slug": "speech-308810",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The speaker argued for abolishing the Australian Customs and Border Protection Service and merging its functions with the Department of Immigration and Border Protection to create the Australian Border Force, citing $480.5 million in funding over four years and a track record of no lives lost at sea and over 200 days without boat arrivals."
+  },
+  {
+   "slug": "speech-308811",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Border Force Bill 2015 and related legislation, arguing they establish the Australian Border Force Commissioner and a single integrated border entity with integrity provisions including drug/alcohol testing, serious misconduct declarations, and mandatory reporting, while acknowledging border workers' dedication."
+  },
+  {
+   "slug": "speech-308812",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The speaker endorsed the Australian Border Force Bill 2015, supporting the coalition's national security policies including citizenship revocation for dual nationals involved in terrorism, and argued the bill would create an integrated border force to handle rising cargo and passenger volumes, with projected savings of $180 million over forward estimates and $100 million annually thereafter."
+  },
+  {
+   "slug": "speech-308813",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Border Force Bill 2015, emphasising its importance for Western Australia's border security and highlighting the Cape Class patrol boats built by Austal in Henderson—eight vessels delivered on time and on budget, capable of 28-day patrols and 4,000 nautical mile range."
+  },
+  {
+   "slug": "speech-308814",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Border Force Bill 2015, which merges Customs and Immigration into a single department and establishes an Australian Border Force led by a Commissioner, citing the success of Operation Sovereign Borders in stopping boat arrivals and saving $2.5 billion, and projecting $180 million in efficiencies over the forward estimates."
+  },
+  {
+   "slug": "speech-308924",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Border Force Bill 2015 and its cognate bill, arguing that increased border interactions—44.17% more passenger/crew, 83.59% more air cargo, and 40.6% more sea cargo over the past decade—necessitated the creation of a single integrated Australian Border Force within the Department of Immigration and Border Protection from 1 July. He also criticised the previous government’s border policy, citing 51,798 illegal arrivals and a cost of $11.5 billion, and praised Operation Sovereign Borders."
+  },
+  {
+   "slug": "speech-308925",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Border Force Bill 2015 and related legislation will improve border security by merging customs and immigration functions under a single commissioner, with projected savings of $180 million over the forward estimates. He contrasted this with the previous Labor government’s border record, citing an $11 billion budget blowout, 50,000 maritime arrivals, over 1,000 drownings at sea, and low cargo examination rates."
+  },
+  {
+   "slug": "speech-308928",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for the establishment of the Australian Border Force through the 2015 bills, citing the government's success in stopping illegal boat arrivals (51,000 under Labor, including 8,400 children, with 1,200 lives lost at sea) and getting children out of detention, while also outlining new powers for the Commissioner, drug testing, and misconduct provisions."
+  },
+  {
+   "slug": "speech-308929",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Customs and Other Legislation Amendment (Australian Border Force) Bill 2015 should be passed to integrate the Department of Immigration and Border Protection with the Australian Customs and Border Protection Service, creating the Australian Border Force by 1 July 2015. The bill is expected to generate $180 million in operating efficiencies and $100 million in annual savings, while strengthening border security against drug smuggling, visa non-compliance, and organised crime."
+  },
+  {
+   "slug": "speech-308930",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Australian Border Force Bill 2015, which creates a single front-line border enforcement agency combining customs and immigration officers to manage projected increases in travellers and goods. They cited expected efficiencies of $180 million over forward estimates and contrasted the Coalition's border policies with Labor's record of 800 boats and up to 2,000 children in detention."
+  },
+  {
+   "slug": "speech-308931",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Border Force Bill 2015 and related legislation, arguing they would strengthen border protection, save $100 million, and build on Operation Sovereign Borders' success in stopping boat arrivals. They credited the coalition with ending Labor-era detention centre strain in Solomon, citing 800 boats and over 50,000 arrivals, and thanked Ministers Peter Dutton and Scott Morrison."
+  },
+  {
+   "slug": "speech-308932",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Border Force Bill 2015 establishes a single integrated border agency to enforce customs and immigration laws, criticising Labor’s border policies for leading to 800 boats, 1,200 deaths at sea, and 2,000 children in detention, which the coalition reduced to under 100. He also highlighted the need for integrity provisions to counter organised crime and the creation of a Border Force Counter-Terrorism Unit to intercept passengers of national security concern."
+  },
+  {
+   "slug": "speech-308933",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australia Border Force Bill 2015 and the Customs and Other Legislation Amendment (Australian Border Force) Bill 2015, arguing the government fulfilled its election commitment to stop boat arrivals. They cited over 240 days without illegal boat arrivals, one boat in the past year compared to 302 in 2013, and projected $180 million in efficiencies from consolidating immigration and customs into the Australian Border Force."
+  },
+  {
+   "slug": "speech-308934",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The Australian Border Force Bill 2015 was argued to integrate the Department of Immigration and Border Protection and the Australian Customs and Border Protection Service, generating $180 million in efficiencies over the forward estimates and $100 million per year thereafter, while addressing threats from transnational crime, terrorism, and increased traveller and cargo volumes."
+  },
+  {
+   "slug": "speech-308935",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Australian Border Force Bill 2015, criticising previous Labor government cuts to border protection agencies that reduced air cargo screening from 60% to 10% and enabled the illegal importation of 220 Glock pistols, with 106 still unaccounted for. The bill establishes the statutory office of the Australian Border Force Commissioner to command a new front-line operational border control entity within the Department of Immigration and Border Protection."
+  },
+  {
+   "slug": "speech-308936",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Border Force Bill 2015 and the Customs and Other Legislation Amendment (Australian Border Force) Bill 2015 establish the Australian Border Force Commissioner, integrate the Department of Immigration and the Australian Customs and Border Protection Service, and strengthen border integrity and law enforcement, with thanks to Mike Pezzullo and Roman Quaedvlieg."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Border Force Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00040",
+   "assent_date": "2015-05-20"
+  }
+ ]
+}

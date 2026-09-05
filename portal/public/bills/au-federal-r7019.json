@@ -1,0 +1,485 @@
+{
+ "key": "au-federal-r7019",
+ "title": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023",
+ "short_title": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7019_ems_30a282a6-7b5a-4659-b9cb-13da5698bca1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/9174583%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7019%22",
+   "document_date": "2023-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8128",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "question": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023 - Second Reading - Agree with bill's main idea",
+   "stage": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023",
+   "ayes": 120,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-31/1"
+  },
+  {
+   "key": "federal-representatives-8129",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "question": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023 - Consideration in Detail - Agree with the bill",
+   "stage": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023",
+   "ayes": 121,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-31/2"
+  },
+  {
+   "key": "federal-representatives-8130",
+   "date": "2023-05-31",
+   "house": "representatives",
+   "question": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023 - Third Reading - Pass the bill",
+   "stage": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023",
+   "ayes": 121,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-31/3"
+  },
+  {
+   "key": "federal-senate-8161",
+   "date": "2023-06-16",
+   "house": "senate",
+   "question": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023 - Second Reading - Agree with bill's main idea",
+   "stage": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023",
+   "ayes": 42,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-16/3"
+  },
+  {
+   "key": "federal-senate-8162",
+   "date": "2023-06-16",
+   "house": "senate",
+   "question": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023 - in Committee - Agree with the bill",
+   "stage": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023",
+   "ayes": 41,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-16/4"
+  },
+  {
+   "key": "federal-senate-8163",
+   "date": "2023-06-19",
+   "house": "senate",
+   "question": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023 - Third Reading - Pass the bill",
+   "stage": "Constitution Alteration (Aboriginal and Torres Strait Islander Voice) 2023",
+   "ayes": 52,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "member": 10,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-19/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829637",
+   "speaker": "Marion Scrymgour",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The government introduced the Constitution Alteration (Aboriginal and Torres Strait Islander Voice) Bill 2023, proposing a referendum to alter the Constitution to establish an Aboriginal and Torres Strait Islander Voice, giving Indigenous Australians a say in matters affecting them."
+  }
+ ],
+ "acts": []
+}

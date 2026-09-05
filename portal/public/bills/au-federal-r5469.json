@@ -1,0 +1,194 @@
+{
+ "key": "au-federal-r5469",
+ "title": "Superannuation Guarantee (Administration) Amendment Bill 2015",
+ "short_title": "Superannuation Guarantee (Administration) Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5469_ems_7744d663-c470-4802-b81b-7ba291ba07e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5469%22",
+   "document_date": "2015-05-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00071",
+   "document_date": "2015-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-28",
+  "sentences": [
+   "The bill would remove the duty for employers to offer a superannuation fund choice to temporary residents and when funds merge.",
+   "Employers would no longer need to give a standard choice form to temporary visa holders or when an employee’s super benefits transfer to a successor fund after a merger.",
+   "The government says employee entitlements to super contributions and their ability to choose a fund would not be affected."
+  ],
+  "changes": [
+   "Removes the obligation to offer a choice of super fund to temporary residents.",
+   "Removes the obligation to offer a choice of super fund when super funds merge.",
+   "Simplifies super compliance for employers."
+  ],
+  "affected": "Employers, temporary residents, and employees whose super funds merge.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:42Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-311063",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The bill simplifies when employers must offer a standard choice form to employees, removing the requirement for temporary residents (including New Zealand residents) and when a superannuation fund merges, and expands eligibility for the free small business superannuation clearing house to businesses with turnover under $2 million or fewer than 20 employees, saving an estimated $45 million annually in compliance costs."
+  },
+  {
+   "slug": "speech-312664",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "Labor supported the Superannuation Guarantee (Administration) Amendment Bill, which removes the obligation for employers to offer a choice of superannuation fund to temporary resident employees and during fund mergers, reducing compliance costs for small business while maintaining employer super guarantee payments. The speaker also criticised the Liberal Party for cutting Labor's instant asset write-off from $6,500 to $1,000 before reintroducing it at $20,000, while the federal deficit grew from $13 billion to $35 billion."
+  },
+  {
+   "slug": "speech-312668",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The company tax rate was reduced to 28.5%, the lowest since 1967, to benefit small businesses, and the Superannuation Guarantee Administration (Amendment) Bill 2015 includes a new instant asset write-off incentive. The speaker also supported encouraging small businesses to hire staff, agreeing with the member for Oxley."
+  },
+  {
+   "slug": "speech-312675",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Superannuation Guarantee (Administration) Amendment Bill 2015, which removes the obligation for employers to offer a choice of super fund to temporary resident employees or when super funds merge, citing reduced paperwork burdens for small businesses. The speaker also argued for increasing the superannuation guarantee to 12%, criticised the Abbott government for freezing the guarantee and scrapping the low-income superannuation contribution, and claimed these cuts would affect 28,300 people in their electorate and reduce national savings by $45 billion by 2021."
+  },
+  {
+   "slug": "speech-312676",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The Senate approved a small business company tax cut to its lowest level since 1967 and an instant asset write-off of up to $20,000. The Superannuation Guarantee (Administration) Amendment Bill 2015 simplifies superannuation choice forms for employers, reducing compliance costs, particularly for businesses employing temporary residents in sectors like horticulture and hospitality."
+  },
+  {
+   "slug": "speech-312677",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-15",
+   "stage_hint": null,
+   "brief": "The Superannuation Guarantee (Administration) Amendment Bill 2015 reduces compliance costs for small businesses by removing the requirement for employers to provide a standard choice form to temporary resident workers and to re-offer a choice of fund after a merger, while preserving employees' right to choose a fund."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation Guarantee (Administration) Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00071",
+   "assent_date": "2015-06-25"
+  }
+ ]
+}

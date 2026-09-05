@@ -1,0 +1,349 @@
+{
+ "key": "au-federal-alrc-2333",
+ "title": "Tax and Superannuation Laws Amendment (2013 Measures No. 1) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00088",
+   "document_date": "2013-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1094",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "question": "David Bradbury I present a supplementary explanatory memorandum to the bill. I seek leave to move government amendments as circulated together. Leave granted. I move government amendments (1) and (2) on sheet AP242 and (1) and (2) on sheet CJ279: (1) Schedule 5, item 2, page 36 (line 5), after \"earliest year\", insert \"(disregarding any period when the entity was not in existence)\". (2) Schedule 5, item 2, page 36 (line 8), at the end of subsection 160-25(2), add \"(disregarding any period when the entity was not in existence)\". (1) Clause 2, page 2 (table items 6 and 7), omit the table items. (2) Schedule 4, page 24 (line 1) to page 30 (line 19), omit the Schedule. As introduced, the bill requires that an entity be a corporate tax entity throughout the year spanned by the carry-back, including throughout the year to which the loss is carried back. This raises the possible interpretation that an entity cannot have been a corporate tax entity throughout the year during which it comes into being because it did not exist as an entity for the whole of that year. Under the amendments, any part of a year before the entity came into existence is to be disregarded in deciding if it was a corporate tax entity throughout the year. This will ensure that otherwise eligible entities are not precluded from carrying tax losses back to the year they came into existence and is consistent with the intention of the measure. Bruce Billson We have just received the government amendments—it was an exercise tracking them down. As I understand the minister, the self-managed super funds and related parties, the stuff you are seeking to excise, cover the amendment we were seeking to move. The other relates to a technical amendment. We have had no opportunity to consider these amendments that have been moved, but we will take them on face value as they have been described. We will not oppose them and, hopefully, there might be some reciprocity and the government will embrace our amendments when",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-29/2"
+  },
+  {
+   "key": "federal-senate-2970",
+   "date": "2013-06-25",
+   "house": "senate",
+   "question": "Mathias Cormann Here we go again—another whole series of complex changes in tax and superannuation laws. The one loud and clear message from people right across Australia is that— Government Senators Government senators interjecting— Sue Boyce Would people not taking part in the debate please leave the chamber or be quiet. Senator Cormann should be heard in silence. Mathias Cormann Thank you, Madam Acting Deputy President. They really are a rabble over there. They are in complete chaos, they are dysfunctional and they are divided. The only thing that holds them together over there is when there is a vested interest being pushed on them by the union movement. That is the only time there is unity of purpose over there—when they get to pursue the vested interests of the union movement instead of pursuing the public interest. Other than that, they are just a divided rabble completely incapable of governing Australia, completely incapable of providing good governance. So here we go again—another two pieces of legislation proposing 14-odd changes to our tax laws and superannuation laws. Sorry, there are just 13 changes now because in relation to schedule 4 of the Tax and Superannuation Laws Amendment (2013 Measures No. 1) Bill 2013—in which the government tried to impose additional restrictions and more red tape on self-managed super funds in terms of related party transactions, making it harder for people who are doing the right thing by saving to achieve a self-funded retirement—the Labor Party was forced to back down because, again, they got it so wrong. Whenever they see self-managed super, this Labor government, in their ideological pursuit of people who are inspired to look after their own needs in retirement, always looks at ways to make things harder for people. On this occasion, in the face of opposition from crossbench members of parliament in the House of Representatives, the government was forced into an embarrassing backdown, which of course was good news for",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 58,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-25/12"
+  },
+  {
+   "key": "federal-senate-2971",
+   "date": "2013-06-25",
+   "house": "senate",
+   "question": "John Hogg The question is that the Tax and Superannuation Laws Amendment (2013 Measures No. 2) Bill 2013 be now read a second time. Question agreed to. Bills read a second time. In respect of the Tax and Superannuation Laws Amendment (2013 Measures No. 1) Bill 2013, the question is that schedules 5 and 6 stand as printed. _Opposition_ _'_ _s circulated amendments_ (2) Schedules 5 and 6, page 24 (line 1) to page 58 (line 11), TO BE OPPOSED.",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-25/13"
+  },
+  {
+   "key": "federal-senate-2972",
+   "date": "2013-06-25",
+   "house": "senate",
+   "question": "John Hogg The question now is that the remaining stages of these bills be agreed to and these bills be now passed. Mathias Cormann Mr President, again the coalition intends to vote differently on each bill. If you could please take them separately, it would be much appreciated. John Hogg The question now is that the remaining stages of the Tax and Superannuation Laws Amendment (2013 Measures No. 1) Bill 2013 be agreed to and the bill be now passed.",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 59,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-25/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-273446",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273447",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273602",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273604",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273605",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825047",
+   "speaker": "Mathias Cormann",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": "The Coalition argued the Labor government's tax and superannuation changes broke promises, imposed nearly $9 billion in additional taxes on low- and middle-income earners' super, and cut the super co-contribution from $1,500 to $500 per $1,000 saved, costing $3.3 billion. They announced they would move amendments to excise schedules 5 and 6 (loss carry-back measures) from the Tax and Superannuation Laws Amendment (2013 Measures No. 1) Bill 2013 because they are unfunded and linked to the failed minerals resource rent tax, which raised only $310 million against forecasts."
+  },
+  {
+   "slug": "speech-825048",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2013-06-25",
+   "stage_hint": null,
+   "brief": "The coalition requested separate votes on two tax bills, the Tax and Superannuation Laws Amendment (2013 Measures No. 1) Bill 2013 and the Tax and Superannuation Laws Amendment (2013 Measures No. 2) Bill 2013, and both were ultimately passed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2013 Measures No. 1) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00088",
+   "assent_date": "2013-06-28"
+  }
+ ]
+}

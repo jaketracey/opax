@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-r5883",
+ "title": "Industrial Chemicals (Notification and Assessment) Amendment Bill 2017",
+ "short_title": "Industrial Chemicals (Notification and Assessment) Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5883_ems_6b103dff-a0b8-4504-b6f8-170b44970e11%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5883%22",
+   "document_date": "2017-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00014",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 10,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-01",
+  "sentences": [
+   "This bill would make early changes to the national system for overseeing industrial chemicals, ahead of larger reforms planned for 2018.",
+   "It would adjust the definition of a new synthetic polymer, exempt certain low-risk polymers from notification, and require annual reporting to the regulator for permits and self-assessments.",
+   "Introducers would also need to report the total value of chemicals they actually brought in during a registration year, and the bill includes related technical adjustments."
+  ],
+  "changes": [
+   "The definition of a new synthetic polymer would be brought closer to international standards.",
+   "Polymers of low concern would no longer need to be notified to the regulator.",
+   "Holders of permits and self-assessed assessment certificates would have to file yearly reports with the regulator.",
+   "A final statement of the value of chemicals actually imported or manufactured in a registration year would be required.",
+   "The law would be updated with consequential changes to support these new requirements."
+  ],
+  "affected": "Companies and individuals who manufacture or import industrial chemicals into Australia and are covered by the notification and assessment scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:01:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-348094",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-01",
+   "stage_hint": null,
+   "brief": "The Industrial Chemicals (Notification and Assessment) Amendment Bill 2017 was introduced to enable early commencement of certain reforms to industrial chemicals regulation, including aligning low-risk chemical definitions with international standards, exempting polymers of low concern from notification, and removing annual reporting requirements for permits and self-assessed certificates."
+  },
+  {
+   "slug": "speech-355036",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The bills create a new Australian Industrial Chemicals Introduction Scheme, adopting a risk‑based regulatory approach that includes a ban on animal testing for cosmetics consistent with the European Union, while the speaker argued opposition amendments would create loopholes and place Australian industry at a disadvantage by blocking necessary animal test data for multi‑use chemicals."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Industrial Chemicals (Notification and Assessment) Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00014",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

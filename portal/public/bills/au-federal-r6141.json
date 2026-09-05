@@ -1,0 +1,345 @@
+{
+ "key": "au-federal-r6141",
+ "title": "Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6141_ems_cd88aab5-5a74-47e3-b258-f5bef18ae63d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6141_ems_8ec923f3-e688-46a9-bf55-ec9dc22f300b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6141%22",
+   "document_date": "2018-06-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00016",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-21",
+  "sentences": [
+   "The bill would stop superannuation savings from being reduced by fees and insurance costs.",
+   "It would cap fees for low-balance accounts, ban exit fees, make insurance opt-in rather than automatic, and give the Australian Taxation Office more power to merge small, inactive accounts.",
+   "The explanatory memorandum notes that superannuation makes up 17 per cent of household assets and is the second-largest savings vehicle for Australian households."
+  ],
+  "changes": [
+   "The bill limits fees on low-balance accounts so those savings are not eaten up by high charges.",
+   "The bill bans exit fees so people can more easily combine their accounts.",
+   "The bill makes insurance in superannuation only available if members actively choose it, preventing them from paying for coverage they do not want.",
+   "The bill expands the Australian Taxation Office's authority to find and merge small, inactive superannuation accounts."
+  ],
+  "affected": "Australians with superannuation accounts, particularly those with low balances or multiple accounts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:26:57Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5691",
+   "date": "2019-02-14",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (34) on sheet 8501](https://www.openaustralia.org.au/senate/?gid=2019-02-14.244.1), which means they failed. They were introduced by NSW Senator [Deborah O'Neill](https://theyvoteforyou.org.au/people/senate/nsw/deborah_o'neill) (ALP). ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd032): > *The Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018 contains three Schedules, the purpose of which is to make amendments to the* [Superannuation Industry (Supervision) Act 1993] *and the* [Superannuation (Unclaimed Money and Lost Members) Act 1999] *to:* > >> * *limit the amount of fees that can be charged by a trustee of a superannuation fund for MySuper or choice products to three per cent of the balance of the account if the balance is less than $6,000* >> >> * *prohibit superannuation funds and approved deposit funds from imposing exit fees when a member disposes of all or part of their interest in a fund* >> >> * *prevent superannuation funds from providing insurance such as death, total and permanent disability or income protection insurance on an opt-out basis where:* >> >>> * *the member is under the age of 25 years and begins to hold a new superannuation account on or after 1 July 2019* >>> >>> * *the member’s account balance falls below $6,000 or* >>> >>> * *the member’s account has not received a contribution for 13 months and is inactive* >> >> * *require retirement savings account providers and superannuation providers to pay the balance of MySuper or choice accounts to the Commissioner of Taxation, where the account is inactive and the balance is less than $6,000 and* >> >> * *require the Commissioner to consolidate any amounts received into a person’s superannuation account that will have a balance of $6,000 or more once consolidated.*",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 18,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-02-14/12"
+  },
+  {
+   "key": "federal-senate-5692",
+   "date": "2019-02-14",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-02-14.252.1) to keep particular items in the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6141) unchanged, which means those items were successfully opposed. ### Which items were opposed? > *(6) Schedule 2, item 1, page 12 (line 6) to page 14 (line 24), [sections 68AAB and 68AAC](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6141_first-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr6141_first-reps%2F0000%22;rec=0), TO BE OPPOSED.* > *(14) Schedule 2, [items 4 and 5](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6141_first-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr6141_first-reps%2F0000%22;rec=0), page 17 (line 23) to page 19 (line 35), TO BE OPPOSED.* These items deal with low-balance accounts and members under 25 years of age. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd032): > *The Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018 contains three Schedules, the purpose of which is to make amendments to the* [Superannuation Industry (Supervision) Act 1993] *and the* [Superannuation (Unclaimed Money and Lost Members) Act 1999] *to:* > >> * *limit the amount of fees that can be charged by a trustee of a superannuation fund for MySuper or choice products to three per cent of the balance of the account if the balance is less than $6,000* >> >> * *prohibit superannuation funds and approved deposit funds from imposing exit fees when a member disposes of all or part of their interest in a fund* >> >> * *prevent superannuation funds from providing insurance such as death, total and permanent disability or income protection insurance on an opt-out basis where:* >> >>> * *the member is under",
+   "stage": "In committee",
+   "ayes": 3,
+   "noes": 57,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 18,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-02-14/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-366299",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-28",
+   "stage_hint": null,
+   "brief": "Labor supports the bill's objectives of limiting fees and banning exit fees for low-balance accounts, and requiring opt-in insurance for members under 25 or with balances below $6,000, but will refer it to a Senate inquiry to address concerns about unintended underinsurance, particularly for high-risk occupations. The speaker also criticised the government's record on superannuation, including delaying the super guarantee increase and proposing an amnesty for unpaid super."
+  },
+  {
+   "slug": "speech-366301",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-28",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018 protects young Australians and women from excessive fees and unwanted insurance premiums, accusing the opposition of prioritising union-controlled superannuation funds over workers. The bill caps fees and allows opt-out insurance for low-balance accounts, with the speaker criticising opposition leader Bill Shorten for supporting policies that \"raid\" superannuation accounts."
+  },
+  {
+   "slug": "speech-366302",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018 would benefit young people and low-income earners by capping fees on balances under $6,000, banning exit fees, making insurance opt-in for certain groups, and allowing the ATO to reunite people with lost super. The speaker cited estimated savings of $570 million in the first year from fee caps, $52 million from exit fee bans, $3 billion in insurance premiums, and $6 billion reunited with three million people."
+  },
+  {
+   "slug": "speech-366303",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-28",
+   "stage_hint": null,
+   "brief": "Labor gave qualified support to the Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018, subject to Senate committee findings, and argued that multiple superannuation accounts reduce retirement savings, citing 9.5 million accounts with balances under $6,000 and 40% of Australians holding multiple accounts. The speaker also criticised the government's proposed amnesty for employers who failed to pay superannuation contributions and its record on superannuation policy."
+  },
+  {
+   "slug": "speech-366304",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018 protects low-balance superannuation accounts from fee erosion, noting that the previous government removed member protections for accounts under $1,000 in 2013. The bill empowers the Australian Tax Office to consolidate inactive accounts under $6,000 and prevents automatic insurance for members under 25, addressing issues like multiple accounts and unnecessary premiums."
+  },
+  {
+   "slug": "speech-366305",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-28",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018, which caps administration and investment fees at 3% for accounts under $6,000, bans exit fees, makes insurance opt-in for accounts under $6,000 or inactive for 13 months and for new members under 25 from 1 July 2019, and transfers inactive accounts under $6,000 with no insurance to the Australian Taxation Office for proactive reunification with owners."
+  },
+  {
+   "slug": "speech-375494",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speech condemned the government for removing the opt-in insurance provision for young and low-income superannuation members from the Treasury Laws Amendment (Protecting Your Superannuation Package) Bill 2018 through last-minute Senate amendments passed with the Greens' support. The removal contradicted the Treasurer's stated benefits of giving 5 million members the choice to save up to $2 billion a year and rejected Labor's alternative amendments that would have protected high-risk workers such as construction workers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Protecting Your Superannuation Package) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00016",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

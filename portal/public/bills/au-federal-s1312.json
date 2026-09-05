@@ -1,0 +1,80 @@
+{
+ "key": "au-federal-s1312",
+ "title": "Fair Work Amendment (Improving Paid Parental Leave for Parents of Stillborn Babies) Bill 2021",
+ "short_title": "Fair Work Amendment (Improving Paid Parental Leave for Parents of Stillborn Babies) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-05",
+ "originating_house": "senate",
+ "sponsor": "KENEALLY, Sen Kristina",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10906",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1312%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1312%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1312%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1312%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1312_ems_41a52b6b-cf81-4a27-ae5a-557874912992%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1312%22",
+   "document_date": "2021-08-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-05",
+  "sentences": [
+   "The bill would give parents who experience a stillbirth the same employer-paid parental leave they would get if the baby was born alive.",
+   "It would amend the Fair Work Act 2009 to preserve leave entitlements, require employees to provide evidence of the stillbirth if asked, and forbid employers from cancelling or reducing the leave because of the birth's outcome.",
+   "The changes would apply to stillbirths occurring on or after the day Schedule 1 of the bill starts, which is the day after the Act receives royal assent."
+  ],
+  "changes": [
+   "Preserves parents' entitlement to employer-paid parental leave after a stillbirth.",
+   "Prevents employers from cancelling or reducing paid parental leave due to a stillbirth.",
+   "Sets out evidence requirements for employees claiming leave after a stillbirth.",
+   "Allows employees to cancel or alter leave by written notice, with a four-week notice period if leave has already started."
+  ],
+  "affected": "Parents who experience a stillbirth and their employers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

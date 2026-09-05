@@ -1,0 +1,131 @@
+{
+ "key": "au-federal-s1418",
+ "title": "COVID-19 Response Commission of Inquiry Bill 2024",
+ "short_title": "COVID-19 Response Commission of Inquiry Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-25",
+ "originating_house": "senate",
+ "sponsor": "CANAVAN, Sen Matthew",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10827",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-08-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1418%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1418%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1418%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1418%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1418_ems_c6b7908e-5335-4b7c-b9c2-30a6182a52a1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1418%22",
+   "document_date": "2024-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-06-25",
+  "sentences": [
+   "The bill would create a commission of inquiry into Australia's handling of the COVID-19 pandemic.",
+   "The commission would investigate federal, state and territory government responses and report to Parliament within 18 months.",
+   "The commission would have powers to summon witnesses, issue search warrants and arrest people who fail to appear."
+  ],
+  "changes": [
+   "Establishes the Covid-19 Response Commission of Inquiry.",
+   "Requires the commission to report to Parliament within 18 months, unless the Senate extends the period.",
+   "Gives the commission powers to summon witnesses, issue search warrants and arrest non-attending witnesses."
+  ],
+  "affected": "The governments of the Commonwealth, States and Territories, and people who may be summoned as witnesses.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9348",
+   "date": "2024-08-22",
+   "house": "senate",
+   "question": "Covid-19 Response Commission of Inquiry Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-22/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

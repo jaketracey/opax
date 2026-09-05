@@ -1,0 +1,1111 @@
+{
+ "key": "au-federal-r7149",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science and Resources",
+ "status": "passed",
+ "status_as_of": "2024-06-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7149_ems_25980693-972d-48c3-862d-9c481645a29f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7149_ems_f21d7331-34a1-4368-8413-013b7e5d32e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7149_ems_a6f3ffda-99e1-4039-a0cb-d8eb4c7ed20d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7149_ems_8787690b-4a1a-423c-90db-e38f48632309%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7149%22",
+   "document_date": "2024-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00043",
+   "document_date": "2024-06-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-02-15",
+  "sentences": [
+   "This bill aims to improve safety for workers on offshore oil and gas facilities by updating the existing legal framework.",
+   "It would change the Offshore Petroleum and Greenhouse Gas Storage Act 2006 to adopt recommendations from a government safety review and make other adjustments.",
+   "New rules would require vessel operators to tell the regulator when they start or stop working as a facility, and the changes would take effect before the current safety regulations expire on 1 April 2026."
+  ],
+  "changes": [
+   "Align health and safety representative training with the Work Health and Safety Act 2011.",
+   "Let health and safety representatives ask to review safety management documents.",
+   "Let health and safety representatives serve on health and safety committees.",
+   "Broaden the definition of health to cover physical and mental aspects.",
+   "Add new duties for titleholders when a different company runs the facility.",
+   "Set up a scheme requiring operators to notify the regulator when starting or ending work as a facility."
+  ],
+  "affected": "Offshore oil and gas workers, facility operators, titleholders, and the regulator NOPSEMA.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8746",
+   "date": "2024-02-29",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2024-02-29.13.2) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it was unsuccessful. ### Amendment text > *At the end of the motion, add: \"and:* > >> *(a) the provisions of the [Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7149%22) be referred immediately to the Economics Legislation Committee for inquiry and report by 8 May 2024; and* >> >> *(b) the [Financial Framework (Supplementary Powers) Amendment Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1408) be referred immediately to the Finance and Public Administration Legislation Committee for inquiry and report by 14 March 2024\".* ### Original motion > *That the report be adopted.*",
+   "stage": "Committee motion",
+   "ayes": 14,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-29/1"
+  },
+  {
+   "key": "federal-senate-8747",
+   "date": "2024-02-29",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-02-29.18.1) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it succeeded. ### Amendment text > *At the end of the motion, add \"and, in respect of the [Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7149%22), the provisions of the bill be referred immediately to the Economics Legislation Committee [for inquiry and report](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Economics/OPGSAmend24) by 22 March 2024\".*",
+   "stage": "Committee motion",
+   "ayes": 33,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-29/2"
+  },
+  {
+   "key": "federal-representatives-8783",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2024-03-25.36.1) introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens), which means it failed. ### Motion text > *That so much of the standing and sessional orders be suspended as would prevent the question for the second reading of the [Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7149) being put to the House for decision only when the Government's promised environmental reform package has passed both houses.* Standing and session orders are the usual procedural rules of parliament.",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 38
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-25/1"
+  },
+  {
+   "key": "federal-representatives-8785",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 57,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 70,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-25/3"
+  },
+  {
+   "key": "federal-representatives-8786",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2024-03-25.125.1) introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens), which means it failed. ### Motion text > *That so much of the standing and sessional orders be suspended as would prevent the question for the second reading of the Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 being put to the House for decision only when the Government's the Government's amendments to the bill have been considered by a Senate inquiry.* Standing and sessional orders are the usual procedural rules of parliament.",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 68,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-25/4"
+  },
+  {
+   "key": "federal-representatives-8787",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 57,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 70,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-25/5"
+  },
+  {
+   "key": "federal-representatives-8788",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 - Second Reading - Schedule 2, part 2",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 60,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 69,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-25/6"
+  },
+  {
+   "key": "federal-representatives-8789",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2024-03-25.135.1) to read the bill for a second time. In other words, they voted to agree with the main idea of the bill and so it can now be discussed in detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd056) (which is a document prepared by the parliamentary library): * *The Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 seeks to amend the Offshore Petroleum and Greenhouse Gas Storage Act 2006 (OPGGS Act) to improve safety outcomes for Australia’s offshore resources sector workforce.* * *The Bill makes a range of amendments to the OPGGS Act, including to Schedule 3 which relates to occupational health and safety.* * *The Bill implements some recommendations of Offshore Oil and Gas Safety Review which began in 2018. However, the majority of the recommendations will be implemented through the remake of the Offshore Petroleum and Greenhouse Gas Storage (Safety) Regulations 2009, which are due to sunset on 1 April 2026. A draft of proposed regulations is not yet available.* * *The Bill also proposes to introduce a new section that would preserve approvals made under NOPSEMA’s Endorsed Program authorised by the strategic assessment under the Environment Protection and Biodiversity Conservation Act 1999 (EPBC Act). It would allow the OPGGS Act and associated regulations to be amended, even if this would be inconsistent with the Endorsed Program.* * *The Department of Climate Change, Energy, the Environment and Water is currently consulting on major reforms to the EPBC Act, as recommended by the Samuel Review, and it is unclear whether or how this proposed section will interface with those reforms. That consultation process is continuing until 30 March 2024.* * *The Bill does not directly address issues raised in relation to consult",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 70,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-25/7"
+  },
+  {
+   "key": "federal-representatives-8804",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 51,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 63,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/10"
+  },
+  {
+   "key": "federal-representatives-8805",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 - Consideration in Detail - Deleting Part 2 of Schedule 2",
+   "stage": "Consideration in detail",
+   "ayes": 14,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 65,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/11"
+  },
+  {
+   "key": "federal-representatives-8806",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 60,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 47,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 72,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/12"
+  },
+  {
+   "key": "federal-representatives-8807",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/debate/?id=2024-03-26.113.1) introduced by Brand MP [Madeleine King](https://theyvoteforyou.org.au/people/representatives/brand/madeleine_king) (Labor), which means it will now become part of the bill. ### Amendment text > *(1) Schedule 2, item 6, page 61 (line 9), omit \"If\", substitute \"Subject to paragraph (1C)(b) and subsection (6), if\".* > > *(2) Schedule 2, item 6, page 61 (after line 22), after subsection 790E(1), insert:* > >> *Consultation with Environment Minister etc.* >> >> *(1A) Before the Governor-General makes regulations (the designatedregulations) that amend or replace regulations (the prescribed regulations) that are prescribed for the purposes of paragraph (1)(a), the Minister must:* >> >>> *(a) be satisfied that the designated regulations would not be inconsistent with the principles of ecologically sustainable development set out in section 3A of the Environment Protection and Biodiversity Conservation Act 1999; and* >>> >>> *(b) consult with the Environment Minister about the designated regulations; and* >>> >>> *(c) have received notice from the Environment Minister that:* >>> >>>> *(i) the Environment Minister is satisfied that the designated regulations would not be inconsistent with the principles of ecologically sustainable development set out in section 3A of the Environment Protection and Biodiversity Conservation Act 1999; or* >>>> >>>> *(ii) the Environment Minister is not satisfied that the designated regulations would not be inconsistent with the principles of ecologically sustainable development set out in section 3A of the Environment Protection and Biodiversity Conservation Act 1999.* >> >> *(1B) If subparagraph (1A)(c)(ii) applies in relation to the designated regulations, the designated regulations, and any subsequent compilation (within the meaning of the Legislation Act 2003) of the prescribed regulations, must:* >> >>> *(a) specify that subparagrap",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 6
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/13"
+  },
+  {
+   "key": "federal-representatives-8808",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 - Consideration in Detail - Put the question",
+   "stage": "Consideration in detail",
+   "ayes": 47,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/14"
+  },
+  {
+   "key": "federal-representatives-8809",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-03-26.119.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means it failed. ### Amendment text > *(1) Schedule 2, item 6, page 62 (after line 36), after section 790E, insert:* > >> *790F Ministerial opinions about regulations* >> >> *(1) This section applies for any regulations (the relevant regulations) that:* >> >>> *(a) are prescribed for the purposes of paragraph 790E(1)(a); or* >>> >>> *(b) amend regulations prescribed for the purposes of that paragraph.* >> >> *(2) If, before the relevant regulations were made, the Minister:* >> >>> *(a) was of the opinion that the relevant regulations would, or would not, be inconsistent with the principles of ecologically sustainable development set out in section 3A of the Environment Protection and Biodiversity Conservation Act 1999; or* >>> >>> *(b) was given a written notice by the Environment Minister setting out the Environment Minister's opinion on that matter;* >>> >>> *the Minister must table that opinion (including the reasons for that opinion) in each House of the Parliament within 7 sitting days of that House after the day the relevant regulations were made.* >>> >>> *Note: If the Minister and the Environment Minister each held an opinion on the matter, then the Minister must table both opinions.*",
+   "stage": "Consideration in detail",
+   "ayes": 14,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 68,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/15"
+  },
+  {
+   "key": "federal-representatives-8810",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2024-03-26.124.1) to agree with the bill as it had been amended. This means they can now decide on whether to pass the bill in the House of Representatives. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd056) (which is a document prepared by the parliamentary library): * *The Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 seeks to amend the Offshore Petroleum and Greenhouse Gas Storage Act 2006 (OPGGS Act) to improve safety outcomes for Australia’s offshore resources sector workforce.* * *The Bill makes a range of amendments to the OPGGS Act, including to Schedule 3 which relates to occupational health and safety.* * *The Bill implements some recommendations of Offshore Oil and Gas Safety Review which began in 2018. However, the majority of the recommendations will be implemented through the remake of the Offshore Petroleum and Greenhouse Gas Storage (Safety) Regulations 2009, which are due to sunset on 1 April 2026. A draft of proposed regulations is not yet available.* * *The Bill also proposes to introduce a new section that would preserve approvals made under NOPSEMA’s Endorsed Program authorised by the strategic assessment under the Environment Protection and Biodiversity Conservation Act 1999 (EPBC Act). It would allow the OPGGS Act and associated regulations to be amended, even if this would be inconsistent with the Endorsed Program.* * *The Department of Climate Change, Energy, the Environment and Water is currently consulting on major reforms to the EPBC Act, as recommended by the Samuel Review, and it is unclear whether or how this proposed section will interface with those reforms. That consultation process is continuing until 30 March 2024.* * *The Bill does not directly address issues raised in relation to consultation",
+   "stage": "Consideration in detail",
+   "ayes": 54,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 66,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/16"
+  },
+  {
+   "key": "federal-representatives-8811",
+   "date": "2024-03-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-03-26.126.1) to read the bill for a third time. In other words, they voted to pass the bill in the House of Representatives. The bill will now be sent to the Senate for their consideration. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd056) (which is a document prepared by the parliamentary library): * *The Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 seeks to amend the Offshore Petroleum and Greenhouse Gas Storage Act 2006 (OPGGS Act) to improve safety outcomes for Australia’s offshore resources sector workforce.* * *The Bill makes a range of amendments to the OPGGS Act, including to Schedule 3 which relates to occupational health and safety.* * *The Bill implements some recommendations of Offshore Oil and Gas Safety Review which began in 2018. However, the majority of the recommendations will be implemented through the remake of the Offshore Petroleum and Greenhouse Gas Storage (Safety) Regulations 2009, which are due to sunset on 1 April 2026. A draft of proposed regulations is not yet available.* * *The Bill also proposes to introduce a new section that would preserve approvals made under NOPSEMA’s Endorsed Program authorised by the strategic assessment under the Environment Protection and Biodiversity Conservation Act 1999 (EPBC Act). It would allow the OPGGS Act and associated regulations to be amended, even if this would be inconsistent with the Endorsed Program.* * *The Department of Climate Change, Energy, the Environment and Water is currently consulting on major reforms to the EPBC Act, as recommended by the Samuel Review, and it is unclear whether or how this proposed section will interface with those reforms. That consultation process is continuing until 30 March 2024.* * *The Bill does not directly address iss",
+   "stage": "Third reading",
+   "ayes": 55,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 51,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 67,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-26/17"
+  },
+  {
+   "key": "federal-senate-8917",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024 - Second Reading - Opposition amendments",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/24"
+  },
+  {
+   "key": "federal-senate-8918",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2024-05-16.209.3) \"*that part 2 of schedule 2 stand as printed.*\" In other words, they voted to keep that part unchanged. This division was put after the government moved the following motion: > *(2) Schedule 2, Part 2, page 61 (line 1) to page 64 (line 21), to be opposed.* ### What is part 2? [Part 2 of Schedule 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7149_third-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr7149_third-reps%2F0000%22;rec=0#994acbc2b0714fb7816b34e4e749088c) relates to approval under Environment Protection and Biodiversity Conservation Act 1999. According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd056): > *Part 2—Approval under Environment Protection and Biodiversity Conservation Act 1999 inserts proposed section 790E into the OPGGS Act to preserve the effect of the Offshore Petroleum and Greenhouse Gas Storage approvals made in accordance with the Endorsed Program under the EPBC Act, even where amendments to the OPGGS Act or prescribed regulations (such as the Environment Regulations) are inconsistent with aspects of the Endorsed Program.*",
+   "stage": "Committee of the whole",
+   "ayes": 26,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/25"
+  },
+  {
+   "key": "federal-senate-8919",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-05-16.211.1) that [subsections 790E(1A) to (1D) and (6)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7149_third-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr7149_third-reps%2F0000%22;rec=0) in item 6 of schedule 2 stand as printed. This division was put after the opposition moved that: > *(2) Schedule 2, item 6, page 61 (line 23) to page 63 (line 2), subsections 790E(1A) to (1D) to be opposed.* > > *(3) Schedule 2, item 6, page 64 (lines 10 to 21), subsection 790E(6) to be opposed.* ### Text of subsections 790E(1A)-(1D) and (6) > *790E Approval under Environment Protection and Biodiversity Conservation Act 1999 —interaction with this Act and Environment Regulations* > > *Consultation with Environment Minister etc.* > > *(1A) Before the Governor-General makes regulations (the designated regulations ) that amend or replace regulations (the prescribed regulations ) that are prescribed for the purposes of paragraph (1)(a), the Minister must:* > >> *(a) be satisfied that the designated regulations would not be inconsistent with the principles of ecologically sustainable development set out in section 3A of the Environment Protection and Biodiversity Conservation Act 1999 ; and* >> >> *(b) consult with the Environment Minister about the designated regulations; and* >> >> *(c) have received notice from the Environment Minister that:* >> >>> *(i) the Environment Minister is satisfied that the designated regulations would not be inconsistent with the principles of ecologically sustainable development set out in section 3A of the Environment Protection and Biodiversity Conservation Act 1999 ; or* >>> >>> *(ii) the Environment Minister is not satisfied that the designated regulations would not be inconsistent with the principles of ecologically sustainable development set out in section 3A of the Environment Protection an",
+   "stage": "Committee of the whole",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/26"
+  },
+  {
+   "key": "federal-senate-8920",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-05-16.213.1) introduced by Queensland Senator [Susan McDonald](https://theyvoteforyou.org.au/people/senate/queensland/susan_mcdonald) (Nationals), which means it failed. ### Amendment text > *(1) Schedule 2, item 6, page 61 (line 9), omit \"Subject to paragraph (1C)(b) and subsection (6), if\", substitute \"If\".* ### What is paragraph (1C)(b) and subsection (6)? > *(1C) If subparagraph (1A)(c)(ii) applies in relation to the designated regulations, then:* > >> *(a) ...* >> >> *(b) subsection (1) does not apply in relation to conduct engaged in in relation to a relevant action on or after the earliest day on which any of the provisions of the designated regulations commence.* > > *(6) Subsection (1) does not apply in relation to conduct engaged in in accordance with regulations (the designated regulations ) if:* > >> *(a) other regulations are prescribed for the purposes of paragraph (1)(a) (the prescribed regulations ); and* >> >> *(b) the designated regulations amended or replaced some or all of the prescribed regulations; and* >> >> *(c) all of the provisions of the designated regulations commenced after the end of the period of 12 months starting on the day the Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Act 2024 receives the Royal Assent.*",
+   "stage": "Committee of the whole",
+   "ayes": 26,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/27"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00043",
+   "assent_date": "2024-06-11"
+  }
+ ]
+}

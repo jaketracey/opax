@@ -1,0 +1,475 @@
+{
+ "key": "au-federal-r5129",
+ "title": "Building and Construction Industry (Improving Productivity) Bill 2013",
+ "short_title": "Building and Construction Industry (Improving Productivity) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2015-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5129_ems_cf47ce8b-f480-410f-a2ce-26d5fa513745%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5129_ems_26e17cac-7b00-425e-b201-9b236c342885%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5129_ems_35a04201-d96d-4ddd-bffe-9848730ea9fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5129_ems_9f4907c9-b957-42a8-a2b6-ea5052cbcea0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5129%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "The bill would re-establish a national regulator for the building and construction industry.",
+   "It would set up the Australian Building and Construction Commission to enforce workplace laws and the Building Code.",
+   "The government plans to move amendments clarifying the bill's application to offshore platforms and ships, and adding enforcement powers to the Building Code."
+  ],
+  "changes": [
+   "Re-establish the Australian Building and Construction Commission.",
+   "Clarify that building work includes transporting employees and contractors to building sites.",
+   "Add new matters to the Building Code for monitoring and enforcement.",
+   "Let the Building Code give the ABC Commissioner functions to enforce it.",
+   "Ensure code-authorized actions are not subject to coercion prohibitions in clause 54."
+  ],
+  "affected": "The building and construction industry, including employers, employees, and contractors on offshore resources platforms and ships.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3072",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "question": "Building and Construction Industry (Improving Productivity) Bill 2013 - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 83,
+   "noes": 43,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-12/9"
+  },
+  {
+   "key": "federal-senate-3877",
+   "date": "2015-08-17",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 47,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-17/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-278426",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-278427",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279715",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279720",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279721",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279722",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279880",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279881",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279885",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279886",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279891",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279892",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279893",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279894",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279895",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279896",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279897",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279898",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279899",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279900",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281779",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281785",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281787",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281806",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

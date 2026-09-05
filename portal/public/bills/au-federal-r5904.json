@@ -1,0 +1,238 @@
+{
+ "key": "au-federal-r5904",
+ "title": "Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017",
+ "short_title": "Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5904_ems_4ea051c3-cf90-438f-a6cc-71b9f9fb7e59%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5904%22",
+   "document_date": "2017-06-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-21",
+  "sentences": [
+   "This bill would tighten eligibility for student payments announced in the 2017-18 federal budget.",
+   "It would stop students whose family home is outside Australia from receiving the relocation scholarship, and limit it to those moving within Australia to study.",
+   "The relocation scholarship would also be denied to students who travel overseas for part of an Australian course."
+  ],
+  "changes": [
+   "Restrict the relocation scholarship to students whose family home is in Australia.",
+   "Remove eligibility for students whose family home is outside Australia.",
+   "Remove eligibility for students who relocate outside Australia to study part of an Australian course."
+  ],
+  "affected": "Students receiving Youth Allowance and the relocation scholarship.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4957",
+   "date": "2017-10-23",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-23/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-355385",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "Labor opposed the Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017, arguing it unfairly cuts the education entry payment and pensioner education supplement, affecting around 11,000 and 37,000 recipients respectively, with disproportionate impact on women and vulnerable groups including disability support pensioners, carers, single parents, and jobseekers."
+  },
+  {
+   "slug": "speech-355386",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government's Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017 unfairly cuts the pensioner education supplement and education entry payment, disproportionately affecting women, single parents, people with disabilities, and carers. They cited 2016–17 figures: 11,662 recipients of the education entry payment and 37,717 of the pensioner education supplement, with 94% of parenting payment single and 69% of carer payment recipients being women."
+  },
+  {
+   "slug": "speech-355387",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017, arguing it cuts the pensioner education supplement and education entry payment for vulnerable recipients—including people with disability, carers, and single parents—by up to $15.60 per fortnight, saving $96 million over five years while disproportionately affecting women and regional communities."
+  },
+  {
+   "slug": "speech-355389",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017 and supported amendments by the member for Jagajaga, arguing the cuts would disproportionately harm women, carers, people with disability, and low-income students. They cited that 11,662 people received the Education Entry Payment and 37,717 received the Pensioner Education Supplement in 2016–17, with 94% of parenting payment single recipients and 69% of carer payment recipients being women, and noted opposition from ACOSS, the National Social Security Rights Network, Carers Australia, and People with Disability Australia."
+  },
+  {
+   "slug": "speech-355390",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017, arguing it unfairly targets women (75% of affected recipients) and vulnerable groups including single parents, people with disabilities, carers, and low-income students. Specific cuts would affect the relocation scholarship, education entry payment ($208 annually), and pensioner education supplement, with 11,700 people receiving the education entry payment and 38,000 the pensioner education supplement in 2016-17."
+  },
+  {
+   "slug": "speech-355391",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017, arguing it cuts payments to the most disadvantaged—young, disabled, and women—and will harm around 50,000 recipients annually. The bill's projected savings of $96 million over five years were contrasted with tax concessions for the wealthy, and no community organisation supported the bill."
+  },
+  {
+   "slug": "speech-355392",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017, arguing it would cut the education entry payment and pensioner education supplement, disproportionately affecting women, people with disabilities, carers, sole parents, and unemployed people reskilling. The bill would reduce payments by up to $104 per year for some education entry recipients and $15.60 per fortnight for pensioner education supplement recipients, impacting over 49,000 people in 2016–17."
+  },
+  {
+   "slug": "speech-355393",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker condemned the government's bill to abolish the pensioner education supplement (affecting 11,000 people) and the education entry payment (affecting 38,000 people), arguing these cuts harm low-income Australians, including those on disability support, carers, sole parents, and the unemployed. The speaker contrasted the $62 payments with tax cuts for high earners and corporations, and accused the government of pursuing trickle-down economics that increase inequality."
+  },
+  {
+   "slug": "speech-355511",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Better Targeting Student Payments) Bill 2017 unfairly cuts payments to vulnerable groups, including young carers, students, and women, citing reductions of up to $104 for education entry supplement recipients and $31.20 for pensioner education supplement recipients with study loads between 26 and 50 percent, and named Jaeyden, a young carer in Tasmania, as an example of those affected."
+  },
+  {
+   "slug": "speech-355594",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-23",
+   "stage_hint": null,
+   "brief": "The government argued that the bill closes a loophole ensuring the relocation scholarship is only available to regional Australian students, not those moving from overseas, and aligns education supplement payments with study loads, citing that only 7% of pensioner education supplement recipients moved off welfare within 12 months, while redirecting $263 million to the ParentsNext scheme."
+  }
+ ],
+ "acts": []
+}

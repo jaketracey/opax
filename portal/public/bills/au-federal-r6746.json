@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-r6746",
+ "title": "Charter of the United Nations Amendment Bill 2021",
+ "short_title": "Charter of the United Nations Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs",
+ "status": "passed",
+ "status_as_of": "2021-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6746_ems_fbe61d07-c551-4ed9-b641-3e7eac055231%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6746%22",
+   "document_date": "2021-08-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00106",
+   "document_date": "2021-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-11",
+  "sentences": [
+   "The bill would require counter-terrorism financial sanctions listings and revocations to be made by legislative instrument.",
+   "It would confirm the validity of past and future actions related to existing listings that were not registered on the Federal Register of Legislation.",
+   "The bill would not change the operation of the Act, alter any criminal offence, impose additional punishment, or vary the terms of previous listings."
+  ],
+  "changes": [
+   "Requires counter-terrorism financial sanctions listings and revocations to be made by legislative instrument.",
+   "Confirms the validity of actions taken or to be taken regarding existing listings not registered on the Federal Register of Legislation.",
+   "Aligns the making of listings with the objective of promoting accessibility of the law."
+  ],
+  "affected": "The Minister for Foreign Affairs and persons or entities subject to counter-terrorism financial sanctions listings.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-411160",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-11",
+   "stage_hint": null,
+   "brief": "The Charter of the United Nations Amendment Bill 2021 was moved to clarify that counterterrorism financial sanction listings are legislative instruments, requiring registration on the Federal Register of Legislation to ensure enforceability and public awareness, while preserving the validity of existing listings."
+  },
+  {
+   "slug": "speech-412247",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "Labor supported the Charter of the United Nations Amendment Bill 2021, which requires counterterrorism financial sanctions listings to be made by legislative instrument, condemned the Kabul airport terrorist attack that killed at least 60 people, and called on the government to ensure safety for Afghan nationals who assisted Australian troops."
+  },
+  {
+   "slug": "speech-412248",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Charter of the United Nations Amendment Bill 2021 will make counterterrorism financial sanctions listings legislative instruments on the Federal Register of Legislation to reduce legal challenges and improve enforceability. The Morrison government also introduced measures after the Christchurch attack to ban extremist content online and establish a crisis coordination centre."
+  },
+  {
+   "slug": "speech-412249",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Charter of the United Nations Amendment Bill 2021 to ensure the enforceability of counterterrorism listings by registering them as legislative instruments, citing over 6,900 individuals and entities on Australia’s sanctions list including al-Qaeda and those linked to the annexation of Crimea."
+  },
+  {
+   "slug": "speech-412250",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The government argued the Charter of the United Nations Amendment Bill 2021 ensures transparency and enforceability of counterterrorism financial sanction listings by requiring them to be registered as legislative instruments on the Federal Register of Legislation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Charter of the United Nations Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00106",
+   "assent_date": "2021-09-13"
+  }
+ ]
+}

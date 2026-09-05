@@ -1,0 +1,454 @@
+{
+ "key": "au-federal-r7449",
+ "title": "Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026",
+ "short_title": "Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2026-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7449_ems_dcac9a8c-ab35-4ee9-86e8-02fa33f843d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7449_ems_74956a6e-cf0f-4f4e-8bb2-adb74430a8f0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7449%22",
+   "document_date": "2026-03-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00070",
+   "document_date": "2026-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10656",
+   "date": "2026-08-12",
+   "house": "senate",
+   "question": "Dave Sharma The question is that the second reading amendment on sheet 3825, as moved by Senator Cash, be agreed to. _A division having been called and the bells being rung—_ David Shoebridge I seek leave for the question to be recommitted. Leave granted. Dave Sharma The question is that the second reading amendment on sheet 3825 be agreed to.",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-12/1"
+  },
+  {
+   "key": "federal-senate-10726",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Crimes and Other Legislation Amendment (Omnibus No. 1) Bill 2026. When the bill was last considered, the votes on the amendments moved by Senator Shorebridge and Senator Bell were deferred. I will put those questions first before dealing with the remaining amendments. I will begin with the amendments moved by Senator Shoebridge. _Australian Greens_ _'_ _circulated amendments—_ (1) Schedule 1, item 13, page 6 (line 7), omit \"4 September 2029\", substitute \"1 July 2027\". (2) Schedule 1, item 14, page 6 (line 10), omit \"4 September 2029\", substitute \"1 July 2027\". (3) Schedule 1, item 15, page 6 (line 20), omit \"4 September 2029\", substitute \"1 July 2027\". (4) Schedule 1, item 19, page 8 (line 24), omit \"4 September 2029\", substitute \"1 July 2027\". (5) Schedule 1, item 22, page 9 (line 3), omit \"4 September 2029\", substitute \"1 July 2027\". (6) Schedule 1, item 23, page 9 (line 6), omit \"4 September 2029\", substitute \"1 July 2027\". (7) Schedule 1, item 28, page 10 (line 3), omit \"4 September 2029\", substitute \"1 July 2027\". The question is that the amendments on sheet 3790 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 10,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/14"
+  },
+  {
+   "key": "federal-senate-10727",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the amendments moved by Senator Bell. _One Nation's circulated amendments—_ (1) Clause 2, page 2 (after table item 4), insert: (2) Schedule 2, page 22 (after line 12), at the end of the Schedule, add: Part 3 — Meaning of hors de combat _Criminal Code Act 1995_ 9 Dictionary in the _Criminal Code_ (definition of _hors de combat_ ) Repeal the definition, substitute: _hors de combat_: a person is _hors de combat_ if: (a) the person is in the power of an adverse party; and (b) the person: (i) clearly expresses an intention to surrender; or (ii) has been rendered unconscious or is otherwise incapacitated by wounds or sickness and is therefore incapable of defending himself or herself; and (c) the person abstains from any hostile act and does not attempt to escape. 10 Application provision (1) The definition of _hors de combat_ in the Dictionary in the _Criminal Code_, as inserted by this Part, applies in relation to: (a) any conduct engaged in on or after 26 September 2002; and (b) any legal proceedings that are commenced on or after that day, if the proceedings have not been finally determined before the commencement of this item. (2) In this item, _legal proceedings_ include any proceedings before a court or tribunal, and include proceedings that are pending. The question is that the amendments on 3897 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 25,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/15"
+  },
+  {
+   "key": "federal-senate-10728",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the amendments circulated by the Australian Greens on sheet 3791. The question is that schedule 2 stand as printed. _The Australian Greens' circulated amendments—_ (2) Schedule 2, page 16 (line 1) to page 22 (line 12), to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/16"
+  },
+  {
+   "key": "federal-senate-10729",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines As that matter was resolved in the affirmative, the consequential amendment on sheet 3791 will not be put. The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/17"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1201118",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201756",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201763",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201851",
+   "speaker": "Matt Gregg",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204929",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205272",
+   "speaker": "Slade Brockman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205473",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205920",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes and Other Legislation Amendment (Omnibus No. 1) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00070",
+   "assent_date": "2026-08-26"
+  }
+ ]
+}

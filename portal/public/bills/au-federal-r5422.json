@@ -1,0 +1,333 @@
+{
+ "key": "au-federal-r5422",
+ "title": "Fair Work (Registered Organisations) Amendment Bill 2014 [No. 2]",
+ "short_title": "Fair Work (Registered Organisations) Amendment Bill 2014 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2015-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5422_ems_a601144a-9602-4545-9058-d44a8ff0a4d9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5422%22",
+   "document_date": "2015-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-19",
+  "sentences": [
+   "This bill is part of a package that would tighten the rules for how unions and employer groups are run.",
+   "A new independent agency, the Registered Organisations Commission, would monitor these groups and have stronger powers to investigate and collect information.",
+   "The package would also create criminal penalties for officials who seriously breach their duties and raise financial transparency requirements."
+  ],
+  "changes": [
+   "Establishes the Registered Organisations Commission as an independent watchdog with enhanced investigation and information-gathering powers.",
+   "Adds new criminal offences and higher civil penalties for serious breaches of officers' duties.",
+   "Strengthens financial accounting, disclosure and transparency obligations by making certain rule requirements enforceable as civil remedy provisions.",
+   "Amends rules on officers' disclosure of material personal interests and changes disqualification and ineligibility grounds for office."
+  ],
+  "affected": "Registered organisations, their branches and their officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:57:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3853",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "question": "Brendan O'Connor No, the member for Gorton, Deputy Speaker Kelly. There is a member for O'Connor; I just do not happen to be the member for O'Connor. It is a magnificent story about a West Australian engineer who engineered the water pipeline to Kalgoorlie. He thought it had failed and he committed suicide. A week after that, the water arrived. That is why we got the member for O'Connor. My seat is named after a former Prime Minister, not a bad Prime Minister, John Grey Gorton. He was quite an interesting enigmatic sort of guy. I would prefer to be called the member for Gorton than the member for McMahon. Chris Bowen, a good colleague and friend of mine, I am sure would rather my title. I rise to remark upon the Fair Work (Registered Organisations) Amendment Bill 2014 [No. 2] before the House. This is, by the way, the third occasion that this matter has been before the House. For those of us who find the government's agenda to be a bit of a chaotic blur, albeit a nasty one, this is a bill that will establish the Registered Organisations Commission. The commission will be headed by a registered organisations commissioner with greater investigative power than those available to the general manager of the Fair Work Commission. The bill also modifies disclosure requirements, increases red tape and regulates individuals who choose, often on a voluntary basis, to dedicate their time to an employer body or union in the same way that the chief executives of corporate boards are also having to do. You could be forgiven for being a little confused that we are back in this place debating this bill because this is the third time those opposite have brought this bill forward. I will try not to be too cynical about politics but my generosity of spirit has been somewhat tried by the coalition's timing on this bill. In the primitive collective of those opposite, you can imagine it would have gone something like this: attack your rights at work with Work Choices, lose the election;",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-06-25/5"
+  },
+  {
+   "key": "federal-senate-3863",
+   "date": "2015-06-25",
+   "house": "senate",
+   "question": "Christopher Back For clarity, colleagues, we now move to the Fair Work (Registered Organisations) Amendment Bill 2014 [No.2]. _A division having been called and the bells being rung—_ Richard Colbeck by leave—Mr President, I rise to make a point of clarification in respect of this division for people who were not in the chamber when I spoke just prior to the division being called. The government has given an assurance that this piece of legislation will not be called on today, in accordance with agreement between the opposition and the government. We understand that this piece of legislation is before a committee, and that committee should report to the parliament prior to it being considered. The basis of this division right now is that there is some concern that we may bring this on for debate today. I have made a statement to the chamber that that is not the case. We respect the processes of the parliament and we will not be bringing the legislation on for debate today—it is purely and simply receiving a message from the House of Representatives so that the legislation is introduced. It is the Fair Work (Registered Organisations) Amendment Bill 2014. It is before a committee and it should go through that process before it comes to the chamber. Penny Wong by leave—Mr President, the opposition is not denying this bill a first reading. The opposition is only responding to the motion that the bill 'may proceed without formalities'. That is what we wish to vote against. The effect of that, as the minister knows, is that this bill can then be debated in the next session. If the minister is so concerned about adhering to what he has put to us, the opposition's position is entirely consistent with the procedure you have outlined, and I wonder why the government is opposing it. Stephen Parry Order! We have had enough debate on this matter. The question is that these bills may proceed without formalities, be taken together and be now read a first time. Penny Wong by leave—",
+   "stage": "Bill",
+   "ayes": 31,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 13,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-06-25/9"
+  },
+  {
+   "key": "federal-senate-3879",
+   "date": "2015-08-17",
+   "house": "senate",
+   "question": "Fair Work (Registered Organisations) Amendment Bill 2014 [No. 2] - Second Reading - Agree to the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 47,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-17/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-308242",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-19",
+   "stage_hint": null,
+   "brief": "The Fair Work (Registered Organisations) Amendment Bill 2014 [No. 2] was reintroduced to enhance accountability and transparency of registered organisations by aligning obligations, penalties and regulator powers with the Corporations Act 2001, including increased civil penalties, new criminal offences for serious breaches, and the establishment of an independent Registered Organisations Commission within the Fair Work Ombudsman."
+  },
+  {
+   "slug": "speech-314888",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Fair Work (Registered Organisations) Amendment Bill 2014 [No. 2], stating it was a political attack on opponents rather than genuine reform, and noted that the previous Labor government had already strengthened transparency and penalties in 2012. He highlighted that employer bodies and unions both opposed the bill, and criticized Prime Minister Tony Abbott for using a royal commission to compel three Labor leaders (Kevin Rudd, Julia Gillard, Bill Shorten) to testify."
+  },
+  {
+   "slug": "speech-314916",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The government argued the bill would establish a Registered Organisations Commission to strengthen financial transparency, increase penalties, and introduce criminal offences for union misconduct, while denying claims of hostility toward unions and asserting the reforms would protect honest union members from corruption and scandal."
+  },
+  {
+   "slug": "speech-314918",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the amendments to the Fair Work (Registered Organisations) Amendment Bill 2014 [No. 2], arguing the bill is politically motivated to attack unions, not to improve governance. They cited the CFMEU’s exposure of a Liberal Party donor company underpaying temporary visa workers, which led to union investigations rather than employer penalties."
+  },
+  {
+   "slug": "speech-314919",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work (Registered Organisations) Amendment Bill 2014, criticising union power and alleging corruption, and cited a 63% increase in shipping costs at Bell Bay Aluminium after coastal shipping reforms tied to unions."
+  },
+  {
+   "slug": "speech-314930",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment Bill 2014 [No. 2], arguing it attacks unions and worsens inequality, and cited ACOSS data showing the top 20% of earners receive five times as much as the bottom 20% and economist Joseph Stiglitz’s view that unions are a key bulwark against inequality. He supported amendments moved by the shadow minister and noted the bill was one of ten workplace deregulation bills introduced by the government."
+  }
+ ],
+ "acts": []
+}

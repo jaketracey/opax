@@ -1,0 +1,686 @@
+{
+ "key": "au-federal-r6741",
+ "title": "Family Assistance Legislation Amendment (Child Care Subsidy) Bill 2021",
+ "short_title": "Family Assistance Legislation Amendment (Child Care Subsidy) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-08-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6741_ems_a363b6b6-64d7-4042-b390-35604ec23b20%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6741_ems_b6e1ac1e-c91c-492e-a758-e9a7ee34be4e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6741_ems_e399cae2-cd6d-4a49-890b-0fbc7c5b3df3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6741%22",
+   "document_date": "2021-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00086",
+   "document_date": "2021-08-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-24",
+  "sentences": [
+   "The bill would change how much child care subsidy some families can get.",
+   "It would remove the yearly cap on the subsidy for higher-income families and increase the subsidy rate for families with multiple children under six.",
+   "The higher rate for second and subsequent children under six would be 30 percentage points more, up to a maximum of 95%, starting from 11 July 2022 or earlier if proclaimed."
+  ],
+  "changes": [
+   "Removes the annual limit on child care subsidy for families above a specified income.",
+   "Increases the child care subsidy rate by 30 percentage points for second and subsequent children under six, up to 95%.",
+   "Applies the increased rate from 11 July 2022 or an earlier date set by proclamation."
+  ],
+  "affected": "Australian families eligible for child care subsidy, especially those with multiple children under six.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7364",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with amendments to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"that the bill be read for a second time\" - parliamentary jargon for agreeing with the main idea of the bill. This means that the amendments failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) most families receive no extra support from the Government's changes to the child care subsidy;* > > *(2) the Government's changes do nothing to stop out of control child care fees;* > > *(3) the workforce participation rate is projected to decline over the forward estimates; and* > > *(4) Australia ranks 37 out of 41 OECD countries for child care affordability\".*",
+   "stage": "Second reading",
+   "ayes": 44,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 34
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-08-05/1"
+  },
+  {
+   "key": "federal-representatives-7365",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debates/?id=2021-08-05.18.1) introduced by Fenner MP [Andrew Leigh](https://theyvoteforyou.org.au/people/representatives/fenner/andrew_leigh) (Labor), which means they failed. ### What is the purpose of these amendments? Kingston MP [Amanda Rishworth](https://theyvoteforyou.org.au/people/representatives/kingston/amanda_rishworth) (Labor) [explained that](https://www.openaustralia.org.au/debate/?id=2021-08-05.19.1): > *these amendments have one purpose—that is, to give families relief from childcare fees during COVID-19 lockdowns, when parents are asked to stay at home and not using child care but legally required to pay the full fees.* ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *5. Schedule 3* | *The day after this Act receives the Royal Assent.* > > *(2) Page 12 (after line 25), at the end of the Bill, add:* > >> *Schedule 3 — Exception to duty to enforce payment of hourly session fees because of stay at home directions etc.* >> >> *A New Tax System (Family Assistance) (Administration) Act 1999* >> >> *1 After subsection 201B(1)* >> >> *Insert:* >> >> *Exception because of stay at home directions etc.* >> >> *(1AA) The provider is not required to take reasonable steps in relation to a session of care provided by the service to the child if the child is not able to attend the session of care because of a law of a State or Territory (e.g. a public health direction) that:* >> >>> *(a) is enacted or made in reponse to the coronavirus known as COVID-19; and* >>> >>> *(b) restricts the ability of persons to:* >>> >>>> *(i) leave their homes; or* >>>> >>>> *(ii) travel a certain distance from their homes.* >>>> >>>> *Note: A defendant bears an evidential burden in relation to the matters mentioned in this subsection: see subsection 13.3(3) of the Criminal Code and section 96 of the Regulatory Powers Act.* >> >> *2 After paragraph 201C(1)(a",
+   "stage": "Consideration in detail",
+   "ayes": 42,
+   "noes": 37,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 34
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-08-05/2"
+  },
+  {
+   "key": "federal-senate-7407",
+   "date": "2021-08-12",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"that the bill be read for a second time,\" which is parliamentary jargon for agreeing with the main idea of the bill. This means that the amendment failed. ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) most families receive no extra support from the government's changes to the child care subsidy;* > > *(b) the government's changes do nothing to stop out of control child care fees;* > > *(c) passage of the bill will allow the Minister to bring forward the commencement of the changes; and* > > *(d) the government should deliver extra support to families as soon as possible\".*",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 15,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "member": 7,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-12/3"
+  },
+  {
+   "key": "federal-senate-7408",
+   "date": "2021-08-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-12.19.1) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*that the bill be read for a second time*,\" which is parliamentary jargon for agreeing with the main idea of the bill. This means that the amendment failed. ### Motion text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) childcare is an essential public service that should be free and universally accessible for all children; and* > > *(b) workers and educators in the childcare sector deserve higher wages and better conditions to reflect the value of their enormous contribution to our community\"*",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 12,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-12/4"
+  },
+  {
+   "key": "federal-senate-7409",
+   "date": "2021-08-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-12.21.1) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*that the bill be read for a second time*,\" which is parliamentary jargon for agreeing with the main idea of the bill. This means that the amendment failed. ### Motion text > *At the end of the motion, add \", and the Senate calls on the Government to acknowledge that:* > > *(a) it has a duty of care to avoid the harmful impacts of climate change on Australia's children; and* > > *(b) in light of the latest IPCC report, supporting new and expanded coal, oil and gas projects is negligent dereliction of that duty\".*",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 11,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-12/5"
+  },
+  {
+   "key": "federal-senate-7410",
+   "date": "2021-08-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-12.61.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. ### What would the amendment do? Senator Faruqi [explained that](https://www.openaustralia.org.au/senate/?gid=2021-08-12.61.1) the amendment would bring \"*forward the start date of the package by one year to 1 July 2021 ... There is no good reason why the government couldn't prioritise getting more money into the pockets of families who continue to be slugged with some of the highest childcare fees in the world.*\" WA Senator [Linda Reynolds](https://theyvoteforyou.org.au/people/senate/wa/linda_reynolds) (Liberal) [explained that](https://www.openaustralia.org.au/senate/?gid=2021-08-12.62.1) \"*the government will not be supporting this amendment ... [because it] does require significant system and software changes, for not just Services Australia but also third-party software providers, because of the interface with thousands of childcare providers.*\"",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 13,
+    "earliest": 13,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-12/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-409928",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-24",
+   "stage_hint": null,
+   "brief": "The bill removes the annual $10,560 childcare subsidy cap for families earning over $189,390 from July 2022 and increases the subsidy for second and subsequent children under six by 30 percentage points up to 95%, benefiting around 250,000 families and aiming to add up to 300,000 hours of work per week and $1.5 billion to GDP annually."
+  },
+  {
+   "slug": "speech-410418",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The government's child care subsidy changes provide no extra support to most families, do not address rising fees, and fail to boost workforce participation, while Labor's alternative policy would benefit 860,000 families (86% of those with children under six) and improve Australia's ranking of 37th out of 41 OECD countries for child care affordability."
+  },
+  {
+   "slug": "speech-410420",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The Morrison government argued that the Family Assistance Legislation Amendment (Child Care Subsidy) Bill 2021 will make child care more affordable, targeting low- and middle-income families, with 250,000 families expected to save an average of $2,260 per year. Key measures include increasing the subsidy by up to 30 percentage points for second and subsequent children under six, removing the $10,560 annual cap for families earning over $189,000, and aiming to boost female workforce participation, which currently stands at 67.6%."
+  },
+  {
+   "slug": "speech-410421",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The bill removes the annual childcare subsidy cap and increases the subsidy rate for second and subsequent children under six to a maximum of 95%, but these measures do not take effect until July 2022 and will leave around three‑quarters of families with no extra help. The speaker noted that long day care fees rose 37.2% under the Liberal government and that nearly 100,000 families are not working due to childcare costs."
+  },
+  {
+   "slug": "speech-410422",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The bill increases the child care subsidy by 30 percentage points to a maximum 95% for second and subsequent children and removes the $10,560 annual cap for families earning over $189,390, benefiting around 250,000 families and intended to reduce workforce disincentives, particularly for women."
+  },
+  {
+   "slug": "speech-410424",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The Family Assistance Legislation Amendment (Child Care Subsidy) Bill 2021 was announced, increasing the childcare subsidy for families with more than one child and removing the annual cap for families earning over $189,000, benefiting 250,000 families by an average of $2,260 per year. Concerns were raised about childcare shortages in rural areas, citing examples from Mallee and proposing changes to the Community Child Care Fund, such as annual funding rounds and a $500,000 capital support cap."
+  },
+  {
+   "slug": "speech-410425",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The Member for Lalor criticised the bill for delaying the abolition of the annual subsidy cap until after the next election and for failing to address out-of-school-hours care, arguing it does not go far enough to support families in her electorate of Wyndham, which has 19,190 children in care across 14,350 families. She noted the bill would only tweak the number of children per family and stated that Labor’s proposed reforms would make childcare more affordable for 90 per cent of families in her electorate."
+  },
+  {
+   "slug": "speech-410583",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The Family Assistance Legislation Amendment (Child Care Subsidy) Bill 2021 removes obstacles in childcare payment schedules to encourage two parents to enter the workforce, addressing an extreme skills shortage. It increases the subsidy rate from 85% to 95% for families with a second child in care, removes the $10,000 cap for families earning over $189,000, and could save a family on $100,000 up to $102 per week."
+  },
+  {
+   "slug": "speech-410588",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The Morrison government's childcare policy was criticised as inadequate, with ABS data showing 138,700 Australians unable to work due to childcare costs, 92% of them women. In contrast, Labor's proposed policy would scrap the $10,560 subsidy cap, raise the maximum subsidy to 90%, and extend support to families earning under $530,000, helping 86% of families with children under six, while the government's plan only benefits 1.8%."
+  },
+  {
+   "slug": "speech-410590",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's bill is an inadequate response to the childcare affordability crisis, noting it will not take effect until July 2022 and does little to support families or women returning to work. They contrasted Labor's alternative plan, which would scrap the $10,560 subsidy cap, increase the maximum subsidy rate to 90%, and save 97% of families between $600 and $2,900 per year, while also criticising the government for failing to waive gap fees for locked-down families outside New South Wales."
+  },
+  {
+   "slug": "speech-410591",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker argued the Family Assistance Legislation Amendment (Child Care Subsidy) Bill 2021 is important but disappointing, as it lacks vision for early childhood education and fails to address low pay for predominantly female workers or high costs for families. They announced Labor's policy to scrap the $10,560 childcare subsidy cap, lift the maximum subsidy rate to 90%, increase rates for families earning under $530,000, and commission a Productivity Commission review aiming for a universal 90% subsidy."
+  },
+  {
+   "slug": "speech-410592",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Morrison government for scheduling childcare debate during the \"witching hour\" for parents, and argued the government has been dragged into childcare reform while failing to address rising fees and workforce issues. They highlighted three Lilley constituents forced to pay gap fees during lockdown without receiving services, and contrasted Labor's plan—scrapping the $10,560 subsidy cap, lifting the maximum rate to 90%, and tasking the ACCC with price regulation—against the government's temporary relief for a minority of families."
+  },
+  {
+   "slug": "speech-410593",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Child Care Subsidy Bill 2021 but argued it fails to address high costs and workforce barriers, and announced Labor would task the Productivity Commission to investigate a universal childcare system. They also criticised Coalition members for calling childcare \"outsourcing parenting\" and for being out of touch with families."
+  },
+  {
+   "slug": "speech-410595",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's childcare policy is inadequate, citing a 36% fee increase over eight years, and announced Labor's alternative plan to provide cheaper childcare for 97% of families with no age cut-off, along with a technical amendment to automatically waive gap fees during lockdowns."
+  },
+  {
+   "slug": "speech-410597",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Child Care Subsidy Bill is a weak, spin-driven policy that fails to address rising costs, contrasting it with Labor's plan to scrap the $10,560 cap, lift the maximum subsidy to 90%, and introduce price regulation. They noted internal LNP opposition from Senators Rennick and Canavan, and MPs Christensen and Young, while citing that childcare costs have risen 36% since 2013 and that 300,000 Australians are out of the workforce due to childcare expenses."
+  },
+  {
+   "slug": "speech-410628",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's childcare subsidy bill provides only limited, short-term relief for a small minority of families, while Labor's alternative policy would benefit 86% of families more substantially. The speech cited UNICEF ranking Australia 37th out of 41 countries for childcare affordability, with costs consuming a quarter of the average wage and rising faster than inflation."
+  },
+  {
+   "slug": "speech-410629",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition's childcare policy has caused fees to rise 36% since 2013, with 86% of families better off under Labor's plan, and criticised the government's vaccine rollout for failing to provide adequate Pfizer doses in the Shortland electorate."
+  },
+  {
+   "slug": "speech-410630",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's Child Care Subsidy bill does not go far enough and is too late, urging support for Labor's amendments to create a universal system. Concrete examples included a nurse in Bendigo who avoided extra shifts due to cost, and claims that childcare fees in the electorate have risen 34 per cent."
+  },
+  {
+   "slug": "speech-410631",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that child care should be treated as an economic imperative, not welfare, and criticised the government for making it unaffordable, particularly for women returning to work. They highlighted Labor’s alternative plan that would benefit 86% of families (almost a million families) and a proposed $300 vaccine incentive, both rejected by the government."
+  },
+  {
+   "slug": "speech-410632",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The bill provides an additional childcare subsidy for second and subsequent children, benefiting 250,000 families; a median-income family on $110,000 with two children in care four days a week will be $95 per week better off, and total government childcare spending will reach $11 billion annually. The speaker contrasted this with Labor’s alternative policy, which would give $1,000 per week in subsidies to families earning $400,000 or more and cost $20 billion."
+  },
+  {
+   "slug": "speech-410637",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker opposed Labor's amendments to bring the gap fee waiver into primary legislation, arguing that retaining it in ministerial rules allows flexibility to adapt to each lockdown's unique circumstances. They outlined a three-pronged support approach in New South Wales: allowing services to waive out-of-pocket costs, partnering with NSW for JobSaver (40% of payroll costs if revenue drops 30%), and COVID disaster payments of up to $750 per week for childcare workers with reduced hours."
+  },
+  {
+   "slug": "speech-411356",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The government rushed the Family Assistance Legislation Amendment (Child Care Subsidy) Bill 2021 for political wedge purposes, resulting in a flawed formula that was corrected only after a Twitter user pointed it out. Labor supports the bill but maintains its own policy would benefit 97% of families more."
+  },
+  {
+   "slug": "speech-411489",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The Family Assistance Legislation Amendment (Child Care Subsidy) Bill 2021 was passed, benefiting 250,000 families with two or more children in childcare by addressing workforce disincentives from high childcare costs."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Assistance Legislation Amendment (Child Care Subsidy) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00086",
+   "assent_date": "2021-08-27"
+  }
+ ]
+}

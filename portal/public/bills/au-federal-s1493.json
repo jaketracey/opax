@@ -1,0 +1,416 @@
+{
+ "key": "au-federal-s1493",
+ "title": "Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026",
+ "short_title": "Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-13",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1493_ems_73602a77-426e-4fa3-aa0a-2bfc4f7156df%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1493_ems_f0feb713-366e-40b3-9555-235a7dd2dc18%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1493%22",
+   "document_date": "2026-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00048",
+   "document_date": "2026-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2026-05-13",
+  "sentences": [
+   "The bill would let the minister declare an exceptional circumstance, such as the ongoing effects of the Middle East conflict, to help businesses respond to situations that are not a national emergency.",
+   "The Australian Competition and Consumer Commission (ACCC) could then authorise or exempt conduct that serves the public interest but would normally break competition laws, as long as it helps with the response.",
+   "The new powers include safeguards to protect consumers, and declarations can be disallowed and will expire after a set period; the bill starts the day after royal assent."
+  ],
+  "changes": [
+   "Gives the minister power to make an exceptional circumstance declaration.",
+   "Enables the ACCC to authorise or exempt conduct that breaches competition laws if it is in the public interest and assists the response.",
+   "Adds safeguards including consumer protection, disallowance, and sunset provisions for declarations."
+  ],
+  "affected": "Businesses responding to exceptional circumstances that are not a national emergency under the NED Act.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10218",
+   "date": "2026-05-14",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1493_amend_34a7f085-db27-4519-b181-21d50d4d7637%22;rec=0) introduced by Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means it failed. The amendment would have changed the wording of the usual second reading motion, which is the \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *Omit all words after “That”, substitute “the bill be referred to the Economics Legislation Committee for inquiry and report by 22 June 2026, with particular reference to:* > > *(a) whether the existing Australian Competition and Consumer Commission (ACCC) powers are genuinely inadequate;* > > *(b) whether the Treasurer’s declaration power is too broad;* > > *(c) whether ACCC exemptions should be disallowable;* > > *(d) whether transparency requirements are strong enough;* > > *(e) whether the retrospective start date is justified;* > > *(f) whether the powers are properly limited in time and scope; and* > > *(g) whether there should be stronger sunset and review mechanisms”.*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-05-14/2"
+  },
+  {
+   "key": "federal-senate-10219",
+   "date": "2026-05-14",
+   "house": "senate",
+   "question": "The majority voted against [Coalition amendments](https://www.openaustralia.org.au/senate/?id=2026-05-14.19.1) introduced under the name of Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means they were unsuccessful. The amendments relate to adding a sunset provision for the exceptional circumstances exemption powers and removing retrospective application. ### Amendment text See [openaustralia.org.au](https://www.openaustralia.org.au/senate/?gid=2026-05-14.19.2) for the amendment text.",
+   "stage": "Limitation of debate",
+   "ayes": 27,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-05-14/3"
+  },
+  {
+   "key": "federal-senate-10220",
+   "date": "2026-05-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-05-14.21.6) to agree with the remaining stages of the bill so it can now pass. In other words, they voted to read it for a third time. This means the bill will now be sent to the House of Representatives for their consideration. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd064), which is a document prepared by the parliamentary library: > *The Competition and Consumer Amendment (Responding to Exceptional Circumstances) Bill 2026 would amend the Competition and Consumer Act 2010 (the CCA) to introduce a new power for the Minister to make exceptional circumstances declarations, and to allow the Australian Competition and Consumer Commission (ACCC) to grant an authorisation or declare a class exemption in relation to conduct that might otherwise breach competition law, when this would assist in responding to the exceptional circumstances. The Bill would also increase the maximum penalties that could apply for breaches of the Oil Code of Conduct for the petroleum marketing industry.* > > *The ACCC currently has powers to authorise specified conduct on application, or classes of conduct generally, that might otherwise breach some competition laws, where it is in the public interest to do so. This power includes authorising conduct in response to a declared national emergency under the National Emergency Declaration Act 2020 (NEDA).* > > * *the amendments would provide an additional basis for the ACCC to authorise conduct in circumstances which may not meet the NEDA’s national emergency criteria.* > > *Ministerial declarations would be open to disallowance by the Parliament. As a result of a Senate amendment introduced by the Greens, class exemptions would also be subject to disallowance.* > > *Ministerial declarations, and ACCC authorisations and class exemptions may commence retrospectiv",
+   "stage": "Limitation of debate",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-05-14/4"
+  },
+  {
+   "key": "federal-representatives-10231",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2026-05-25.27.2) introduced by Page MP [Kevin Hogan](https://theyvoteforyou.org.au/people/representatives/page/kevin_hogan) (Nationals), which means it was unsuccessful. Had it been successful, the amendment would have changed the usual wording of the second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the bill be referred to the House Standing Committee on Economics for inquiry and report by 22 June 2026, with particular reference to whether:* > >> *(1) the existing ACCC powers are genuinely inadequate;* >> >> *(2) the Treasurer's declaration power is too broad;* >> >> *(3) in addition to class exemptions, ACCC authorisations should also be disallowable;* >> >> *(4) transparency requirements are strong enough;* >> >> *(5) the retrospective start date is justified;* >> >> *(6) the powers are properly limited in time and scope; and* >> >> *(7) there should be stronger sunset and review mechanisms\".*",
+   "stage": "Second reading",
+   "ayes": 48,
+   "noes": 94,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 92
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-25/1"
+  },
+  {
+   "key": "federal-representatives-10233",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2026-05-25.99.2) introduced by Page MP [Kevin Hogan](https://theyvoteforyou.org.au/people/representatives/page/kevin_hogan) (Nationals), which means it was unsuccessful. Mr Hogan [explained that](https://www.openaustralia.org.au/debates/?id=2026-05-25.99.2): > *The amendments would remove the retrospective application of the bill. The government has introduced this bill with a 1 April 2026 retrospective start date, but we don't have any detail or any explanation of why that date is needed. We're happy to work constructively with the government on these issues, but this is a matter of competition law, and we don't know if there's been a breach of the law that the government is aware of. This amendment would remove the retrospectivity of the law. The amendments would also introduce a sunset clause to the bill. The changes to the bill would sunset on 2 July 2026. This would allow for the bill to be passed, a proper inquiry to occur and then the legislation to remove the sunset clause if appropriate.* ### Amendment text > *(1) Clause 2, page 2 (table item 1), omit \"Sections 1 to 3\", substitute \"Sections 1 to 4\".* > > *(2) Page 2 (after line 12), after clause 3, insert:* > >> *4 Sunsetting of amendments* >> >> *The amendments made by Schedules 1 and 2 are repealed on 2 July 2026.* > > *(3) Schedule 1, item 4, page 5 (line 2), omit \"may\", substitute \"must not\".* > > *(4) Schedule 1, item 4, page 6 (lines 20 to 22), omit \"which may be before the commencement of this section, but must not be before 1 April 2026\", substitute \"which must not be before the commencement of this section\".* > > *(5) Schedule 1, item 5, page 10 (lines 1 to 3), omit \"which may be before the commencement of this section, but must not be before 1 April 2026\", substitute \"which must not be before the commencement of this section\".* > > *(6) Schedule 1, item 6, page 12 (lines 1 to 3), omit \"which may be before the co",
+   "stage": "Consideration in detail",
+   "ayes": 45,
+   "noes": 97,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 92
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-25/3"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Responding to Exceptional Circumstances) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00048",
+   "assent_date": "2026-05-26"
+  }
+ ]
+}

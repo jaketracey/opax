@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-r6738",
+ "title": "Tertiary Education Quality and Standards Agency (Charges) Amendment Bill 2021",
+ "short_title": "Tertiary Education Quality and Standards Agency (Charges) Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Youth",
+ "status": "passed",
+ "status_as_of": "2021-08-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6738_ems_60649e74-7be1-4105-8395-c7a969270dc4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6738%22",
+   "document_date": "2021-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00087",
+   "document_date": "2021-08-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-409929",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-24",
+   "stage_hint": null,
+   "brief": "The bill amends the Education Services for Overseas Students (Registration Charges) Act 1997 to implement an updated cost-recovery model for CRICOS registration charges, reducing provider payments by approximately $7 million per year. From 1 January 2022, only the Department of Education, Skills and Employment's regulatory costs will be recovered under this Act, with ASQA and TEQSA charging separately under their own frameworks."
+  },
+  {
+   "slug": "speech-409932",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-24",
+   "stage_hint": null,
+   "brief": "The bill amends the Tertiary Education Quality and Standards Agency (Charges) Act 2021 to correctly reference charges under proposed amendments to the Education Services for Overseas Students (Registration Charges) Act 1997."
+  },
+  {
+   "slug": "speech-410649",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the bills as they reduce charges on international education providers by $7 million a year, but criticised the Morrison government for damaging higher education, jeopardising jobs and research, and using ministerial discretion to avoid parliamentary scrutiny."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tertiary Education Quality and Standards Agency (Charges) Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00087",
+   "assent_date": "2021-08-27"
+  }
+ ]
+}

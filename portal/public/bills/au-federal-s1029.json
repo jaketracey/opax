@@ -1,0 +1,205 @@
+{
+ "key": "au-federal-s1029",
+ "title": "Courts Administration Legislation Amendment Bill 2015",
+ "short_title": "Courts Administration Legislation Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-02",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-03-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1029_ems_c5d41d38-c6df-4d82-9ea0-bbc45b8eb680%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1029%22",
+   "document_date": "2015-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00024",
+   "document_date": "2016-03-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-02",
+  "sentences": [
+   "The bill would combine the administrative operations of Australia's three main federal courts and the National Native Title Tribunal into one shared services organisation.",
+   "A single chief executive officer would manage corporate functions such as finance and human resources for all three courts, while each court keeps its separate legal identity.",
+   "The government expects the merger to save $9.4 million over six years and $5.4 million each year after that, with the money reinvested in core court activities."
+  ],
+  "changes": [
+   "Creates a single administrative entity for the Federal Court, Family Court, Federal Circuit Court and National Native Title Tribunal.",
+   "Requires the courts to share corporate services such as finance, human resources and information technology.",
+   "Gives the Federal Court Chief Executive Officer responsibility for managing the shared corporate services for all three courts.",
+   "Changes the titles of the Family Court's Chief Judge and Deputy Chief Judge to Chief Justice and Deputy Chief Justice respectively.",
+   "Merges the roles of the Family Court Chief Executive Officer and the Family Court to allow a transitional period for appointing someone with suitable expertise."
+  ],
+  "affected": "The Federal Court of Australia, the Family Court of Australia, the Federal Circuit Court of Australia, the National Native Title Tribunal, and the staff and users of those courts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-329814",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The bill merges the corporate services of the Federal Court, Family Court, and Federal Circuit Court into a single administrative entity to achieve sustainable funding, with projected savings of $9.4 million over six years and $5.4 million ongoing annually reinvested in the courts, while maintaining each court's judicial independence and separate standing."
+  },
+  {
+   "slug": "speech-329815",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Courts Administration Legislation Amendment Bill 2015, which merges back-office functions of the Federal Court, Family Court, and Federal Circuit Court to save $9.4 million over six years, while arguing the government has failed to fill judicial vacancies, provide court facilities in Rockhampton, and fund legal assistance, increasing burdens on the courts."
+  },
+  {
+   "slug": "speech-329822",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The Parramatta federal court registry has only five judges, down from eight since 2013, causing family law delays of up to three years for final orders and 18 months for interim hearings, with one judge handling 600 cases. The speaker supported the Courts Administration Legislation Amendment Bill 2015 for merging back-end functions to save $9.4 million over six years, but criticised the government for not appointing enough judges and urged the Attorney-General to release a KPMG report warning of a $75 million funding shortfall."
+  },
+  {
+   "slug": "speech-329824",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The Labor Party broadly supports the Courts Administration Legislation Amendment Bill 2015, which merges corporate functions of the Federal Court, Family Court, and Federal Circuit Court. The speaker criticised Attorney-General George Brandis for delays in replacing family court judges, citing 560 days to replace a Sydney Family Court judge and 375 days for Justice Bell in Brisbane, and quoted former judge Giles Coakes stating the delay had put children at risk."
+  },
+  {
+   "slug": "speech-329825",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The member argued that the federal government’s under-resourcing of the Family Court and Federal Circuit Court, with 41% of cases involving family violence, caused wait times of over three years in Wollongong and failure to meet the 90%‑within‑12‑months benchmark, citing Chief Justice Diana Bryant and Chief Judge of the Federal Circuit Court. The member noted a $100 million family violence package but said it did not address the courts’ funding gap, and highlighted previous cuts to legal aid and community legal centres."
+  },
+  {
+   "slug": "speech-329978",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Courts Administration Legislation Amendment Bill 2015, arguing that a single administrative entity for the Federal Court, Family Court and Federal Circuit Court would improve efficiency and address under-resourcing, citing the 2014 National Commission of Audit and noting that the Federal Circuit Court finalised only 75% of applications in 2014-15, with 91% of its workload being family matters."
+  },
+  {
+   "slug": "speech-329979",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-03-02",
+   "stage_hint": null,
+   "brief": "The Courts Administration Legislation Amendment Bill 2015 is argued to be essential for placing federal courts on a sustainable funding footing, forecasting $5.4 million in annual savings from back-office amalgamation while retaining all savings within the courts. The speaker also noted the appointment of six federal judges on 25 February, including four women, and stated that aside from one vacancy in the Federal Circuit Court's Melbourne registry, each court has its full complement of judges."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Courts Administration Legislation Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00024",
+   "assent_date": "2016-03-18"
+  }
+ ]
+}

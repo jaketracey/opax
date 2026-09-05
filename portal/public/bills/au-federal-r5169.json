@@ -1,0 +1,202 @@
+{
+ "key": "au-federal-r5169",
+ "title": "Customs Tariff Amendment (Tobacco) Bill 2014",
+ "short_title": "Customs Tariff Amendment (Tobacco) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-02-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2014-03-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5169_ems_6db87ce6-8845-411e-aac2-0f6492c3aee8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5169%22",
+   "document_date": "2014-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00008",
+   "document_date": "2014-03-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-284192",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284193",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284194",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284370",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284371",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284377",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284378",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284379",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-284380",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Tobacco) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00008",
+   "assent_date": "2014-03-18"
+  }
+ ]
+}

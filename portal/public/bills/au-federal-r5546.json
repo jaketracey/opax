@@ -1,0 +1,415 @@
+{
+ "key": "au-federal-r5546",
+ "title": "Education Legislation Amendment (Overseas Debt Recovery) Bill 2015",
+ "short_title": "Education Legislation Amendment (Overseas Debt Recovery) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2015-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5546_ems_a41aad83-9952-412d-b00b-0f28747183cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5546%22",
+   "document_date": "2015-09-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00154",
+   "document_date": "2015-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-17",
+  "sentences": [
+   "This bill would make Australians living abroad repay their student loans and trade support loans under the same rules as those in Australia.",
+   "It would amend the Higher Education Support Act 2003 and the Trade Support Loans Act 2014 to require repayments based on worldwide income, collected through a levy.",
+   "The new rules would start on 1 January 2016 or the day after royal assent, whichever is later, and debtors overseas would need to register with the Australian Taxation Office by 1 July 2017."
+  ],
+  "changes": [
+   "Extends the HELP and TSL repayment framework to debtors living overseas.",
+   "Imposes repayment obligations on overseas debtors based on their worldwide income.",
+   "Requires debtors going overseas for more than six months to register with the ATO.",
+   "Sets repayment rates and thresholds to mirror those for debtors in Australia."
+  ],
+  "affected": "Australians living overseas with HELP or TSL debts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3969",
+   "date": "2015-11-09",
+   "house": "senate",
+   "question": "The majority voted against [an amendment](http://www.openaustralia.org.au/senate/?gid=2015-11-09.193.1) introduced by Greens Senator [Robert Simms](https://theyvoteforyou.org.au/people/senate/sa/robert_simms). ### Amendment text > *At the end of the motion, add:* > *\", but the Senate calls on the Government to use existing mutual taxation agreements to assist in the identification of foreign residents and overseas travellers required to repay HELP [[Higher Education Loan Programme](https://www.education.gov.au/higher-education-loan-program-help)] or TSL [[Trade Support Loan](http://www.australianapprenticeships.gov.au/trade-support-loans)] debt, rather than require those residents and travellers to comply with changes in Australian law.\".* ### What does this amendment mean? Senator Simms introduced this amendment in order to \"tak[e] the onus off the individual\" (see his [whole explanation](http://www.openaustralia.org.au/senate/?gid=2015-11-09.193.1)). Currently, the bills make it the responsibility of overseas Australians (or Australians planning on being overseas for over six months) to be aware of the new requirement to repay their debts and to register with the Australian Taxation Office. ### What exactly do the bills do? **These bills relate to the policy [for requiring Australians working overseas to repay their student debts](https://theyvoteforyou.org.au/policies/82).** If made into law, the bills will require Australians living overseas and earning over the threshold (which was $54,126 in 2015–16) to repay their [Higher Education Loan Programme](https://www.education.gov.au/higher-education-loan-program-help) (HELP) debt or [Trade Support Loan](http://www.australianapprenticeships.gov.au/trade-support-loans) (TSL) debt under the same compulsory repayment scheme that applies in Australia. The bills will also require Australians with HELP or TSL debts to notify the Commissioner of Taxation if they plan to be overseas for at least 183 days or if they have been",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 25,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-09/6"
+  },
+  {
+   "key": "federal-senate-3970",
+   "date": "2015-11-09",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org.au/senate/?gid=2015-11-09.209.1) introduced by Greens Senator [Robert Simms](https://theyvoteforyou.org.au/people/senate/sa/robert_simms). ### What was the amendment? The amendment was about how the bills would apply to people with student debts who already live overseas. It would have meant that the changes made by the bills wouldn't apply to those people so long as they continued to live and work overseas and didn't add to their debts at all (yearly indexation doesn't count as adding to your debt). ### What are the changes made by the bills? **These bills relate to the policy [for requiring Australians working overseas to repay their student debts](https://theyvoteforyou.org.au/policies/82).** If made into law, the bills will require Australians living overseas and earning over the threshold (which was $54,126 in 2015–16) to repay their [Higher Education Loan Programme](https://www.education.gov.au/higher-education-loan-program-help) (HELP) debt or [Trade Support Loan](http://www.australianapprenticeships.gov.au/trade-support-loans) (TSL) debt under the same compulsory repayment scheme that applies in Australia. The bills will also require Australians with HELP or TSL debts to notify the Commissioner of Taxation if they plan to be overseas for at least 183 days or if they have been overseas for at least 183 days over any 12 month period. The notification will have to occur either: * no later than seven days after leaving Australia; or * no later than seven days after the end of those 183 days See [StudyAssist](http://studyassist.gov.au/sites/studyassist/helpfulresources/pages/2015%20budget%20-%20student%20overview) for information about when these changes will come into effect. Previously, Australians with HELP or TSL debts who moved overseas didn't have to make any repayments, regardless of how much they earned. Nor did they have to notify the Commissioner if they went overseas. For more infor",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-09/7"
+  },
+  {
+   "key": "federal-senate-3971",
+   "date": "2015-11-09",
+   "house": "senate",
+   "question": "Education Legislation Amendment (Overseas Debt Recovery) Bill 2015, Student Loans (Overseas Debtors Repayment Levy) Bill 2015 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 12,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-09/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-319356",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The bills require Australians with HELP or trade support loan debts living overseas to repay based on their worldwide income if above the minimum repayment threshold, starting 1 July 2017, with projected savings of over $150 million over 10 years. The legislation also enables data sharing with overseas jurisdictions for debt recovery and prohibits tax deductions for overseas repayments."
+  },
+  {
+   "slug": "speech-320569",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "Labor supported the Education Legislation Amendment (Overseas Debt Recovery) Bill 2015, which from 1 July 2016 requires HELP and HECS debtors living overseas for six months or more to repay debts at Australian rates if worldwide income exceeds the threshold. The bill is expected to affect 46,000 Australians, with 38,000 making repayments totalling $26 million over four years and saving the Commonwealth $150 million."
+  },
+  {
+   "slug": "speech-320570",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-320571",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the bills, which would affect 46,000 Australians overseas and save $150 million over ten years, but expressed reservations about the government's plans for $100,000 degrees and the need for effective communication to avoid a 30% default rate."
+  },
+  {
+   "slug": "speech-320572",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Education Legislation Amendment (Overseas Debt Recovery) Bill 2015, which requires Australians living overseas to repay their HELP and TSL debts based on worldwide income, with repayments starting above $54,126. The speaker also defended the HECS system, noting the government pays 60% of university fees, and rejected Labor’s claims that degrees would cost $100,000."
+  },
+  {
+   "slug": "speech-320575",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The member supported the Education Legislation Amendment (Overseas Debt Recovery) Bill 2015, which requires Australians living overseas with HELP/HECS debts to make repayments once earning above the $54,000 threshold. The bill is expected to recover $150 million over 10 years, with an estimated 70–75 per cent self-compliance rate based on Canadian and UK experience."
+  },
+  {
+   "slug": "speech-320576",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The bill was presented as necessary to recover HELP/HECS debts owed by Australians overseas, citing $30 billion in accumulated debt and $800 million lost since 1989. It will amend tax and education laws to share data with the UK and New Zealand, and is expected to recover at least $25 million per year, or $150 million over ten years."
+  },
+  {
+   "slug": "speech-320577",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Education Legislation Amendment (Overseas Debt Recovery) Bill 2015 and the Student Loans (Overseas Debtors Repayment Levy) Bill 2015 are fair and necessary, noting that $800 million in revenue has been lost since 1989 because overseas earners did not repay student debts. He criticised the opposition’s claims about \"$100,000 degrees\" as a deliberate scare campaign and stated that graduates earning above approximately $50,000 overseas should contribute to the cost of their education."
+  },
+  {
+   "slug": "speech-320579",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Education Legislation Amendment (Overseas Debt Recovery) Bill 2015 and Student Loans (Overseas Debtors Repayment Levy) Bill 2015 close a loophole by requiring Australians living overseas to repay student loans, saving an estimated $25 million from 2015–16 to 2018–19 and over $150 million over 10 years; from 1 January 2016, debtors living overseas for six months or more must notify the ATO, and from 1 July 2017 repayments will be based on income exceeding approximately $54,000."
+  },
+  {
+   "slug": "speech-320580",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-15",
+   "stage_hint": null,
+   "brief": "The bills require Australians living overseas for six months or more to repay their Higher Education Loan Program and Trade Support Loans debts based on their income, with data-sharing arrangements with New Zealand and the United Kingdom, and are projected to save over $150 million over ten years."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Education Legislation Amendment (Overseas Debt Recovery) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00154",
+   "assent_date": "2015-11-26"
+  }
+ ]
+}

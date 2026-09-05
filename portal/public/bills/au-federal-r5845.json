@@ -1,0 +1,310 @@
+{
+ "key": "au-federal-r5845",
+ "title": "Petroleum and Other Fuels Reporting Bill 2017",
+ "short_title": "Petroleum and Other Fuels Reporting Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2017-08-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5845_ems_bfff95b7-b3f4-4e0b-bf49-78fa81bb7ec5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5845_ems_caec63cf-fb36-439f-bbaf-76ee530b7020%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5845%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00090",
+   "document_date": "2017-08-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "This bill is part of a package that would create a legal requirement for businesses to report data on petroleum, biofuels and other fuel-related products so the government can publish market statistics.",
+   "The Minister for the Environment and Energy could order people to provide fuel information to the department's Secretary, with the details of what must be reported set out in Ministerial Rules.",
+   "Departmental employees, consultants or contractors who break the prohibition on recording, using or disclosing protected information could face up to two years imprisonment."
+  ],
+  "changes": [
+   "Establishes a mandatory reporting regime for fuel statistics.",
+   "Gives the minister power to require reporting of fuel information.",
+   "Creates a prohibition on recording, using or disclosing protected information, with penalties of up to two years imprisonment."
+  ],
+  "affected": "Businesses that deal with petroleum, other fuels and fuel-related products, and employees, consultants and contractors of the Department of the Environment and Energy.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4783",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "question": "The majority voted against the following [motion](http://www.openaustralia.org.au/debate/?id=2017-08-15.10.2): > *That all words after “That” be omitted with a view to substituting the following words:* > *“whilst not declining to give the bill a [second reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html) the House notes the Government’s:* >> *(1) lack of national energy policy, which is causing an investment strike in new electricity generation; and* >> *(2) failure to ensure an adequate and affordable gas supply for Australian industry while Australia becomes the world’s largest LNG exporter”.* This means that this wording is rejected and the [second reading motion](http://www.openaustralia.org.au/debates/?id=2017-08-15.105.2) will remain as it is. ### What is a second reading? A \"second reading\" motion is one where the house votes on whether they agree with the main idea of the bill. A bill needs to be read for a second time before it can be discussed in greater detail. This sort of motion (where extra text is added to a second reading motion without actually refusing it a second reading) is a way for the opposition to express their views without stopping a bill from actually passing through the house.",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-08-15/8"
+  },
+  {
+   "key": "federal-representatives-4784",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "question": "Petroleum and Other Fuels Reporting Bill 2017 and another - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-08-15/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-345174",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The bill allows the Australian Taxation Office and the Australian Competition and Consumer Commission to share fuel data with the Department of the Environment and Energy to reduce reporting burdens and monitor compliance under the Petroleum and Other Fuels Reporting Bill 2017."
+  },
+  {
+   "slug": "speech-351524",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the mandatory reporting regime under the Petroleum and Other Fuels Reporting Bill is needed to improve data transparency, ensure energy security, and restore compliance with International Energy Agency oil stockholding obligations; he also criticised the Turnbull government for lacking a coherent national energy policy, citing doubled wholesale power prices."
+  },
+  {
+   "slug": "speech-351529",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that South Australian Labor policies caused the world's highest electricity prices and criticised renewable energy subsidies, citing a $3 billion annual consumer cost. He called for freezing the renewable energy target and questioned how Labor would achieve a 40% reduction in liquid fuel use by 2030 under the Paris Agreement."
+  },
+  {
+   "slug": "speech-351533",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Petroleum and Other Fuels Reporting Bill 2017 and its companion bill, which create mandatory reporting for petroleum and fuel products to improve statistics, monitor energy security, comply with International Energy Agency obligations, and implement a 2015 Senate committee recommendation."
+  },
+  {
+   "slug": "speech-351683",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia’s reliance on imported petroleum has grown from 60% in 2000 to 91%, with over half of unleaded petrol coming from a single refinery in Singapore. They stated that the Petroleum and Other Fuels Reporting Bill 2017 would improve transparency but would not resolve the ongoing gas crisis, which has seen wholesale gas prices rise from $4 to $20 per gigajoule under the current government."
+  },
+  {
+   "slug": "speech-351684",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-351685",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Petroleum and Other Fuels Reporting Bill for mandatory fuel data disclosure but argued the government has failed to address the broader gas and energy crisis, citing four years of inaction, gas prices rising from $4–$5 to $15–$20 per gigajoule, and 20% electricity price increases for NSW households."
+  },
+  {
+   "slug": "speech-351686",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia must urgently address its non-compliance with International Energy Agency oil stock obligations and its dependence on imported fuel, which poses national security, health, and climate risks. They highlighted the potential of domestic biofuel technology like Algae.Tec's algae-based biodiesel and called for a bipartisan policy framework, including a Clean Energy Target, to stimulate renewable energy and reduce emissions."
+  },
+  {
+   "slug": "speech-351687",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The Petroleum and Other Fuels Reporting Bill 2017 and related bill aim to improve the accuracy, reliability and timeliness of Australia’s fuel statistics to safeguard energy security, meet international oil stockholding obligations under the International Energy Program Treaty, and support market efficiency, with provisions for data sharing between agencies and flexible reporting requirements, plus an addendum clarifying the delegation of compliance-monitoring functions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Petroleum and Other Fuels Reporting Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00090",
+   "assent_date": "2017-08-23"
+  }
+ ]
+}

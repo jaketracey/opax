@@ -1,0 +1,280 @@
+{
+ "key": "au-federal-r6545",
+ "title": "Primary Industries (Customs) Charges Amendment (Dairy Cattle Export Charge) Bill 2020",
+ "short_title": "Primary Industries (Customs) Charges Amendment (Dairy Cattle Export Charge) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2020-09-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6545_ems_4379bf86-0bb2-47a6-9ff0-8fefaa911bff%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6545%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00090",
+   "document_date": "2020-09-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-13",
+  "sentences": [
+   "The bill would create a new statutory export charge on dairy cattle to fund research, development and marketing for the sector.",
+   "It would amend the Primary Industries (Customs) Charges Act 1999 to allow a per head charge on dairy cattle exports, with a separate per kilogram rate for other cattle.",
+   "The charge would be set at $6 per head of dairy cattle exported, replacing a voluntary charge that was under-collected."
+  ],
+  "changes": [
+   "Imposes a statutory export charge on dairy cattle.",
+   "Sets the charge rate on a per head basis for dairy cattle.",
+   "Enables full funding of the Dairy Cattle Export Program."
+  ],
+  "affected": "Exporters of dairy cattle and the dairy cattle export sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6622",
+   "date": "2020-09-03",
+   "house": "senate",
+   "question": "Primary Industries (Customs) Charges Amendment (Dairy Cattle Export Charge) Bill 2020 - Second Reading - Against live export",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 15,
+    "dated": 13,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-03/14"
+  },
+  {
+   "key": "federal-senate-6623",
+   "date": "2020-09-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-09-03.184.1) to agree with the bill's main idea. In parliamentary jargon, they voted to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which means they can now discuss it in more detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd103), the purpose of the bill is to: * *provide for the imposition of an export charge on the export of dairy cattle and* * *amend the rate provision to provide for two different rates of charges—a per head charge on dairy cattle and a per kilogram charge on cattle other than dairy cattle.*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 4,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 15,
+    "dated": 13,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-03/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391028",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Primary Industries (Customs) Charges Amendment (Dairy Cattle Export Charge) Bill 2020 imposes a mandatory $6 per head charge on exported dairy cattle, replacing the current voluntary charge, to fund marketing and research and development through LiveCorp. The dairy cattle export industry is valued at over $200 million, with over 100,000 cattle exported in 2019 to markets including China, Indonesia, Pakistan and Japan."
+  },
+  {
+   "slug": "speech-393427",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The opposition supported the Primary Industries (Customs) Charges Amendment (Dairy Cattle Export Charge) Bill 2020, but moved an amendment condemning the government for failing to develop a comprehensive plan to achieve the National Farmers’ Federation’s vision of a $100 billion agriculture industry by 2030, despite the Prime Minister’s promise at the Dubbo Bush Summit over a year ago. The speaker also noted that voluntary levy contributions had dropped from 92% in 2011 to 3% by 2019, and criticised the government for lacking an overarching strategic plan for agriculture, citing the Future Drought Fund as another example of headline numbers without follow-through."
+  },
+  {
+   "slug": "speech-393430",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker advocated for a fairer farmgate milk price, extended eligibility for special disaster loans, and case managers for bushfire-affected farmers, and called for a national plan for the dairy industry. They noted a $5 million biogas plant turning manure into electricity and supported moving to zero net emissions by 2050."
+  },
+  {
+   "slug": "speech-393431",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The bill makes the Livestock Exporters' Council voluntary code mandatory and funds research and development for live cattle exports. The speaker noted a rise in dairy cattle exports due to drought and low prices, and called for further reforms including a mandatory code of conduct for the dairy industry and competition reform with divestment power."
+  },
+  {
+   "slug": "speech-393432",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The bill imposes a per-head export charge on dairy cattle to fund research, development, and marketing for the sector, replacing an undercollected voluntary charge. It was supported by a majority of licensed exporters and aims to improve animal welfare, market access, and regulatory performance for the $200 million dairy cattle export industry."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Primary Industries (Customs) Charges Amendment (Dairy Cattle Export Charge) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00090",
+   "assent_date": "2020-09-17"
+  }
+ ]
+}

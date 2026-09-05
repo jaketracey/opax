@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-r6050",
+ "title": "Treasury Laws Amendment (Income Tax Consolidation Integrity) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Income Tax Consolidation Integrity) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6050_ems_2e553595-9dee-43f0-b1bc-26ab34686de1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6050%22",
+   "document_date": "2018-02-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00014",
+   "document_date": "2018-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-15",
+  "sentences": [
+   "This bill would change the income tax law to make the rules for corporate groups that file a single tax return work more fairly and simply.",
+   "It would adjust several specific rules, including those about debts, tax deferrals, and assets that are sold or transferred when a company joins or leaves the group.",
+   "The explanatory memorandum does not state a start date or any dollar amounts for these changes."
+  ],
+  "changes": [
+   "It would stop a company from getting a tax benefit twice for certain debts when it joins a consolidated group.",
+   "It would ignore deferred tax liabilities when working out the tax cost of assets on entry to or exit from a group.",
+   "It would fix problems that occur when a company with securitised assets joins or leaves a group.",
+   "It would turn off the entry tax cost rules in some cases where a foreign owner's capital gain or loss is ignored.",
+   "It would clarify how the tax rules apply when a financial arrangement leaves a group with a departing subsidiary.",
+   "It would correct anomalies when a company leaves a group holding an asset that matches a debt owed by the old group."
+  ],
+  "affected": "Companies that join or leave a consolidated group for income tax purposes, and their foreign owners.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-359682",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-15",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Income Tax Consolidation Integrity) Bill 2018 was moved to strengthen the integrity of Australia's consolidation regime, closing loopholes identified by the Board of Taxation affecting approximately 12,000 consolidated taxpayers. The bill targets specific unintended tax outcomes with various effective dates from 2013 to 2016, including removing double tax benefits and preventing non-resident asset churning."
+  },
+  {
+   "slug": "speech-360479",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The member moved an amendment to note the Coalition’s failure to close multinational tax loopholes and improve tax haven transparency, while supporting the bill’s consolidation integrity measures. He criticised the government’s $65 billion corporate tax cut, citing that it would boost household income by only 0.1 per cent in the 2030s and that one in five large Australian companies paid no tax in the past three years."
+  },
+  {
+   "slug": "speech-360484",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Income Tax Consolidation Integrity) Bill 2018, arguing it closes tax loopholes for foreign multinationals and raises nearly a billion dollars, while opposing the government’s proposed $65 billion company tax cut and citing a Congressional Budget Office finding that Australia’s effective corporate tax rate is around 11 percent, lower than the US at 16 percent."
+  },
+  {
+   "slug": "speech-360490",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Income Tax Consolidation Integrity) Bill 2018 amends the Income Tax Assessment Act 1997 to close loopholes and improve integrity for Australia's 12,000 consolidated taxpayers, including most large businesses. The bill prevents double tax benefits from deductible liabilities and securitised assets, simplifies entry/exit tax cost rules, stops double deductions from value shifting and nonresident asset churning, and aligns tax treatment of intragroup liabilities with economic substance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Income Tax Consolidation Integrity) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00014",
+   "assent_date": "2018-03-28"
+  }
+ ]
+}

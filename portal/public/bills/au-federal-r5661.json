@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5661",
+ "title": "Tax Laws Amendment (Tougher Penalties for Country-by-Country Reporting) Bill 2016",
+ "short_title": "Tax Laws Amendment (Tougher Penalties for Country-by-Country Reporting) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-02",
+ "originating_house": "representatives",
+ "sponsor": "LEIGH, Andrew, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10746",
+ "portfolio": "(s) LEIGH, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5661%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5661%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5661%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5661_ems_7cf8dba8-2d87-42ec-ae82-e051849b7bc1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5661%22",
+   "document_date": "2016-05-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-05-02",
+  "sentences": [
+   "This bill is part of a package that would raise the maximum fine for large multinational companies that fail to hand over annual reports on their worldwide profits and tax payments.",
+   "The package would amend the Income Tax Assessment Act 1997 to create a new penalty regime, raising the top fine from $5,400 to $270,000.",
+   "The Commissioner of Taxation would also be allowed to audit companies that still do not provide the reports after the higher penalty is applied."
+  ],
+  "changes": [
+   "Introduces a new penalty regime for significant global entities that fail to lodge country-by-country reports.",
+   "Increases the maximum penalty for non-compliance from $5,400 to $270,000.",
+   "Gives the Commissioner of Taxation power to audit firms that continue to not lodge their reports after the maximum penalty is applied."
+  ],
+  "affected": "Significant global entities, defined as companies with global turnover above $1 billion, that must provide country-by-country reports to the Commissioner of Taxation.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:31:00Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

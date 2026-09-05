@@ -1,0 +1,338 @@
+{
+ "key": "au-federal-r7369",
+ "title": "Australian Centre for Disease Control Bill 2025",
+ "short_title": "Australian Centre for Disease Control Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2025-11-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-11-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7369_ems_5b73d5c4-a691-4c2a-886f-04dcf6a2a7c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7369_ems_b9ea8d59-0b02-4a33-ad8f-960f25228951%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10518765%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7369%22",
+   "document_date": "2025-09-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00061",
+   "document_date": "2025-11-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2025-09-03",
+  "sentences": [
+   "This bill is part of a package that would establish the Australian Centre for Disease Control as an independent Commonwealth entity and transfer public health responsibilities to it.",
+   "The bill would create the Australian CDC and set out the powers, functions and duties of the agency and its Director-General.",
+   "The accompanying bill would transfer responsibilities under the National Health Security Act 2007 and the National Occupational Respiratory Disease Registry Act 2023, and repeal the Australian National Preventive Health Agency Act 2010."
+  ],
+  "changes": [
+   "Establishes the Australian Centre for Disease Control as an independent, non-corporate Commonwealth entity.",
+   "Creates the role of Director-General and defines the agency's powers, functions and duties.",
+   "Transfers public health responsibilities from the National Health Security Act 2007 and the National Occupational Respiratory Disease Registry Act 2023 to the Director-General.",
+   "Repeals the Australian National Preventive Health Agency Act 2010."
+  ],
+  "affected": "The Australian Centre for Disease Control, its Director-General, and agencies and entities affected by the transferred responsibilities under the amended Acts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9797",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2025-10-27.34.17) to read the bill a second time. In other words, they voted to agree with the main idea of the bill. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd019) (which is a document prepared by the parliamentary library): > *The [Australian Centre for Disease Control Bill 2025](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7369) (the Bill) establishes the Australian Centre for Disease Control (Australian CDC) as an independent, non-corporate Commonwealth entity and establishes the role, powers, functions and duties of the agency and its Director-General.* > > *The establishment of an Australian CDC was a commitment made by the Australian Labor Party prior to the 2022 election. An interim Australian CDC was established on 1 January 2024 within the Department of Health, Disability and Ageing.* > > *The Australian CDC is intended to be an ‘authoritative source of public health advice and information’ for Governments, health professionals, the Australian public, international agencies and non-government organisations. The initial focus of the CDC includes communicable diseases, pandemic preparedness, emergency health management (including management of the National Medical Stockpile), disease surveillance and existing capabilities in environmental health and occupational respiratory diseases. The functions of the Australian CDC are subject to review and intended to grow over time.* > > *The [Australian Centre for Disease Control (Consequential Amendments and Transitional Provisions) Bill 2025](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7372) (the C&T Bill) makes consequential amendments to existing Commonwealth legislation to transfer relevant public health responsibilities to the Di",
+   "stage": "Second reading",
+   "ayes": 101,
+   "noes": 38,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-27/1"
+  },
+  {
+   "key": "federal-representatives-9798",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2025-10-27.36.2) introduced by Kooyong MP [Monique Ryan](https://theyvoteforyou.org.au/people/representatives/kooyong/monique_ryan) (Independent), which means they were unsuccessful. ### What do the amendments do? The wording of the amendments is available on [openaustralia.org.au](https://www.openaustralia.org.au/debate/?id=2025-10-27.36.2). Dr Ryan [explained the purpose](https://www.openaustralia.org.au/debate/?id=2025-10-27.36.2) of the amendments: > *Amendment (1) refers to the definition of 'public health matters'. Each of the topics listed in the bill relates to forms of public health and harm, and it's clear and obvious that they should be the natural responsibilities falling within the scope of a well-defined and fulsome CDC. This amendment captures the additional harm of occupational exposures and the public health responsibility for injury prevention related to these. I note that the addition of public health exposures and occupational exposures has been supported by the Public Health Association of Australia and the Thoracic Society of Australia and New Zealand, and even by the Australian Council of Trade Unions—a body with which the government may be familiar.* > > *Amendment (2) refers to the functions of the director-general, which sets out the centre's advisory role and the intersections with and coordination of bodies with health responsibilities within the CDC. The health effects of climate change are captured under the existing definition of 'public health matters' in this bill, but what is not captured is the importance of the Centre for Disease Control in providing integrated advice in a matter of national and global consequence. These amendments aim to position the CDC as an authoritative and valuable contributor to the understanding of and policy advice on climate change impacts on public health, particularly in the absence of any other national body which curr",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 87
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-27/2"
+  },
+  {
+   "key": "federal-representatives-9799",
+   "date": "2025-10-27",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2025-10-27.39.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means it failed. ### What do these amendments do? Dr Haines [explained that](https://www.openaustralia.org.au/debate/?id=2025-10-27.39.1): > *This amendment would establish best practice for the statutory review of the CDC act, improving the independence and integrity of the review process. It would strengthen public trust in the CDC and its operation.* ### Amendment text > *(1) Clause 78, page 63 (line 22) to page 64 (line 12), omit the clause, substitute:* > > *78 Review of operation of Act* > > *(1) The Minister must cause an independent review to be undertaken of:* > >> *(a) the operation of this Act during the 5 year period beginning at the commencement of the Act; and* >> >> *(b) the operation of this Act during each subsequent 5 year period.* > > *(2) The review must be conducted by an expert panel comprised of 3 members appointed by the Minister.* > > *(3) Each member of the expert panel must have experience in at least one of the following:* > >> *(a) public health;* >> >> *(b) clinical practice;* >> >> *(c) economics;* >> >> *(d) human rights;* >> >> *(e) health data and statistics;* >> >> *(f) emergency management;* >> >> *(g) communications.* > > *(4) A member of the expert panel must not be any of the following:* > >> *(a) a current employee of the Commonwealth public service;* >> >> *(b) a current member of the Advisory Council;* >> >> *(c) a current or former member of the Commonwealth Parliament;* >> >> *(d) a current or former employee or executive of a registered political party.* > > *Timing of review and Minister to be given report* > > *(5) The expert panel must be appointed by the Minister within 6 months after the end of the 5 year period to which the report relates.* > > *(6) The review must be completed and the r",
+   "stage": "Consideration in detail",
+   "ayes": 11,
+   "noes": 64,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    }
+   },
+   "party_coverage": {
+    "dated": 75
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-10-27/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1198388",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198393",
+   "speaker": "Slade Brockman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198411",
+   "speaker": "Matthew Canavan",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2025-11-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Centre for Disease Control Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00061",
+   "assent_date": "2025-11-10"
+  }
+ ]
+}

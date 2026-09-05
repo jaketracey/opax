@@ -1,0 +1,178 @@
+{
+ "key": "au-federal-s1089",
+ "title": "Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 1) Bill 2019",
+ "short_title": "Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 1) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-14",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1089_ems_7cfefa66-ce46-4014-97e3-fcadbfeb9fdb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1089_ems_272935df-7e20-4020-98af-5f3b7b27404a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1089_ems_75dc7abb-f393-4f70-ace6-edf35a5c7bc9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1089_ems_a4005a44-80b2-4de5-af80-d849a5013fd2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1089%22",
+   "document_date": "2017-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00040",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376913",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "Labor’s amendments to the bill expanded the member outcomes test to cover choice superannuation products, which were originally exempted, and increased penalties for misconduct to over $500,000. The speaker also criticised the government for failing to implement royal commission recommendations and outlined plans to address unpaid superannuation and the gender gap, including paying super on Commonwealth paid parental leave."
+  },
+  {
+   "slug": "speech-376914",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "Labor supported the bill but argued the government's original version exempted 83% of bank-owned retail super assets by only covering MySuper products, not choice products. Labor successfully amended the bill to extend portfolio holdings disclosure, APRA powers and outcomes assessments to choice products, and argued penalties for directors should exceed $500,000 and be retrospective to October 2015."
+  },
+  {
+   "slug": "speech-376915",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-04",
+   "stage_hint": null,
+   "brief": "The Labor MP supported the Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 1) Bill 2019 after Senate amendments expanded its accountability requirements to all superannuation funds, not just MySuper accounts. He criticised the government for originally exempting retail funds and for opposing penalty rate restoration, and stated Labor would legislate to restore penalty rates and make superannuation guarantee payments part of the National Employment Standards."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Improving Accountability and Member Outcomes in Superannuation Measures No. 1) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00040",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

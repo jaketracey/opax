@@ -1,0 +1,235 @@
+{
+ "key": "au-federal-r6125",
+ "title": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2018",
+ "short_title": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6125_ems_d5d4ca66-e3b4-45d4-b9bf-80c54e59a4d1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6125%22",
+   "document_date": "2018-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00074",
+   "document_date": "2018-08-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "This bill would keep several counter-terrorism powers in force beyond their current expiry date.",
+   "It extends control orders, preventative detention orders, declared areas rules, and stop-search-seize powers for three more years, and ASIO questioning powers for one more year.",
+   "The bill also updates the Criminal Code to assign responsibility for protecting sensitive information under the continuing detention order regime to the Attorney-General and the AFP Minister."
+  ],
+  "changes": [
+   "Extends control order, preventative detention order, declared areas, and stop-search-seize powers for three years.",
+   "Extends ASIO questioning and detention powers for 12 months.",
+   "Amends the Criminal Code to reflect new ministerial responsibilities for sensitive information protection."
+  ],
+  "affected": "Law enforcement and security agencies, and people subject to counter-terrorism powers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:08Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5316",
+   "date": "2018-08-16",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2018 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 48,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 18,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-08-16/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-365598",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The bill extends the sunset date for control order, preventative detention order and declared area regimes to 7 September 2021. The government did not implement PJCIS and INSLM recommendations to repeal questioning and detention warrants and to exempt control order subjects from paying costs for variation applications."
+  },
+  {
+   "slug": "speech-365599",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for extending the control order sunset clause, raised concerns that police cannot question people under preventative detention orders (PDOs), and advocated for a national criminal intelligence database and community protection intervention orders to compel deradicalisation, citing around 500 persons of interest in Australia and examples such as Numan Haider and Abdul Nacer Benbrika."
+  },
+  {
+   "slug": "speech-365600",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-06-25",
+   "stage_hint": null,
+   "brief": "The bill extends the control order, preventive detention order, declared areas, and terrorism stop/search/seizure powers for three years until 7 September 2021, and continues ASIO’s questioning and detention powers for 12 months, while also increasing independent oversight of these counter-terrorism provisions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment Act (No. 1) 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00074",
+   "assent_date": "2018-08-24"
+  }
+ ]
+}

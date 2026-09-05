@@ -1,0 +1,285 @@
+{
+ "key": "au-federal-r6866",
+ "title": "Supply Bill (No. 1) 2022-2023",
+ "short_title": "Supply Bill (No. 1) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6866_ems_5320a2c2-8196-469e-b5e6-ffd81439e832%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6866%22",
+   "document_date": "2022-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00021",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-03-29",
+  "sentences": [
+   "This bill would authorise the government to spend money from the Consolidated Revenue Fund on its ordinary annual services.",
+   "It would provide funding equal to about five-twelfths of the estimated annual amount for the 2022-23 financial year, with extra for agencies like the Department of Health that have high early-year spending or COVID-19 costs.",
+   "The remaining seven-twelfths plus budget measures would be covered by a separate bill later in the year."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "Sets the amount at broadly 5/12ths of the estimated 2022-23 annual appropriations.",
+   "Allows greater appropriations for entities with high early-year spending or COVID-19 response needs."
+  ],
+  "affected": "The government and its agencies, particularly the Department of Health.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7673",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted against a request for an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-03-30.20.2), which means the amendment failed. It was introduced by WA Senator [Dorinda Cox](https://theyvoteforyou.org.au/people/senate/wa/dorinda_cox) (Greens). ### Amendment request text > *That the House of Representatives be requested to make the following amendment:* > > *(1) Page 6 (after line 2), after clause 9, insert:* > >> *9A Energy Security and Regional Development Plan — Nor thern Territory* >> >> *(1) No amount appropriated by this Act is to be spent in the Northern Territory region as part of the 'Energy Security and Regional Development Plan' as described in Budget Paper No. 2 2022-23 on page 133.* >> >> *9B Energy and Emissions Reduction* >> >> *(1) No amount appropriated by this Act is to be spent on the 'Future Gas Infrastructure Investment Framework' as part of the 'Energy and Emissions Reduction' program as described in Budget Paper No. 2 2022-2023 on page 125.* > > *Statement pursuant to the order of the Senate of 26 June 2000* > >> *Amendment (1)* >> >> *Amendment (1) is framed as a request because it is to a bill which appropriates moneys for the ordinary annual services of the government.* > > *Statement by the Clerk of the Senate pursuant to the order of the Senate of 26 June 2000* > >> *Amendment (1)* >> >> *As this is a bill appropriating moneys for the ordinary annual services of the government within the meaning of section 53 of the Constitution, any Senate amendments to the bill must be moved as requests. This is in accordance with the precedents of the Senate.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 17,
+    "dated": 15,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/1"
+  },
+  {
+   "key": "federal-senate-7674",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "Supply Bill (No. 1) 2022-2023 and two others - in Committee - Against vaccinations for children aged 0-4 years",
+   "stage": "In committee",
+   "ayes": 2,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 12,
+    "member": 9,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-419401",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 1) 2022-2023 and related bills seek over $80 billion in interim appropriations to fund normal government business and extended COVID-19 response measures for the first five months of 2022‑23. The bill includes a $2.4 billion advance to the finance minister—$2 billion earmarked for COVID-19 and $400 million for other urgent expenditure—with enhanced transparency and opposition concurrence required for advances over $1 billion."
+  },
+  {
+   "slug": "speech-419403",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The bill seeks $10.7 billion in appropriations for capital works, payments to states and territories, and equity injections for the first five months of 2022‑23, including extended COVID‑19 response measures. It also provides a $3.6 billion advance to the Finance Minister—$3 billion for COVID‑related expenditure and $600 million for other urgent spending—while returning the general advance to pre‑pandemic settings."
+  },
+  {
+   "slug": "speech-419405",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "Labor supports the supply bills for continuity of government into 2022–23 due to the upcoming election. The opposition criticises the government for failing to follow through on bushfire and flood funding, not using the $4.7 billion Emergency Response Fund, neglecting climate change mitigation, and presiding over falling real wages, insecure work, and aged care neglect."
+  },
+  {
+   "slug": "speech-419511",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Supply Bill (No. 1) 2022-2023, Supply Bill (No. 2) 2022-2023 and Supply (Parliamentary Departments) Bill (No. 1) 2022-2023 seek authority to appropriate just over $91 billion from the Consolidated Revenue Fund for the first five months of 2022-23. The bills provide interim funding to ensure continuity of programs and services from 1 July 2022 until annual appropriation bills pass, and contain no new budget measures."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Supply Act (No. 1) 2022-2023",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00021",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

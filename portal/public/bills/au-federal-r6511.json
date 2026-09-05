@@ -1,0 +1,385 @@
+{
+ "key": "au-federal-r6511",
+ "title": "Telecommunications Legislation Amendment (International Production Orders) Bill 2020",
+ "short_title": "Telecommunications Legislation Amendment (International Production Orders) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-03-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6511_ems_0ac5ae09-3e3e-400b-ae5e-680a68af4e45%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6511_ems_49d3ec54-f743-4a9f-b639-8e3d9fc88e41%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6511_ems_68b3d794-a914-4fa4-9965-db74d716ffaa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6511_ems_941bf105-24f3-4bf6-be33-91911d5047d7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6511%22",
+   "document_date": "2020-03-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00078",
+   "document_date": "2021-07-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7335",
+   "date": "2021-06-24",
+   "house": "senate",
+   "question": "The majority voted against an amendment to a [motion](https://www.openaustralia.org.au/senate/?id=2021-06-24.28.2) introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means it failed. The purpose of the original motion is to speed up consideration of the two bills mentioned. The amendment would have removed the Telecommunications bill from the original motion so that the usual rules would have applied to it. ### Amendment text > *Omit \"Telecommunications Legislation Amendment (International Production Orders) Bill 2020\"* ### Original motion text > *That the provisions of paragraphs (5) to (8) of [standing order](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) 111 not apply to the following bills, allowing them to be considered during this period of sittings:* > >> *Hazardous Waste (Regulation of Exports and Imports) Amendment Bill 2021* >> >> *Telecommunications Legislation Amendment (International Production Orders) Bill 2020.*",
+   "stage": "Business motion",
+   "ayes": 11,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "earliest": 19,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-24/2"
+  },
+  {
+   "key": "federal-senate-7346",
+   "date": "2021-06-24",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-06-24.187.1) to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) \"*that the bill be read a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. This means the amendment failed. ### Amendment text > *At the end of the motion, add: \", but the Senate:* > > *(a) notes that:* > >> *(i) the bill lacks the protections included under equivalent United States legislation, and the safeguards provided for under mutual assistance laws, with respect to matters such as protection of human rights, including the right to life and prohibition on torture, and restrictions on accessing data about Australian persons,* >> >> *(ii) it is currently impossible to fully identify and assess the safeguards that will apply to the scheme set out in the bill, particularly any safeguards to protect the privacy and the rights of law abiding individuals,* >> >> *(iii) the bill leaves many essential details, including critical safeguards, to the content of individual, future executive agreements that would be prescribed by regulation as Designated International Agreements (DIAs), and* >> >> *(iv) some Administrative Appeals Tribunal members lack the independence required to properly fulfil the role of considering and issuing International Production Orders (IPOs), particularly given community perceptions that the Tribunal is being influenced through appointments that reflect political affiliation, and* > > *(b) calls on the Government to:* > >> *(i) ensure that proposed DIAs are subject to the same degree of parliamentary scrutiny as mutual assistance treaties,* >> >> *(ii) create statutory requirements for the timely publication and tabling in Parliament of the full text of any agreement that is to be prescribed as a DIA, so that Parliament has immediate access to",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 18,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-24/13"
+  },
+  {
+   "key": "federal-senate-7347",
+   "date": "2021-06-24",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-06-24.187.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that the bill can now be discuss in more detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd001): > *The purpose of the Bill is to amend the Telecommunications (Interception and Access) Act 1979 (the TIA Act) and make consequential amendments to other Acts to introduce a framework for Australian agencies to obtain an international production order (IPO) requiring a designated communications provider (DCP) overseas to:* > > * *intercept communications* > * *provide access to stored communications or* > * *provide access to telecommunications data.* > > *Certain agencies will be able to apply for IPOs in relation to investigating serious offences, carrying out ASIO’s functions, and purposes relating to control orders.* > > *IPOs will be authorised externally to the requesting agency. They will only be available in relation to providers in countries with which Australia has a bilateral or multilateral agreement on cross-border access to electronic information and communications data; that is, a designated international agreement.* > > *The Bill will also amend the TIA Act and other Acts to ensure that Australian communications providers are not prevented from responding to incoming requests for access to electronic information and communications data from countries with which Australia has a designated international agreement.* > > *The proposed IPO framework is intended to provide a faster alternative to the formal mutual legal assistance process for obtaining access to certain information and data held by overseas providers",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 19,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-24/14"
+  },
+  {
+   "key": "federal-senate-7348",
+   "date": "2021-06-24",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-06-24.192.1) to pass the bill in the Senate. In parliamentary jargon, they voted to read the bill [for a third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). Because the bill has already passed in the House of Representatives, it can now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd001): > *The purpose of the Bill is to amend the Telecommunications (Interception and Access) Act 1979 (the TIA Act) and make consequential amendments to other Acts to introduce a framework for Australian agencies to obtain an international production order (IPO) requiring a designated communications provider (DCP) overseas to:* > > * *intercept communications* > * *provide access to stored communications or* > * *provide access to telecommunications data.* > > *Certain agencies will be able to apply for IPOs in relation to investigating serious offences, carrying out ASIO’s functions, and purposes relating to control orders.* > > *IPOs will be authorised externally to the requesting agency. They will only be available in relation to providers in countries with which Australia has a bilateral or multilateral agreement on cross-border access to electronic information and communications data; that is, a designated international agreement.* > > *The Bill will also amend the TIA Act and other Acts to ensure that Australian communications providers are not prevented from responding to incoming requests for access to electronic information and communications data from countries with which Australia has a designated international agreement.* > > *The proposed IPO framework is intended to provide a faster alternative to the formal mutual legal assistance process for obtaining access to certain information and data held",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 19,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-24/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-390293",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-05",
+   "stage_hint": null,
+   "brief": "The government introduced the Telecommunications Legislation Amendment (International Production Orders) Bill to create a framework for independently authorised cross-border data requests from designated communications providers, enabling a bilateral CLOUD Act agreement with the United States and reciprocal assistance for partner countries. The bill includes safeguards such as provider objection rights, oversight by the Commonwealth Ombudsman and Inspector-General of Intelligence and Security, and annual ministerial reports to parliament."
+  },
+  {
+   "slug": "speech-409809",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Telecommunications Legislation Amendment (International Production Orders) Bill 2020, noting the government agreed to 23 bipartisan amendments from the Parliamentary Joint Committee on Intelligence and Security, but criticised the Morrison government for being slow to negotiate a CLOUD Act agreement with the United States and accused the Prime Minister of falsely claiming the bill lacked bipartisan support."
+  },
+  {
+   "slug": "speech-409810",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The Greens argued that the Telecommunications Legislation Amendment (International Production Orders) Bill 2020 lacks adequate protections and safeguards, including for human rights, journalists' data, and parliamentary scrutiny, with critical details left to future international agreements and concerns about the Administrative Appeals Tribunal issuing orders instead of the judiciary."
+  },
+  {
+   "slug": "speech-409811",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Telecommunications Legislation Amendment (International Production Orders) Bill 2020, arguing it was being rushed through Parliament without adequate debate. They noted that over 80 national security laws have been passed since 9/11 and called for the bill to be delayed until the next day for full consideration."
+  },
+  {
+   "slug": "speech-409812",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The bill creates a framework for international production orders to obtain electronic data from foreign communications providers, aiming to reduce delays in international cooperation for serious crime investigations, and its passage is a critical step to finalising a bilateral CLOUD Act agreement with the United States."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications Legislation Amendment (International Production Orders) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00078",
+   "assent_date": "2021-07-23"
+  }
+ ]
+}

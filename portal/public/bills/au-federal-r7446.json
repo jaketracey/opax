@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r7446",
+ "title": "Export Control Amendment (Clarifying Obligations Relating to Registered Establishments) Bill 2026",
+ "short_title": "Export Control Amendment (Clarifying Obligations Relating to Registered Establishments) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2026-05-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-05-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7446_ems_17f04612-98ae-4ee1-9e51-d828f587d386%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7446%22",
+   "document_date": "2026-03-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00044",
+   "document_date": "2026-05-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-12",
+  "sentences": [
+   "This bill would reduce the regulatory burden on Australia's export industry by clarifying obligations for registered establishments under the Export Control Act 2020.",
+   "It would allow export operations to occur at registered establishments without being listed in the registration when not required as a condition of export, and expand the types of export documents the Department of Agriculture, Fisheries and Forestry can issue to include non-consignment-specific certificates requested by trading partners.",
+   "The changes are part of a broader export assurance reform project that will eventually prescribe certain goods like wool, rendered products, skins and hides, animal food, honey and bee products, and pharmaceuticals as 'general products' under the Act."
+  ],
+  "changes": [
+   "Allow export operations at registered establishments without registration coverage when not a prescribed export condition.",
+   "Expand the range of export documentation issuable by the department to include certificates not tied to a specific consignment.",
+   "Reduce the scope of the offence under section 143 so operators are only penalised if they fail to meet prescribed export conditions."
+  ],
+  "affected": "Industry stakeholders involved in exporting general products such as wool, rendered goods, skins, hides, animal food, honey, bee products, food, beverages, and pharmaceuticals.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1201756",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201764",
+   "speaker": "Sam Birrell",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202890",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202904",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Control Amendment (Clarifying Obligations Relating to Registered Establishments) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00044",
+   "assent_date": "2026-05-20"
+  }
+ ]
+}

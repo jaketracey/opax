@@ -1,0 +1,206 @@
+{
+ "key": "au-federal-r5961",
+ "title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017",
+ "short_title": "ASIC Supervisory Cost Recovery Levy Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-03-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-04-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5961_ems_1d5015ec-6441-4437-976e-d18813724d94%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5961%22",
+   "document_date": "2017-09-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00024",
+   "document_date": "2018-04-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-07",
+  "sentences": [
+   "This bill is part of a package that creates a licensing regime for administrators of significant financial benchmarks, with ASIC as the regulator.",
+   "The package gives ASIC power to designate significant benchmarks, make rules for licensed administrators, and make benchmark manipulation a criminal offence with civil penalties.",
+   "This bill supports the package by adding benchmark administrator licensees to the list of entities from which ASIC may recover its regulatory costs."
+  ],
+  "changes": [
+   "Adds benchmark administrator licensees to the list of entities from which ASIC may recover its regulatory costs.",
+   "Supports the establishment of a new licensing regime for administrators of designated significant financial benchmarks.",
+   "Supports the creation of criminal and civil penalties for financial benchmark manipulation."
+  ],
+  "affected": "Administrators of designated significant financial benchmarks and ASIC.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-353142",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-07",
+   "stage_hint": null,
+   "brief": "The ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 ensures that licensed financial benchmark administrators, and those required to hold a licence but failing to do so, pay an annual levy equal to their regulatory costs under ASIC's industry funding model, shifting costs from taxpayers to regulated entities."
+  },
+  {
+   "slug": "speech-360405",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "Labor supported the bills strengthening financial benchmark manipulation laws and ASIC cost recovery, but announced it will move a Senate amendment to replace the bill's race-based definition of \"Indigenous person\" with the modern three-part Commonwealth working definition of descent, identification and community acceptance."
+  },
+  {
+   "slug": "speech-360406",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2017 Measures No. 5) Bill 2017 and the ASIC Supervisory Cost Recovery Levy Amendment Bill 2017 introduce a new regulatory regime for financial benchmarks, including licensing, criminal and civil penalties (up to 10 years imprisonment and fines of nearly $10 million), and cost recovery levies, while also expanding the Productivity Commission to include a new Indigenous policy commissioner. The government argued that the existing legislative definition of an 'Indigenous person' should be retained."
+  },
+  {
+   "slug": "speech-360407",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-27",
+   "stage_hint": null,
+   "brief": "The speaker supported not blocking the Treasury Laws Amendment Bill but argued that the government's approach to defining indigeneity and the appointment of an Indigenous policy commissioner to the Productivity Commission are inseparable from the bill's regulatory measures."
+  },
+  {
+   "slug": "speech-360460",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill and ASIC Supervisory Cost Recovery Levy Amendment Bill, arguing for stronger criminal penalties for financial benchmark manipulation—including fines up to $9.45 million for corporations—and a new licensing regime for benchmark administrators. He also criticised the government’s $120 million cut to ASIC in 2014, called for a genuine banking royal commission, and raised concerns about the definition of Indigeneity in the Productivity Commission reform, urging the Prime Minister to support the Uluru Statement from the Heart."
+  },
+  {
+   "slug": "speech-360464",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-28",
+   "stage_hint": null,
+   "brief": "Labor supports the bill but objects to schedule 2, which would replace the established three-part administrative definition of Aboriginality (descent, self-identification, community acceptance) with a race-based definition for the new Productivity Commissioner role."
+  }
+ ],
+ "acts": [
+  {
+   "title": "ASIC Supervisory Cost Recovery Levy Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00024",
+   "assent_date": "2018-04-11"
+  }
+ ]
+}

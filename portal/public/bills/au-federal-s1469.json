@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-s1469",
+ "title": "Repeal Net Zero Bill 2025 [No. 2]",
+ "short_title": "Repeal Net Zero Bill 2025 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-09-04",
+ "originating_house": "senate",
+ "sponsor": "CANAVAN, Sen Matthew",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10827",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-09-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1469%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1469%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1469_ems_a23d1aa0-2421-4d74-a03d-8e9ed0d1380c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1469%22",
+   "document_date": "2025-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-09-04",
+  "sentences": [
+   "This bill would repeal Australia's Net Zero policy, its targets, and related legislation.",
+   "It would remove the policy by amending or repealing the Acts listed in the bill's schedules.",
+   "The bill would commence the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "Repeals the Net Zero policy and its associated targets.",
+   "Repeals supporting legislation listed in the bill's schedules.",
+   "Commences the day after Royal Assent."
+  ],
+  "affected": "The explanatory memorandum says the bill would affect the Australian economy and cost of living, but does not specify which people, businesses, or agencies are directly affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

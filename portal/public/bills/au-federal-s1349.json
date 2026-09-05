@@ -1,0 +1,141 @@
+{
+ "key": "au-federal-s1349",
+ "title": "Maritime Legislation Amendment Bill 2022",
+ "short_title": "Maritime Legislation Amendment Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-28",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2022-12-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1349_ems_526981c9-30be-470f-af8f-4bf01741516a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1349%22",
+   "document_date": "2022-09-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00078",
+   "document_date": "2022-12-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-28",
+  "sentences": [
+   "This bill updates Australian laws to match international shipping pollution rules adopted by the International Maritime Organization.",
+   "It would add restrictions on certain liquid waste discharges in European waters, ban heavy fuel oil in the Arctic from July 2024, and ban the anti-fouling chemical cybutryne from January 2023.",
+   "The ban on heavy fuel oil in the Arctic mirrors an existing Antarctic ban, with temporary waivers possible until 2029 for ships flagged by coastal states."
+  ],
+  "changes": [
+   "The bill would amend the Protection of the Sea (Prevention of Pollution from Ships) Act 1983 to control discharges of persistent floater residues in northern European waters.",
+   "It would amend the Protection of the Sea (Harmful Anti-fouling Systems) Act 2006 to extend anti-fouling controls to include cybutryne.",
+   "It would prohibit ships from using or carrying heavy fuel oil in Arctic waters from 1 July 2024, with a later date of 1 July 2029 for ships with oil fuel tank protection.",
+   "It would require ships with existing cybutryne coatings to remove or seal them by the next anti-fouling system renewal, within 60 months.",
+   "It would replace the term 'orders' with 'Marine Orders' in both Acts for consistency with the Navigation Act 2012."
+  ],
+  "affected": "Ship operators, owners, and builders are affected by new discharge, fuel, and anti-fouling requirements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:49:29Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Maritime Legislation Amendment Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00078",
+   "assent_date": "2022-12-05"
+  }
+ ]
+}

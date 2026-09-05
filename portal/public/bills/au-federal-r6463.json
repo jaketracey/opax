@@ -1,0 +1,236 @@
+{
+ "key": "au-federal-r6463",
+ "title": "Australian Business Growth Fund Bill 2019",
+ "short_title": "Australian Business Growth Fund Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-02-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6463_ems_fd18e3b4-5a9b-435c-8609-f7a0c232e0a0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6463%22",
+   "document_date": "2019-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6176",
+   "date": "2020-02-06",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is that the majority agree to read the bill for a second time - parliamentary jargon for agreeing with the bill's main idea. ### Amendment text > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes the Government's lack of adequate public consultation in relation to the Australian Business Growth Fund; and* > > *(2) further notes that the Government has failed to support the economic climate faced by small and medium sized businesses, with the economy deteriorating well before the bushfire crisis and the coronavirus outbreak hit\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-06/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-387106",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Business Growth Fund Bill 2019 in principle, which authorises a $100 million government investment to provide equity financing of $5–15 million to eligible SMEs, but criticised the government for allowing only four days of consultation and lacking detail on governance and operations, and moved to refer the bill to a Senate inquiry for clarification."
+  },
+  {
+   "slug": "speech-387108",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "The Australian Business Growth Fund Bill 2019 would establish a fund to provide patient equity capital to small and medium enterprises, with the government committing $100 million alongside participating financial institutions for a total investment capacity of $540 million, potentially growing to $1 billion. The fund will take minority stakes of 10 to 40 percent in eligible businesses, operate independently, and address the gap in equity funding for SMEs beyond venture capital or private equity."
+  },
+  {
+   "slug": "speech-387109",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "Labor will support the Australian Business Growth Fund Bill 2019 subject to an amendment but will refer it to a Senate inquiry, citing insufficient detail on the governance and operations of the $100 million taxpayer investment alongside major banks and concerns about due diligence and risk."
+  },
+  {
+   "slug": "speech-387110",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Business Growth Fund Bill 2019 is necessary to free up risk capital, blaming Labor Party policies for low productivity, stagnant real wages, and barriers to new company formation, and recommended the bill be passed unamended."
+  },
+  {
+   "slug": "speech-387202",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The Morrison government's Australian Business Growth Fund Bill 2019 will provide $5–15 million in minority equity investments (10–40% stakes) to small and medium businesses, initially supporting 10 investments per year with a target of 30, funded by banks and superannuation to reach $500 million. The speaker also announced a jobs fair in Penrith to connect local employers with jobseekers."
+  },
+  {
+   "slug": "speech-387204",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The speech supported the Australian Business Growth Fund Bill 2019, which will provide long-term patient equity capital to small and medium enterprises with a $100 million government investment matched by $400 million from the four big banks and $20 million from Macquarie Group. The fund aims to fill a gap in Australia's equity finance market by taking minority stakes of up to 40% in eligible businesses."
+  },
+  {
+   "slug": "speech-387205",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The Australian Business Growth Fund Bill 2019 establishes a $500 million fund, with $100 million from the government and contributions from four banks and Macquarie, to provide equity financing to small and medium businesses with annual turnover between $2 million and $100 million, addressing a gap in access to patient capital for growth."
+  },
+  {
+   "slug": "speech-387212",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The government introduced the Australian Business Growth Fund Bill 2019, authorising a $100 million Commonwealth investment to establish the Australian Business Growth Fund, which will provide patient capital and strategic support to growing SMEs with an initial capacity of $540 million. The government also acknowledged the impact of bushfires on small businesses, particularly those relying on Christmas holiday revenue."
+  },
+  {
+   "slug": "speech-387213",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-06",
+   "stage_hint": null,
+   "brief": "The Australian Business Growth Fund Bill 2019 appropriates $100 million for the Commonwealth to participate in a fund that provides long-term capital and business guidance to small and medium businesses, modelled on similar funds in the UK and Canada. The speaker argued that small businesses, not government, create jobs and wealth, and that the legislation demonstrates the government's commitment to supporting them."
+  }
+ ],
+ "acts": []
+}

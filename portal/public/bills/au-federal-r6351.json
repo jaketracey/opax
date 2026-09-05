@@ -1,0 +1,487 @@
+{
+ "key": "au-federal-r6351",
+ "title": "Criminal Code Amendment (Agricultural Protection) Bill 2019",
+ "short_title": "Criminal Code Amendment (Agricultural Protection) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2019-09-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6351_ems_daf27de0-ac27-46b3-a17e-e6a3b063cdd9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6351_ems_25ce1c48-7c8e-461e-b45b-e11658ba02d4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6351%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00067",
+   "document_date": "2019-09-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5880",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "question": "Criminal Code Amendment (Agricultural Protection) Bill 2019 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 69,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-12/2"
+  },
+  {
+   "key": "federal-senate-10365",
+   "date": "2019-09-12",
+   "house": "senate",
+   "question": "Pauline Hanson I speak in continuation of my comments from yesterday with regard to the Criminal Code Amendment (Agricultural Protection) Bill 2019. Farming is very important to the lifeblood of this nation. These morons, idiots, ratbags—you name it—are the ones who are actually going out protesting and trespassing, and they think they're doing a wonderful job in trying to help the animals, but, as I expressed here in my speech before, they are actually killing animals. They are actually seeing the death of animals, as I have explained. Farming is a life of dedication, effort and hardship. As we know, it is a struggle for farmers to make good profits year in and year out. A relatively small number of people here in the parliament would have a deep understanding of rural living and life on the land—a very small number. I'd like to really have an understanding of how many people, especially Greens, who are actually standing up and making comments, have ever lived on a rural property, bred livestock, understand drought and understand the connection with the livestock that you rear. Very few in this chamber have ever experienced that—very few. You need to understand the commitment and the hardships that are connected with this. You do look after your animals, but, at the end of the day, you rear animals as part of the food chain. They are there for us to eat, to consume, to sell. That's what these animals are reared for. You have your pets—you have your dogs, you have your cats, you have your birds. That's fair enough. Those farm animals are livestock, reared for the fact that they are there as part of the food chain. That is a fact. If you want to have a pet cow or a pet horse, you can have it. If you have a pet sheep, fine; that's your pet. Don't start imposing your views, your thoughts, on the businesses in the farming sector. They have businesses for their own livelihoods and income. It is a bit rich for the Greens, who pushed for the so-called protection of animals",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 20,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-12/1"
+  },
+  {
+   "key": "federal-senate-10366",
+   "date": "2019-09-12",
+   "house": "senate",
+   "question": "Raff Ciccone As I foreshadowed earlier in my speech, I move: At the end of the motion, add: \", but the Senate: (a) notes that the Legal and Constitutional Affairs Legislation Committee inquiry into this bill identified a range of potential unintended consequences that could flow from the operation of new criminal offences contained in this bill; and (b) calls on the Government to carefully monitor the operation of the new laws to ensure that unintended consequences do not arise, and if they do, urgently introduce any necessary amendments to the new laws.\" Scott Ryan The question is that the second reading amendment moved by Senator Ciccone be agreed to.",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 28,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-12/2"
+  },
+  {
+   "key": "federal-senate-10367",
+   "date": "2019-09-12",
+   "house": "senate",
+   "question": "Scott Ryan The question is now that the bill be read a second time.",
+   "stage": "Second reading",
+   "ayes": 53,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 28,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-12/3"
+  },
+  {
+   "key": "federal-senate-10372",
+   "date": "2019-09-12",
+   "house": "senate",
+   "question": "Janet Rice After that short delay, we're back! Minister, let's go back to the things that would be covered under this act in my state of Victoria. I want to talk you through a scenario. Say there is logging occurring on public land—logging of our precious native forest, which is destroying our natural heritage, destroying threatened wildlife, destroying our water quality and quantity, destroying our carbon stores, destroying our forests. The logs from this logging operation are then transported to a chipmill or a pulp mill where they are going to be processed into woodchips. Protesters who are concerned about this logging operation feel that it is their right, and their civil responsibility in terms of protecting our native forests, to conduct a protest action at this wood processing facility—at this chipmill or pulp mill. Can you confirm for me, then, that it would be an offence under this legislation for any person or organisation to send out an email or a text message encouraging people to join this protest—that that would be caught under the provisions of this legislation? Bridget McKenzie Well, Senator Rice! Again—the emotive arguments of the Greens! Seventy thousand Australians—proud Australians, most of them in rural and regional Australia—work in the forestry industry. You continue to come in here and behave as if it is not a sustainable industry, with its management based on the best science, where we actually put aside resource for public enjoyment, for our flora and fauna to thrive and for our biodiversity outcomes to be met— Senator McKim interjecting— And, indeed, Senator McKim, we put aside resources to sequester carbon. That whole system exists to manage that resource, and 70,000 Australians and their families rely on mum or dad being a logger, like my dad used to be, being a truck driver, working in the woodchip processing plant or what have you. You come in here and say they're somehow not allowed to do that because someone feels that they need to s",
+   "stage": "In committee",
+   "ayes": 47,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 23,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-12/8"
+  },
+  {
+   "key": "federal-senate-10373",
+   "date": "2019-09-12",
+   "house": "senate",
+   "question": "Bridget McKenzie I move: That the bill be now read a third time. Slade Brockman The question is that the bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 47,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 23,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-12/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377399",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (Agricultural Protection) Bill 2019 introduces new offences for using a carriage service to incite trespass, property damage, destruction or theft on agricultural land, with penalties of up to 12 months imprisonment for inciting trespass and up to five years for inciting damage or theft. The bill includes exemptions for journalists and whistleblowers, and builds on earlier action to prescribe the Aussie Farms website under the Privacy Act, exposing it to potential penalties of up to $2.1 million."
+  },
+  {
+   "slug": "speech-379525",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-08-01",
+   "stage_hint": null,
+   "brief": "Labor argued the bill may be unnecessary due to existing state and territory laws already criminalising trespass, property damage and theft, and raised concerns it could infringe on democratic rights, whistleblower protections, journalism, native title access and legitimate industrial action. Labor will not oppose the bill in the House but will await the Senate Legal and Constitutional Affairs Legislation Committee's report before announcing a final position."
+  },
+  {
+   "slug": "speech-379680",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-08-01",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (Agricultural Protection) Bill 2019 is a necessary response to online incitement of trespass and property offences against farmers, and the bill was commended to the House."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (Agricultural Protection) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00067",
+   "assent_date": "2019-09-19"
+  }
+ ]
+}

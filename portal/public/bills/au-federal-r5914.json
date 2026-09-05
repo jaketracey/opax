@@ -1,0 +1,619 @@
+{
+ "key": "au-federal-r5914",
+ "title": "Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017",
+ "short_title": "Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2017-10-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5914_ems_93402f76-ce95-4678-928f-9d18e6de4fda%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5914_ems_152bf76a-6eca-41f6-8f17-0e7193d944a7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5914_ems_7c5df2c0-5b54-4f1b-997d-571e92669ee8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5914_ems_65c0f777-97eb-418b-81fb-e250def8d7d5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5914%22",
+   "document_date": "2017-06-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-15",
+  "sentences": [
+   "The bill would make it harder to become an Australian citizen by adding new requirements.",
+   "Applicants would need to have been permanent residents for four years, show competent English, sign an Australian Values Statement and demonstrate integration into the community.",
+   "The bill would also introduce a two-year ban on reapplying after a refusal on grounds other than the residence requirement."
+  ],
+  "changes": [
+   "Increase the general residence requirement to four years of permanent residency before applying for citizenship.",
+   "Require most applicants to prove competent English proficiency.",
+   "Require applicants to sign an Australian Values Statement.",
+   "Require applicants to demonstrate integration into the Australian community.",
+   "Introduce a two-year bar on reapplying after a refusal on non-residence grounds.",
+   "Extend the citizenship test eligibility criteria to include previous failures, rule breaches or cheating."
+  ],
+  "affected": "People applying for Australian citizenship by conferral, including those aged under 18.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:54Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4855",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "question": "Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-08-14/3"
+  },
+  {
+   "key": "federal-representatives-4856",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "question": "Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017 - Third Reading - Suspend standing orders",
+   "stage": "Third reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-08-14/4"
+  },
+  {
+   "key": "federal-representatives-4857",
+   "date": "2017-08-14",
+   "house": "representatives",
+   "question": "Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-08-14/5"
+  },
+  {
+   "key": "federal-senate-4909",
+   "date": "2017-09-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2017-09-13.163.2) to: > *Omit all words after \"That\", substitute \"if, by 18 October 2017, the government business order of the day relating to the consideration of the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017, has not been finally considered, the order of the day shall be discharged from the Notice Paper\".* The original motion was: > *That the government business order of the day relating to the consideration of the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017 be discharged from the Notice Paper.*",
+   "stage": "Business motion",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 39,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-13/1"
+  },
+  {
+   "key": "federal-senate-4910",
+   "date": "2017-09-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2017-09-13.163.2) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), as amended by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network). ### Motion text > *That if, by 18 October 2017, the government business order of the day relating to the consideration of the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017, has not been finally considered, the order of the day shall be discharged from the Notice Paper.*",
+   "stage": "Business motion",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 39,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-13/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-349034",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017 increases the general residence requirement to four years of permanent residence, introduces a competent English language test, requires applicants to sign an Australian Values Statement, and adds values-based questions to the citizenship test. The bill also expands good character checks to applicants under 18, allows the minister to set aside certain Administrative Appeals Tribunal decisions in the public interest, and makes other integrity amendments to the citizenship program."
+  },
+  {
+   "slug": "speech-350725",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker defended the Australian Citizenship Legislation Amendment Bill 2017, arguing its English proficiency requirement is level 6 (not university-level) and includes separate general and study streams, and accused Labor of misrepresenting the bill and opposing it for political gain, citing Labor members' past support for stricter English and residency requirements."
+  },
+  {
+   "slug": "speech-350726",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017, arguing it would create a permanent underclass of residents by requiring four years of permanent residence and a university-level English test, and that it was not based on national security advice. Labor referred the bill to a Senate committee for inquiry, with a report due in September."
+  },
+  {
+   "slug": "speech-350732",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The MP opposed the bill, arguing that the mandatory English test at IELTS level 6 and the additional four-year wait for permanent residents would isolate migrants rather than integrate them. They also said the government was using national security as a pretext, criticised the consultation process, and cited the case of Indian-born doctors affected by the 20 April application cutoff."
+  },
+  {
+   "slug": "speech-350733",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017, which implements the Liberal and National government's commitment to strengthen the citizenship test by putting Australian values first."
+  },
+  {
+   "slug": "speech-350736",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-350741",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill’s introduction of a university-level English test and a four-year waiting period for citizenship, arguing these would exclude many long-term residents and their families—particularly citing the Vietnamese and Turkish communities—and rejected the government’s framing of the bill as a national security measure."
+  },
+  {
+   "slug": "speech-350743",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The member argued that the bill strengthens Australian multiculturalism by requiring citizenship applicants to meet tougher residency, English language, and values requirements, including a four-year permanent residence period, a competent English test, and a signed values statement, with exceptions for age or incapacity. The bill also extends good character requirements to all applicants under 18 and tightens rules on citizenship revocation for fraud or misrepresentation."
+  },
+  {
+   "slug": "speech-350863",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill is misrepresented as a national security measure when it targets permanent residents already in Australia, and the government should deal with any security issues under existing powers. They also contended that Australia's current citizenship laws have produced a successful multicultural society, so the bill's higher barriers are unnecessary."
+  },
+  {
+   "slug": "speech-350864",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017, which increases the permanent residency requirement to four years and mandates English language proficiency for citizenship applicants, and criticised the opposition for inconsistency on these measures. The speaker also noted the crash of an MV-22 Osprey aircraft during Exercise Talisman Sabre that killed three US marines."
+  },
+  {
+   "slug": "speech-350873",
+   "speaker": "Julia Banks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The MP for Chisholm argued the Turnbull government's citizenship reforms—including an English language competency requirement and a formal Australian values statement—are necessary to preserve the integrity of citizenship as a privilege, not a right, and criticised Labor for opposing the changes."
+  },
+  {
+   "slug": "speech-350875",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017 does not improve English proficiency, national security, or adherence to Australian values, but instead creates barriers and divisions, particularly with its band 6 IELTS requirement, which is higher than comparable OECD countries. Labor will vote against the bill, citing that it discourages citizenship uptake and undermines existing English language programs."
+  },
+  {
+   "slug": "speech-350876",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Citizenship Legislation Amendment Bill 2017, arguing for a four-year permanent residence requirement, stronger English language testing with extra hours for humanitarian visa holders, a values statement and test, and expanded character checks including for under-18s and automatic visa cancellation for serious gang-related crimes. He cited data showing South Sudanese youth overrepresented in certain Victorian crimes and noted bipartisan committee work on migrant settlement outcomes."
+  },
+  {
+   "slug": "speech-350879",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Australian Citizenship Legislation Amendment Bill 2017, arguing it would impose an unreasonably high English language test (IELTS level 6), extend the permanent residency requirement, and create a discriminatory two-tier system that harms skilled migrants, refugees, and business migrants. The speaker also criticised the retrospective application from 20 April and the lack of evidence or national security justification for the changes."
+  },
+  {
+   "slug": "speech-350880",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Labor Party falsely claimed the bill required university-level English, when it actually requires a band 6 on the general IELTS test, and rejected accusations that exemptions for the UK, US, Canada, and New Zealand were racially motivated, citing low English usage in Singapore and India."
+  },
+  {
+   "slug": "speech-350885",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2017 citizenship bill contradicts Australian values of permanent migration and multiculturalism, citing that 28% of Australians are foreign-born and the nation has historically welcomed migrants as permanent settlers. They opposed the bill's retrospective application from 20 April, which would harm migrants who moved in good faith, and noted Australia ranks third in the OECD for overseas-born population."
+  },
+  {
+   "slug": "speech-350974",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The MP argued the Australian Citizenship Legislation Amendment Bill 2017 has no clear purpose or justification, and countered the Minister for Urban Infrastructure's claim that Canberra is \"out of touch\" by asserting the Coalition government shows contempt for Canberra through thousands of job cuts and lack of infrastructure investment."
+  },
+  {
+   "slug": "speech-350975",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the proposed English language testing in the Australian Citizenship Legislation Amendment Bill 2017 is unfair, will split families, and is not recommended by security agencies, citing examples of a Greek roofer and a Vietnamese horticultural community who contribute to society but would be excluded from citizenship."
+  },
+  {
+   "slug": "speech-350977",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The Nick Xenophon Team opposed the Australian Citizenship Legislation Amendment Bill 2017, citing the government's failure to provide critical documents including the Australian values statement and test examples, and specifically criticised the proposed IELTS band 6 English requirement as higher than university entrance standards and comparable nations' requirements, arguing it would deter skilled migrants and professionals."
+  },
+  {
+   "slug": "speech-350978",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Australian Citizenship Legislation Amendment (Strengthening the Requirements for Australian Citizenship and Other Measures) Bill 2017, arguing it is exclusionary, discriminatory, and not based on security evidence, and supported Labor's amendments. They highlighted that the proposed English language test would harm migrants from non-English-speaking backgrounds and that no security analysis justified the changes."
+  },
+  {
+   "slug": "speech-350981",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the 2017 bill to strengthen citizenship requirements, arguing it was unwarranted, divisive, and would exclude migrants, particularly due to the proposed English language test at IELTS level 6."
+  },
+  {
+   "slug": "speech-350982",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Australian Citizenship Legislation Amendment Bill 2017, arguing that the proposed university-level English language test (IELTS level 6) and increased four-year waiting period for permanent residents would create a permanent underclass of non-citizens, particularly disadvantaging women, older migrants, and those with learning difficulties. The speaker noted that 46% of their Moreton electorate was born overseas, that national security agencies had not recommended the changes, and that the measures had been implemented prematurely by Minister Dutton before parliamentary debate concluded."
+  },
+  {
+   "slug": "speech-350983",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Australian Citizenship Legislation Amendment Bill 2017, arguing that the longer waiting period and the requirement for an IELTS 6 English test are unreasonable, noting that many MPs would fail such a test and that the immigration minister's own Facebook page contained grammatical errors."
+  },
+  {
+   "slug": "speech-350984",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

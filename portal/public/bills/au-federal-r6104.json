@@ -1,0 +1,440 @@
+{
+ "key": "au-federal-r6104",
+ "title": "Appropriation Bill (No. 1) 2018-2019",
+ "short_title": "Appropriation Bill (No. 1) 2018-2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2018-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6104_ems_71ba5b62-4210-40a3-b1cc-ed78734407b3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6104%22",
+   "document_date": "2018-05-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00050",
+   "document_date": "2018-06-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-08",
+  "sentences": [
+   "This bill would take money from the government's main bank account to pay for its day-to-day running costs.",
+   "It would set aside funds for the government's ordinary annual services, which the Constitution requires to be in a separate bill from other spending.",
+   "The explanatory memorandum says the bill should be read alongside the Portfolio Budget Statements, which give details on the amounts in the bill's schedules."
+  ],
+  "changes": [
+   "Proposes to authorise spending from the Consolidated Revenue Fund for the government's ordinary annual services.",
+   "Separates ordinary annual service appropriations from other annual appropriations, as required by the Constitution.",
+   "Forms part of the three Budget Appropriation Bills for 2018-2019."
+  ],
+  "affected": "The government and its agencies that receive funding for ordinary annual services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:29:38Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361939",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "The bill seeks approval for $13 billion in appropriations, including $5 billion for NBN Co., $3 billion for Defence equipment and facilities, and $2.4 billion for infrastructure projects such as Western Sydney Airport, Inland Rail, and WestConnex stage 2."
+  },
+  {
+   "slug": "speech-362517",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker announced that unless otherwise ordered, five appropriation bills would be referred to the Federation Chamber for further consideration at the adjournment of the House."
+  },
+  {
+   "slug": "speech-362532",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The budget provides $132 million for the final stage of the Princes Highway duplication in Gippsland, with the speaker urging the Victorian state government to contribute its 20% share. The speaker also criticised Monash University for requiring Gippsland medical students to complete an undergraduate degree at its Melbourne campus before accessing the Gippsland Medical School, arguing this blocks a regional pathway."
+  },
+  {
+   "slug": "speech-362535",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker defended the Turnbull government's $75 billion, 10-year infrastructure plan, citing over $8 billion in annual transport spending and listing projects such as the $5.3 billion Western Sydney Airport, $5 billion Melbourne Airport rail link, and state-specific road and rail upgrades, while rejecting the opposition's claims of insufficient new funding."
+  },
+  {
+   "slug": "speech-362650",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The 2018-19 budget was condemned as repeating the unfair priorities of the 2014 Abbott budget, including an $80 billion tax cut for large corporations and banks and a $17 billion cut to school funding."
+  },
+  {
+   "slug": "speech-362656",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the 2018-19 budget, highlighting a projected surplus a year earlier than expected, 427,000 jobs created in the past year, and $160 million in federal funding for duplicating the Joy Baluch AM Bridge at Port Augusta. Other key measures included middle-income tax relief, an extra 14,000 home-care packages, increased pension income thresholds, and permanent funding for the School Chaplaincy Program."
+  },
+  {
+   "slug": "speech-362657",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Supply bills but criticised the Liberal budget as unfair, arguing it gives $80 billion in tax handouts to big business and banks while cutting $17 billion from education, $715 million from hospitals, and the energy supplement for pensioners. They named specific cuts to Western Australian universities (UWA $38m, Curtin $86m, Murdoch $35m, Edith Cowan $49m) and pledged Labor would reverse these cuts, abolish the university cap, fund 100,000 TAFE places, and deliver $2.8 billion for hospitals."
+  },
+  {
+   "slug": "speech-362668",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2018-2019 budget benefits their Central Coast electorate through safer communities (CCTV funding at McEvoy Oval and other sites), small business tax cuts (including for craft brewers like Six String Brewing), support for older Australians, tax relief for nearly 60,000 low- and middle-income earners, and infrastructure projects such as a $10 million performing arts and conference centre in Gosford."
+  },
+  {
+   "slug": "speech-362670",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Appropriation Bill reflects the Liberal-National government's sound economic management, citing one million jobs created since Labor left office and tax relief of up to $530 for low- and middle-income earners. They highlighted $6.7 billion in Bruce Highway funding, including $411 million for the Haughton River bridge replacement, $57 million for Sandy Gully bridge upgrades, and $3.5 billion for Roads of Strategic Importance with $1.5 billion for northern Australia, as well as the $1.8 billion Land 400 Defence deal for Townsville and various regional job and community grants."
+  },
+  {
+   "slug": "speech-362672",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The budget delivers tax relief for over 75,000 people in Brisbane, a record $75 billion national infrastructure pipeline with over $20 billion for Queensland projects including the Brisbane Metro, and $1.3 billion for a National Health and Medical Industry Growth Plan, while contrasting Labor’s commitment to retaining a 49 per cent top marginal tax rate."
+  },
+  {
+   "slug": "speech-362673",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 2018-2019 budget fails to deliver fairness, instead prioritising $80 billion in tax cuts for big business while cutting pensions, education ($17 billion), and health. They noted the government offers only a modest $10 weekly tax cut for workers and criticised its opposition to the banking royal commission."
+  },
+  {
+   "slug": "speech-362676",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the appropriation bills present a choice between the Turnbull government's record of one million new jobs, record bulk-billing rates, and $75 billion in infrastructure versus an opposition of false promises, and criticised the Opposition Leader as having no credibility after the Heydon royal commission found him evasive."
+  },
+  {
+   "slug": "speech-363009",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The member for Corangamite argued the 2018-19 budget delivers tax relief, infrastructure funding, and a return to surplus, while criticising Labor for misrepresentations and failures on hospital funding, the East West Link, rail services, and Avalon Airport. Specific commitments include $36.2 million extra for Barwon Health, $50 million for Geelong rail duplication, $20 million for Avalon Airport’s international terminal, and tax relief for 64,558 local taxpayers."
+  },
+  {
+   "slug": "speech-363251",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the private sector drives all Australian wealth and tax revenue, and defended the budget’s tax cuts and infrastructure spending as pro-business. They announced $971 million for the Coffs Harbour bypass, renewed funding for the Building Better Regions Fund and Stronger Communities Program, and claimed the coalition would return the budget to surplus earlier than expected."
+  },
+  {
+   "slug": "speech-363268",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The member for La Trobe argued for the $59 million Australian Criminal Intelligence Database to improve law enforcement data sharing, and announced infrastructure funding including $1.75 billion for the North East Link, $3 million for Rowville Rail planning, $500 million for the Monash Freeway upgrade, and $5 billion for airport rail, along with tax relief for 17,800 local taxpayers."
+  },
+  {
+   "slug": "speech-363275",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The member for O'Connor supported the Appropriation Bill, arguing the budget delivers tax relief for 61,000 locals (up to $530 per person), extends the $20,000 instant asset write-off, and funds the NDIS, preschool, and school chaplaincy, while noting unemployment rates of 3.1% in Kalgoorlie, 3.3% in Esperance, and 4.2% in Albany."
+  },
+  {
+   "slug": "speech-363291",
+   "speaker": "Julia Banks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker commended the Turnbull government's 2018-19 budget, highlighting a projected $11 billion surplus in 2020-21 and tax relief for low and middle-income earners, including a new offset of up to $530 a year for over 63,000 taxpayers in Chisholm. The budget also includes record funding for hospitals and schools, a $20,000 instant asset write-off for small businesses, and additional Medicare investment of $4.8 billion."
+  },
+  {
+   "slug": "speech-363493",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-24",
+   "stage_hint": null,
+   "brief": "The member appealed for restored ABC funding, pitched Cessnock as a location for a new Qantas pilot training school, called the Alinta bid for AGL's Liddell power station a stunt, and argued the agriculture department has lost policy capacity under Barnaby Joyce and the current minister."
+  },
+  {
+   "slug": "speech-363655",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 1) 2018-2019 was commended for delivering tax relief for low- and middle-income earners, infrastructure investment including the M1 motorway in Logan and the Gold Coast, and energy reforms under the National Energy Guarantee, with the coalition’s policies having created over a million jobs since 2013 and reduced welfare dependency to its lowest level in 25 years. The budget will return to balance in 2019-20, with net debt falling by $30 billion over four years, and nearly 74,000 taxpayers in the electorate of Forde will benefit from the low- and middle-income tax relief."
+  },
+  {
+   "slug": "speech-363661",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "Labor opposed the government's $80 billion corporate tax cut plan, arguing over $75 billion would go to large corporations and big banks—including $17 billion to the four major banks—while cutting funding to hospitals and schools. The speaker criticised the Prime Minister's \"trickle-down economics\" approach, citing negative outcomes from U.S. implementation, and highlighted that 700,000 workers would face further penalty rate cuts on 1 July 2018 amid low wage growth."
+  },
+  {
+   "slug": "speech-363664",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the budget delivers a \"Turnbull trickle-down trifecta\" of tax cuts for the wealthy and large corporations alongside wage suppression, noting that Australian GDP growth struggles below 2.5% while global growth nears 4%, and that real wages have flatlined under Abbott and Turnbull."
+  },
+  {
+   "slug": "speech-363669",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Turnbull government for cutting $3 billion from TAFE and skills funding since 2013, resulting in 140,000 fewer apprentices and a 30% decline in training hours, and announced Labor's plan to scrap up-front fees for 100,000 TAFE students, guarantee two-thirds of VET funding to TAFE, and invest $100 million in a building fund for TAFE campuses."
+  },
+  {
+   "slug": "speech-363670",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2018-19 budget fails fairness and fiscal responsibility, harming middle Australia and vulnerable groups, and opposed raising the pension age to 70, cutting the $14 fortnightly energy supplement for 16,128 pensioners in their electorate, and freezing Medicare specialist rebates. They criticised the government's $80 billion corporate tax cuts as \"trickle-down economics,\" citing job losses from Pacific Brands, Yakka, Dunlop, and Ford, and promoted Labor's alternative: tax cuts of $928 per year for those earning up to $125,000, support for mandatory car data sharing to help independent mechanics, and opposition to R&D tax incentive changes that could cost Dulux $100,000 annually."
+  },
+  {
+   "slug": "speech-363672",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-29",
+   "stage_hint": null,
+   "brief": "The bill was criticised for locking in cuts to pensions, increasing the pension age to 70, removing the energy supplement, cutting $715 million from hospitals, $40 million from veterans' allied health services, and $83 million from the ABC, while freezing Medicare for specialists. The speaker supported immediate tax cuts from 1 July 2018 but opposed the long-term tax cut trajectory."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2018-2019",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00050",
+   "assent_date": "2018-06-27"
+  }
+ ]
+}

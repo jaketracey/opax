@@ -1,0 +1,610 @@
+{
+ "key": "au-federal-r5507",
+ "title": "Australian Citizenship Amendment (Allegiance to Australia) Bill 2015",
+ "short_title": "Australian Citizenship Amendment (Allegiance to Australia) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5507_ems_210d7d3c-a0bf-4ea0-9e7c-1bc3d4b48d5e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5507_ems_13fb76d4-b057-4b2b-aacd-ec06e738b5ee%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5507_ems_604b2d77-7c8f-41db-b72b-93dd6af52977%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5507%22",
+   "document_date": "2015-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00166",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2015-06-24",
+  "sentences": [
+   "The bill would let the government strip Australian citizenship from dual citizens who engage in terrorism-related conduct.",
+   "It creates three ways citizenship can cease: a person aged 14 or older renounces it by acting inconsistently with allegiance, loses it for fighting for a declared terrorist organisation, or the minister may determine it ceases after a terrorist-linked conviction with at least 6 years imprisonment.",
+   "The bill applies only to dual citizens to avoid statelessness, and the minister must give written notice (or try to) when citizenship ends, unless doing so could prejudice security."
+  ],
+  "changes": [
+   "The bill broadens the grounds for citizenship cessation beyond requiring a conviction for a specified offence.",
+   "It introduces a purpose clause setting out the principles behind the amendments.",
+   "It requires the minister to report on and monitor the operation of the new arrangements."
+  ],
+  "affected": "Dual citizens who are nationals of another country and engage in terrorism-related conduct.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:46Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4010",
+   "date": "2015-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?gid=2015-11-30.176.1) introduced by Senator [Richard Colbeck](https://theyvoteforyou.org.au/people/senate/tasmania/richard_colbeck), which means they were in favour of considering [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5507) quickly. In parliamentary language, the motion was: > *That the provisions of paragraphs (5) to (8) of [standing order 111](http://www.aph.gov.au/Parliamentary_Business/Chamber_documents/Senate_chamber_documents/standingorders/b00/b20) not apply to the bill, allowing it to be considered during this period of sittings.* [Standing orders](http://www.peo.gov.au/learning/fact-sheets/standing-orders.html) are the rules that are followed in parliament about when to speak, when to vote, when to adjourn etc. If this motion hadn't passed, the Senate would have had to wait until the next period of sittings before they could discuss whether to pass the bill. In this case, the next sitting period would've been next year in 2016 (see the [Sitting Calendar](http://www.aph.gov.au/About_Parliament/Sitting_Calendar)). ### What is this bill about? **This bill relates to the policy \"[For revoking citizenship of dual nationals involved with terrorism offences](https://theyvoteforyou.org.au/policies/84)\".** The purpose of the bill is to remove the Australian citizenship of a [dual national](https://en.wikipedia.org/wiki/Multiple_citizenship) in certain situations, including if they fight for or serve a terrorist organisation (read more in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd015) and [ABC News](http://www.abc.net.au/news/2015-05-27/citizenship-stripped-under-new-laws-explainer/6500280)).",
+   "stage": "First Reading",
+   "ayes": 40,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 12,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-30/5"
+  },
+  {
+   "key": "federal-senate-4014",
+   "date": "2015-12-01",
+   "house": "senate",
+   "question": "Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-01/3"
+  },
+  {
+   "key": "federal-senate-4047",
+   "date": "2015-12-03",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org.au/senate/?gid=2015-12-03.271.1) introduced by Liberal Democratic Party Senator [David Leyonhjelm](https://theyvoteforyou.org.au/people/senate/nsw/david_leyonhjelm). In other words, the majority did *not* want to add a new [sunset clause](https://en.wikipedia.org/wiki/Sunset_provision) to the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5507). ### What is a sunset clause? A sunset clause puts a limit on how long parts of the bill (or maybe even the whole bill) can be in force without being considered again by Parliament. For example, Leyonhjelm's proposed sunset clause would have meant that the sections he mentioned would stop being law after ten years. At that point, if the Parliament wanted the sections to continue, they would have to re-introduce them. Read [Senator Leyonhjelm's speech](http://www.openaustralia.org.au/senate/?gid=2015-12-03.271.1) to learn why he thought a sunset clause was needed. ### What is this bill all about? The main idea of the bill is to remove the Australian citizenship of a [dual national](https://en.wikipedia.org/wiki/Multiple_citizenship) in certain situations, including if they fight for or serve a terrorist organisation (read more in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1516a/16bd015) and [ABC News](http://www.abc.net.au/news/2015-05-27/citizenship-stripped-under-new-laws-explainer/6500280)). ### Wording of Leyonhjelm's amendment > *(1) Schedule 1, page 18 (after line 27), after item 7, insert:* > *7A After section 53* > *Insert:* >> *53A Sunset provision* >> *(1) Sections 33AA, 35, 35AA, 35AB, 35A, 35B and 36A cease to have effect at the end of 10 years after this section commences.* >> *(2) The regulations may prescribe matters of a transitional nature (including prescribing any saving or application provisions) arising out of the provisions mentioned in su",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 10,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-12-03/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-314636",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 was moved to automatically strip dual citizens of Australian citizenship for engaging in specified terrorist conduct, fighting for or serving a declared terrorist organisation overseas, or being convicted of terrorism-related offences, with no right to reacquire citizenship."
+  },
+  {
+   "slug": "speech-323103",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The opposition supported the bill and its amendments, which allow revoking the citizenship of dual nationals engaged in terrorist-related conduct offshore or after leaving Australia, or convicted of serious terrorism offences, with safeguards including ministerial discretion, six-monthly reporting, and the right to appeal to the Federal Court. The amendments narrowed the bill’s scope from potentially millions of people to only dozens, aiming to balance national security with avoiding the creation of two classes of citizens."
+  },
+  {
+   "slug": "speech-323114",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 is a necessary and appropriate response to rising terrorism, allowing automatic and irrevocable revocation of citizenship for dual nationals convicted of specified terrorism offences. The speaker noted that security agencies manage over 400 high-priority counter-terrorism investigations, 26 people have been charged since September 2014, around 110 Australians are fighting in Syria and Iraq, and almost 200 are enabling terrorism, and that the bill implements all 27 recommendations of the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-323121",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The bill was improved by committee amendments to restrict citizenship revocation to serious terrorist offences with sentences of six years or more, and to apply conduct-based loss only to persons outside Australia; Labor supported the bill despite unresolved constitutional concerns, accepting the government's assurance it would withstand a High Court challenge."
+  },
+  {
+   "slug": "speech-323122",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 should pass, allowing revocation of citizenship for dual nationals engaged in terrorism-related conduct, citing over 400 high-priority counter-terrorism investigations, 26 people charged in 14 months, and more than 100 Australians fighting with terrorist groups in Syria and Iraq. The speaker also proposed a new preamble for citizenship ceremonies emphasising loyalty to Australia and its laws."
+  },
+  {
+   "slug": "speech-323123",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor supports national security but will not rubber-stamp government legislation, noting the bill was scrutinised by the Parliamentary Joint Committee on Intelligence and Security, which made 27 bipartisan recommendations. The bill amends the Australian Citizenship Act 2007 to allow revocation of Australian citizenship for dual nationals who serve in armed forces of a country at war with Australia, a provision originally enacted under Labor Prime Minister Ben Chifley in 1948."
+  },
+  {
+   "slug": "speech-323125",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015, which would strip dual nationals of Australian citizenship for engaging in terrorism-related conduct, including fighting for declared terrorist organisations or being convicted of specified terrorism offences. The bill applies only to dual nationals to avoid statelessness and includes provisions for automatic cessation of citizenship and ministerial discretion, citing around 110 Australians fighting in Syria or Iraq and 190 identified supporters."
+  },
+  {
+   "slug": "speech-323126",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The speaker accepted the modified bill after its worst excesses were constrained by the joint committee, particularly Anthony Byrne and Mark Dreyfus, but flagged deep concerns about the legal fiction of self-actuating conduct and the threat to the separation of powers. He supported amendments targeting non-state participants like ISIS and convicted terrorists, while warning against unfettered ministerial power."
+  },
+  {
+   "slug": "speech-323129",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015, arguing that dual citizens convicted of terrorism offences or who take up arms against Australia should lose their citizenship and be deported. They noted 110 Australians fighting with terrorist groups in Syria and Iraq, and referenced local terrorist incidents in Victoria, including the Endeavour Hills police station stabbing and the Lindt Cafe siege."
+  },
+  {
+   "slug": "speech-323130",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued against anti-Muslim sentiment while criticising the government's intake of 130,000 people per year from Middle Eastern countries, citing concerns about violence and lack of rule of law, but emphasised that many Muslim Australians are ordinary, hardworking citizens and that he personally owes his life to two Muslim medical professionals."
+  },
+  {
+   "slug": "speech-323134",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that citizenship is meaningful and that updating laws to strip dual citizens who fight for terrorist groups is appropriate, but criticised the government's poor process and cheap politics surrounding the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015."
+  },
+  {
+   "slug": "speech-323289",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-12",
+   "stage_hint": null,
+   "brief": "The Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 was supported, allowing cessation of Australian citizenship for dual nationals engaged in terrorist activities. The Parliamentary Joint Committee on Intelligence and Security recommended the bill pass with finetuning and increased transparency."
+  },
+  {
+   "slug": "speech-323538",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's consultation process for the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 as a \"deception\" and \"complete debacle,\" noting submissions were never made public and a final report was not produced. Labor supported the bill's final version, which only allows citizenship revocation for those convicted of terrorist offences or fighting with terrorist groups overseas, but retained concerns about its constitutionality."
+  },
+  {
+   "slug": "speech-323539",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 should be passed to strip dual nationals of Australian citizenship if convicted of specific terrorism-related offences, citing that up to 250 Australian citizens have departed as foreign fighters, 40–50% of Australians fighting in Syria and Iraq are dual nationals, and about 50% of convicted major terrorism offenders are dual nationals."
+  },
+  {
+   "slug": "speech-323540",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015, arguing it would not improve safety, would create two classes of citizens based on dual nationality, and would violate the fundamental principle that those born in Australia cannot have citizenship stripped by a minister. The speaker cited Waleed Aly’s warning against policies that play into ISIL’s strategy of dividing societies, and urged parliament not to create unequal citizenship rights."
+  },
+  {
+   "slug": "speech-323541",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015, which creates three new automatic grounds for dual nationals to lose citizenship for engaging in terrorist conduct, including fighting for or serving a terrorist organisation overseas. The speaker noted that in nine months, 23 Australian citizens had been arrested in counter-terrorism operations, with over 400 high-priority investigations ongoing, and argued the bill would allow faster action against threats."
+  },
+  {
+   "slug": "speech-323542",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill is likely unconstitutional, contrary to the rule of law and natural justice, and broader than claimed, as it allows automatic renunciation of citizenship for dual citizens without a criminal conviction or trial. They warned the provision could be used against anyone who leaves Australia for any reason, and that excluding natural justice and meaningful judicial review undermines citizenship and may be counterproductive."
+  },
+  {
+   "slug": "speech-323543",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015, which would strip Australian citizenship from dual nationals engaged in terrorism-related conduct. The speaker cited over 400 high-priority counter-terrorism investigations, about 110 Australians fighting with terrorist groups in Syria and Iraq, and 190 providing support, stating the bill is a necessary response to the rising terrorist threat."
+  },
+  {
+   "slug": "speech-323545",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 would allow dual citizens to automatically lose Australian citizenship for engaging in terrorism-related conduct, fighting for declared terrorist organisations overseas, or upon conviction for serious offences such as treason or espionage, with the minister able to declare terrorist organisations subject to parliamentary review. The bill is supported by the Australian Federal Police and ASIO as a measure to keep terrorist threats offshore."
+  },
+  {
+   "slug": "speech-323546",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's objective of revoking citizenship from dual citizens who engage in terrorism but argued that granting the executive power to do so without a judicial step may be unconstitutional, citing Canada, New Zealand, and the United States as examples requiring judicial oversight; they also noted the government had not provided the Solicitor-General's advice on the bill's validity."
+  },
+  {
+   "slug": "speech-323547",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 automatically strips dual nationals of Australian citizenship if they engage in terrorism-related conduct, fight for a declared terrorist organisation, or are convicted of specified terrorism offences. The speaker cited over 400 high-priority counter-terrorism investigations, 26 people charged since September 2014, approximately 110 Australians fighting in Syria and Iraq, and 190 providing support."
+  },
+  {
+   "slug": "speech-323548",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Citizenship Amendment (Allegiance to Australia) Bill, which would allow revocation of citizenship for dual nationals convicted of terrorist offences, engaged in overseas conflict, or collaborating with terrorist organisations, with safeguards including the right to appeal. The bill incorporates 27 unanimous recommendations from the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-323549",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015, which would revoke Australian citizenship for dual nationals engaging in terrorism-related conduct such as fighting with terrorist groups, financing terrorism, or recruiting. They cited figures including 110 Australians fighting with terrorist groups in Syria and Iraq, 190 providing support, 400 high-priority counter-terrorism investigations, and 26 people charged since September 2014."
+  },
+  {
+   "slug": "speech-323550",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Australian Citizenship Amendment (Allegiance to Australia) Bill 2015 needed to balance citizenship rights with counter-terrorism measures, supporting 27 amendments secured by Labor that narrowed the bill's scope, including limiting citizenship revocation to serious terrorist offences, requiring ministerial notice of revocation, and allowing appeals to the Federal Court."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Citizenship Amendment (Allegiance to Australia) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00166",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

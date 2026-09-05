@@ -1,0 +1,330 @@
+{
+ "key": "au-federal-r7507",
+ "title": "Australia’s Foreign Relations (State and Territory Arrangements) Amendment Bill 2026",
+ "short_title": "Australia’s Foreign Relations (State and Territory Arrangements) Amendment Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2026-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7507_ems_28021404-7437-405d-bb5a-5139787db39d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7507_ems_ef6c4645-9bc3-454f-b525-340974c34242%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10976204%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7507%22",
+   "document_date": "2026-07-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00080",
+   "document_date": "2026-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-26",
+  "sentences": [
+   "This bill would change the law that governs agreements between Australian states and territories and foreign bodies.",
+   "It would give the federal Minister new powers to impose conditions on arrangements and to extend review timeframes.",
+   "The scheme would be reviewed every five years, and overseas university campuses in Australia would be covered."
+  ],
+  "changes": [
+   "The bill strengthens the national interest focus of the Foreign Arrangements Scheme.",
+   "It reduces red tape for lower-risk arrangements.",
+   "It introduces a framework for sharing information across government.",
+   "It requires state and territory bodies to notify the Minister about existing arrangements of certain entities.",
+   "It allows the Minister to overturn automatic cancellations of core foreign arrangements.",
+   "It amends the application of the ASIO Act for certain decisions."
+  ],
+  "affected": "State and territory governments, Australian universities with overseas campuses, and foreign entities that have arrangements with Australian jurisdictions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:04:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10618",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Bill",
+   "ayes": 38,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 78
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 118
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-08-19/7"
+  },
+  {
+   "key": "federal-senate-10733",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Katy Gallagher I move: That this bill be now read a first time. Question agreed to. Bill read a first time. Sue Lines I will now deal with the Committee of the Whole amendment circulated by the government. I understand the minister has a document to table. Katy Gallagher I table a supplementary explanatory memorandum relating to the government amendment to be moved to this bill. Sue Lines The question is that the amendment on sheet AD128 be agreed to. _Government's circulated amendment—_ (1) Page 40 (after line 3), at the end of the Bill, add: Division 5 — Foreign research projects _Australia's Foreign Relations (State and Territory Arrangements) Act 2020_ 95 After Division 6 of Part 5 Insert: Division 6A — Foreign research projects 55A Requirement in relation to foreign research projects (1) An Australian university must maintain policies and procedures for: (a) identifying research projects conducted by researchers employed or engaged by the Australian university with researchers employed or engaged by foreign entities; and (b) assessing whether such research projects: (i) adversely affect, or are likely to adversely affect, Australia's national interest; or (ii) are, or are likely to be, inconsistent with Australia's foreign policy; and (c) managing risks identified through those assessments. (2) The Australian university must take reasonable steps to implement the policies and procedures. (3) In this section: _Australian university_ means a university that is a State/Territory entity under paragraph 7(e).",
+   "stage": "Limitation of debate",
+   "ayes": 30,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/21"
+  },
+  {
+   "key": "federal-senate-10734",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Limitation of debate",
+   "ayes": 30,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/22"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1205629",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205630",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205631",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205723",
+   "speaker": "Claire Clutterham",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205942",
+   "speaker": "Tony Sheldon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australia’s Foreign Relations (State and Territory Arrangements) Amendment Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00080",
+   "assent_date": "2026-08-26"
+  }
+ ]
+}

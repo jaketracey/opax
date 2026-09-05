@@ -1,0 +1,374 @@
+{
+ "key": "au-federal-r6841",
+ "title": "Appropriation Bill (No. 3) 2021-2022",
+ "short_title": "Appropriation Bill (No. 3) 2021-2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6841_ems_5fb7729c-4cd7-4510-bea5-4a2586024732%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6841%22",
+   "document_date": "2022-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00019",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-10",
+  "sentences": [
+   "This bill would authorise extra government spending for the current financial year, on top of amounts already approved by earlier appropriation laws.",
+   "The money would come from the Consolidated Revenue Fund and be allocated to the ordinary annual services of the government, as required by the Australian Constitution.",
+   "The bill is one of two Additional Estimates Appropriation Bills, with the other covering non-ordinary annual services, and details are in the Portfolio Additional Estimates Statements."
+  ],
+  "changes": [
+   "The bill proposes additional appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "It separates these appropriations from other types of appropriations, as the Constitution requires.",
+   "It works alongside the Appropriation Bill (No. 4) 2021-2022 to cover additional estimates."
+  ],
+  "affected": "The government and its agencies that receive the additional funding.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-417906",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The government introduced the additional estimates appropriation bills for 2021-22, seeking just over $11.9 billion in total. Key allocations include nearly $2.9 billion for the Department of Health (mostly COVID-19 response), $2.8 billion for the NDIS, $1.4 billion for education and employment programs, and nearly $1.3 billion for Defence."
+  },
+  {
+   "slug": "speech-417907",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-10",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 4) 2021‑2022 seeks $4.033 billion, including $2.493 billion for additional personal protective equipment for the National Medical Stockpile from April to June 2022, $424 million for the Hunter Power Project by Snowy Hydro Ltd, and further funds for national resilience centres in Melbourne, Brisbane and Perth."
+  },
+  {
+   "slug": "speech-419081",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the $15.9 billion Appropriation Bills (No. 3 and No. 4) 2021-2022, detailing $2.86 billion for the Department of Health’s COVID-19 response, $2.75 billion for the NDIS, $1.41 billion for education and employment, and $1.28 billion for defence, while also advocating for federal funding for numerous local infrastructure projects in the City of Joondalup and City of Stirling, including the $15.7 million Heathridge Park redevelopment, coastal paths, and park upgrades."
+  },
+  {
+   "slug": "speech-419083",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker defended the government's net zero by 2050 plan and accused opponents—including Climate 200 and Simon Holmes a Court—of lacking integrity, citing a $100,000 donation split into eight payments linked to a coal investor with an ICAC adverse finding. They also argued that housing affordability is at its lowest for Australians under 40 since 1947."
+  },
+  {
+   "slug": "speech-419085",
+   "speaker": "Catherine Fiona King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's infrastructure and regional development record, arguing the Building Better Regions Fund has been used for political pork-barrelling, citing examples of coalition electorates receiving disproportionate funding. They also highlighted cost blowouts on Inland Rail (from $4.4 billion to $14.3 billion) and claimed the government has cut infrastructure spending, contrasting this with Labor's past achievements in the portfolio."
+  },
+  {
+   "slug": "speech-419089",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's economic mismanagement has produced record deficits and near-$1 trillion debt, and its ill-preparedness for the omicron outbreak—including failing to stockpile rapid antigen tests and backing NSW Premier Dom Perrottet's premature reopening—caused healthcare and aged-care crises. Labor will not block the $16 billion appropriation bills."
+  },
+  {
+   "slug": "speech-419093",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of Appropriation Bill (No. 3) 2021‑2022 ($11.9 billion) and Appropriation Bill (No. 4) 2021‑2022 ($4 billion), highlighting government investments including nearly 1,000 mobile base stations under the Mobile Black Spot Program, $10 million for the Wagga Wagga PCYC, $10 million for Flipscreen, and support for regional cinemas through the SCREEN Fund."
+  },
+  {
+   "slug": "speech-419094",
+   "speaker": "Julie Maree Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for failures in providing rapid antigen tests, COVID-19 booster shots, and aged care support, and for not delivering on infrastructure promises in Tasmania, including only $2 million spent from a $25 million Hobart City Deal and the abandoned $300 million Antarctic runway."
+  },
+  {
+   "slug": "speech-419098",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Appropriation Bill (No. 3) 2021–2022, arguing it gives the government an additional $15.9 billion on top of a $16 billion undisclosed fund, while criticising rising costs (groceries up $25, childcare up 6.5% in a year, petrol up 33% in 12 months) and stagnant real wages—citing 0.7% falls from 2013–2019, a $700 drop last year, and eight years of record-low wage growth under the Coalition."
+  },
+  {
+   "slug": "speech-419105",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The member for Sturt highlighted nearly $200 million in federal-state funded congestion-busting intersection upgrades at Portrush Road-Magill Road ($98 million), Fullarton Road-Cross Road ($61 million), and Fullarton Road-Glen Osmond Road, with the first project now substantially complete. He also noted $7 million for the Kensington Gardens Reserve upgrade, $15 million for the Magill Village Precinct, and a gross pollutant trap on Second Creek."
+  },
+  {
+   "slug": "speech-419108",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's economic management has failed, citing weak per capita GDP growth, the worst real wages growth since the Great Depression between 2013 and 2020, and persistently high underemployment. They announced Labor's alternative plan, including policies on childcare, TAFE investment, infrastructure, and industrial relations reforms to address insecure work, equal pay, and productivity."
+  },
+  {
+   "slug": "speech-419109",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The Morrison-Joyce government was criticised for cutting funding to GP Access After Hours in the Hunter region and for ignoring mobile phone black spots in Shortland, with a future Labor government pledging to restore the funding. Prime Minister Scott Morrison's politicisation of national security was also condemned as doing Beijing's bidding."
+  },
+  {
+   "slug": "speech-419112",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "Labor supported the appropriation bills but argued the Liberal government is the most wasteful since Federation, citing $40 billion in improper JobKeeper payments, a trillion-dollar debt, and a $5,000 annual tax increase per person since 2013. The speaker announced Labor’s plan to provide 465,000 free TAFE places and 20,000 new university places in areas of critical skills shortage, and to invest in manufacturing and renewable energy."
+  },
+  {
+   "slug": "speech-419124",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The member for Gippsland welcomed the Black Summer Bushfire Recovery Grants Program increase from $280 million to $390 million, with $30 million allocated to East Gippsland, and named specific funded projects including the Bairnsdale Aerodrome ($9.6 million), Mallacoota Surf Life Saving Club ($2.5 million), and Snowy River railway trestle bridge ($1 million). He also criticised inadequate hazard reduction, called for more \"boots on the ground\" over bureaucratic \"suits,\" and pledged to continue seeking funding for unsuccessful townships including Buchan, Sarsfield and Wairewa."
+  },
+  {
+   "slug": "speech-419125",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government has used Commonwealth grants as a \"personal slush fund,\" citing that 43 of 54 approved community projects went to Liberal electorates, while Labor-held McEwen has been denied federal funding for the Macedon Ranges Regional Sports Precinct since 2018 (despite $10.7 million from council, $11.6 million from the state, and $100,000 from the AFL). The speaker also criticised the government's childcare plan, claiming it helps only families with more than one child and expires when the eldest starts school, whereas Labor's plan would benefit 86% of families with children under six."
+  },
+  {
+   "slug": "speech-419127",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for economic mismanagement, citing a trillion dollars in debt, eight consecutive deficits, and failures on vaccine rollout, aged care, and infrastructure, while announcing support for a $220 million Centenary Bridge upgrade and Labor’s $1.2 billion skills plan with free TAFE and 20,000 new university places."
+  },
+  {
+   "slug": "speech-419130",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued for cutting taxes on electric vehicles to increase their uptake from 0.7% of car sales, adding 400 community batteries across Australia, and rewiring the nation's outdated electricity grids, while criticising the government's inheritance tax proposal and its 22 energy policies."
+  },
+  {
+   "slug": "speech-419132",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The member for Greenway paid tribute to constituent Damien MacRae and his son Aiden, who created the LEGO Surf Rescue concept to raise melanoma awareness after Damien’s stage 4 diagnosis, and argued that LEGO then released a similar Beach Lifeguard Station set without crediting or including sun‑safe features, calling on the company to act ethically."
+  },
+  {
+   "slug": "speech-419365",
+   "speaker": "Shayne Kenneth Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has failed on economic management, citing a trillion dollars in debt, consecutive deficits, and broken promises of surpluses. They criticised the government's handling of the NBN, aged-care sector funding, and the Department of Veterans' Affairs, noting a backlog of 50,000 claims and a $1.3 million McKinsey review that interviewed only two families and remains secret."
+  },
+  {
+   "slug": "speech-419367",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The coalition government has wasted billions on rorts including an estimated $20 billion on JobKeeper to profitable companies, $1 billion on robodebt, and targeted funds like the $660 million car park fund and $100 million sports rorts, while mismanaging COVID, aged care, housing, and the NBN; it is time for an Albanese-led Labor government."
+  },
+  {
+   "slug": "speech-419371",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the appropriation bills but criticised the Morrison government for mismanagement, sports rorts, and corruption, citing Newcastle Olympic Football Club's loss of $500,000 in funding and the Building Better Regions Fund directing $270 million to Coalition-held seats. Specific failures highlighted include the government's inaction on Afghan humanitarian visas (only 15,000 over four years from existing quotas), mobile blackspots in Stockton, GP shortages due to removed bulk-billing incentives, and a housing crisis with five-to-ten-year social housing waiting lists in Newcastle."
+  },
+  {
+   "slug": "speech-419372",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Morrison government for prioritising wedge politics over meaningful policy, citing failures in vaccine rollout, aged care, NDIS funding, and infrastructure like the North-South Motorway. They argued the government doubled debt before the pandemic, collects $4,500 more per Australian than in 2013, and attacked Medicare and pensions, while Labor proposed investment in training, energy, and infrastructure."
+  },
+  {
+   "slug": "speech-419390",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-419391",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "Moved the third reading of Appropriation Bill (No. 3) and (No. 4) 2021-2022, seeking parliamentary authority for additional expenditure from the Consolidated Revenue Fund to continue government programs and meet Commonwealth obligations for the remainder of the financial year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 3) 2021-2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00019",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

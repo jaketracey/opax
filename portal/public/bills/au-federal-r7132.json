@@ -1,0 +1,503 @@
+{
+ "key": "au-federal-r7132",
+ "title": "Communications Legislation Amendment (Prominence and Anti-siphoning) Bill 2024",
+ "short_title": "Communications Legislation Amendment (Prominence and Anti-siphoning) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2024-07-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-05-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-07-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7132_ems_5b00cc5c-d1d4-4843-8c7c-f60c006503c7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7132_ems_a5d8901a-a364-469a-b3f8-beb06f853f85%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7132_ems_91a284af-591d-4063-95f5-e0ef6ed45e0e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7132%22",
+   "document_date": "2023-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00062",
+   "document_date": "2024-07-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8872",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2024-05-14.118.1) introduced by North Sydney MP [Kylea Tink](https://theyvoteforyou.org.au/people/representatives/north_sydney/kylea_tink) (Independent), which means they failed. ### What do the amendments do? Ms Tink [explained that](https://www.openaustralia.org.au/debates/?id=2024-05-14.118.1): > *The amendments I'm moving today would shorten the timeframe for the prominence provisions to come into effect to 12 months after the bill passes. As the bill currently stands, manufacturers would have an 18-month transition period, after which they would be required to ensure that their prominence obligations have been met. Having reviewed the views of many stakeholders, the submissions made to the Senate Environment and Communications Legislation Committee and the recommendations of that committee, I believe it is both appropriate and feasible to fast-track the prominence provisions.* ### Amendment text > *(1) Schedule 1, item 1, page 17 (line 14), omit \"18 months\", substitute \"12 months\".* > > *(2) Schedule 1, item 24, page 24 (line 7), omit \"18 months\", substitute \"12 months\".*",
+   "stage": "Consideration in detail",
+   "ayes": 13,
+   "noes": 61,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 73,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-14/2"
+  },
+  {
+   "key": "federal-senate-9480",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "Communications Legislation Amendment (Prominence and Anti-Siphoning) Bill 2024 - Second Reading - Online gambling advertising",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/11"
+  },
+  {
+   "key": "federal-senate-9481",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "Communications Legislation Amendment (Prominence and Anti-Siphoning) Bill 2024 - Second Reading - SBS and ABC",
+   "stage": "Second reading",
+   "ayes": 2,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/12"
+  },
+  {
+   "key": "federal-senate-9482",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted against amendments on [sheets 2612 revised, 2638, 2682 and 2684](https://www.openaustralia.org.au/senate/?gid=2024-07-04.77.1), which were introduced by the Australian Greens. This means the amendments failed. ### Amendment text See sheets [2612 revised](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7132_amend_e4643e4b-f434-419c-a3a8-aa4757e7b9e8%22;rec=0), [2638](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7132_amend_1cf155c9-ae8b-4004-b56e-44b8991daec5%22;rec=0), [2682](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7132_amend_20db3ec6-3b36-416a-a960-23910c357941%22;rec=0) and [2684](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7132_amend_d96dee83-5d85-491e-b76f-08fda0e13cc1%22;rec=0) for the amendment text.",
+   "stage": "Committee of the Whole",
+   "ayes": 12,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/13"
+  },
+  {
+   "key": "federal-senate-9483",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (17) and (19) to (36)](https://www.openaustralia.org.au/senate/?gid=2024-07-04.79.3), which were introduced by the Jacqui Lambie Network, which means they failed. ### Amendment text You can find the text of [these amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7132_amend_134c7ea8-5522-4e4a-8d3d-915731cc1c38%22;rec=0) here. They concerned the prominence framework. ### What is the prominence framework? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd057): > *The Bill introduces a ‘prominence framework’ – a set of minimum requirements that manufacturers of internet-connected televisions and television-like devices must meet regarding the accessibility of free-to-air television content on regulated television devices.*",
+   "stage": "Committee of the Whole",
+   "ayes": 13,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/14"
+  },
+  {
+   "key": "federal-senate-9484",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-07-04.81.1) to keep item 24 of schedule 1 unchanged, which means it will remain as it is. This vote was put in response to a [Jacqui Lambie Network amendment](https://www.openaustralia.org.au/senate/?gid=2024-07-04.81.1) to oppose the item. ### What is item 24 of schedule 1? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd057): > *Item 24 of Part 2 of Schedule 1 of the Bill provides that the obligations imposed in relation to regulated television devices under the prominence framework apply to a device that is manufactured on or after the day that is 18 months after the commencement of the Schedule, or is supplied on or after that date.*",
+   "stage": "Committee of the Whole",
+   "ayes": 31,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/15"
+  },
+  {
+   "key": "federal-senate-9485",
+   "date": "2024-07-04",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-07-04.83.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it failed. ### Amendment text > *(1)—Clause 2, page 2 (at the end of the table), add:* > >> *4. Schedule 3* >> >>> *The day after the end of the period of 18 months beginning on the day this Act receives the Royal Assent.* > > *(2)—Page 36 (after line 2), at the end of the bill, add:* > >> *Schedule 3 — Codes of practice for broadcasting video on demand services* >> >> *Broadcasting Services Act 1992* >> >> *1 Subsection 123(1)* >> >>> *Omit \"radio and television industry\", substitute \"radio, television, and other relevant broadcasting industry\".* >> >> *2 After paragraph 123(1)(e)* >> >>> *Insert:* >>> >>> *and (f) providers of broadcasting video on demand services;* >> >> *3 At the end of section 123* >> >>> *Add:* >>> >>> *(8) For the purposes of this section:* >>> >>>> *broadcasting video on demand service has the same meaning as in Part 9E.*",
+   "stage": "Comittee of the Whole",
+   "ayes": 14,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-07-04/16"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Communications Legislation Amendment (Prominence and Anti-siphoning) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00062",
+   "assent_date": "2024-07-09"
+  }
+ ]
+}

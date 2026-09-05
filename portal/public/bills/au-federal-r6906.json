@@ -1,0 +1,318 @@
+{
+ "key": "au-federal-r6906",
+ "title": "Treasury Laws Amendment (2022 Measures No. 3) Bill 2022",
+ "short_title": "Treasury Laws Amendment (2022 Measures No. 3) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-12-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6906_ems_074fdc71-4956-405c-8de0-616e65b0979a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6906_ems_ceb86b25-baf0-4810-b989-bd1bc52385fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6906%22",
+   "document_date": "2022-09-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00075",
+   "document_date": "2022-12-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7801",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debates/?id=2022-10-27.26.1), which means they failed. ### What do these amendments do? Fadden MP [Stuart Robert](https://theyvoteforyou.org.au/people/representatives/fadden/stuart_robert) (Liberal), who introduced the amendments, [explained that](https://www.openaustralia.org.au/debate/?id=2022-10-27.26.2): > *Amendments (1) and (3) effectively excise schedule 5 from the Treasury Laws Amendment (2022 Measures No. 3) Bill 2022. That is the measure that allows faith based super funds to not have to meet the requirements of the benchmark that was put in place under the Your Future, Your Super legislative changes. We do that quite soberly. If we look through at the benchmark requirements that this parliament passed, it requires super funds to meet basic benchmarks of performance. If they do not, then of course they are named and they will need to inform their members that their fund is not performing to those benchmarks. If they fail a second time they are no longer able to receive contributions that are mandatory and therefore they can't be a MySuper regulated fund. This has already occurred once. Thirteen funds failed, and they all quite rightly sought to merge with other funds. Quite recently five other funds have also been named for underperformance.* > > *It's not as if these benchmarks are onerous.* Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor) disagreed, [saying that](https://www.openaustralia.org.au/debate/?id=2022-10-27.27.8): > *Let me explain what the government is proposing to do and why the member for Fadden has just misled the House. There are fewer than five faith based funds in the country, and they are set up with a specific investment mandate. They say, 'If you join our fund, you can be assured that your funds are going to be invested in accordance with your religious and your faith based pre",
+   "stage": "Consideration in detail",
+   "ayes": 83,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-10-27/3"
+  },
+  {
+   "key": "federal-representatives-7802",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-10-27.35.7) to *disagree* with [amendments (2) and (4)](https://www.openaustralia.org.au/debate/?id=2022-10-27.32.1) introduced by Fadden MP [Stuart Robert](https://theyvoteforyou.org.au/people/representatives/fadden/stuart_robert) (Liberal), which means they failed. ### What were these amendments? Mr Robert [explained that](https://www.openaustralia.org.au/debate/?id=2022-10-27.32.1): > *Amendments (2) and (4) seek to put what was the annual member meeting notices by regulation into primary legislation. Imagine an incoming government's first act of Treasury. You would think the first act would be fairly significant. They've been out of government for nine years, and the very first act of Treasury was to water down transparency in super.* Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor) [countered that](https://www.openaustralia.org.au/debate/?id=2022-10-27.33.4): > *There is an important piece of work to be done on transparency and reporting in superannuation funds all across the country. Unfortunately, the politically motivated regulations that were introduced by the former government were all about the politics and had nothing to do with transparency. I ask the House to consider this: if there is something material that ought to be disclosed to members, would you stick it in the annual member meeting notice, or would you stick it in an annual report? Would you stick it in an annual member meeting notice that gets mailed out, or would you stick it in the annual report that is required to be disclosed to all of your members, to regulators and all the rest of it?* Read more about these amendments [in the debate](https://www.openaustralia.org.au/debates/?id=2022-10-27.26.1).",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-10-27/4"
+  },
+  {
+   "key": "federal-senate-7882",
+   "date": "2022-11-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6906_amend_afe49d68-d921-4517-8709-4ff95b1dd06c%22;rec=0) introduced by Western Australian Senator [Dean Smith](https://theyvoteforyou.org.au/people/senate/wa/dean_smith) (Liberal) on behalf of Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal), which means they failed. The amendments related to annual members’ meetings.",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 21,
+    "earliest": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-28/5"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2022 Measures No. 3) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00075",
+   "assent_date": "2022-12-05"
+  }
+ ]
+}

@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r5560",
+ "title": "Aged Care Amendment (Red Tape Reduction in Places Management) Bill 2015",
+ "short_title": "Aged Care Amendment (Red Tape Reduction in Places Management) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2016-02-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5560_ems_3bbb27fb-98a1-4e04-a50d-9ff697d6422b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5560%22",
+   "document_date": "2015-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00001",
+   "document_date": "2016-02-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-11-25",
+  "sentences": [
+   "This bill would make it easier for approved aged care providers to transfer places between each other by treating proposed transfers as automatically approved, unless the Secretary steps in to block them.",
+   "It would also cut red tape by lengthening the provisional allocation period and limiting how many extensions providers can get, so care is delivered to older Australians more promptly.",
+   "The explanatory memorandum does not specify the new length of the provisional allocation period or the exact number of extensions allowed."
+  ],
+  "changes": [
+   "Deems proposed transfers of places between approved providers as approved, subject to the Secretary's veto.",
+   "Extends the current provisional allocation period for approved providers.",
+   "Limits the number of extensions available for provisional allocations."
+  ],
+  "affected": "Approved aged care providers and older Australians receiving care.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-324023",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-25",
+   "stage_hint": null,
+   "brief": "The government introduced a bill to reduce red tape for aged-care providers by replacing the application process for transferring residential, home-care and flexible-care places with a simplified Notice of Transfer and extending the initial period for provisionally allocated residential aged-care places from two to four years, with two 12-month extensions allowed before care must be operational. The changes aim to align legislation with business realities and reduce reporting burdens by 75% while retaining government oversight to protect quality of care."
+  },
+  {
+   "slug": "speech-325314",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "Labor supported the Aged Care Amendment (Red Tape Reduction in Places Management) Bill 2015, which streamlines transfer of places between approved providers and extends provisional allocation of aged care places from two to four years. The speaker also criticised the government's implementation of the My Aged Care website and hotline, citing ongoing delays and inadequate referrals."
+  },
+  {
+   "slug": "speech-325318",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment Bill to reduce red tape by allowing unused aged care place licenses to be transferred to other providers and requiring facilities to be built within four years, with possible extensions, addressing over 7,000 allocated but unbuilt places as of 2014."
+  },
+  {
+   "slug": "speech-325319",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Amendment (Red Tape Reduction in Places Management) Bill 2015 reduces administrative burdens for aged-care providers by removing the need for approval to transfer places and extending provisional allocation periods to four years, while maintaining consumer protections and support for rural and remote areas."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Amendment (Red Tape Reduction in Places Management) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00001",
+   "assent_date": "2016-02-10"
+  }
+ ]
+}

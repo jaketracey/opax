@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r5423",
+ "title": "Foreign Death Penalty Offences (Preventing Information Disclosure) Bill 2015",
+ "short_title": "Foreign Death Penalty Offences (Preventing Information Disclosure) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-01",
+ "originating_house": "representatives",
+ "sponsor": "PALMER, Clive, MP",
+ "sponsor_party": "Palmer United Party",
+ "sponsor_person_id": "10823",
+ "portfolio": "(s) PALMER, Clive, MP",
+ "status": "lapsed",
+ "status_as_of": "2015-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5423%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5423%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5423%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5423_ems_f700d3ee-060b-45a7-94e7-af10f53baee1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5423%22",
+   "document_date": "2015-06-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

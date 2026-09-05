@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r5784",
+ "title": "Agriculture and Water Resources Legislation Amendment Bill 2016",
+ "short_title": "Agriculture and Water Resources Legislation Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5784_ems_d7b79b9e-5236-478e-b913-c61aad5bb9e7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5784%22",
+   "document_date": "2016-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "This bill would abolish the advisory board that provides recommendations to the chief executive of the Australian Pesticides and Veterinary Medicines Authority.",
+   "It removes from the Agricultural and Veterinary Chemicals (Administration) Act 1992 all references to the board, including its establishment, membership and procedures.",
+   "The bill also changes a related law to limit what information the regulator must send to Food Standards Australia New Zealand when a maximum residue limit standard is altered."
+  ],
+  "changes": [
+   "Abolishes the Australian Pesticides and Veterinary Medicines Authority Advisory Board.",
+   "Removes obsolete definitions and provisions from the Agricultural and Veterinary Chemicals (Administration) Act 1992.",
+   "Reduces the information the Australian Pesticides and Veterinary Medicines Authority must provide to Food Standards Australia New Zealand when changing a maximum residue limit standard."
+  ],
+  "affected": "Chemical companies that pay registration fees, the Australian Pesticides and Veterinary Medicines Authority, and Food Standards Australia New Zealand.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-339621",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The bill amends 13 portfolio acts to cease four redundant statutory bodies, remove unnecessary regulation, and repeal 12 redundant acts, including removing annual permit applications for fisheries and export licences for meat by-products, and transferring the Statutory Fishing Rights Allocation Review Panel's functions to the Administrative Appeals Tribunal."
+  },
+  {
+   "slug": "speech-339622",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-12-01",
+   "stage_hint": null,
+   "brief": "The bill amends the Primary Industries (Excise) Levy Act 1999 and the National Residue Survey (Excise) Levy Act 1998 to remove obsolete provisions allowing buyers to give sellers a certificate of intention to export honey, a practice no longer used by the industry. The changes, supported by the Australian Honey Bee Industry Council, do not alter levy or customs charges, and come as Australian honey producers exported nearly 4.5 million kilograms valued at over $45 million in 2015–16."
+  },
+  {
+   "slug": "speech-341083",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Agriculture and Water Resources Legislation Amendment Bill 2016 and the Excise Levies Legislation Amendment (Honey) Bill 2016 are largely housekeeping measures to reduce red tape, and raised concerns about the abolition of the APVMA advisory committee, water policy, transparency, research and development corporations, the Farm Household Allowance, drought policy, biosecurity, and environment and energy issues."
+  },
+  {
+   "slug": "speech-341087",
+   "speaker": "John McVeigh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Agriculture and Water Resources Legislation Amendment Bill 2016, arguing it reduces red tape and repeals redundant acts, and defended decentralisation, citing the disbanding of the APVMA advisory board (which cost over $200,000 annually) and highlighting trade agreements with Korea, Japan, and China."
+  },
+  {
+   "slug": "speech-341088",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Murray-Darling Basin Plan must be delivered in full, warning that the Deputy Prime Minister’s proposal to deliver only the 650-gigalitre benefit for irrigation communities while abandoning the 450-gigalitre environmental target would break the bipartisan compromise. Labor will move an amendment to the Water Act linking the two targets unless the government guarantees the full plan’s implementation."
+  },
+  {
+   "slug": "speech-341089",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "Labor supported the agriculture and water bills as technical improvements but demanded the government deliver the promised additional 450 gigalitres of water for the environment under the Murray-Darling Basin Plan, calling it non-negotiable. The speaker proposed an amendment to ensure water security and criticized the Deputy Prime Minister for seeking to unravel the plan."
+  },
+  {
+   "slug": "speech-341090",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported Labor's amendments to increase transparency and accountability for live exports, called for the 450-gigalitre Murray-Darling Basin water target to be legislated, and opposed the relocation of the APVMA from Canberra to Armidale, citing $25 million in relocation costs and $157 million annual loss to Canberra's economy."
+  },
+  {
+   "slug": "speech-341091",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-02-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Agriculture and Water Resources Legislation Amendment Bill 2016 but called for the farm household allowance to be separated from social security legislation, citing ongoing problems with application delays, asset tests, and Centrelink service. They urged the minister to urgently act on a report by Senator Bridget McKenzie detailing dairy farmers’ difficulties, including cases of repeated application rejections and poor follow-up."
+  }
+ ],
+ "acts": []
+}

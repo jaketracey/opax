@@ -1,0 +1,334 @@
+{
+ "key": "au-federal-r5527",
+ "title": "Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2015-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5527_ems_0aa4ddc4-007b-4124-9bf6-bef55a5e3d8f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5527%22",
+   "document_date": "2015-09-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00159",
+   "document_date": "2015-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-321359",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker raised a point of order on relevance, requesting that the member be directed to debate the Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015."
+  },
+  {
+   "slug": "speech-321363",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The bill was supported as a first step toward fairer youth allowance for regional students, removing the family assets test and family actual means test, expanding the family pool to all Family Tax Benefit children, and committing over $262 million to about 30,000 families. Further reform of the independence criteria for rural and remote students was also called for."
+  },
+  {
+   "slug": "speech-321365",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 will better support rural, regional and remote families, particularly farmers who are asset-rich but income-poor, by removing the family asset test and family actual means test for youth allowance, benefiting around 1,200 families."
+  },
+  {
+   "slug": "speech-321418",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "The bill excludes farm assets from youth allowance means testing, increases rates for rural and remote students, and includes all family tax benefit children in the parental income test; it follows an interdepartmental committee process urged by Senator Bridget McKenzie and Nola Marino."
+  },
+  {
+   "slug": "speech-321420",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "The bill simplifies parental means testing for youth payments, removes the family actual means test and family assets test, increases youth allowance rates for regional students (with some receiving over $7,000 a year), and excludes farm assets from testing, benefiting around 1,200 families."
+  },
+  {
+   "slug": "speech-321421",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "The speaker praised the government's Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 and called for a comprehensive higher education policy for rural and regional Australia. They cited that only 57% of 20-24 year olds in their electorate of Indi finish year 12, compared to 78% in Melbourne, and that 16.5% of non-metropolitan school completers defer university versus 8.1% in metropolitan areas."
+  },
+  {
+   "slug": "speech-321422",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill will provide more generous and consistent support for regional and rural youth by removing the family assets test and aligning means testing with family tax benefit, benefiting farming families. Key figures include 1,200 more people receiving youth allowance and 4,860 existing students gaining around $2,000 per year."
+  },
+  {
+   "slug": "speech-321423",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 would remove the family asset test and actual means test for youth allowance, align parental income tax exemptions with family tax benefit part A, and remove maintenance income from assessment, effective 1 January 2016. The bill aims to help regional families like that of farmer Frank Padula afford higher education costs and increase university completion rates, which in the Mallee electorate are only 26 per cent."
+  },
+  {
+   "slug": "speech-321713",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition's Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 will better support rural students by removing the family farm from the means test, including other children in the family pool, and increasing payment rates. The changes will make an additional 4,100 students eligible for youth allowance, receiving on average $7,000 extra per year, and benefit 13,700 families with around $1,100 more annually, while 5,800 families will become eligible for an average $1,300."
+  },
+  {
+   "slug": "speech-321714",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015, which removes the family assets test and family actual means test from youth allowance assessments. The changes will enable around 4,100 additional payments, 1,200 more young people to receive youth allowance for the first time, and increase payments for about 5,000 existing students by roughly $2,000 annually, benefiting rural and regional farming families by not counting assets in means testing."
+  },
+  {
+   "slug": "speech-321715",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 will help close the education gap between regional and metropolitan students by removing the family assets test and family actual means test for youth allowance, benefiting around 4,100 young people from asset‑rich but cash‑poor farming families. He noted that only 17% of regional 25‑ to 34‑year‑olds hold a bachelor’s degree, compared to 36% in capital cities, and that regional students have a 33% chance of attending university versus 55% for metropolitan students."
+  },
+  {
+   "slug": "speech-321716",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-321860",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-22",
+   "stage_hint": null,
+   "brief": "The bill removes the family actual means test and family assets test from youth allowance parental means testing from 1 January 2016, aligning it with family tax benefit part A, to help more young people from regional areas access tertiary education."
+  },
+  {
+   "slug": "speech-322002",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 provides $262.7 million to remove the family assets test and family actual means test for youth allowance from 1 January 2016, exempt farm assets, and expand the family pool from 1 July 2016, benefiting around 4,100 new claimants and increasing payments for thousands of existing students."
+  },
+  {
+   "slug": "speech-322003",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The bill removes the family actual assets test and family means test for youth allowance, enabling an extra 4,100 and 1,200 students respectively to qualify for assistance, at a cost of $262 million over the forward estimates. The changes aim to address the financial disadvantage faced by regional students who must leave home for tertiary education."
+  },
+  {
+   "slug": "speech-322004",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill provides more generous means testing for youth payments, benefiting around 1,200 regional and remote families by removing the family actual means test and assets test, including farm assets. He called the changes a good first step but stressed student income support remains unfinished business, advocating for a tertiary access allowance for students forced to travel over 90 minutes to university."
+  },
+  {
+   "slug": "speech-322006",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015, arguing it would improve rural and regional students' access to higher education by removing the family assets test and actual means test and aligning youth allowance parental income testing with family tax benefit arrangements from 1 January 2016. The changes were projected to qualify around 4,100 additional young people for youth allowance, increase payments for about 4,860 existing students by roughly $2,000 per year, and benefit around 1,200 regional and remote families."
+  },
+  {
+   "slug": "speech-322007",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 would provide more generous and consistent youth allowance support, particularly for rural and regional families, by removing the family assets test and family actual means test. The bill would allow an additional 4,100 young Australians to qualify for youth allowance and increase payments for around 4,860 existing students by approximately $2,000 per year."
+  },
+  {
+   "slug": "speech-322008",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 would equalise access to tertiary education regardless of background, removing the family assets test and actual means test from Youth Allowance parental means testing from 1 January 2016. They highlighted that their electorate has one of the lowest tertiary education rates and that psychological barriers, not just financial ones, prevent young people from pursuing further study."
+  },
+  {
+   "slug": "speech-322126",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Bill 2015 will remove complex means tests and align parental income testing with family tax benefit A, benefiting about 1,200 regional and remote families with an increase of around $7,000 per year."
+  },
+  {
+   "slug": "speech-322132",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-09",
+   "stage_hint": null,
+   "brief": "The bill removes the family assets test and family actual means test from youth allowance parental means testing from 1 January 2016, removes maintenance income from the parental income test from 1 January 2016 with a separate test from 1 January 2017, and expands the family pool from 1 July 2016, at a cost of $262.7 million over the forward estimates. This is expected to allow around 4,100 additional youth allowance claimants to qualify, increase payments for about 4,860 existing students by approximately $2,000 per year, and reduce regulatory burden on around 230,000 families."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (More Generous Means Testing for Youth Payments) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00159",
+   "assent_date": "2015-11-26"
+  }
+ ]
+}

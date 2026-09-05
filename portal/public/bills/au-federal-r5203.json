@@ -1,0 +1,361 @@
+{
+ "key": "au-federal-r5203",
+ "title": "Australian National Preventive Health Agency (Abolition) Bill 2014",
+ "short_title": "Australian National Preventive Health Agency (Abolition) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2014-11-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5203_ems_e4090cd1-cfbd-45ec-87d5-c83252a93ec0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5203%22",
+   "document_date": "2014-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-15",
+  "sentences": [
+   "The bill would close the Australian National Preventive Health Agency.",
+   "Preventive health tasks shared between two federal bodies would be merged into the Department of Health to cut duplication and costs.",
+   "The bill would end the roles of the agency's chief executive, staff, advisory council and committees, and transfer leftover work to the Department of Health."
+  ],
+  "changes": [
+   "Repeals the Australian National Preventive Health Agency Act 2010.",
+   "Transfers the agency's functions to the Commonwealth Department of Health.",
+   "Terminates the positions of the chief executive, staff, advisory council and committees."
+  ],
+  "affected": "The Australian National Preventive Health Agency, its staff and advisory bodies, and the Commonwealth Department of Health.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3212",
+   "date": "2014-06-03",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debate/?id=2014-06-03.114.8) to read the bill for a second time. This means that the majority agreed with the main idea of the the bill and that the House can now discuss it in more detail.(Read more about the stages that a bill must pass through to become law [here](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ) Alternatively, the House may vote immediately on whether to read the bill for a third time, which would mean the bill would be passed in the House and would now go to the Senate for their consideration.(In the case of this bill, the House did decide to read the bill for a third time without further consideration of the bill in more detail (see [here](http://www.openaustralia.org/debates/?id=2014-06-03.116.1)). This decision was made without division and so is not recorded here on Public Whip (see our [FAQ Section](http://publicwhip-rails.openaustraliafoundation.org.au/faq.php#division) for more information about divisions and why they are not always called). ) _Background to the bill_ The bill was introduced to repeal the [Australian National Preventive Health Agency Act 2010](http://www.austlii.edu.au/au/legis/cth/consol_act/anphaa2010428/) in order to abolish the [Australian National Preventive Health Agency](http://www.anpha.gov.au/internet/anpha/publishing.nsf/Content/about-us).(For more information, including the bill's explanatory memorandum, see [here](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr5203%22). ) This Agency was established on 1 January 2011 \"to provide national capacity to drive preventive health policy and programs\".(Read more about the Agency on its [website](http://www.anpha.gov.au/internet/anpha/publishing.nsf/Content/about-us). More information on its abolition is available on Radio National's [Life Matters](http://www.abc.net.au/radionational/programs/lifematters/put-the-cupcake-down3a-",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-06-03/1"
+  },
+  {
+   "key": "federal-senate-3610",
+   "date": "2014-11-25",
+   "house": "senate",
+   "question": "Fiona Nash The government is fast tracking the full implementation of the National Bowel Cancer Screening Program, building on the successes it has achieved to date, thereby providing access for all Australians aged 50 to 74 years to biennial screening by 2020 and continuing to enhance our broader preventive health efforts by supporting the establishment of 10 new headspace sites, which will provide community based services for young people aged 12 to 25 years who have or are at risk of mental illness. We need to make sure that our investment in the health system, wherever it can, encourages Australians to develop and maintain healthy behaviours. This is one reason we are developing a national diabetes strategy, supported by an advisory group which will draw on the expertise of clinicians and researchers who focus on this disease. Diabetes and its complications places an incredible demand on the health system, particularly type 2 diabetes, a disease which can be prevented and managed through physical exercise and diet. The experts are reviewing current practices and will develop advice to ensure that all parts of the health system are able to respond effectively to those who are diagnosed, as well as increasing our efforts to prevent the disease. The government will also continue working with the primary care and other sectors to promote health behaviours and to support better health outcomes. We are establishing primary health networks, which will seek to embed preventive behaviours in the community. It is important that our general practitioners are seen as a critical part of the preventive health picture. If we can achieve better outcomes in the health of high-risk and high-need complex chronic disease patients, we will help prevent increased demand on specialists and hospitals. As well as the role for the Australian government, the states and territories have responsibility for providing services and they need to ensure these services include preventive approach",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 11,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-11-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-288189",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-05-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290152",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290154",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290310",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290311",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290315",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290316",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290317",
+   "speaker": "Andrew Southcott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290319",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290321",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290328",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290329",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290331",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-290334",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-03",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

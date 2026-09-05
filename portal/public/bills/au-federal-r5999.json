@@ -1,0 +1,632 @@
+{
+ "key": "au-federal-r5999",
+ "title": "Migration Amendment (Skilling Australians Fund) Bill 2018",
+ "short_title": "Migration Amendment (Skilling Australians Fund) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-10-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2018-05-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5999_ems_347f751d-affa-460f-a032-6a57f17895b3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5999_ems_59909685-3054-4b0e-ad0c-95f592c66ec1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5999_ems_e9557e11-9b43-4d0f-aff7-99db109ece68%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5999%22",
+   "document_date": "2017-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00038",
+   "document_date": "2018-05-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-10-18",
+  "sentences": [
+   "The bill would make employers pay a charge when they sponsor a worker under skilled migration programmes.",
+   "The charge would fund a training account run by the Department of Education and Training to improve Australians' skills.",
+   "The bill also lets the Minister set rules by legislative instrument for how labour market testing must be done and what evidence is needed."
+  ],
+  "changes": [
+   "Requires employers sponsoring skilled migrants to pay a nomination training contribution charge.",
+   "Allows nominations from people who have applied to be an approved sponsor or are negotiating a work agreement.",
+   "Permits the Minister to determine labour market testing requirements and evidence through a legislative instrument."
+  ],
+  "affected": "Employers who nominate workers under temporary and permanent skilled migration programmes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:32:27Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5107",
+   "date": "2018-02-08",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read for a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. This means it failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes the failure of the Government to protect local jobs by failing to legislate strict labour market testing\".*",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-08/7"
+  },
+  {
+   "key": "federal-representatives-5115",
+   "date": "2018-02-12",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2018-02-08.44.1) introduced by Blair MP [Shayne Neumann](https://theyvoteforyou.org.au/people/representatives/blair/shayne_neumann) (Labor), which means they failed. ### What did the amendments do? Mr Neumann [explained that](https://www.openaustralia.org.au/debate/?id=2018-02-08.44.1): > *... these amendments are to ensure proper labour market testing is in place. There needs to be real, genuine and strict labour market testing. Labour market testing requires that employers who want to bring in overseas workers test the local labour market first, to give Australians and permanent residents the first chance at local jobs. This is to make sure that, if no suitably and qualified local workers are readily available, we can bring people from overseas with the skill, talent and ability to contribute to our economy. These amendments are all about putting local workers first.* > > *Although the legislation allows the immigration minister to determine by legislative instrument the manner of labour market testing, it doesn't provide that he can follow through on it. The minister may only include the following in the legislative instrument: the language to be used in advertising, the advertising method, the period during or prior to nomination in which the advertisement must occur, and the duration of the advertising. The government's bill asks Australians to trust the immigration minister to do the right thing in this legislative instrument, which is non-disallowable. Many on the opposite benches, including the Prime Minister and the Treasurer, when he was the shadow minister for immigration, have voted again and again in this place against labour market testing. They can't be trusted to do the right and proper thing to protect Australian jobs.* ### Amendment text > *(1) Schedule 1, page 8 (after line 10), after item 14, insert:* > >> *14A At the end of subsection 140GBA(4)* >> >> *Add \"The p",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-12/2"
+  },
+  {
+   "key": "federal-senate-5146",
+   "date": "2018-02-15",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2018-02-15.197.1) introduced by NSW Senator [Doug Cameron](https://theyvoteforyou.org.au/people/senate/nsw/doug_cameron) (Labor), which means they passed. ### What does the amendment do? Senator Cameron [explained that](https://www.openaustralia.org.au/senate/?gid=2018-02-15.197.1): > *These amendments try to deal with the lack of certainty that has been expressed by business, the vocational education system, academics and states and territories around the country. These are designed to make sure, if we've got labour market testing, that the labour market testing is understood, that it is genuine and that those employers that want to bring in overseas workers properly test the local market. It's to make sure that there are no suitably qualified and experienced local workers readily available who cannot get access to the employment to fill the positions.* ### Amendment text > *(1) Schedule 1, page 8 (after line 10), after item 14, insert:* > >> *14A At the end of subsection 140GBA(4)* >> >> *Add \"The period must not start earlier than 4 months before the nomination is received by the Minister.\".* > > *(2) Schedule 1, item 15, page 8 (after line 24), after subsection 140GBA(6), insert:* > >> *(6AA) The Minister must not make a determination under subsection(5) unless the Minister is reasonably satisfied that any advertising of the position undertaken in the determined manner:* >> >>> *(a) will be targeted in such a way that a significant proportion of suitably qualified and experienced Australian citizens or Australian permanent residents would be likely to be informed about the position; and* >>> >>> *(b) will set out any skills or experience requirements that are appropriate to the position.* >> >> *(6AB) A duration determined for the purposes of paragraph (6) (d) must be at least 4 weeks.*",
+   "stage": "In committee",
+   "ayes": 38,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 38,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-15/4"
+  },
+  {
+   "key": "federal-senate-5194",
+   "date": "2018-05-08",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2018-05-08.9.1) introduced by South Australian Senator [Stirling Griff](https://theyvoteforyou.org.au/people/senate/sa/stirling_griff). This means they'll now be included in the bill. ### What do these amendments do? Senator Griff [explained that](https://www.openaustralia.org.au/senate/?gid=2018-05-08.9.1): > *we have proposed an amendment for a review of the legislation in 18 months, to look at any unintended consequences on employers paying the levy. Allowing the levy to operate for a year before reviewing its operation should provide better information through which to fine-tune the program.* ### Amendment text > *(1) Clause 2, page 2 (table item 1, column 1), omit \"3\", substitute \"4\".* > > *(2) Page 3 (after line 5), after clause 3, insert:* > >> *4 Review of operation of amendments* >> >> *(1) The Minister must cause an independent review of the operation of the amendments made by this Act.* >> >> *(2) The review must:* >> >>> *(a) start as soon as practicable after 18 months after Royal Assent; and* >>> >>> *(b) be completed within 6 months.* >> >> *(3) The Minister must cause a written report about the review to be prepared.* >> >> *(4) The Minister must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the day on which the report is given to the Minister.* >> >> *(5) The report is not a legislative instrument.*",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-08/1"
+  },
+  {
+   "key": "federal-senate-5195",
+   "date": "2018-05-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-05-08.13.1) introduced by South Australian Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens), which means it failed. ### What did this amendment do? Senator Hanson-Young [explained that](https://www.openaustralia.org.au/senate/?gid=2018-05-08.13.1): > *The Greens amendment that I have moved exempts universities and registered training organisations from the Skilling Australians Fund charge. It does so because the Skilling Australians Fund is supposed to be about paying to train Australians to fill skills shortages. There's no economic rationale for charging trainers to fund trainers. Australia has no monopoly on world-class educators and researchers. We compete with the rest of the world for the best and brightest to create our own best and brightest. This bill, if it goes through unamended, will work against Australia's ability to do that. If we're going to make that harder, we're going to be short-changing ourselves.* ### Amendment text > *(1) Schedule 1 , item 12 , page 6 (after line 6) , after section 140ZM , insert:* > >> *140ZMA Exemption for higher education providers and registered training organisations* >> >> *Despite section 140ZM, the following are not liable to pay nomination training contribution charge:* >> >>> *(a) higher education providers (within the meaning of the Higher Education Support Act 2003);* >>> >>> *(b) registered training organisations (within the meaning of the National Vocational Education and Training Regulator Act 2011).*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "earliest": 6,
+    "member": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-08/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-355139",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Skilling Australians Fund) Bill 2017 introduces a levy on employers sponsoring overseas skilled workers, expected to raise $1.2 billion over four years to fund training for up to 300,000 Australians, with small businesses paying $1,200 per year per temporary worker and $3,000 per permanent worker, and larger businesses paying $1,800 and $5,000 respectively. The levy replaces the existing training benchmark system and includes amendments to standardise labour market testing."
+  },
+  {
+   "slug": "speech-355140",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-18",
+   "stage_hint": null,
+   "brief": "The Migration (Skilling Australians Fund) Charges Bill 2017 imposes a Skilling Australians Fund levy, with a charge limit of $8,000 for temporary visa nominations and $5,500 for permanent visa nominations in 2017–18, indexed to CPI, and the temporary visa levy is calculated at $1,800 per year for up to four years for large businesses."
+  },
+  {
+   "slug": "speech-358536",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The opposition moved to amend the Migration Amendment (Skilling Australians Fund) Bill 2017 and related charges bill, arguing the government failed to protect local jobs by not legislating strict labour market testing. Labor supported the skilled visa levy but criticised the government for cutting $2.8 billion from TAFE and skills training since 2013, for a 30% drop in government-funded training, and for failing to consult stakeholders before announcing the levy, which is expected to raise $1.2 billion."
+  },
+  {
+   "slug": "speech-358538",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Skilling Australians Fund) Bill 2017 is necessary to fund apprenticeships and reverse declines in trade training, imposing levies of $1,200–$1,800 per year for temporary overseas workers and $3,000–$5,000 one-off for permanent workers, aiming to create 300,000 apprenticeships over four years, and cited a 38% drop in apprentices in the Hinkler electorate from 2011 to 2016."
+  },
+  {
+   "slug": "speech-358540",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The bill adopts Labor's policy of using higher levies on temporary skilled visas to fund training, but the government has cut $2.8 billion from training while the fund raises only $1.2 billion, and the proposed labour market testing is weak and could be overridden by trade agreements."
+  },
+  {
+   "slug": "speech-358632",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Skilling Australians Fund) Bill 2017 does not go far enough to protect Australian jobs, citing a Tasmanian government project where a UK contractor brought in 44% overseas labour. They detailed Labor’s alternative policies, including stricter labour market testing, increased TAFE investment, and an apprentice bonus scheme, and noted 704 fewer apprentices in Braddon since the Abbott-Turnbull government was elected."
+  },
+  {
+   "slug": "speech-358635",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Skilling Australians Fund levy on employers using temporary skilled migrants but argued it was insufficient, calling for genuine labour market testing and greater investment in TAFE and vocational training, noting that apprenticeships had fallen by a third since 2013 and youth unemployment in some regions reached 20–25%."
+  },
+  {
+   "slug": "speech-358637",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-08",
+   "stage_hint": null,
+   "brief": "The speech criticised the Turnbull government's Migration Amendment (Skilling Australians Fund) Bill 2017 as a miserly and inadequate response to high unemployment and underemployment, arguing that a $10 per week levy on foreign workers would not sufficiently fund training and that labour market testing had been rorted. It supported Labor's amendment to establish an independent Australian Skills Authority instead."
+  },
+  {
+   "slug": "speech-358638",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Skilling Australians Fund) Bill 2017 and related charges bill will introduce a levy on short-term skilled visa sponsors, raising an estimated $1.2 billion to fund 300,000 apprenticeships and traineeships, and that enhanced labour market testing will prioritise Australian workers for jobs. He also stated that under the government, 400,000 jobs were created in the past year, working-age welfare recipients are at a 25-year low, and 457 visa numbers have decreased, contrasting with the previous Labor government."
+  },
+  {
+   "slug": "speech-358640",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-08",
+   "stage_hint": null,
+   "brief": "The government moved amendments to the Migration Amendment (Skilling Australians Fund) Bill 2017 to cap the civil penalty for underpayment of the nomination training contribution charge at 60 penalty units, currently $12,600. The amendments address Senate Scrutiny of Bills committee concerns and aim to ensure transparency and accountability in the Skilling Australians Fund."
+  },
+  {
+   "slug": "speech-358646",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that labour market testing should ensure Australians get jobs before temporary skilled migrants, and criticised the government's bill for removing specific testing requirements from the Migration Act without disclosing the replacement instrument."
+  },
+  {
+   "slug": "speech-359016",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The government's sudden 457 visa changes, made without consulting the tech sector, worsened longstanding skills shortages in the digital economy. Reports like *Australia 2030: prosperity through innovation* and *Tomorrow’s digitally enabled workforce* highlight the need for action, yet the government has cut education and ignored calls for overseas talent access, exemplified by Immigration Minister Peter Dutton's questioning of Atlassian's hiring practices."
+  },
+  {
+   "slug": "speech-359017",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has failed to provide details on mandatory labour market testing, which is needed to guarantee Australian workers priority for jobs in industries like hospitality, mining, meatworks, and construction. They urged support for Labor's amendments to the bill."
+  },
+  {
+   "slug": "speech-359020",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s 457 visa changes were ineffective, affecting only 8% of visas while leaving occupations like cooks and bricklayers open to overseas workers. They said the Skilling Australians Fund would raise $1.2 billion but cut $2.8 billion in skills funding, and called for enshrining labour market testing in legislation, challenging Coalition members for Dawson, Capricornia and Flynn to support the amendment."
+  },
+  {
+   "slug": "speech-359025",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government should table the legislative instrument for the Migration Amendment (Skilling Australians Fund) Bill 2017, so that parliament can assess whether it genuinely requires employers to offer jobs to Australians before using temporary migrant workers. They criticised the government’s record of opposing labour market testing and signing trade agreements that create loopholes, and urged Ministers Tudge and Dutton to accept Labor’s modest amendments."
+  },
+  {
+   "slug": "speech-361998",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-09",
+   "stage_hint": null,
+   "brief": "Labor successfully amended the Migration Amendment (Skilling Australians Fund) Bill 2018 to require employers to advertise jobs for at least four weeks, test the local labour market within four months before nomination, and avoid unrealistic skill requirements, ensuring local workers get first priority. Labor also highlighted $270 million in cuts to the Skilling Australians Fund in the Turnbull government's budget, arguing the fund's reliance on visa levies is flawed."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Skilling Australians Fund) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00038",
+   "assent_date": "2018-05-22"
+  }
+ ]
+}

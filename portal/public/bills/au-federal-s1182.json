@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-s1182",
+ "title": "Export Control Amendment (Banning Cotton Exports to Ensure Water Security) Bill 2019",
+ "short_title": "Export Control Amendment (Banning Cotton Exports to Ensure Water Security) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1182%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1182%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1182%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1182_ems_c6088a22-a97f-41ea-a1c0-29671222db1f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1182%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would prohibit exporting cotton grown in Australia to protect water and food supplies in the Murray-Darling Basin.",
+   "It would add a provision to the Export Control Act 1982 that, three years after it starts, regulations must treat Australian cotton as a banned export good.",
+   "The ban would not affect cotton produced for use within Australia."
+  ],
+  "changes": [
+   "The bill bans all exports of Australian-grown cotton.",
+   "The ban takes effect three years after the provision commences.",
+   "Cotton grown for domestic use is not affected."
+  ],
+  "affected": "Cotton growers, exporters and governments of the Murray-Darling Basin states and territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:29Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-374849",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

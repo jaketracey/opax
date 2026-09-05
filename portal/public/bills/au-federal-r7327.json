@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-r7327",
+ "title": "Appropriation Bill (No. 1) 2025-2026",
+ "short_title": "Appropriation Bill (No. 1) 2025-2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7327%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7327%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7327%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7327%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7327_ems_2b02f5c4-4eac-4a01-8f8b-dbd717f863d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7327%22",
+   "document_date": "2025-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-03-25",
+  "sentences": [
+   "This bill would take money from the Consolidated Revenue Fund to cover the government's day-to-day running costs.",
+   "The funding equals about seven-twelfths of the estimated yearly total for 2025-26, plus new budget measures and some extra spending already approved for the current financial year.",
+   "A separate bill covers the remaining five-twelfths, ensuring enough cash for the first five months of the next financial year."
+  ],
+  "changes": [
+   "Appropriates money for the ordinary annual services of government.",
+   "Provides seven-twelfths of the estimated 2025-26 annual appropriations plus 2025-26 Budget measures.",
+   "Includes appropriations for spending in the rest of 2024-25 agreed since the 2024-25 Additional Estimates."
+  ],
+  "affected": "The federal government's ordinary annual services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6261",
+ "title": "Commonwealth Registers Bill 2019",
+ "short_title": "Commonwealth Registers Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6261%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6261%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6261%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6261_ems_fa2e0932-8a97-48dd-bd6f-de42ba2fff9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6261%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "This bill is part of a package that would modernise Commonwealth business registers and introduce a director identification number requirement.",
+   "The minister would appoint an existing Commonwealth body as registrar, with powers largely set out in existing laws and data standards made by the registrar.",
+   "Directors would generally need to apply for a DIN before appointment, but transitional provisions give existing directors extra time and first‑year appointees 28 days to apply."
+  ],
+  "changes": [
+   "The package would modernise Commonwealth business registers to be flexible, technology neutral and governance neutral.",
+   "The package would introduce a requirement for directors of bodies registered under the Corporations Act or CATSI Act to obtain a director identification number.",
+   "The registrar would have powers to issue, cancel and reissue DINs, make data standards and administer related penalties."
+  ],
+  "affected": "Directors of bodies corporate registered under the Corporations Act or CATSI Act, and officials handling registrar-held information.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:20:47Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

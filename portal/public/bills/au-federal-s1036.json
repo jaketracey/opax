@@ -1,0 +1,100 @@
+{
+ "key": "au-federal-s1036",
+ "title": "Commonwealth Electoral Amendment (Political Donations and Other Measures) Bill 2016",
+ "short_title": "Commonwealth Electoral Amendment (Political Donations and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-03-02",
+ "originating_house": "senate",
+ "sponsor": "RHIANNON, Sen Lee",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10760",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1036%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1036%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1036%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1036%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1036%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1036%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1036%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1036_ems_e1fe28fc-dc6a-4471-8eab-ad0314803a82%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1036%22",
+   "document_date": "2016-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-03-02",
+  "sentences": [
+   "The bill would lower the threshold for disclosing political donations from over $10,000 to $1,000 and ban foreign donations.",
+   "It would require donors and recipients to file returns within 8 weeks after polling day and twice yearly, and treat related parties as one entity for the disclosure threshold.",
+   "The bill would also ban anonymous gifts over $50 and introduce new offences and higher penalties for breaches."
+  ],
+  "changes": [
+   "Reduces the disclosure threshold from more than $10,000 to $1,000.",
+   "Requires returns within 8 weeks of polling day for election-period gifts.",
+   "Requires biannual returns within 8 weeks after 31 December and 30 June.",
+   "Prevents donation splitting by treating related political parties as one entity.",
+   "Makes it unlawful to receive gifts of foreign property for parties, candidates, and some entities.",
+   "Extends the ban on anonymous gifts to all except those of $50 or less at public activities or private events."
+  ],
+  "affected": "Political parties, candidates, members of Senate groups, associated entities, and people incurring political expenditure.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:48:32Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,95 @@
+{
+ "key": "au-federal-r6781",
+ "title": "Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions) Bill 2021",
+ "short_title": "Climate Change (National Framework for Adaptation and Mitigation) (Consequential and Transitional Provisions) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-18",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": "(s) STEGGALL, Zali, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6781%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6781%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6781%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6781_ems_5d2b0b3b-e686-4ed5-9679-91df02c7738b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6781%22",
+   "document_date": "2021-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-18",
+  "sentences": [
+   "This bill would make changes to existing Commonwealth laws to support a new national framework for adapting to climate change and reducing emissions.",
+   "It would repeal the Climate Change Authority Act 2011 to create an independent Climate Change Commission that advises the government and parliament.",
+   "The bill would amend several Acts, including the Australian Securities and Investments Commission Act 2001 and the Carbon Credits (Carbon Farming Initiative) Act 2011, to align them with the new framework."
+  ],
+  "changes": [
+   "Repeals the Climate Change Authority Act 2011 to establish the Climate Change Commission.",
+   "Amends the Australian Securities and Investments Commission Act 2001 for consistent operation with the new framework.",
+   "Amends the Carbon Credits (Carbon Farming Initiative) Act 2011 for consistent operation with the new framework.",
+   "Amends the Clean Energy Regulator Act 2011 for consistent operation with the new framework.",
+   "Amends the Competition and Consumer Act 2010 for consistent operation with the new framework.",
+   "Amends the National Greenhouse and Energy Reporting Act 2007 for consistent operation with the new framework."
+  ],
+  "affected": "Commonwealth government agencies and entities, including the Climate Change Authority, the Australian Securities and Investments Commission, and the Clean Energy Regulator.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-413018",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The bill introduces mandatory climate risk disclosure for Commonwealth entities and establishes a Climate Change Commission to provide independent expert advice, replacing the Climate Change Authority. The speaker argued that the public sector is lagging behind private companies in reporting climate risks, citing legal precedents, international government actions, and the risk of higher lending costs and investment avoidance for Australia."
+  },
+  {
+   "slug": "speech-413019",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-18",
+   "stage_hint": null,
+   "brief": "The member seconded the Climate Change (National Framework for Adaptation and Mitigation) Bill 2021, arguing it supports regional Australia's economic future, and criticised the National Party for calling for $250 billion in subsidies for fossil fuel companies instead of funding regional services and renewable energy jobs."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,45 @@
+{
+ "key": "au-federal-alrc-5055",
+ "title": "Overseas Aid (Millennium Development Goals) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-06-26",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2013-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-26",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-825157",
+   "speaker": "Lee Rhiannon",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-06-26",
+   "stage_hint": null,
+   "brief": "The Overseas Aid (Millennium Development Goals) Bill 2013 was introduced to mandate Australia meet United Nations official development assistance targets and establish an Independent Commissioner on Aid Effectiveness."
+  }
+ ],
+ "acts": []
+}

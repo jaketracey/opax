@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r6564",
+ "title": "Fair Work Amendment (One in, All in) Bill 2020",
+ "short_title": "Fair Work Amendment (One in, All in) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-15",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-02-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6564%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6564%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6564%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6564_ems_4d5180b8-d7cc-42ba-a482-95b6a6e581e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6564%22",
+   "document_date": "2020-06-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-15",
+  "sentences": [
+   "The bill would let the Fair Work Commission handle disputes about whether a worker qualifies for the JobKeeper payment.",
+   "It would give the commission power to make rulings that enforce the rule requiring employers to nominate all eligible staff for the scheme.",
+   "The commission could not issue any order after 28 September 2020, when the JobKeeper scheme ends."
+  ],
+  "changes": [
+   "Gives the Fair Work Commission authority to resolve employee eligibility disputes for the JobKeeper payment.",
+   "Allows the commission to order that a particular worker qualifies for the payment.",
+   "Bars the commission from making orders after the JobKeeper scheme's end date of 28 September 2020."
+  ],
+  "affected": "Employees who believe their employer has not nominated them for the JobKeeper scheme, and employers participating in the scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

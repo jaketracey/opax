@@ -1,0 +1,161 @@
+{
+ "key": "au-federal-r5445",
+ "title": "Tax and Superannuation Laws Amendment (Norfolk Island Reforms) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (Norfolk Island Reforms) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-05-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-05-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5445_ems_cd00bdf0-3eba-49ce-bed5-e5d559463978%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5445%22",
+   "document_date": "2015-03-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00053",
+   "document_date": "2015-05-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-26",
+  "sentences": [
+   "This bill is part of a package that reforms governance on Norfolk Island and extends mainland social security, immigration, health and tax arrangements to the territory.",
+   "The package would abolish the Norfolk Island Legislative Assembly and establish an Advisory Council during an interim transition period, with a second phase starting on 1 July 2016 that applies New South Wales state law as Commonwealth law.",
+   "The explanatory memorandum does not specify which Acts this bill alone amends or when the interim transition period begins."
+  ],
+  "changes": [
+   "Abolishes the Norfolk Island Legislative Assembly and Executive Council.",
+   "Establishes an Advisory Council to advise the Administrator.",
+   "Confers legislative power on the Governor-General to make Ordinances for the territory.",
+   "Creates a statutory position of Executive Director to run the Norfolk Island Administration.",
+   "Gives the Commonwealth Minister overarching supervisory powers over the Administration.",
+   "Transfers powers and functions from Norfolk Island Ministers to the Commonwealth Minister."
+  ],
+  "affected": "Norfolk Island residents, the Norfolk Island Government, and the Commonwealth Government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-309196",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The Tax and Superannuation Laws Amendment (Norfolk Island Reforms) Bill 2015 will fully apply Australia’s income tax, Medicare Levy and superannuation guarantee system to Norfolk Island, with exceptions for indirect taxes such as GST, customs duty and excise duties. Transitional arrangements phase in the superannuation guarantee over 12 years and apply capital gains tax to gains accruing from 1 July 2016."
+  },
+  {
+   "slug": "speech-309197",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-26",
+   "stage_hint": null,
+   "brief": "The A New Tax System (Medicare Levy Surcharge-Fringe Benefits) Amendment Bill 2015 was moved for a second reading, making consequential amendments to the 1999 Act to support the repeal of Medicare levy exemptions provided for by the Norfolk Island Reforms Bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (Norfolk Island Reforms) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00053",
+   "assent_date": "2015-05-26"
+  }
+ ]
+}

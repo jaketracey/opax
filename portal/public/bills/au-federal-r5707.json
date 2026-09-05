@@ -1,0 +1,926 @@
+{
+ "key": "au-federal-r5707",
+ "title": "Budget Savings (Omnibus) Bill 2016",
+ "short_title": "Budget Savings (Omnibus) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-09-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5707_ems_dcc2f2b0-a669-41fb-a1c5-39dc81c15e9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5707_ems_09829908-eec8-4210-b967-aacc6567463c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5707_ems_d7b2cc45-9429-4534-952b-63cf78ef15a4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5707_ems_d481c999-e00d-43e9-99ec-214bb95c2ade%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5707%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00055",
+   "document_date": "2016-09-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4304",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "question": "Budget Savings (Omnibus) Bill 2016 - Consideration in Detail - Maintain Australian Renewable Energy Agency funding",
+   "stage": "Consideration in detail",
+   "ayes": 5,
+   "noes": 124,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 120,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-09-14/1"
+  },
+  {
+   "key": "federal-senate-4314",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org.au/senate/?gid=2016-09-15.62.13) introduced by Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson), which means it was unsuccessful. It would have amended the motion \"That this [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5707) be now read a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html)\" (if you read a bill for a second time then you're agreeing with its main idea). The amendment was: > *Leave out all words after \"That\", insert:* > *this bill be withdrawn and redrafted to provide for budget savings to be made in the areas of fuel tax credits, mandatory data retention, compulsory income management, and abolishing the Wind Farm Commissioner and reinvesting private health insurance rebates into the public health system; rather than those proposed which have a disproportionate impact on lower to middle income households, students, researchers, innovative companies and building clean energy infrastructure.*",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 13,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/6"
+  },
+  {
+   "key": "federal-senate-4315",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org.au/senate/?gid=2016-09-15.196.1) introduced by Greens Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert), which means it was unsuccessful. It would have amended the motion \"That this [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5707) be now read a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html)\" (if you read a bill for a second time then you're agreeing with its main idea). The amendment was: > *At the end of the motion, add* > *\", but the Senate expresses its deep distress and concern at the continued attempt by the Coalition Government to cut away Australia's social safety net, including cuts to the Clean Energy Supplement, Carers Allowance and other measures which will hurt the most vulnerable and disadvantaged.\"*",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 13,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/7"
+  },
+  {
+   "key": "federal-senate-4316",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "Budget Savings (Omnibus) Bill 2016 - Second Reading - ARENA funding",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 13,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/8"
+  },
+  {
+   "key": "federal-senate-4317",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "Budget Savings (Omnibus) Bill 2016 - Second Reading - Higher education funding",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 13,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/9"
+  },
+  {
+   "key": "federal-senate-4318",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "Budget Savings (Omnibus) Bill 2016 - Second Reading - Financial arrangements of ARENA",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 53,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 14,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/10"
+  },
+  {
+   "key": "federal-senate-4319",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "Budget Savings (Omnibus) Bill 2016 - Second Reading - Agree to the main idea",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 13,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/11"
+  },
+  {
+   "key": "federal-senate-4320",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "Budget Savings (Omnibus) Bill 2016 - in Committee - ARENA",
+   "stage": "In committee",
+   "ayes": 44,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 12,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/12"
+  },
+  {
+   "key": "federal-senate-4321",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/senate/?gid=2016-09-15.206.2) introduced by Senator [Derryn Hinch](https://theyvoteforyou.org.au/people/senate/victoria/derryn_hinch), which means it was unsuccessful. The motion related to [Australian Renewable Energy Agency](https://en.wikipedia.org/wiki/Australian_Renewable_Energy_Agency) and was part of Senator Hinch's attempt \"[to save ARENA in its entirety](http://www.openaustralia.org.au/senate/?gid=2016-09-15.206.2)\". ### Motion text > *(1) Page 2, clause 2 (table item 6), omit \"Schedules 5 and 6\", substitute \"Schedule 6\".*",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 10,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/13"
+  },
+  {
+   "key": "federal-senate-4322",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?gid=2016-09-15.353.1) to leave schedule 24 and table item 26 in clause 2 as they are. In parliamentary language, the majority voted for those parts to \"stand as printed\". The motion was put after Senator Jacqui Lambie moved a [motion](http://www.openaustralia.org.au/senate/?gid=2016-09-15.291.1) to oppose them. The parts related to military rehabilitation and compensation. When proposing to oppose them, Senator Lambie explained: > *What the government is proposing under the single appeal pathways, even though it has been amended by Labor, still means that this bill denies veterans a right to legal representation when forced to go against a government body stacked with government lawyers. Important decisions about veterans' entitlements are being made in situations where a veteran and advocate walk into a room packed with government employees holding law degrees.* ### What does this bill do? Learn more about this [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5707) in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd007).",
+   "stage": "In committee",
+   "ayes": 40,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 11,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/14"
+  },
+  {
+   "key": "federal-senate-4323",
+   "date": "2016-09-15",
+   "house": "senate",
+   "question": "Budget Savings (Omnibus) Bill 2016 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 41,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 11,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-09-15/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332746",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The Budget Savings (Omnibus) Bill 2016 and explanatory memorandum were presented."
+  },
+  {
+   "slug": "speech-332893",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The revised explanatory memorandum for the Budget Savings (Omnibus) Bill 2016 was tabled, with savings figures updated from the original Treasury-prepared version."
+  },
+  {
+   "slug": "speech-333809",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The cooperative process between government and opposition led to a bill achieving larger savings than initially proposed, while protecting vulnerable people on Newstart, pensions, and disability payments, opposing $100,000 university degrees and cuts to higher education, and preserving the Child Dental Benefits Schedule and carbon pollution reduction efforts."
+  },
+  {
+   "slug": "speech-333810",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "Labor opposed cuts to the clean energy supplement for pensioners, people with disability, carers, and job seekers, and cuts to income support for those in psychiatric confinement; after negotiations these measures were amended or removed from the bill. The party will oppose any future attempts to cut the supplement, citing that a single mother on Newstart would lose $220 a year and a pensioner couple $550 a year."
+  },
+  {
+   "slug": "speech-333816",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The Budget Savings (Omnibus) Bill 2016 secures an additional $800 million over five years for the Australian Renewable Energy Agency, preserving its research and demonstration programs, and the opposition has agreed to bipartisan discussions on accelerating clean energy transition."
+  },
+  {
+   "slug": "speech-333817",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Budget Savings (Omnibus) Bill 2016 should be supported, but praised Labor for protecting the Child Dental Benefits Schedule—which has helped one million children—and the National Partnership Agreement on Adult Public Dental Services—which treated 400,000 adults—from being replaced by a scheme that would add five million children to public dental waiting lists."
+  },
+  {
+   "slug": "speech-333818",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Budget Savings (Omnibus) Bill 2016 is superior to the original because it delivers larger savings, is fairer to vulnerable people, and invests in renewable energy. They also criticised the government's $50 billion tax giveaway to multinational corporations and called for further fair savings measures to protect the AAA credit rating."
+  },
+  {
+   "slug": "speech-333819",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the amended Budget Savings (Omnibus) Bill 2016, arguing that the government’s tripled deficit and 20% cut in infrastructure investment were mismanaged, and that the earlier proposal to abolish the energy supplement would have unfairly cut $4–$8 per week from the lowest-income recipients. The negotiated outcome preserved support for pensioners and vulnerable groups and secured $800 million over five years for the Australian Renewable Energy Agency (ARENA)."
+  },
+  {
+   "slug": "speech-333820",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The Budget Savings (Omnibus) Bill 2016 is a bad bill that attacks low-income earners, children's dental, and clean energy, with Labor agreeing to cut $517 million from the Australian Renewable Energy Agency (ARENA)—nearly all in the next three years—while fairer alternatives like ending fuel tax credits for wealthy mining companies or reducing superannuation tax breaks for high earners were ignored."
+  },
+  {
+   "slug": "speech-333823",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Budget Savings (Omnibus) Bill 2016, arguing it cuts over half a billion dollars from ARENA, reduces family tax benefits and supplements, and fails to secure dental care for low-income children, while proposing alternative revenue measures such as a superprofits tax on banks and higher taxes on high earners, and criticising spending on asylum seeker detention and defence build-up."
+  },
+  {
+   "slug": "speech-333825",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Budget Savings (Omnibus) Bill 2016 while criticising the $500 million cut to the Australian Renewable Energy Agency (ARENA) and calling for changes to its funding model, including repayable grants and equity stakes. They also argued for an 18-month delay to the repeal of student start-up scholarships and defended continued carbon tax compensation for low-income recipients, citing concerns for disadvantaged communities and economic demand."
+  },
+  {
+   "slug": "speech-333826",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The Turnbull government argued the Budget Savings (Omnibus) Bill 2016 would deliver $6.3 billion in savings and reduce debt by $30 billion over the medium term, thanking the shadow Treasurer and Senator Cormann for the bipartisan agreement."
+  },
+  {
+   "slug": "speech-333931",
+   "speaker": "Kevin Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-334173",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The House passed the Fair Work Amendment (Respect for Emergency Services Volunteers) Bill, which removes clauses from Victoria’s CFA enterprise agreement that gave unions power over volunteer firefighters. The speaker also noted the passage of the Budget Savings (Omnibus) Bill, saving $6.3 billion, and reported 3.3% economic growth with over 200,000 jobs created in the past year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Budget Savings (Omnibus) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00055",
+   "assent_date": "2016-09-16"
+  }
+ ]
+}

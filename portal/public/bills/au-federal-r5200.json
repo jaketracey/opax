@@ -1,0 +1,283 @@
+{
+ "key": "au-federal-r5200",
+ "title": "Safety, Rehabilitation and Compensation Legislation Amendment Bill 2014",
+ "short_title": "Safety, Rehabilitation and Compensation Legislation Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5200_ems_8bc20bf3-728a-46bb-a057-716680b4715a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5200%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "This bill would cut red tape for businesses covered by the Comcare workers' compensation scheme.",
+   "It would let the regulator grant a single self-insurance licence to a group of related companies instead of requiring each to apply separately.",
+   "The government says the changes would save the economy $32.8 million each year for the next 10 years."
+  ],
+  "changes": [
+   "Introduces a 'national employer' test for corporations to join the Comcare scheme.",
+   "Allows the Commission to issue group licences to related companies.",
+   "Removes the need for the Minister to declare a corporation eligible for a self-insurance licence.",
+   "Extends work health and safety law to new self-insurers.",
+   "Excludes compensation for injuries during breaks away from the workplace or caused by serious misconduct."
+  ],
+  "affected": "Australian Government and ACT employees, employees of licensed private corporations, and corporations seeking self-insurance under the Comcare scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3618",
+   "date": "2014-11-26",
+   "house": "representatives",
+   "question": "Keith Pitt It is my great pleasure to rise to speak in the debate on the Safety, Rehabilitation and Compensation Legislation Amendment Bill 2014. Before we got to the details of the bill, we had the unfortunate circumstance of sitting through the contributions from the member for Griffith and the member for Corio last night. I would like to make some comments on the contributions from that side of the chamber. Certainly, the proposition put forward that Comcare simply do not have enough inspectors to enforce this legislation is plain wrong. My understanding is that, effectively, every state has some accreditors and inspectors from the state population who can enforce not only this legislation, but the state legislation and a whole pile of other things—including electrical safety acts and a wide range of legislation, including Comcare legislation. I wonder how those opposite think that this has been done for the last 15 years or more. Quite simply, we have public servants; we have federal activities; we have federal ownership of assets all over this country. Comcare has been providing those services for well over a decade, to the best of my knowledge. So it is quite simply outrageous that opposition members make these claims. I will now turn to the bill itself. This is a bill which effectively allows employers who operate over multiple jurisdictions to insure through one agency, which is Comcare. It is about reducing red tape. As someone who has worked in the industry for many, many years, I know that it is exceptionally difficult for companies to cross state borders and operate across a range of legislation. I will give you some very simple examples. Currently—and these are some changes that we have just made—if you wish to construct a building which has a contribution from the Commonwealth valued at over $5 million you need to be a construction firm which is accredited with the Office of the Federal Safety Commissioner. Unfortunately, to gain an accreditation with",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-11-26/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-301742",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301743",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301977",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301978",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301979",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301980",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301983",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302248",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302251",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302330",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302332",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302333",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-302338",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

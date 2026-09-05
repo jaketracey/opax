@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r6228",
+ "title": "Parliamentary Service Amendment (Post-election Report) Bill 2018",
+ "short_title": "Parliamentary Service Amendment (Post-election Report) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2019-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6228_ems_217700bd-af4d-4fdc-8a5a-6ba23a67eedd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6228%22",
+   "document_date": "2018-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00004",
+   "document_date": "2019-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-12-05",
+  "sentences": [
+   "This bill would push back the date by which the Parliamentary Budget Office must publish its post-election report on the cost of parties' promises.",
+   "It would amend the Parliamentary Service Act 1999 to give the PBO more time to prepare the report after a federal election.",
+   "The change follows a 2017 independent review that also recommended expanding the report to include medium-term financial impacts and policies of smaller parties, but those changes do not need legislation."
+  ],
+  "changes": [
+   "The bill changes the deadline for publishing the post-election report.",
+   "It amends the Parliamentary Service Act 1999 to allow more time for the report's preparation.",
+   "The delayed publication is intended to accommodate the expanded scope of the report and to increase its visibility closer to when Parliament resumes."
+  ],
+  "affected": "The Parliamentary Budget Office and political parties with five or more parliamentarians are affected, as well as smaller parties that choose to be included in the report.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:21:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-374016",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-12-05",
+   "stage_hint": null,
+   "brief": "The bill amends the Parliamentary Service Act to delay the release of the Parliamentary Budget Office's post-election report on election commitments, allowing more time to include medium-term financial impacts and policies from parties with fewer than five members, and to improve visibility by timing it closer to the resumption of parliament."
+  },
+  {
+   "slug": "speech-374843",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "Labor will support the Parliamentary Service Amendment (Post-election Report) Bill 2018, extending the deadline for the Parliamentary Budget Office’s post-election report to either 30 days after the caretaker period or seven days before the first sitting day, whichever is later. The speaker also argued that the Abbott-Turnbull-Morrison government has mismanaged the budget, accruing over half of Australia’s $360 billion net debt, and noted that Labor established the Parliamentary Budget Office to provide independent, non-partisan policy costings."
+  },
+  {
+   "slug": "speech-374846",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-13",
+   "stage_hint": null,
+   "brief": "The Parliamentary Service Amendment (Post-Election Report) Bill was argued to extend the timeframe and scope for the Parliamentary Budget Office’s post-election report, allowing inclusion of medium-term financial impacts and policies from parties with fewer than five members. The speaker thanked the Prime Minister, Treasurer and finance minister, and claimed the government inherited a fiscal black hole in 1996 and a structural deficit in 2013, but has brought the budget back to surplus."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Service Amendment (Post-election Report) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00004",
+   "assent_date": "2019-03-01"
+  }
+ ]
+}

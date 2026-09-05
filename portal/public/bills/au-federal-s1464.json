@@ -1,0 +1,218 @@
+{
+ "key": "au-federal-s1464",
+ "title": "Members of Parliament (Staff) Amendment (Providing Certainty and Improving Integrity) Bill 2025",
+ "short_title": "Members of Parliament (Staff) Amendment (Providing Certainty and Improving Integrity) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-25",
+ "originating_house": "senate",
+ "sponsor": "CASH, Sen Michaelia",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10707",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-09-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1464%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1464%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1464_ems_958fb1bc-e1b4-46cb-8aa9-c8b2d79f491e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1464%22",
+   "document_date": "2025-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-25",
+  "sentences": [
+   "This bill would set statutory minimum staffing levels for parliamentarians who are not part of the government, and prevent the executive from lowering those levels later.",
+   "It would entrench these minimums in the Members of Parliament (Staff) Act 1984, with the Prime Minister allowed to raise but not reduce them through determinations.",
+   "Opposition parties would get the larger of 110 personal staff or 22 percent of the government's allocation, while other non-government groups get smaller guaranteed numbers."
+  ],
+  "changes": [
+   "The bill would guarantee minimum staffing entitlements in three categories: opposition, other non-government parliamentarians, and independents or minority party members.",
+   "It would remove the executive's power to reduce those minima by later determination.",
+   "It would clarify that the Prime Minister may only increase these minimum entitlements."
+  ],
+  "affected": "Non-government parliamentarians, including opposition parties, minor parties, and independents, are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9750",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1464_amend_9e1372b8-170d-4a6b-a7a7-202aa02d88f8%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the wording below will be added to the usual motion. These sorts of motions do not make any legal changes of their own but are politically influential because they represent the will of the Senate. ### Amendment text > *At the end of the motion, add “, but the Senate calls on the Government to work with all elected groups and individuals in the Parliament to develop a fair and independent staffing model for allocating personal staff that reflects the diversity of representation, as elected by the Australian people, and addresses staff wellbeing and sustainability of workload.”*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/1"
+  },
+  {
+   "key": "federal-senate-9751",
+   "date": "2025-09-03",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2025-09-03.8.1) to pass the bill in the Senate. In parliamentary jargon, they voted to read the bill for a third time. ### What does the bill do? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fs1464_ems_958fb1bc-e1b4-46cb-8aa9-c8b2d79f491e%22;rec=0), which is a document prepared by the parties introducing the bill (Liberal Party, United Australia Party, Pauline Hanson's One Nation Party and Australia's Voice): > *This Bill amends the Members of Parliament (Staff) Act 1984 to place statutory minimum staffing guarantees for non-government parliamentarians and to remove the power of the executive to reduce those minima by later determination.* > > *This Bill ensures that all members of Parliament—regardless of political affiliation—have the basic staffing support necessary to do their job, and provides for minimum staffing entitlements in three categories.* > > *First, it provides that Opposition parties will be entitled to at least 110 personal staff (non‑ministerial) or 22 per cent of the Government’s allocation, whichever is greater. This recognises the vital role of the Opposition in holding the Government to account. It also ensures that the proportion of senior staff available to the Opposition reflects that of the Government’s own staffing structure.* > > *Second, the Bill provides that a non‑government party with 8 or more parliamentarians must be allocated at least 25 personal staff, or 5 per cent of the Government’s total allocation, whichever is greater.* > > *Third, the Bill guarantees that independent parliamentarians and parliamentarians who are members of minority parties—where the party has fewer than 8 parliamentarians—must receive at least three personal staff, including one classified as a Senior Adviser.* > > *The Bill also clarifies th",
+   "stage": "Third reading",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-09-03/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1196198",
+   "speaker": "Wendy Askew",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-08-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,613 @@
+{
+ "key": "au-federal-r7316",
+ "title": "Early Childhood Education and Care (Three Day Guarantee) Bill 2025",
+ "short_title": "Early Childhood Education and Care (Three Day Guarantee) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2025-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7316_ems_9b17ca09-d56b-44c4-b56b-c29fc25df82d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7316%22",
+   "document_date": "2025-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00012",
+   "document_date": "2025-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-9521",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-06.28.1) to an [original motion](https://www.openaustralia.org.au/senate/?gid=2025-02-06.27.1), which means it was unsuccessful. ### Amendment text > *Omit \"be referred immediately to the Education and Employment Legislation Committee for inquiry and report by 21 March 2025\", substitute \"not be referred to a committee\".* ### Original motion text > *At the end of the motion, add: \"and the [Early Childhood Education and Care (Three Day Guarantee) Bill 2025](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7316) be referred immediately to the Education and Employment Legislation Committee for inquiry and report by 21 March 2025\".*",
+   "stage": "Committee motion",
+   "ayes": 14,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/3"
+  },
+  {
+   "key": "federal-senate-9522",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2025-02-06.27.1) introduced by Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal), which means it was successful and the bill will go to the relevant Committee for report. ### Motion text > *At the end of the motion, add: \"and the [Early Childhood Education and Care (Three Day Guarantee) Bill 2025](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7316) be referred immediately to the [Education and Employment Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Education_and_Employment/ThreeDayGuarantee) for inquiry and report by 21 March 2025\".*",
+   "stage": "Committee motion",
+   "ayes": 29,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/4"
+  },
+  {
+   "key": "federal-representatives-9603",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "question": "Early Childhood Education and Care (Three Day Guarantee) Bill 2025 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/5"
+  },
+  {
+   "key": "federal-representatives-9604",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "question": "Early Childhood Education and Care (Three Day Guarantee) Bill 2025 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 88,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/6"
+  },
+  {
+   "key": "federal-representatives-9605",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2025-02-13.45.1) introduced by Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor), which means it was successful. ### Motion text > *That [standing order 43(a)](https://www.aph.gov.au/-/media/05_About_Parliament/53_HoR/532_PPP/Standing_Orders/Chapter_6.pdf) be suspended until the conclusion of proceedings on the bill.* Standing orders are the usual procedural rules of parliament. ### Standing order 43 > *43 Members’ statements* > > *...* > > *(c) During these periods, when called on by the Chair, a Member, but not a Minister (or Parliamentary Secretary), may make a statement for no longer than 90 seconds.*",
+   "stage": "Second reading",
+   "ayes": 91,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 11,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/7"
+  },
+  {
+   "key": "federal-senate-9618",
+   "date": "2025-02-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2025-02-13.53.2) introduced by Victorian Senator [Steph Hodgins-May](https://theyvoteforyou.org.au/people/senate/victoria/steph_hodgins-may) (Greens), which means it was successful. ### Motion text > *That—* > > *(a) immediately after a message from the House of Representatives is reported in relation to the [Early Childhood Education and Care (Three Day Guarantee) Bill 2025](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7316), the questions on all stages of the bill be put;* > > *(b) paragraph (a) operate as a limitation of debate under standing order 142;* > > *(c) divisions may take place for the purposes of the bill notwithstanding anything contained in the standing orders; and* > > *(d) to avoid doubt, the bill may be considered before the Education and Employment Legislation Committee presents its report on its inquiry into the provisions of the bill, and the inquiry may proceed notwithstanding the passage of the bill.*",
+   "stage": "Business motion",
+   "ayes": 35,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 3
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 9,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-13/13"
+  },
+  {
+   "key": "federal-senate-9624",
+   "date": "2025-02-13",
+   "house": "senate",
+   "question": "Early Childhood Education and Care (Three Day Guarantee) Bill 2025 - First Reading - Put the question",
+   "stage": "First Reading",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-13/19"
+  },
+  {
+   "key": "federal-senate-9625",
+   "date": "2025-02-13",
+   "house": "senate",
+   "question": "Early Childhood Education and Care (Three Day Guarantee) Bill 2025 - First Reading - Suspend the usual rules",
+   "stage": "First Reading",
+   "ayes": 27,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-13/20"
+  },
+  {
+   "key": "federal-senate-9626",
+   "date": "2025-02-13",
+   "house": "senate",
+   "question": "Early Childhood Education and Care (Three Day Guarantee) Bill 2025 - Second Reading - Agree with the main idea of the bill",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-13/21"
+  },
+  {
+   "key": "federal-senate-9627",
+   "date": "2025-02-13",
+   "house": "senate",
+   "question": "Early Childhood Education and Care (Three Day Guarantee) Bill 2025 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-13/22"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Early Childhood Education and Care (Three Day Guarantee) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00012",
+   "assent_date": "2025-02-20"
+  }
+ ]
+}

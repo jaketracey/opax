@@ -1,0 +1,682 @@
+{
+ "key": "au-federal-r7130",
+ "title": "Australian Research Council Amendment (Review Response) Bill 2023",
+ "short_title": "Australian Research Council Amendment (Review Response) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2024-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7130_ems_ee3bc382-3023-4444-ad38-5e7797e881c2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7130%22",
+   "document_date": "2023-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00008",
+   "document_date": "2024-03-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-29",
+  "sentences": [
+   "This bill would change the Australian Research Council Act to implement recommendations from a review of the ARC.",
+   "It would create an ARC Board appointed by the Minister for Education that would oversee the agency and appoint its chief executive.",
+   "The capped special appropriation for research funding would be replaced with an annual appropriation, removing the need to annually update funding caps by legislative amendment."
+  ],
+  "changes": [
+   "Clarify the ARC's purpose and functions in the Act.",
+   "Establish an ARC Board to strengthen governance and accountability.",
+   "Give the Board power to approve grants, except for designated research programs which the Minister would approve.",
+   "Allow the Minister to reject or terminate grants on security, defence or international relations grounds.",
+   "Replace the capped special appropriation with an annual appropriation for research funding.",
+   "Remove the requirement to split funding between categories of research programs."
+  ],
+  "affected": "The Australian Research Council, universities, researchers, and organisations receiving ARC grants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8646",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2024-02-07.36.8) to agree with the bill's main idea. In parliamentary jargon, they voted to read the bill for a second time. This means our MPs can now discuss the bill in more detail. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd37) (which is a document prepared by the parliamentary library): > * *The Australian Research Council Amendment (Review Response) Bill 2023 (the Bill) amends the Australian Research Council Act 2001 (ARC Act) to make changes to the Australian Research Council’s (ARC) purpose, oversight and funding arrangements.* > > * *The Bill inserts a revised objects provision into the ARC Act, with the aim of establishing a clearer statement of the ARC’s purpose.* > > * *The Bill establishes an ARC Board as the accountable authority of the ARC. The Board will have skills-based appointees, First Nations representation, and a representative of regional, rural and remote Australia. The Bill devolves the appointment process for the Chief Executive Officer to the Board, in consultation with the Minister.* > > * *The Bill makes the Board responsible for providing advice to the Minister on funding rules (grant guidelines), with approved funding rules now subject to disallowance.* > > * *The Board will also have responsibility for approving spending on research programs under funding rules, including grants within the National Competitive Grants Program. The Minister will retain the ability to approve grants for designated research programs, which currently include ARC Centres of Excellence, Industrial Transformation Training Centres and Industrial Transformation Research Hubs. The Minister also retains the right to direct the ARC to not fund a research proposal or to recover funds from previously approved research grants based on security, defence or international relations concerns.",
+   "stage": "Report from Federation Chamber",
+   "ayes": 89,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-07/2"
+  },
+  {
+   "key": "federal-senate-8731",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-03-18.76.4) to agree with the bill's main idea. In parliamentary jargon, they voted to read the bill for a second time. This means our senators can now discuss the bill in more detail. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd37) (which is a document prepared by the parliamentary library): > * *The Australian Research Council Amendment (Review Response) Bill 2023 (the Bill) amends the Australian Research Council Act 2001 (ARC Act) to make changes to the Australian Research Council’s (ARC) purpose, oversight and funding arrangements.* > > * *The Bill inserts a revised objects provision into the ARC Act, with the aim of establishing a clearer statement of the ARC’s purpose.* > > * *The Bill establishes an ARC Board as the accountable authority of the ARC. The Board will have skills-based appointees, First Nations representation, and a representative of regional, rural and remote Australia. The Bill devolves the appointment process for the Chief Executive Officer to the Board, in consultation with the Minister.* > > * *The Bill makes the Board responsible for providing advice to the Minister on funding rules (grant guidelines), with approved funding rules now subject to disallowance.* > > * *The Board will also have responsibility for approving spending on research programs under funding rules, including grants within the National Competitive Grants Program. The Minister will retain the ability to approve grants for designated research programs, which currently include ARC Centres of Excellence, Industrial Transformation Training Centres and Industrial Transformation Research Hubs. The Minister also retains the right to direct the ARC to not fund a research proposal or to recover funds from previously approved research grants based on security, defence or international relations con",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/10"
+  },
+  {
+   "key": "federal-senate-8732",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "Australian Research Council Amendment (Review Response) Bill 2023 - in Committee - Designated research programs",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/11"
+  },
+  {
+   "key": "federal-senate-8733",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "Australian Research Council Amendment (Review Response) Bill 2023 - in Committee - Designated research programs",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/12"
+  },
+  {
+   "key": "federal-senate-8734",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-03-18.107.1) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens), which means it failed. ### What does this amendment do? Senator Thorpe [explained that](https://www.openaustralia.org.au/senate/?gid=2024-03-18.107.1): > *This amendment is very simple. It gives full effect to recommendation 6 of the review, which states that the board must comprise members with:* > >> *… a combination of skills, experience, and perspectives relevant to the functions of the ARC across the spectrum of ARC disciplines, Aboriginal and Torres Strait Islander leadership, research administration and evaluation, and university industry partners.* > > *Numerous submissions and stakeholders called for measures to ensure the board is comprised of individuals from a range of academic disciplines. While I endorse the existing provisions requiring a First Nations member and geographical diversity, the diversity of the general community remains open to interpretation and does not guarantee that the range of academic disciplines are represented on the board.* ### Amendment text > *(1) Schedule 2, item 10, page 9 (line 15), at the end of subsection 12(4), add:* > > *; and (e) ensure that the membership of the Board reflects a diversity of discipline areas to the extent that is reasonably practicable.*",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/13"
+  },
+  {
+   "key": "federal-senate-8735",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "Australian Research Council Amendment (Review Response) Bill 2023 - in Committee - Removing international relations veto",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/14"
+  },
+  {
+   "key": "federal-representatives-8775",
+   "date": "2024-03-21",
+   "house": "representatives",
+   "question": "The majority voted in favour of agreeing with the [Senate amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7130_sched_14bcf6a7-e49a-4362-a9cd-41ebfffd5e02%22;rec=0), which means the bill in its final form has been agreed to in both houses of parliament and so will become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd37) (which is a document prepared by the parliamentary library): > * *The Australian Research Council Amendment (Review Response) Bill 2023 (the Bill) amends the Australian Research Council Act 2001 (ARC Act) to make changes to the Australian Research Council’s (ARC) purpose, oversight and funding arrangements.* > > * *The Bill inserts a revised objects provision into the ARC Act, with the aim of establishing a clearer statement of the ARC’s purpose.* > > * *The Bill establishes an ARC Board as the accountable authority of the ARC. The Board will have skills-based appointees, First Nations representation, and a representative of regional, rural and remote Australia. The Bill devolves the appointment process for the Chief Executive Officer to the Board, in consultation with the Minister.* > > * *The Bill makes the Board responsible for providing advice to the Minister on funding rules (grant guidelines), with approved funding rules now subject to disallowance.* > > * *The Board will also have responsibility for approving spending on research programs under funding rules, including grants within the National Competitive Grants Program. The Minister will retain the ability to approve grants for designated research programs, which currently include ARC Centres of Excellence, Industrial Transformation Training Centres and Industrial Transformation Research Hubs. The Minister also retains the right to direct the ARC to not fund a research proposal or to recove",
+   "stage": "Consideration of Senate message",
+   "ayes": 82,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 132,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-21/6"
+  },
+  {
+   "key": "federal-senate-8777",
+   "date": "2024-03-21",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) and (2) on sheet 2396](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7130_amend_a80451f0-a998-400f-aff1-494305e36b68%22;rec=0), which were moved in the name of NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens). This means the amendments failed. ### Amendment text > *(1) Schedule 3, item 6, page 35 (line 16), at the end of subsection 59(3), add “, but section 42 (disallowance) of the Legislation Act 2003 does not apply to the rules”.* > > *(2) Schedule 3, item 6, page 35 (line 31), at the end of subsection 60(4), add “, but section 42 (disallowance) of the Legislation Act 2003 does not apply to the variation”.*",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-21/2"
+  },
+  {
+   "key": "federal-senate-8778",
+   "date": "2024-03-21",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (3) on sheet 2402](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7130_amend_af512cef-ab0e-4387-8b19-370e3845b4bd%22;rec=0), which were moved in the name of NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens). This means the amendments failed. ### Amendment text > *(1) Schedule 3, item 6, page 35 (after line 12), after subsection 59(2), insert:* > >> *(2A) If the Minister makes such a request, the Minister must prepare a written statement setting out:* >> >>> *(a) the Minister’s specific concerns with the rules that the Board gave to the Minister for approval; and* >>> >>> *(b) details of the changes to the rules, if any, that the Minister requested.* >> >> *(2B) The statement must be tabled in each House of the Parliament with the rules to which the statement relates.* >> >> *Note: As approved rules are a legislative instrument, they are tabled in each House of the Parliament under section 38 of the Legislation Act 2003.* > > *(2) Schedule 3, item 6, page 35 (after line 26), after subsection 60(3), insert:* > >> *(3A) If the Minister makes such a request, the Minister must prepare a written statement setting out:* >> >>> *(a) the Minister’s specific concerns with the proposed variation that the Board gave to the Minister for approval; and* >>> >>> *(b) details of the changes to the proposed variation, if any, that the Minister requested.* >> >> *(3B) The statement must be tabled in each House of the Parliament with the variation to which the statement relates.* >> >> *Note: As approved variations are a legislative instrument, they are tabled in each House of the Parliament under section 38 of the Legislation Act 2003.* > > *(3) Schedule 4, item 2, page 40 (before line 18), before paragraph 65A(d), insert:* > >> *(cb) include copies of any written statements prepared under subs",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-21/3"
+  },
+  {
+   "key": "federal-senate-8779",
+   "date": "2024-03-21",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-03-21.13.1) \"*that the bill as amended be agreed to.*\" In other words, they voted to agree with the bill as it currently stands, including the amendments previously agreed with. This means they can now consider whether to pass the bill in the Senate. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd37) (which is a document prepared by the parliamentary library): > * *The Australian Research Council Amendment (Review Response) Bill 2023 (the Bill) amends the Australian Research Council Act 2001 (ARC Act) to make changes to the Australian Research Council’s (ARC) purpose, oversight and funding arrangements.* > > * *The Bill inserts a revised objects provision into the ARC Act, with the aim of establishing a clearer statement of the ARC’s purpose.* > > * *The Bill establishes an ARC Board as the accountable authority of the ARC. The Board will have skills-based appointees, First Nations representation, and a representative of regional, rural and remote Australia. The Bill devolves the appointment process for the Chief Executive Officer to the Board, in consultation with the Minister.* > > * *The Bill makes the Board responsible for providing advice to the Minister on funding rules (grant guidelines), with approved funding rules now subject to disallowance.* > > * *The Board will also have responsibility for approving spending on research programs under funding rules, including grants within the National Competitive Grants Program. The Minister will retain the ability to approve grants for designated research programs, which currently include ARC Centres of Excellence, Industrial Transformation Training Centres and Industrial Transformation Research Hubs. The Minister also retains the right to direct the ARC to not fund a research proposal or to recover funds from previously approved researc",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-21/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-830123",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2024-02-06",
+   "stage_hint": null,
+   "brief": "The speaker announced that five bills—the Customs Tariff Amendment (Incorporation of Proposals) Bill (No. 2) 2023, the COAG Legislation Amendment Bill 2023, the Australian Research Council Amendment (Review Response) Bill 2023, the National Redress Scheme for Institutional Child Sexual Abuse Amendment Bill 2023, and the Modern Slavery Amendment (Australian Anti-Slavery Commissioner) Bill 2023—are referred to the Federation Chamber for further debate."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Research Council Amendment (Review Response) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00008",
+   "assent_date": "2024-03-28"
+  }
+ ]
+}

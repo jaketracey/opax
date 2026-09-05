@@ -1,0 +1,69 @@
+{
+ "key": "au-federal-r7439",
+ "title": "Prime Agricultural Land Protection Bill 2026",
+ "short_title": "Prime Agricultural Land Protection Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-02",
+ "originating_house": "representatives",
+ "sponsor": "PENFOLD, Alison, MP",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "11046",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7439%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7439%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7439_ems_9d4a185a-5844-47f6-82e4-8374018a252e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7439%22",
+   "document_date": "2026-03-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-03-02",
+  "sentences": [
+   "This bill would create a nationwide system to safeguard Australia's best farmland from threats like mining, housing, energy projects and foreign investment.",
+   "It would set up an independent Agriculture Commissioner to resolve disputes, oversee community acceptance processes and enforce the rules.",
+   "The bill would restrict federal funding for projects that harm farm productivity or enable unwanted foreign ownership."
+  ],
+  "changes": [
+   "Creates a national map that sorts farmland into tiers based on how productive it is.",
+   "Limits Commonwealth money for projects that damage agricultural output or lead to foreign control.",
+   "Gives farmers stronger rights around housing, moving help and dealing with project effects.",
+   "Sets up an Agriculture Commissioner with independent powers to handle disputes and monitor compliance.",
+   "Provides for compensation when the law takes property without fair payment."
+  ],
+  "affected": "Farmers, agricultural landowners, foreign investors, and Commonwealth agencies that fund projects on agricultural land.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:17:28Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

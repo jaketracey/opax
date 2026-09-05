@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-r5539",
+ "title": "Social Services Legislation Amendment (Cost of Living Concession) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (Cost of Living Concession) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5539_ems_c12e01dd-d1dd-4ebf-a45c-2df001901e25%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5539%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00142",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-320242",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Cost of Living Concession) Bill 2015, which excludes a $200 per year South Australian government payment to pensioners and concession card holders from being assessed as income under social security and veterans' affairs tests. The speaker welcomed the South Australian Labor government's payment, arguing it was needed because the federal Liberal government had cut money to pensioners."
+  },
+  {
+   "slug": "speech-320245",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "The Labor MP argued the bill should pass to ensure the South Australian government’s $200 cost-of-living payment is not assessed as income, criticising the coalition government for cutting $1.3 billion from the National Partnership Agreement on Certain Concessions and noting no coalition members spoke on the bill."
+  },
+  {
+   "slug": "speech-320246",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "The bill excludes the South Australian government's cost-of-living concession payment from being assessed under the social security and veterans' affairs income test, a measure the speaker described as beneficial."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Cost of Living Concession) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00142",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

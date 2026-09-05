@@ -1,0 +1,450 @@
+{
+ "key": "au-federal-r6504",
+ "title": "Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Bill 2020",
+ "short_title": "Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2020-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6504_ems_98783898-a8d9-4756-a186-4b2505766453%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6504_ems_98826267-affe-48ed-8e39-444a5275ec4d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6504_ems_2162dd39-239c-4340-a43a-be54f61a2c62%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6504%22",
+   "document_date": "2020-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00084",
+   "document_date": "2020-09-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6472",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-08-24.120.6) to keep the original second reading motion unchanged. A [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is a motion \"*That this bill be now read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. This vote was put after Kingston MP [Amanda Rishworth](https://theyvoteforyou.org.au/people/representatives/kingston/amanda_rishworth) (Labor) introduced an amendment. ### Proposed amendment > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) the Government will snap back to the complex and expensive child care subsidy system on 13 July and end its poorly targeted and unfunded 'free child care' response;* > > *(2) families will start paying child care fees again, even after the Treasurer admitted Australia was in a recession, and fees soared by 7.2 per cent in the last year;* > > *(3) unaffordable child care will now force families, particularly women, to reconsider returning to work and could act as a handbrake on Australia's economic recovery; and* > > *(4) early childhood workers have been ripped out of the JobKeeper program, three days after the Prime Minister promised there would be no changes until September\"*",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-08-24/1"
+  },
+  {
+   "key": "federal-senate-6493",
+   "date": "2020-08-26",
+   "house": "senate",
+   "question": "Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Bill 2020 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 21,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "member": 12,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-26/1"
+  },
+  {
+   "key": "federal-senate-6494",
+   "date": "2020-08-26",
+   "house": "senate",
+   "question": "Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Bill 2020 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "earliest": 19,
+    "dated": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-26/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-388957",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Bill 2020 extends the backdating of additional childcare subsidy certificates from 28 days to up to 13 weeks in exceptional circumstances and extends determination periods from 13 weeks to up to 12 months for children on long-term protection orders. The bill also clarifies provider eligibility for subsidy for foster children and modifies the childcare subsidy calculation for individuals who changed relationship status during the year."
+  },
+  {
+   "slug": "speech-392018",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's changes to the additional child care subsidy for child wellbeing, but criticised the government's snapback to the old childcare subsidy system on 13 July, ending free childcare, and removing 120,000 early childhood educators from JobKeeper, noting that childcare fees rose 7.2% and a 21% drop in children receiving the child wellbeing payment occurred after 2018 rule changes."
+  },
+  {
+   "slug": "speech-392135",
+   "speaker": "Terry Young",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Assistance Legislation Amendment Bill 2020, which extends additional childcare subsidy periods for children under long-term protection orders and allows backdating up to 13 weeks in exceptional circumstances, as part of the government's transition to a demand-driven childcare subsidy system from 13 July 2020 with $2 billion in subsidies and $708 million in transition payments."
+  },
+  {
+   "slug": "speech-392136",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-12",
+   "stage_hint": null,
+   "brief": "The MP supported the Family Assistance Amendment Bill’s small improvements for vulnerable families and childcare centres but criticised the government for failing to pursue broader childcare reforms, citing the high cost of $112 per child per day in Brisbane and a 150% cost increase since 2001. They also condemned Senator Rennick’s suggestion that one parent should stay home, and argued that childcare workers should not be the first removed from JobKeeper."
+  },
+  {
+   "slug": "speech-393319",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's childcare policies have worsened during the pandemic, citing that 25% of families are still waiting for 2018-19 subsidy reconciliation, $130 million in childcare debts were collected from families, and fees rose 4.6% in the year to December 2019. They proposed building more childcare centres to create construction jobs, educator jobs, and increase access for families."
+  },
+  {
+   "slug": "speech-393320",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The Morrison government argued that the Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Bill 2020 improves access to childcare by extending the additional childcare subsidy application period from 13 weeks to 12 months for children under long-term protection orders and allowing backdating up to 13 weeks in exceptional circumstances, while also noting $8.3 billion in annual childcare subsidy and a $708 million transition package."
+  },
+  {
+   "slug": "speech-393322",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The member argued that the government's child care system has failed families, with fees 34% higher than when the Coalition took office, families paying an average $3,800 more per year, and 330,000 families left worse off. He criticised the government's treatment of early educators during JobKeeper and called for a transition plan rather than a \"snapback\" approach."
+  },
+  {
+   "slug": "speech-393325",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Family Assistance Legislation Amendment Bill 2020 to fix design flaws in the Additional Child Care Subsidy for vulnerable children, after a 21% drop in recipients and ongoing red tape issues. The speaker criticised the government's childcare system for leaving one in four families worse off, reducing access for 279,000 families, raising fees 34% under the government, and issuing debt notices to 91,000 audited families."
+  },
+  {
+   "slug": "speech-393326",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill is needed to fix flaws in the 2018 childcare system that caused a 21% collapse in child wellbeing subsidy recipients and left one in four families worse off, and criticised the government's COVID-era free childcare announcement for halving family day care operators' income."
+  },
+  {
+   "slug": "speech-393408",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Bill 2020 is vital to support vulnerable children and families, while criticising the Morrison government's childcare subsidy system for increasing fees by $3,800 yearly, leaving one in four families worse off, and cutting JobKeeper for childcare staff prematurely. The speaker noted 570 children in care in Perth's south-eastern suburbs and that 55% of low-income children risk staying in poverty without action."
+  },
+  {
+   "slug": "speech-393409",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The bill extends backdating of additional childcare subsidy certificates from 28 days to 13 weeks and extends determination periods to 12 months for children on long-term protection orders, including foster children. The speaker argued the bill does not address broader affordability issues, noting Australia's childcare costs average 30–40% of household income versus the OECD average of 11%, and that a $5 billion subsidy investment could yield an $11 billion GDP increase."
+  },
+  {
+   "slug": "speech-393410",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the government should reverse its removal of JobKeeper for early education workers and criticised the bill for not making childcare more affordable, noting that high costs burden families and disproportionately affect women."
+  },
+  {
+   "slug": "speech-393411",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's 2018 changes to the additional childcare subsidy caused a 21% drop in children receiving support, and while the current bill fixes some design flaws, the overall childcare system remains deeply flawed, with costs rising 34% in seven years and only 41% of families reporting positive change. The speaker also criticised the government's COVID-19 response, noting that JobKeeper was removed from the sector and that transition payments failed to protect educators' wages."
+  },
+  {
+   "slug": "speech-393412",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government should restore JobKeeper to early childhood educators and workers, condemning its removal just four days after a promise it would last until September, and praised the City of Port Phillip’s decision to reverse a plan to privatise council-run childcare services."
+  },
+  {
+   "slug": "speech-393414",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Assistance Legislation Amendment Bill 2020, arguing it fixes design flaws in the additional childcare subsidy that caused a 21% drop in children receiving the payment after new rules in July 2018. They criticised the government for increasing red tape for vulnerable families, mishandling childcare during the pandemic, and denying JobKeeper to early educators, calling for better pay and access to support for the female-dominated sector."
+  },
+  {
+   "slug": "speech-393421",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The government invested over $8.6 billion in child care last financial year and will increase this to more than $10 billion. The Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Bill 2020 extends backdating of additional childcare subsidy certificates from 28 days to 13 weeks in exceptional circumstances and extends determination periods from 13 weeks to 12 months for children at risk, including those in foster care."
+  },
+  {
+   "slug": "speech-393422",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's mismanagement of early childhood education, including a so-called 'free' childcare plan that capped centre income at 50% and the early removal of JobKeeper for educators, pushed centres to the brink and left families unable to access care, disproportionately harming women. They supported an amendment moved by shadow minister Amanda Rishworth."
+  },
+  {
+   "slug": "speech-393423",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "The government defended the bill as improving childcare support for vulnerable families, citing that over 98% of providers remained open under the COVID-19 relief package and outlining measures that extend backdating of additional childcare subsidy certificates to 13 weeks and determinations to 12 months for children on long-term protection orders, while clarifying provider eligibility for foster children. The speech also confirmed that schedule 2, which adjusts subsidy balancing for relationship-status changes, would be removed via government amendment because it had already been enacted in April 2020."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Assistance Legislation Amendment (Improving Assistance for Vulnerable and Disadvantaged Families) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00084",
+   "assent_date": "2020-09-07"
+  }
+ ]
+}

@@ -1,0 +1,158 @@
+{
+ "key": "au-federal-r5490",
+ "title": "Australian Radiation Protection and Nuclear Safety Amendment Bill 2015",
+ "short_title": "Australian Radiation Protection and Nuclear Safety Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2015-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5490_ems_c47a6784-15d7-444d-b6dc-42fdac5c09be%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5490%22",
+   "document_date": "2015-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00125",
+   "document_date": "2015-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-18",
+  "sentences": [
+   "The bill updates Australia's radiation safety law for the first time since 1998.",
+   "It gives the Australian Radiation Protection and Nuclear Safety Agency new powers to issue time-limited licences, regulate clean-up of contaminated sites, and respond to emergencies.",
+   "The bill also updates technical definitions to match international terms and makes minor improvements to the regulatory regime."
+  ],
+  "changes": [
+   "ARPANSA can issue single licences covering multiple facilities or sources.",
+   "The agency can issue time-limited licences.",
+   "The law is clarified to cover contractors and others working with Commonwealth entities.",
+   "ARPANSA gets a wider range of monitoring and enforcement measures.",
+   "Technical definitions are updated to reflect internationally accepted terms.",
+   "Minor amendments remove redundant provisions and improve clarity."
+  ],
+  "affected": "Commonwealth entities that use radiation, including those operating nuclear facilities and radiation sources such as baggage x-ray units and research reactors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:50:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-315852",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-13",
+   "stage_hint": null,
+   "brief": "The bill amends the Australian Radiation Protection and Nuclear Safety Act to give ARPANSA greater powers for end-to-end risk management, compliance monitoring, and emergency direction-issuing, while maintaining quarterly and annual public reporting to parliament and online for accountability, with no financial impact or increased compliance burden."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Radiation Protection and Nuclear Safety Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00125",
+   "assent_date": "2015-09-10"
+  }
+ ]
+}

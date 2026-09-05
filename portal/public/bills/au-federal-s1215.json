@@ -1,0 +1,81 @@
+{
+ "key": "au-federal-s1215",
+ "title": "Great Australian Bight Environment Protection Bill 2019",
+ "short_title": "Great Australian Bight Environment Protection Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1215%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1215%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1215%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1215%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1215_ems_13594e8d-b5a6-44fc-bc65-be598d64b30e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1215%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "This bill aims to shield the Great Australian Bight from harm caused by mining and to start the process of getting it listed as a World Heritage site.",
+   "It sets up fines for mining activities in the area, clearly defines the protected zone, and allows civil enforcement actions to seek repairs or compensation from wrongdoers.",
+   "The law would take effect the day after it receives royal assent, and it overrides any conflicting Commonwealth laws, including the EPBC Act and the offshore petroleum act."
+  ],
+  "changes": [
+   "Defines the protected area explicitly.",
+   "Clarifies the bill's purpose.",
+   "Adds civil enforcement options for remediation or compensation.",
+   "Expands penalties to match the harm caused.",
+   "Starts a World Heritage listing process."
+  ],
+  "affected": "Marine life, fishing and tourism industries, and the environment of the Great Australian Bight.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:52Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

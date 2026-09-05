@@ -1,0 +1,764 @@
+{
+ "key": "au-federal-r7107",
+ "title": "Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023",
+ "short_title": "Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-05-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-05-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7107_ems_cd4d34d0-6892-41e0-8d14-1b62e0e316f5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7107%22",
+   "document_date": "2023-11-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00037",
+   "document_date": "2024-05-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-16",
+  "sentences": [
+   "This bill would strengthen the penalties and enforcement powers the Australian Taxation Office can use against promoters of tax exploitation schemes.",
+   "It would increase the maximum penalty, extend the time limit for the ATO to apply to the Federal Court for civil penalty proceedings, and broaden the scope of the promoter penalty laws.",
+   "The extended timeframe for applying to the Federal Court would apply to conduct occurring before, on or after the schedule commences, which is set for 1 July 2024 or the first April, July or October after Royal Assent."
+  ],
+  "changes": [
+   "Increases the maximum penalty applicable under the promoter penalty provisions.",
+   "Extends the time the ATO has to apply to the Federal Court for civil penalty proceedings.",
+   "Expands the application of the promoter penalty laws."
+  ],
+  "affected": "The Australian Taxation Office and promoters of tax exploitation schemes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8557",
+   "date": "2023-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of an amendment moved by Senator Nick McKim, which means it failed and the wording of the original government amendment will remain unchanged. ### Amendment text > *At the end of the motion, add:* > > *\"and, in respect of:* > > *(a) the [Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7107), the provisions of the bill be referred immediately to the Economics Legislation Committee for inquiry and report by 18 April 2024; and* > > *(b) the [Help to Buy Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7123) and [Help to Buy Bill (Consequential Provisions) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7124), the provisions of the bill referred immediately to the Economics Legislation Committee for inquiry and report by 16 April 2024\".* ### Original government amendment text > *At the end of the motion, add \", and:* > > *(a) the provisions of the Help to Buy Bill 2023 and the Help to Buy (Consequential Provisions) Bill 2023 be referred immediately to the Economics Legislation Committee for inquiry and report by 22 February 2024;* > > *(b) the provisions of the Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023 be referred immediately to the Economics Legislation Committee for inquiry and report by 22 February 2024; and* > > *(c) the provisions of the National Security Legislation Amendment (Comprehensive Review and Other Measures No. 3) Bill 2023 not be referred to a committee\".*",
+   "stage": "Committee motion",
+   "ayes": 41,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-30/12"
+  },
+  {
+   "key": "federal-representatives-8716",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7107_amend_ef27ac47-7b3a-472b-9fb9-22c918506104%22;rec=0) to [another amendment](https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/3) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent). The amendment was introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent). ### Amendment text > *That all words after “acknowledging the” be omitted with a view to substituting the following words:* > > *“House does not decline to give the bill a second reading, it:* > > *(1) notes that the bill has two important, and distinctly unrelated purposes, being to:* > >> *(a) implement a response to the PwC tax leaks scandal, which was an outrageous breach of confidentiality by a consultancy hired by Government; and* >> >> *(b) reform the Petroleum Resources Rent Tax, by establishing a cap on the use of deductions by offshore gas and oil projects; and* > > *(2) notes that the illogical merging of two unrelated, yet equally important issues into the same piece of legislation is not consistent with the principles of good governance; and* > > *(3) calls on the Government to separate out the provisions of the Petroleum Resources Rent Tax changes from the PwC response provisions, so that they may be considered, debated and voted on in isolation on their individual merits”.* ### Steggall's amendment text > *That all words after “acknowledging” be omitted with a view to substituting the following words:* > > *“the role of gas companies in influencing the drafting of this bill, the House declines to give the bill a second reading as it is of the opinion that:* > > *(1) the bill should:* > >> *(a) adopt an 80 per cent deductions cap for the Petroleum Re",
+   "stage": "Second reading",
+   "ayes": 16,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 70
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/2"
+  },
+  {
+   "key": "federal-representatives-8717",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7107_amend_28ef0796-80ec-49d6-88a0-c29e5c8b9ee5%22;rec=0) to [another amendment](https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/4) introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens). The amendment was introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent). ### Amendment text > *That all words after “acknowledging” be omitted with a view to substituting the following words:* > > *“the role of gas companies in influencing the drafting of this bill, the House declines to give the bill a second reading as it is of the opinion that:* > > *(1) the bill should:* > >> *(a) adopt an 80 per cent deductions cap for the Petroleum Resource Rent Tax, lowered from the current 90 per cent, which would double the amount of revenue subject to the 40 per cent Petroleum Resource Rent Tax for that year and remain consistent with Treasury advice provided to the Government; and* >> >> *(b) abolish the seven-year exemption to the deductions cap which supports the development of new oil and gas projects and is contrary to the Government’s claim to be committed to the Paris Agreement and keeping global warming below two degrees; and* > > *(2) the Government must stop presenting omnibus bills of this nature to the House combining complex, disparate policy issues that require greater interrogation and consideration than is currently allowed for whilst also undermining the Government’s own credibility to present a clear, coherent policy programme”.* ### Bandt's amendment text > *That all words after “whilst” be omitted with a view to substituting the following words:* > > *“acknowledging 15 gas companies signed non-disclosure agreements when p",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 53,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 68
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/3"
+  },
+  {
+   "key": "federal-representatives-8718",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7107_amend_9419ca48-fd22-466a-aa54-8f79a074b5b7%22;rec=0) to an [original amendment](https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/5) introduced by Hume MP [Angus Taylor](https://theyvoteforyou.org.au/people/representatives/hume/angus_taylor) (Liberal). This amendment was introduced by Melbourne MP [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens). ### Amendment text > *That all words after “whilst” be omitted with a view to substituting the following words:* > > *“acknowledging 15 gas companies signed non-disclosure agreements when preparing Schedule 5 of this bill for the Government, the House:* > > *(1) notes the billions of dollars in climate damage that the gas industry has already inflicted through turbocharged bushfires, floods and a 23 per cent reduction in agricultural profits, representing $29,200 in losses per Australian farm ; and* > > *(2) acknowledges that the Australian Taxation Office has labelled the gas industry as ‘systemic non-payers of tax’; and* > > *(3) notes that the Parliamentary Budget Office has costed the potential revenue from repairing the Petroleum Resource Rent Tax at $94.5 billion over the decade; and* > > *(4) resolves that gas companies earning super profits from war should no longer avoid payment of super profits taxes; and* > > *(5) calls on the Government to amend the bill to ensure a minimum doubling of revenue from the Government's proposed changes to the gas super profits tax”.*",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 53,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 67
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/4"
+  },
+  {
+   "key": "federal-representatives-8719",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7107_amend_9d28e4e0-a700-4295-b11c-4470cba7d6dd%22;rec=0) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Hume MP [Angus Taylor](https://theyvoteforyou.org.au/people/representatives/hume/angus_taylor) (Liberal). ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the Treasurer has failed to engage in negotiations with the Opposition on sensible proposals to support investment in the gas industry, which is the revenue base for this tax;* >> >> *(b) the Government still cannot answer simple questions about this tax, including whether it is new or a bring forward of revenue, its impact on investment in the industry, and its impact on energy prices, despite having had more than six months to do so; and* > > *(2) calls on the Government to support the Opposition’s proposals to support the future of the gas industry; and* > > *(3) notes that the cynical and absurd stapling of changes to the Petroleum Resource Rent Tax to measures with cross-party support responding to the PwC and Tax Practitioners Board issue demonstrates the lack of seriousness from the Government towards this legislation”.*",
+   "stage": "Second reading",
+   "ayes": 49,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/5"
+  },
+  {
+   "key": "federal-representatives-8720",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-03-18.48.2) introduced by Hume MP [Angus Taylor](https://theyvoteforyou.org.au/people/representatives/hume/angus_taylor) (Liberal), which means they failed. ### What do these amendments do? Mr Taylor [explained that](https://www.openaustralia.org.au/debate/?id=2024-03-18.48.2): > *These amendments seek to split the Treasury Laws Amendment (Tax Accountability and Fairness) Bill 2023 in order to deal with the PwC schedules separately to the [PRRT](https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/petroleum-resource-rent-tax) [petroleum resource rent tax] measure. The important point about this is that these issues are completely different. On the one hand, we have the PwC and Tax Practitioners Board issue, which rightly should be considered by this place. It's a very important issue in the integrity of our tax and tax administration system. On the other hand, we have the PRRT. These are completely different issues.* This amendment would have omitted the petroleum resource rent tax provisions from the bill. ### Amendment text > *(1) Clause 2, page 2 (table item 4), omit the table item.* > > *(2) Schedule 5, page 32 (line 1) to page 38 (line 23), omit the Schedule.*",
+   "stage": "Consideration in detail",
+   "ayes": 55,
+   "noes": 65,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 119
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/6"
+  },
+  {
+   "key": "federal-representatives-8721",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2024-03-18.52.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means it failed. ### What is the purpose of this amendment? Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2024-03-18.52.1): > *My amendment would insert a statutory review of the changes to the PRRT, to be commenced no later than 1 July 2026. This would allow two full financial years for the government changes to take effect and for it to become clear whether these reforms are delivering an equitable return to the taxpayer.* ### Amendment text > *(1) Clause 2, page 2 (table item 1), omit \"to 3\", substitute \"to 4\".* > > *(2) Page 2 (after line 11), after clause 3, insert:* > >> *4 Review of operation of amendments made by Schedule 5* >> >> *(1) The Minister must cause a review to be conducted of the operation of the amendments made by Schedule 5 to this Act.* >> >> *(2) Without limiting the matters that may be considered when conducting the review, the review must have regard to:* >> >>> *(a) the appropriate distribution of petroleum resource rents and the need to provide a fair return to the Australian community; and* >>> >>> *(b) the appropriateness of the Petroleum Resource Rent Tax Assessment Act 1987 (as amended by Schedule 5 to this Act) and associated regulations in light of recent, and potential future, developments in industries subject to that Act; and* >>> >>> *(c) the applicability of the review's findings to resource export industries not subject to that Act.* >> >> *(3) The review must start no later than 1 July 2026.* >> >> *(4) The persons who conduct the review must give the Minister a written report of the review no later than 1 January 2027.* >> >> *(5) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 3 months after t",
+   "stage": "Consideration in detail",
+   "ayes": 15,
+   "noes": 48,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 63
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-18/7"
+  },
+  {
+   "key": "federal-senate-8925",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-05-16.224.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > >> *(a) notes that:* >> >>> *(i) the Treasurer has failed to engage in negotiations with the Opposition on sensible proposals to support investment in the gas industry, which is the revenue base for this tax,* >>> >>> *(ii) the Government still cannot answer simple questions about this tax, including whether it is new or a bring forward of revenue, its impact on investment in the industry, and its impact on energy prices, despite having had more than six months to do so, and* >>> >>> *(iii) that the cynical and absurd stapling of changes to the Petroleum Resource Rent Tax to measures with cross-party support responding to the PwC and Tax Practitioners Board issue demonstrates the lack of seriousness from the Government towards this legislation; and* >> >> *(b) calls on the Government to support the Opposition's proposals to acknowledge its own Future Gas Strategy and support the future of the gas industry\".*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/32"
+  },
+  {
+   "key": "federal-senate-8926",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-05-16.226.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *Omit all the words after \"That\", substitute \"The Senate:* > >> *(a) notes that:* >> >>> *(i) in 2022, offshore gas exports were $92.8 billion,* >>> >>> *(ii) to date, not a single cent of petroleum resources rent tax has been paid from the export of offshore liquefied natural gas,* >>> >>> *(iii) Australians pay more HECS-HELP than gas companies pay in petroleum resources rent tax,* >>> >>> *(iv) in 2020-21, Australian nurses paid three times as much tax as the gas industry paid in company tax,* >>> >>> *(v) petroleum resources rent tax receipts have been revised down by $2.4 billion over the four years to 2026-27, effectively wiping off any benefit from the change proposed in Schedule 5, and* >>> >>> *(vi) taxation of Australian gas is an issue that the Australian community expects to be the subject of Parliamentary scrutiny, including debate in the Senate;* >> >> *(b) requires that further consideration of the bill be made an order of the day for the next sitting day and that the bill be considered in committee of the whole for not less than three hours\".*",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/33"
+  },
+  {
+   "key": "federal-senate-8927",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-05-16.228.1) to read the bill for a second time. In other words, they voted to agree with the main idea of the bill. This means they can now discuss the bill in greater detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd31) (which is a document prepared by the parliamentary library), these are the key points of the bill: * *Schedule 1 amends the Tax Agent Services Act 2009 (TAS Act) and the Tax Administration Act 1953 (TAA) to expand tax promoter penalty laws with the aim of ensuring that promoters of tax exploitation schemes face significant consequences for their actions.* * *Schedule 2 amends the TAA to extend existing tax protections to whistleblowers who disclose information to the Tax Practitioners Board.* * *Schedule 3 amends the TAS Act to allow the Tax Practitioners Board to publish details of its investigations and decisions and extend the timeframe for investigations.* * *Schedule 4 amends the TAA and TAS Act to remove limitations on information sharing that were a barrier to regulators acting in response to PwC’s breach of confidence.* * *Schedule 5 amends the Petroleum Resource Rent Tax Assessment Act 1987 (PRRT Act) to limit the proportion of petroleum resource rent tax assessable income that can be offset by deductions to 90 percent of assessable receipts.* * *The Bill has been referred to the Senate Economics Legislation Committee with a reporting date of 18 April 2024.* * *Schedules 1 to 4 appear broadly uncontroversial. However, the unrelated amendments to the PRRT Act in Schedule 5 have been severely criticised by non-government parties and Independents in debate of the Bill in the House of Representatives. Calls have been made to split Schedule 5 from the Bill and consider it separately.* > *Quick Guide to Schedule 5:* > >> *The provisions in Schedule 5 to the",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/34"
+  },
+  {
+   "key": "federal-senate-8928",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-05-16.230.1) \"*that schedule 5 stand as printed.*\" In other words, they voted to keep the schedule as it is. ### What is schedule 5? According to the [bill digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd31): > *The provisions in Schedule 5 to the Bill amend the Petroleum Resource Rent Tax Assessment Act 1987 (PRRT Act) to place a cap of 90 per cent on the availability of deductible expenditure incurred in relation to a petroleum project for a year of tax, and consequently brings forward tax payable. The amendments are intended to ensure that the offshore LNG industry pays more tax sooner.* ### Amendment text > *(2) Schedule 5, page 32 (line 1) to page 38 (line 23), Schedule 5 to be opposed.*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/35"
+  },
+  {
+   "key": "federal-senate-8929",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-05-16.232.1) to agree with the remaining stages of the bill and so pass the bill in the Senate. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd31) (which is a document prepared by the parliamentary library), these are the key points of the bill: * *Schedule 1 amends the Tax Agent Services Act 2009 (TAS Act) and the Tax Administration Act 1953 (TAA) to expand tax promoter penalty laws with the aim of ensuring that promoters of tax exploitation schemes face significant consequences for their actions.* * *Schedule 2 amends the TAA to extend existing tax protections to whistleblowers who disclose information to the Tax Practitioners Board.* * *Schedule 3 amends the TAS Act to allow the Tax Practitioners Board to publish details of its investigations and decisions and extend the timeframe for investigations.* * *Schedule 4 amends the TAA and TAS Act to remove limitations on information sharing that were a barrier to regulators acting in response to PwC’s breach of confidence.* * *Schedule 5 amends the Petroleum Resource Rent Tax Assessment Act 1987 (PRRT Act) to limit the proportion of petroleum resource rent tax assessable income that can be offset by deductions to 90 percent of assessable receipts.* * *The Bill has been referred to the Senate Economics Legislation Committee with a reporting date of 18 April 2024.* * *Schedules 1 to 4 appear broadly uncontroversial. However, the unrelated amendments to the PRRT Act in Schedule 5 have been severely criticised by non-government parties and Independents in debate of the Bill in the House of Representatives. Calls have been made to split Schedule 5 from the Bill and consider it separately.* > *Quick Guide to Schedule 5:* > >> *The provisions in Schedule 5 to the Bill amend the Petroleum Resource Rent Tax Assessment Act 1987 (PRRT Act) to place",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/36"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Tax Accountability and Fairness) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00037",
+   "assent_date": "2024-05-31"
+  }
+ ]
+}

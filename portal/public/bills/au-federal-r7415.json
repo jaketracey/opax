@@ -1,0 +1,336 @@
+{
+ "key": "au-federal-r7415",
+ "title": "Translating and Interpreting Services Bill 2025",
+ "short_title": "Translating and Interpreting Services Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2026-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7415_ems_0cff2732-e0f0-41ea-ac45-4309b850ac39%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7415%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00040",
+   "document_date": "2026-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "This bill would put the Department of Home Affairs' translation and interpreting service on a legal footing for the first time.",
+   "The Secretary of the Department would gain explicit powers to provide, arrange, charge fees for, and delegate functions related to these services.",
+   "The bill would not change how services are currently delivered, and existing arrangements would continue unchanged after commencement."
+  ],
+  "changes": [
+   "Creates a statutory framework for the Department's translating and interpreting services.",
+   "Gives the Secretary power to provide services to the Commonwealth, states, territories, and for migrants.",
+   "Allows the Secretary to train and support translators and interpreters.",
+   "Permits the Secretary to charge fees and delegate powers to senior staff.",
+   "Lets the Minister make rules for carrying out the legislation.",
+   "Ensures pre-existing arrangements remain valid after the bill starts."
+  ],
+  "affected": "The Department of Home Affairs, the Secretary, translators and interpreters, people with limited English proficiency, Commonwealth agencies, states and territories, and migrants and humanitarian entrants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10197",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-04-01.61.2) to the usual second reading motion, which is \"*that the bill be a read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). Had it been successful, it would have added the words below to the usual motion. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) translation should be an essential service in a multicultural society, and* >> >> *(ii) the Albanese Government has committed to the principles of the Multicultural Framework Review; and* > > *(b) calls on the Government to implement the findings of the Multicultural Framework Review, released in 2024, as it relates to translation services, including:* > >> *(i) establishing a fully funded capacity within the existing Translating and Interpreting Service (TIS) national business unit to deliver general interpreting and translation services with a core workforce of Australian Public Service staff, and* >> >> *(ii) providing additional funding to the National Accreditation Authority for Translators and Interpreters (NAATI) to address critical workforce quality and gaps, including within the TIS\".*",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/20"
+  },
+  {
+   "key": "federal-senate-10198",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-04-01.63.1) to the usual second reading motion, which is \"*that the bill be a read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). Had it been successful, it would have added the words below to the usual motion. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) access to qualified interpreters is essential to equitable access to healthcare, justice and government services,* >> >> *(ii) gaps in interpreter services contribute to adverse health outcomes, reduced access to justice and reduced access to government services,* >> >> *(iii) the translating and interpreting workforce is largely migrant and feminised and experiences insecure work arrangements,* >> >> *(iv) government procurement practices may contribute to downward pressure on interpreter pay and conditions, and* >> >> *(v) interpreter workforce sustainability is critical to the delivery of essential government services; and* > > *(b) calls on the Government to develop a national framework for language access and workforce sustainability in the translating and interpreting sector\".*",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/21"
+  },
+  {
+   "key": "federal-senate-10199",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-04-01.65.4) to the usual second reading motion, which is \"*that the bill be a read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). Had it been successful, it would have added the words below to the usual motion. ### Motion text > *At the end of the motion, add \", but the Senate notes that the Aboriginal and Torres Strait Islander translating and interpreting services industry must be independently recognised and strengthened as well as led, developed and delivered by First Nations Aboriginal Community Controlled Organisations and practitioners, as enshrined in the upcoming new National Framework for Aboriginal and Torres Strait Islander Interpreting and Translating\".*",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/22"
+  },
+  {
+   "key": "federal-senate-10200",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against [Australia's Voice amendments](https://www.openaustralia.org.au/senate/?gid=2026-04-01.67.1), which means they were unsuccessful. These amendments were related to additional objects and Commonwealth‑funded translating and interpreting services framework. ### Amendment text See the amendment text on [OpenAustralia](https://www.openaustralia.org.au/senate/?gid=2026-04-01.67.1).",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/23"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1199548",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199553",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Translating and Interpreting Services Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00040",
+   "assent_date": "2026-04-08"
+  }
+ ]
+}

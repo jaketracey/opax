@@ -1,0 +1,141 @@
+{
+ "key": "au-federal-r6927",
+ "title": "Customs Tariff Amendment (Australia-United Kingdom Free Trade Agreement Implementation) Bill 2022",
+ "short_title": "Customs Tariff Amendment (Australia-United Kingdom Free Trade Agreement Implementation) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2022-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6927_ems_02cdd220-3996-487a-a0d9-3d215349ede5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6927%22",
+   "document_date": "2022-10-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00058",
+   "document_date": "2022-11-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-27",
+  "sentences": [
+   "This bill would change the Customs Tariff Act 1995 to put the Australia-United Kingdom free trade deal into effect.",
+   "It would set a zero customs duty rate for goods that come from the United Kingdom, except for some items listed in a new schedule.",
+   "Duties on certain alcohol, tobacco and petroleum products from the UK would stay at the same level as the excise duty on locally made versions."
+  ],
+  "changes": [
+   "Provides a 'Free' rate of customs duty for UK originating goods, except those in new Schedule 15.",
+   "Inserts a new Schedule 15 with phasing rates that reduce to 'Free' by the fifth calendar year after the agreement starts.",
+   "Maintains customs duty rates on certain alcohol, tobacco and petroleum products equal to the excise duty on locally made goods.",
+   "Inserts a safeguard provision to restore the previous duty rate for certain products if the UK keeps its equivalent safeguard.",
+   "Amends Schedule 4 to keep customs duty rates for certain UK originating goods under concessional items."
+  ],
+  "affected": "Importers of goods from the United Kingdom and the Australian government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Australia-United Kingdom Free Trade Agreement Implementation) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00058",
+   "assent_date": "2022-11-23"
+  }
+ ]
+}

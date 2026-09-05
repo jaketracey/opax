@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-r7509",
+ "title": "Therapeutic Goods Amendment (Medicines Shortages and Other Measures) Bill 2026",
+ "short_title": "Therapeutic Goods Amendment (Medicines Shortages and Other Measures) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7509_ems_36d151bb-3ab4-4e0a-bcce-40e40857c51a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7509%22",
+   "document_date": "2026-07-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-09-01",
+  "sentences": [
+   "This bill would change the law to better manage medicine shortages and discontinuations in Australia.",
+   "It would require drug companies to notify the government at least 12 months before stopping supply of certain medicines, and give officials new powers to demand information about stock levels and shortages.",
+   "The bill would also let the regulator group similar biological medicines under a single registration entry, and move powers to inspect clinical trial sites from regulations into the main Act."
+  ],
+  "changes": [
+   "Requires sponsors to notify the Secretary at least 12 months before permanently discontinuing a reportable medicine.",
+   "Allows the Secretary to demand information from all sponsors about availability, shortages or discontinuations of their products.",
+   "Lets the Secretary define common biologicals groups so similar biologicals share a single Register entry.",
+   "Moves legal powers to enter and inspect clinical trial sites from delegated legislation to the primary Act.",
+   "Allows the Medicines Watch List to incorporate other documents as they change over time."
+  ],
+  "affected": "Sponsors of approved medicines, biological medicine manufacturers, and clinical trial operators.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:03:52Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1204660",
+   "speaker": "Rebecca White",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204661",
+   "speaker": "Rebecca White",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204832",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204887",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205096",
+   "speaker": "Zhi Soon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

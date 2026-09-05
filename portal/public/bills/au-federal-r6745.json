@@ -1,0 +1,539 @@
+{
+ "key": "au-federal-r6745",
+ "title": "Treasury Laws Amendment (COVID-19 Economic Response No. 2) Bill 2021",
+ "short_title": "Treasury Laws Amendment (COVID-19 Economic Response No. 2) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-08-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6745_ems_0225d809-32e7-49b0-99b5-66a336e2d304%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6745%22",
+   "document_date": "2021-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00079",
+   "document_date": "2021-08-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7366",
+   "date": "2021-08-05",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an amendment introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor). Had it been successful, it would have added the words below to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add \", but the Senate notes that:* > > *(a) only 15% of Australians are fully vaccinated;* > > *(b) businesses and workers are struggling from lockdowns made necessary by the Government's botched vaccine rollout and the lack of purpose-built quarantine facilities; and* > > *(c) these lockdowns are costing the Australian economy hundreds of millions of dollars every day\".*",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 14,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "member": 5,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-05/1"
+  },
+  {
+   "key": "federal-senate-7367",
+   "date": "2021-08-05",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-05.6.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens). It will add the words below to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Treasurer to ensure that rules regarding payments providing financial support to entities prevent payments being made to, or include a mechanism to recover payments from, large companies that are profitable or pay executive bonuses in the same financial year that they receive a payment\".*",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "member": 5,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-05/2"
+  },
+  {
+   "key": "federal-senate-7368",
+   "date": "2021-08-05",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-08-05.4.2) introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) (Greens). Had it been successful, it would have added the words below to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add \", but the Senate is of the opinion that:* > > *(a) people on income support payments, including Jobseeker Payment, Youth Allowance, Disability Support Pension and Carer Payment, continue to be ignored and miss out on additional support during lockdowns;* > > *(b) this bill does nothing to support the estimated 350,000 people (including 50,000 children) in Greater Sydney who are denied access to Covid-19 Disaster Payments despite living on income support of as little as $44 a day;* > > *(c) if we want people to be able to afford to stay home, Covid-19 Disaster Payments must be immediately extended to all people on income support payments;* > > *(d) people who have lost less than 8 hours a week of work continue to be excluded from the Covid-19 Disaster Payment; and* > > *(e) all income support payments should be increased above the poverty line and everyone who has lost work should be given adequate support with access to the full JobKeeper payment rate so that everyone is supported through the pandemic\".*",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 13,
+    "member": 7,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-05/3"
+  },
+  {
+   "key": "federal-senate-7369",
+   "date": "2021-08-05",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Covid-19 Economic Response No. 2) Bill 2021 - in Committee - Publication of COVID-19 payment information",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "member": 7,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-05/4"
+  },
+  {
+   "key": "federal-senate-7376",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-08-09.27.6) to not insist on its amendments to the bill, after the House of Representatives disagreed with them. This means that the bill can now [be passed](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), as its final form has been agreed to in both Houses of parliament. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6745), the bill was introduced to: * *enable the Treasurer to make rules for economic response payments to provide support to an entity where they are adversely affected by restrictions imposed by a state or territory public health order that is directed at controlling the transmission of COVID-19;* * *enable tax information to be disclosed to Australian government agencies for the purposes of administering COVID-19 business support programs;* * *make payments received by eligible businesses under certain COVID-19 business support programs and Commonwealth COVID-19 disaster payments exempt from income tax; and* * *reinstate a temporary mechanism for ministers to change arrangements relating to meeting information and document requirements under Commonwealth legislation.*",
+   "stage": "Consideration of House message",
+   "ayes": 27,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "member": 7,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-410218",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The government's failure on vaccine rollout and quarantine has caused costly lockdowns, and while the bill is supported, a $300 cash incentive for vaccination is needed to address both health and economic crises."
+  },
+  {
+   "slug": "speech-410222",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The member for Berowra supported the Treasury Laws Amendment Bill, which provides COVID disaster payments of $750 per week for individuals losing over 20 hours of work, $450 for 8–20 hours, and business payments of 40% of NSW payroll (minimum $1,500, maximum $100,000 per week). He criticised the opposition's proposed $300 vaccination incentive and called for improved telecommunications from Telstra CEO Andy Penn and NBN Co CEO Stephen Rue."
+  },
+  {
+   "slug": "speech-410223",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (COVID-19 Economic Response No. 2) Bill 2021, arguing it was urgently needed due to the Morrison government's failures on vaccine rollout and hotel quarantine, which caused lockdowns costing the economy $300 million daily. They highlighted severe impacts on their electorate of Fowler, where average household income is $60,000 and nearly half live in rental stress, and criticised the Prime Minister for botching two key jobs."
+  },
+  {
+   "slug": "speech-410224",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that government failures in quarantine and vaccination targets led to ongoing lockdowns and poverty, and criticised the new financial support as insufficient, calling for full JobKeeper and a JobSeeker rate above the poverty line."
+  },
+  {
+   "slug": "speech-410358",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The member for Gippsland supported the Treasury Laws Amendment (COVID-19 Economic Response No. 2) Bill 2021, detailing its five schedules for economic response payments, tax exemptions, and modifications, and highlighted the ongoing struggles of local businesses from bushfires and COVID-19 lockdowns, including specific income support of $750 for those losing over 20 hours of work and $450 for 8–20 hours."
+  },
+  {
+   "slug": "speech-410359",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The MP supported the Treasury Laws Amendment bill for COVID-19 support but argued the government’s assistance was too late and insufficient, citing no walk-in vaccination clinics in Greenway, easier access to COVID information in Icelandic than Tamil, and $13 billion in JobKeeper payments to firms whose earnings rose."
+  },
+  {
+   "slug": "speech-410360",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's COVID-19 support measures are welcome but not enough, criticising the JobSaver program for failing to cover fixed costs like rent, creating disincentives for employees, and using rigid turnover thresholds—citing a hospitality venue in Warringathat is $70,000 a month worse off—and urged a return to a mandatory leasing code, extended post-lockdown support, and a COVID cancellation insurance policy."
+  },
+  {
+   "slug": "speech-410361",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The Morrison government’s handling of vaccines and quarantine is costing the economy $300 million a day and making lockdowns necessary, according to the speech. Shaw Road Medical Centre in Lilley was allocated only 150 vaccine doses per week despite capacity for 700, and taxpayer support for Qantas should be conditional on protecting local jobs."
+  },
+  {
+   "slug": "speech-410362",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government’s pandemic failures—including 685 aged care deaths, 28 hotel quarantine leaks, and Australia ranking last in the OECD for fully vaccinated adults—directly harmed the Central Coast, where Pfizer appointments were cancelled and redirected to Sydney while local teachers, healthcare workers, and a cancer patient were left without timely vaccinations, and where many microbusinesses and workers were ineligible for or delayed in receiving financial support."
+  },
+  {
+   "slug": "speech-410363",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment bill but argued that the Morrison government's COVID-19 financial support rollout has been confusing and inadequate, leaving many small businesses and individuals in the Blue Mountains and Hawkesbury without timely assistance after six weeks of lockdown, and criticised the Prime Minister's complacency and the slow, flawed vaccine rollout."
+  },
+  {
+   "slug": "speech-410365",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's pandemic response has been delayed and inadequate, particularly for the early learning sector in Sydney, where centres cannot afford to waive gap fees without extra support, and urged the government to adopt the support package used in Victoria last year."
+  },
+  {
+   "slug": "speech-410366",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill 2021 but argued the government's failures on vaccine rollout and quarantine made the measures necessary, and proposed a $300 payment for Australians fully vaccinated by 1 December."
+  },
+  {
+   "slug": "speech-410367",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment Bill to provide financial assistance during lockdowns, while arguing the government's response was too slow and insufficient, citing a $3.8 billion weekly cost and 10 million people in lockdown, and criticizing the vaccine rollout (under 20%) and quarantine failures. The speaker also proposed a $300 cash payment to incentivise vaccinations, a idea the government had rejected."
+  },
+  {
+   "slug": "speech-410368",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's failures on national quarantine and the vaccine rollout caused a six-week lockdown for 30,000 Central Coast constituents, citing cancelled Pfizer appointments at the Belmont hub and severe business losses for Kings Coaches and Charmhaven Newsagency. They noted that diverted vaccine doses from the Hunter to western Sydney added to distress for essential workers and teachers."
+  },
+  {
+   "slug": "speech-410369",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The member argued the bill is overdue and fails to provide certainty for businesses and workers, criticising the Treasurer for not ensuring support payments were available to all who lost income, particularly in regional areas like Indi, and cited specific figures: $600 weekly for those losing 20+ hours, $375 for 18–20 hours, $3,000 for hospitality venues, $2,000 for small businesses, and up to $15,000 for alpine businesses, while noting that alpine resorts lost $112 million in visitor expenditure during a 12-day lockdown. The member also called for future support to be guaranteed and consistent, rather than decided lockdown by lockdown."
+  },
+  {
+   "slug": "speech-410370",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Prime Minister's failures in vaccine rollout and quarantine facilities caused the ongoing COVID crisis, costing the economy $300 million daily, and supported the bill while proposing a $300 payment for every fully vaccinated Australian by 1 December. They also criticised the New South Wales Premier for not locking down Sydney early enough and for redirecting Pfizer supplies from regional areas to Sydney."
+  },
+  {
+   "slug": "speech-410373",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The speaker yielded their time to the minister due to time constraints, noting that the adjournment was imminent and that the previous speaker had misjudged the speaking duration."
+  },
+  {
+   "slug": "speech-410374",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-03",
+   "stage_hint": null,
+   "brief": "The bill enables the Treasurer to make rules for economic response payments to entities adversely affected by state or territory COVID-19 restrictions between 1 July 2021 and 30 December 2022, and allows the ATO to share data for declared business support programs. It also makes eligible Commonwealth COVID-19 business grants and COVID-19 disaster payments tax-free, and extends the temporary electronic signatures mechanism."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (COVID-19 Economic Response No. 2) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00079",
+   "assent_date": "2021-08-10"
+  }
+ ]
+}

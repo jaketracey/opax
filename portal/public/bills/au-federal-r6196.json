@@ -1,0 +1,217 @@
+{
+ "key": "au-federal-r6196",
+ "title": "Veterans’ Affairs Legislation Amendment (Omnibus) Bill 2018",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Omnibus) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2018-10-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-10-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6196_ems_fe96d6d2-2dac-4a5f-8aad-017cb3fdb516%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6275473%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6196%22",
+   "document_date": "2018-09-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00135",
+   "document_date": "2018-10-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-370142",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The government opposed suspending standing orders, citing important business including the bipartisan passage of strawberry industry legislation, and listed several bills for introduction, such as the Higher Education Support Amendment (VET FEE-HELP Student Protection) Bill 2018 and the Treasury Laws Amendment (Making Sure Foreign Investors Pay Their Fair Share of Tax in Australia and Other Measures) Bill 2018."
+  },
+  {
+   "slug": "speech-370153",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-20",
+   "stage_hint": null,
+   "brief": "The Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018 was introduced to improve outcomes for Australian Defence Force members, veterans, and their families. It extends claim avenues to include the Chief of Defence Force, strengthens the Military Rehabilitation and Compensation Commission's ability to obtain third-party information, and simplifies lump sum exemption processes between DVA and the Department of Human Services."
+  },
+  {
+   "slug": "speech-370931",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018, which streamlines claims processes, and highlighted an ANAO report finding claims lost for 183 days and delayed 148 days due to departmental inefficiency. The speaker also announced Labor's commitment to introduce a military covenant, signed by the Chief of the Defence Force and Prime Minister, with accompanying legislation requiring regular parliamentary reporting on veteran support."
+  },
+  {
+   "slug": "speech-370932",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The member for Forde argued that the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018 will streamline claims processing, enable the Chief of the Defence Force to lodge claims on behalf of injured members, and reduce red tape by aligning DVA exempt lump sum determinations with existing exemptions under the Social Security Act. He also acknowledged local RSL sub-branches and veterans' advocate Alan Hendy for their support."
+  },
+  {
+   "slug": "speech-370933",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018, which includes three schedules to streamline claims processes: allowing the Chief of the Defence Force to make liability claims on behalf of consenting ADF members, expanding the Military Rehabilitation and Compensation Commission's information-gathering powers to all Commonwealth, state and territory departments, and exempting certain lump sum payments from DVA income tests. The speaker also noted there are 5,800 veterans in the electorate of McEwen and praised the member for Kingston's dedication to veterans."
+  },
+  {
+   "slug": "speech-370934",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The member supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018, arguing it will improve outcomes for serving ADF members, veterans and their families by allowing the Chief of the Defence Force to lodge claims on behalf of members, strengthening the Military Rehabilitation and Compensation Commission’s access to third-party information, and streamlining lump-sum income test exemptions. He also called for 23 July to be established as Pozieres Day, noting over 7,000 Australians were lost at Pozieres."
+  },
+  {
+   "slug": "speech-370936",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018, arguing it streamlines claims processing, allows the Chief of Defence Force to make claims on behalf of serving members, and reduces bureaucratic delays. The bill also enables the Military Rehabilitation and Compensation Commission to obtain information from third parties and exempts certain lump sum payments from income tests."
+  },
+  {
+   "slug": "speech-370937",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018 to streamline claims and reduce delays, and announced policies including a military covenant with annual parliamentary reporting, a veterans employment policy with a $5,000 training grant for businesses, and a family engagement and support strategy. The speech also noted veterans unemployment at 30% overall and 11.2% for non-medical discharges, and acknowledged Invictus Games competitors Tiffany White, Rob Saunders, and Jesse Costello."
+  },
+  {
+   "slug": "speech-370938",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The member announced Labor's support for the Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018 to streamline DVA claims processes, and committed to a health, wellbeing and transition facility in the Top End to be named after Scott Palmer. The member also acknowledged the late Corporal Leonard William \"Len\" Allen and named Invictus Games competitors Samantha Gould, Tom Foster and Sonya Newman."
+  },
+  {
+   "slug": "speech-370939",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-17",
+   "stage_hint": null,
+   "brief": "The government's Veterans' Affairs Legislation Amendment (Omnibus) Bill 2018 aims to improve services for Defence members, veterans and families by allowing the Chief of Defence Force to make claims on a member's behalf, strengthening the Military Rehabilitation and Compensation Commission's information-gathering powers, and simplifying lump sum exemptions for income support clients."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Omnibus) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00135",
+   "assent_date": "2018-10-25"
+  }
+ ]
+}

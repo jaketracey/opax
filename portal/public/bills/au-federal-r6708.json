@@ -1,0 +1,460 @@
+{
+ "key": "au-federal-r6708",
+ "title": "Treasury Laws Amendment (2021 Measures No. 3) Bill 2021",
+ "short_title": "Treasury Laws Amendment (2021 Measures No. 3) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6708_ems_75f93146-d6a4-4ba8-be6e-84e4f61e3c9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6708%22",
+   "document_date": "2021-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00061",
+   "document_date": "2021-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7162",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with a [motion](https://www.openaustralia.org.au/debate/?id=2021-05-26.123.1) \"*That the Member [Bowman MP Andrew Laming] be no further heard.* This means that [Mr Laming](https://theyvoteforyou.org.au/people/representatives/bowman/andrew_laming) can continue to speak in this debate.",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 41,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-26/5"
+  },
+  {
+   "key": "federal-representatives-7166",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-05-27.23.9) \"*that the words proposed to be omitted stand part of the question.*\" In other words, they voted to keep the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. A second reading motion is \"*that the bill be read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill.",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 73,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-27/4"
+  },
+  {
+   "key": "federal-senate-7284",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-06-22.252.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim), which means it failed. Senator McKim explained the [purpose of this amendment](https://www.openaustralia.org.au/senate/?gid=2021-06-22.249.1): > *This amendment would establish in legislation, rather than leaving it to regulation, a minimum deposit requirement for the purchaser for all loans guaranteed by the National Housing Finance and Investment Corporation. This amendment would set the minimum deposit requirement at five per cent, which is the current level set under the First Home Loan Deposit Scheme. Loans issued with less than a five per cent deposit are also tracked by APRA as an indicator of high-risk lending. By the prudential regulator's own measure, the Family Home Guarantee as proposed by the government, requiring a mere two per cent deposit for single parents, will encourage and increase higher risk spending.* ### Amendment text > *(1) Schedule 2, page 5 (after line 8), at the end of the Schedule, add:* > > *2 At the end of section 51* > > *Add:* > > *Limit on guarantee* > > *(4) The Commonwealth must not guarantee a loan for which the deposit paid by the borrower or borrowers is less than 5 per cent of the value of the residential property.*",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "earliest": 15,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/16"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-406937",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "Labor will support the Treasury Laws Amendment (2021 Measures No. 3) Bill 2021 and also the second reading amendment moved by the member for Indi."
+  },
+  {
+   "slug": "speech-406939",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The bill increases Medicare levy low-income thresholds, introduces a Family Home Guarantee allowing single parents to purchase a home with a 2% deposit, provides payments and support for thalidomide survivors, allocates disaster recovery grants of up to $75,000 for small businesses and primary producers, and expands tax-deductible gift status to additional not-for-profit organisations including Youthsafe, the Judith Neilson Institute for Journalism and Ideas, and the Trustee for the Great Synagogue Foundation."
+  },
+  {
+   "slug": "speech-406940",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speech supported the bill but argued the Family Home Guarantee is inadequate, helping only 10,000 single-parent families over four years (2,500 annually) against roughly one million eligible, with no clarity on whether 10,000 is a hard cap. It also noted the scheme excludes single parents without dependent children, such as older women aged 65–74 facing homelessness, and questioned whether price caps match available housing, citing Launceston."
+  },
+  {
+   "slug": "speech-407107",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker did not oppose the Family Home Guarantee program but raised concerns it misunderstands the housing crisis, noting it offers only 10,000 places for one million single-parent families, with a $375,000 regional property cap far below median house prices in Indi (e.g., $409,000 in Wodonga), and that less than 0.5% of local properties are vacant. They moved an amendment calling for government leadership on housing supply, including more social and affordable housing."
+  },
+  {
+   "slug": "speech-407109",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported granting deductible gift recipient status to the Sydney Chevra Kadisha (a 203-year-old Jewish burial society) and the Great Synagogue, arguing that the tax-deductible donations would help fund necessary upgrades and maintenance for these historic community institutions."
+  },
+  {
+   "slug": "speech-407110",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 3) Bill 2021 includes a housing measure for sole parents, adjusts Medicare levy thresholds, makes disaster recovery grants tax-free, and adds charities like the Judith Neilson Institute to deductible gift recipient listings. The speaker argued the government is waging a war on charities by appointing Gary Johns as head of the Australian Charities and Not-for-profits Commission, rejecting recommendations for checks on his powers, and proposing to let him deregister charities for anticipated summary offences, while failing to reform outdated fundraising laws costing charities $15 million annually."
+  },
+  {
+   "slug": "speech-407111",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported making disaster recovery grants of $50,000 and $75,000 tax-free for small businesses and primary producers affected by floods and storms between 19 February and 31 March 2021, citing the severe cumulative impacts of drought, bushfires, floods, and the pandemic on his Cowper electorate."
+  },
+  {
+   "slug": "speech-407112",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The government's housing measures, including a scheme to help 10,000 single parents out of one million, primarily stimulate demand and will not address the housing crisis, while Labor's proposed $10 billion Australian Housing Future Fund would build 20,000 new social dwellings and 10,000 affordable homes over five years."
+  },
+  {
+   "slug": "speech-407113",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that community foundations should be granted DGR1 tax-deductible status, citing the Stand Like Stone Foundation and Barossa Foundation in his electorate as examples where the current DGR2 status limited donations during the Black Summer bushfires and COVID-19 response. He noted that Philanthropy Australia now supports this change."
+  },
+  {
+   "slug": "speech-407114",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Medicare levy threshold changes and the Family Home Guarantee measure in the Treasury Laws Amendment Bill, but argued the government’s housing policy is too small—helping only 10,000 single-parent families—and fails to address structural issues like affordable housing supply, low wages, and the need for federal investment in public and social housing. The speaker also raised a specific case of Dr. Vahedeh Naseri, a doctor unable to practise due to COVID-related exam delays, and called for bureaucratic fixes to retain bulk-billing GPs in areas like Carrum Downs and Frankston."
+  },
+  {
+   "slug": "speech-407115",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that home ownership should be prioritised over superannuation for financial security, criticised Labor for focusing on social housing instead of fixing the housing market, and noted that IMF Investors paid $36 million in bonuses to fund managers."
+  },
+  {
+   "slug": "speech-407119",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill, which includes a Family Home Guarantee for 10,000 single parents with a 2% deposit, tax-exempt payments for thalidomide survivors, and recovery grants, while arguing that federal housing funds are not reaching rural areas and called for directing state spending to communities in crisis, noting that women over 55 are the fastest-growing homeless cohort."
+  },
+  {
+   "slug": "speech-407120",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill but questioned how the government will replace the $50 million annual reduction in Medicare levy revenue, and argued that the Family Home Guarantee scheme will likely increase house prices rather than improve affordability, citing 10,000 new places for single parents with deposits as low as 2% but limited to those earning under $125,000."
+  },
+  {
+   "slug": "speech-407121",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The bill covers Medicare levy threshold adjustments, the Family Home Guarantee, tax exemptions for thalidomide survivor payments and flood recovery grants, and new deductible gift recipient status for organisations including the Alliance for Journalists' Freedom, Andy Thomas Space Foundation, and the Great Synagogue Foundation trust. The speaker argued that housing affordability is fundamentally a supply problem caused by failed planning laws, citing Tokyo's liberalisation that reduced homelessness by 80% in 11 years, and criticised opposition to a development in Little Bay that would sell homes for under half the average $2.5 million price in the member for Kingsford Smith's electorate."
+  },
+  {
+   "slug": "speech-407122",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The member supported the bill creating 10,000 First Home Loan Deposit Scheme places for single parents but argued it fails to address the broader housing crisis, particularly for lower-income single parents. He announced Labor's alternative $10 billion Housing Australia Future Fund to build 20,000 social and 10,000 affordable dwellings, including 4,000 for women and children fleeing domestic violence and older women, $200 million for remote Indigenous housing, and $30 million for veteran homelessness services."
+  },
+  {
+   "slug": "speech-407187",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (2021 Measures No. 3) Bill 2021 was supported, with the speaker noting it increases Medicare levy low-income thresholds in line with CPI, expands NHFIC assistance to single parents with dependants, provides income tax exemptions for primary producers and small businesses affected by 2021 storms and floods, and grants deductible gift recipient status to the Andy Thomas Space Foundation. The speaker argued the housing measures are piecemeal compared to Labor’s $10 billion Housing Australia Future Fund, criticised the government’s slow disaster response citing the 2021 bushfires, and called for greater government support for the space sector."
+  },
+  {
+   "slug": "speech-407188",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The bill includes increases to Medicare levy thresholds for low-income households, a Family Home Guarantee providing 10,000 guarantees over four years for single parents to build or buy a home with a 2% deposit, tax exemptions for thalidomide survivor payments, and income tax exemptions for storm and flood recovery grants of up to $75,000 for primary producers and $50,000 for small businesses. It also adds several organisations to the deductible gift recipients list."
+  },
+  {
+   "slug": "speech-407189",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The member supported the Treasury Laws Amendment Bill but criticised schedule 2 for only helping 10,000 of Australia’s one million single parents, calling it minimalistic. The member welcomed schedule 5, which grants deductible gift recipient status to the South Australian Viet Nam Charity Group after years of effort."
+  },
+  {
+   "slug": "speech-407190",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill’s measures to raise the Medicare levy low‑income threshold and help single parents into housing, but argued they are insufficient. They criticised the government’s vaccine rollout, noting 30 aged‑care facilities had received no vaccinations and accusing it of abandoning targets, and called for addressing housing supply rather than just demand."
+  },
+  {
+   "slug": "speech-407191",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Family Home Guarantee measure, providing 10,000 places over four years for single parents to buy homes with a 2% deposit, is inadequate—equating to only about 16.5 single parents per electorate per year, with 738 single parents in Parramatta alone. The speaker noted that the $125,000 income cap excludes most single parents, as the median income is $54,000, and only one suburb in Western Sydney (Carramar) is affordable for them, while the policy drives up housing prices without addressing the need for social housing."
+  },
+  {
+   "slug": "speech-407192",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-27",
+   "stage_hint": null,
+   "brief": "The bill increases Medicare levy low-income thresholds for 2020-21 (singles $23,226, seniors $36,705, couples $39,116 plus $3,597 per child, senior couples $51,094 plus $3,597 per child), establishes a Family Home Guarantee providing 10,000 guarantees over four years for single parents, exempts thalidomide survivor payments from tax ($44.9 million over four years), exempts disaster recovery grants for Feb-Mar 2021 storms/floods (up to $50,000 for small businesses, $75,000 for primary producers), and adds eight organisations—including the Alliance for Journalists' Freedom Limited, Andy Thomas Space Foundation, Youthsafe, RAS Foundation, Judith Nielsen Institute for Journalism and Ideas, Great Synagogue Foundation Trust, Centre for Entrepreneurial Research and Innovation, and Sydney Chevra Kadisha—to the deductible gift recipient list."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2021 Measures No. 3) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00061",
+   "assent_date": "2021-06-29"
+  }
+ ]
+}

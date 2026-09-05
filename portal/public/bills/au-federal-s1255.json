@@ -1,0 +1,82 @@
+{
+ "key": "au-federal-s1255",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Climate Trigger) Bill 2020",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Climate Trigger) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-13",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1255%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1255%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1255%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1255%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1255_ems_e4e9ea76-7475-456e-bacf-8b9c372dc0ff%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1255%22",
+   "document_date": "2020-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-13",
+  "sentences": [
+   "The bill would add emissions-intensive activities to the list of matters that require federal environmental assessment under the EPBC Act.",
+   "It would create civil and criminal penalties for individuals or companies that carry out such activities without approval from the Minister.",
+   "The bill would start the day after it receives Royal Assent and applies to actions beginning on or after that day."
+  ],
+  "changes": [
+   "Introduces a climate trigger by making emissions-intensive actions a new matter of national environmental significance.",
+   "Establishes civil penalties for taking an emissions-intensive action that has a significant impact on the environment.",
+   "Creates criminal offences for the same conduct, with maximum penalties of 7 years imprisonment or 420 penalty units.",
+   "Defines emissions-intensive actions as those involving mining operations, drilling exploration, land clearing, or as specified in regulations.",
+   "Provides exceptions where the Minister has approved the action or it is covered by an accredited management arrangement.",
+   "Allows the Governor-General to make transitional regulations for matters of a transitional nature."
+  ],
+  "affected": "Individuals and bodies corporate that undertake emissions-intensive actions such as mining, drilling, or land clearing.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

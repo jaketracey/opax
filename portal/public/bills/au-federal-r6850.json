@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6850",
+ "title": "Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2022",
+ "short_title": "Commonwealth Electoral Amendment (Cleaning up Political Donations) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-14",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6850%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6850%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6850%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6850_ems_4152b7a1-e0ab-4649-93f0-d433b4b44f59%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6850%22",
+   "document_date": "2022-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-14",
+  "sentences": [
+   "This bill would tighten the rules around political donations in Australia.",
+   "It would require donors and recipients to report gifts to the Australian Electoral Commission more quickly and would cap how much one donor can give.",
+   "The bill would also ban donations from certain industries and increase penalties for breaking the rules."
+  ],
+  "changes": [
+   "Lowering the disclosure threshold from $13,800 (or $14,500 indexed) to $1,000 for individual donations.",
+   "Requiring aggregation of multiple donations from the same source to count toward the threshold.",
+   "Expanding the definition of 'gift' to include actions valued at $1,000 or more that benefit a political entity, and amounts paid to attend fundraisers.",
+   "Introducing a $50,000 cap on total donations from one donor during an electoral cycle.",
+   "Requiring real-time disclosure to the AEC within two business days of reaching the threshold.",
+   "Prohibiting donations from fossil fuel, gambling, liquor, and tobacco industries."
+  ],
+  "affected": "Political donors, political entities, and the Australian Electoral Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:12Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

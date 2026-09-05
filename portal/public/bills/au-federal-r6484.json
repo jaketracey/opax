@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6484",
+ "title": "Australian Capital Territory (Self-Government) Amendment (ACT Integrity Commission Powers) Bill 2020",
+ "short_title": "Australian Capital Territory (Self-Government) Amendment (ACT Integrity Commission Powers) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-24",
+ "originating_house": "representatives",
+ "sponsor": "LEIGH, Andrew, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10746",
+ "portfolio": "(s) LEIGH, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-11-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6484%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6484%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6484%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6484_ems_63080380-7e90-48ab-a56e-d70f71369ed9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6484%22",
+   "document_date": "2020-02-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-388377",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-24",
+   "stage_hint": null,
+   "brief": "The speaker seconded a bill to amend the Australian Capital Territory (Self-Government) Act 1988, allowing the ACT Integrity Commission to investigate ACT Policing, which is currently excluded from its scope. The bill would enable the ACT government to regulate oversight of all public officials, with a memorandum of understanding expected between the ACT Integrity Commission and the Australian Commission for Law Enforcement Integrity to avoid duplication."
+  }
+ ],
+ "acts": []
+}

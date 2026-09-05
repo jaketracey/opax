@@ -1,0 +1,427 @@
+{
+ "key": "au-federal-r7205",
+ "title": "Criminal Code Amendment (Deepfake Sexual Material) Bill 2024",
+ "short_title": "Criminal Code Amendment (Deepfake Sexual Material) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-06-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-07-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-07-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-07-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7205_ems_b5e481ee-ca9d-4e18-ba89-e42385d5e912%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7205%22",
+   "document_date": "2024-06-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00078",
+   "document_date": "2024-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-9081",
+   "date": "2024-08-21",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-08-19.185.1) introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means it failed. This amendment would have added the words below to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate notes that Australia, having ratified the Convention on the Elimination of All Forms of Discrimination against Women, has an international obligation to make the creation of, and associated threat of the creation of, deepfake sexual material an offence.\"*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 4,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-21/3"
+  },
+  {
+   "key": "federal-senate-9082",
+   "date": "2024-08-21",
+   "house": "senate",
+   "question": "Criminal Code Amendment (Deepfake Sexual Material) Bill 2024 - Second Reading - Ban politicial deepfakes",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 3,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-21/4"
+  },
+  {
+   "key": "federal-senate-9083",
+   "date": "2024-08-21",
+   "house": "senate",
+   "question": "Criminal Code Amendment (Deepfake Sexual Material) Bill 2024 - Second Reading - Ban political deepfakes",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 3,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-21/5"
+  },
+  {
+   "key": "federal-senate-9084",
+   "date": "2024-08-21",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-08-21.48.1) introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means it failed. ### What did this amendment do? Senator Cash [explained that](https://www.openaustralia.org.au/senate/?gid=2024-08-21.48.1): > *I'm offering in terms of the amendment—I understand it won't be supported, but by way of explanation—a way forward that avoids the drafting problems, risks and unintended consequences associated with the government's unusual drafting choices in this bill. It is an amendment that means simply clarifying that the existing aggravated offence—that means the definition of consent remains; we don't have the issues arising in terms of cross-examination—applies to deepfakes, as it was always intended to. This is an approach that preserves the advantages the Law Council spoke about but, as I said, also addresses the potential concerns that have been raised in relation to the Attorney-General's unusual drafting choices. It preserves the definition of consent but reduces the risk that a prosecution will fall over—this is always a risk when you're actually prosecuting something and you now need to prove the consent, because consent is an element of the offence—because a victim is reluctant to be cross-examined in a court. It is a better way to arrive at the destination that the government is aiming for. As I said, we get to the same destination. We would argue it is a better way to do it, and it addresses the unusual drafting choices but also the unintended consequences in terms of the risks that prosecutions will fall over because a victim is reluctant to be cross-examined in court.* ### Amendment text > *(1) Schedule 1, page 3 (line 1) to page 9 (line 5), omit Schedule 1, substitute:* > > *Schedule 1 — Amendments* > > *Criminal Code Act 1995* > > *1 Section 473.1 of the Criminal Code (at the end of",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-21/6"
+  },
+  {
+   "key": "federal-senate-9085",
+   "date": "2024-08-21",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-08-21.53.1) introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means it failed. ### What does this amendment do? Senator Cash [explained that](https://www.openaustralia.org.au/senate/?gid=2024-08-21.53.1): > *This is a straightforward review provision that requires us to come back to the issue in two years.* ### Amendment text > *(1) Schedule 1, item 6, page 8 (after line 25), after section 474.17B, insert:* > > *474.17C Review of amendments made by the Criminal Code Amendment (Deepfake Sexual Material) Act 2024* > >> *(1) After the end of the 2-year period beginning at the commencement of this section, the Minister must cause to be conducted a review of the operation of sections 474.17A, 474.17AA, 474.17AB and 474.17B.* >> >> *Report* >> >> *(2) A report of the review must be given to the Minister within 3 months after the end of the 2-year period mentioned in subsection (1).* >> >> *(3) The Minister must cause copies of a report under subsection (2) to be tabled in each House of the Parliament within 15 sitting days of that House after the Minister receives the report.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 8,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-21/7"
+  },
+  {
+   "key": "federal-senate-9086",
+   "date": "2024-08-21",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-08-21.56.1) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means it failed. ### What was the purpose of this amendment? Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens) introduced this amendment on Senator Thorpe's behalf and [explained that](https://www.openaustralia.org.au/senate/?gid=2024-08-21.56.1): > *This amendment is in line with the Greens' long-held position of raising the age of criminal responsibility to 14. [...] Leaving aside that blatant disregard for democracy and human rights, both adult and children's prisons have repeatedly been shown to be unsafe for young people. They increase the likelihood of reoffending, and they impose torture-like conditions. First Nations children are especially targeted and are grossly overrepresented in child prisons. Closing child prisons is a key measure towards closing the gap. That's why the Greens are moving this amendment on sheet 2763, and we urge everyone in the chamber to support this amendment. I note that the federal government should in fact use its power to incentivise all state jurisdictions to raise the age of criminal responsibility for both this and all other offences, because kids don't belong in prison.* ### Amendment text > *(1) Schedule 1, item 5, page 5 (after line 12), after subsection 474.17A(3), insert:* > > *(3A) Subsection (1) does not apply if the first person is not 14 years of age or older.* > > *Note: A defendant bears an evidential burden in relation to the matter in subsection (3A). See subsection 13.3(3).*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-08-21/8"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (Deepfake Sexual Material) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00078",
+   "assent_date": "2024-09-02"
+  }
+ ]
+}

@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6297",
+ "title": "Banking Amendment (Rural Finance Reform) Bill 2019",
+ "short_title": "Banking Amendment (Rural Finance Reform) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-18",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6297%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6297%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6297%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6297_ems_b33bef9d-9121-4622-bce4-2d3dc2e01f1a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6297%22",
+   "document_date": "2019-02-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-18",
+  "sentences": [
+   "This bill is part of a package that would add new protections for small primary production businesses in their loan agreements with banks.",
+   "The package would ban banks from including certain clauses in loan documents, require them to provide notices and summaries, and impose civil penalties for non-compliance.",
+   "It would start on the first 1 July after the bill receives Royal Assent."
+  ],
+  "changes": [
+   "Banks would be banned from performing a unilateral valuation of loan security.",
+   "Banks would be banned from including a catch-all material adverse change clause, except for fraud or criminal activity.",
+   "Banks would have to give a 30 business day notice before exercising a power under a general restriction covenant.",
+   "Banks would have to give a copy of valuation instructions and the final valuation report to the borrower.",
+   "Banks would have to give at least 6 months' notice before the end of a term loan.",
+   "A bank that varies a loan term would need to give at least 6 months' written notice, unless the borrower has failed to comply in a non-minor way or the change reduces the borrower's obligations."
+  ],
+  "affected": "Small primary production businesses and authorised deposit-taking institutions (banks).",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:19:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375344",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-02-18",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Banking Amendment (Rural Finance Reform) Bill 2019, expressing disappointment that the government has failed to advocate for farmers and urging National Party and regional Liberal colleagues to represent their farming constituencies."
+  }
+ ],
+ "acts": []
+}

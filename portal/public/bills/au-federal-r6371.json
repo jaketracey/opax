@@ -1,0 +1,1050 @@
+{
+ "key": "au-federal-r6371",
+ "title": "Future Drought Fund Bill 2019",
+ "short_title": "Future Drought Fund Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2019-07-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6371_ems_6264e6b5-9c45-47a8-9c43-a427efa67fe4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6371%22",
+   "document_date": "2019-07-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00055",
+   "document_date": "2019-07-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5752",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2019-07-22.126.20) to adjourn debate, so the debate could continue.",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-22/8"
+  },
+  {
+   "key": "federal-representatives-5753",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2019-07-22.130.1) to adjourn debate, which means the debate can continue.",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-22/9"
+  },
+  {
+   "key": "federal-representatives-5754",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2019-07-22.135.1) introduced by the MP for Melbourne [Adam Bandt](https://theyvoteforyou.org.au/people/representatives/melbourne/adam_bandt) (Greens), which means it failed. The motion would have amended an [earlier motion](https://theyvoteforyou.org.au/divisions/representatives/2019-07-22/11) introduced by Hunter MP [Joel Fitzgibbon](https://theyvoteforyou.org.au/people/representatives/hunter/joel_fitzgibbon). ### Motion text > *That all words after \"very same\" be omitted with a view to substituting the following words:* > > *\"communities;* > > *(3) notes that the Bureau of Meteorology has said:* > >> *(a) the current drought in the Murray Darling Basin is the most severe in 120 years of records; and* >> >> *(b) that climate change is a significant cause of the severity of the drought; and* > > *(4) calls on the Government to recognise that we are in the middle of a climate crisis, which has implications for droughts in this country\".*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-22/10"
+  },
+  {
+   "key": "federal-representatives-5755",
+   "date": "2019-07-22",
+   "house": "representatives",
+   "question": "The majority voted against a motion introduced by the MP for Hunter [Joel Fitzgibbon](https://theyvoteforyou.org.au/people/representatives/hunter/joel_fitzgibbon), which means it failed. The motion would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) *that the bill be read for a second time*, which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House:* > >> *(1) criticises the Government for its failure over six years to develop and implement a comprehensive and effective policy to assist rural and regional communities facing severe drought conditions; and* >> >> *(2) notes that the inferior response contained in the bill requires the abolition of the Building Australia Fund, which could be used to build road, rail, and other vital infrastructure—including water infrastructure—in these very same rural and regional communities”.*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 2
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-22/11"
+  },
+  {
+   "key": "federal-senate-5766",
+   "date": "2019-07-23",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2019-07-23.11.2) introduced by SA Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means it failed. ### Motion text > *That the provisions of paragraphs (5) to (8) of [standing order 111](https://www.aph.gov.au/Parliamentary_Business/Chamber_documents/Senate_chamber_documents/standingorders/previouseditions/~/~/link.aspx?_id=5845FC0FA06C4184AE526E948368E472&_z=z) not apply to the following bills, allowing them to be considered during this period of sittings:* > >> *Future Drought Fund Bill 2019* >> >> *Future Drought Fund (Consequential Amendments) Bill 2019.*",
+   "stage": "Business motion",
+   "ayes": 9,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 21,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-23/1"
+  },
+  {
+   "key": "federal-senate-5776",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is *that the bill be read a second time*. This is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor). ### Amendment text > *At the end of the motion, add \"but the Senate:* > > *(a) condemns the Government for its failure over six years to develop and implement a comprehensive and effective policy to assist rural and regional communities facing severe drought conditions; and* > > *(b) notes that the inferior response contained in the bill requires the abolition of the Building Australia Fund, which could be used to build road, rail, and other vital infrastructure—including water infrastructure—in these very same rural and regional communities\".*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 32,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/1"
+  },
+  {
+   "key": "federal-senate-5777",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is *that the bill be read a second time*. This is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens). ### Amendment text > *At the end of the motion, add:* > > *\", but the Senate:* > >> *(a) notes that the placement of a 10 per cent royalty on projects subject to the PRRT, creditable against PRRT liabilities, and treated as a deductible expense in calculating company tax, would raise $4 billion, in real terms, within two years; and* >> >> *(b) calls on the Government to bring forward legislation to introduce a Commonwealth royalty on oil and gas projects for the purposes of the Future Drought Fund in recognition that the oil and gas industry are contributing to more severe and prolonged droughts.\"*",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 53,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 27,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/2"
+  },
+  {
+   "key": "federal-senate-5778",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "Future Drought Fund Bill 2019 and another - Second Reading - Fossil fuel companies water use",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 54,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/3"
+  },
+  {
+   "key": "federal-senate-5779",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-07-24.14.1) introduced by Tasmanian Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson) (Greens), which means it failed. The motion would have amended the usual second reading motion, which is that \"*the bills be read [for a second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html)*\". This is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add:* > > *\", but the Senate:* > > *(a) notes that the Bureau of Meteorology has stated that:* > >> *(i) the current drought in the Murray-Darling Basin is the most severe in 120 years of records; and* >> >> *(ii) climate change is a significant cause of the severity of the drought; and* > > *(b) calls on the Government to recognise that we are in the middle of a climate crisis which has implications for droughts in this country.\"*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 53,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 26,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/4"
+  },
+  {
+   "key": "federal-senate-5780",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2019-07-24.21.1) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means they failed. The amendments would have [introduced accountability measures](https://www.openaustralia.org.au/senate/?gid=2019-07-24.21.1).",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 21,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/5"
+  },
+  {
+   "key": "federal-senate-5781",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2019-07-24.51.1) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means they failed. Senator Rice [explained that](https://www.openaustralia.org.au/senate/?gid=2019-07-24.51.1): > *These Greens amendments remove the source of the funding for this drought fund from the Building Australia Fund. We are deeply concerned about the proposition that the money to be used for tackling drought should come from the Building Australia Fund. It makes no sense whatsoever that money that we should be spending on essential transport infrastructure gets ripped out when that's where the money needs to go. We know that it is farcical. We do not need to be ripping money out of transport infrastructure to be able to pay for drought relief.* ### Amendments text > *(1) Clause 4, page 3 (lines 1 to 4), omit the paragraph beginning \"The balance of the Building Australia Fund\".* > > *(2) Clause 5, page 5 (lines 4 to 10), omit the definitions of Building Australia Fund and Building Australia Fund Special Account.* > > *(3) Clause 9, page 10 (lines 7 to 10), omit the paragraph beginning \"The balance of the Building Australia Fund\".* > > *(5) Clause 17, page 16 (line 33), omit \"; or\", substitute \".\".* > > *(6) Clause 17, page 16 (lines 34 to 36), omit subparagraph (f) (iii).*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 43,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 22,
+    "dated": 21,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/6"
+  },
+  {
+   "key": "federal-senate-5782",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-07-24.17.1) that clauses 11, 12 and 64 remain unchanged. In parliamentary jargon, they voted that the clauses *stand as printed.* This motion was put after the Greens moved that those clauses should be opposed. ### Text of clauses 11, 12 and 64 > **11 Transfer of balance of the Building Australia Fund Special Account** > > *As soon as practicable after the commencement of this section, there is to be credited to the Future Drought Fund Special Account an amount equal to the balance of the Building Australia Fund Special Account immediately before the commencement of this section.* > > *Note: The balance of the Building Australia Fund Special Account does not include the value of an investment of the Building Australia Fund.* > **12 Transfer of investments of the Building Australia Fund** > > *Scope* > > *(1) This section applies to a financial asset if, immediately before the commencement of this section, the asset was an investment of the Building Australia Fund.* > > *Transfer* > > *(2) Immediately after the commencement of this section, the financial asset is taken to cease to be an investment of the Building Australia Fund and to become an investment of the Future Drought Fund.* > **64 Transitional—receipts relating to the Building Australia Fund** > > *If the Future Fund Board receives an amount of money that relates to the Building Australia Fund, the amount is to be credited to the Future Drought Fund Special Account.*",
+   "stage": "In committee",
+   "ayes": 42,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 21,
+    "dated": 20,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/7"
+  },
+  {
+   "key": "federal-senate-5783",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "Future Drought Fund Bill 2019 and another - in Committee - Fossil fuels",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 23,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/8"
+  },
+  {
+   "key": "federal-senate-5784",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-07-24.61.1) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice), which means it failed. Senator Rice [explained that](https://www.openaustralia.org.au/senate/?gid=2019-07-24.61.1): > *This amendment to the Future Drought Fund Bill requires the drought plan to be consistent with the Water Act and, particularly, the Murray-Darling Basin Plan. I note that in the bill there is a requirement for the drought plan to be consistent with Regional Investment Corporation activities. I think it is highly appropriate—in fact, much more important—that any projects funded under this fund and the plan that will come out of this legislation are consistent with the Water Act and, particularly, the Murray-Darling Basin Authority plan.* ### Motion text > *(1) Page 22 (after line 29), after clause 25, insert:* > > *25A Consistency with the Water Act 2007* > > *(1) Before making an arrangement or a grant under section 21 that affects Basin water resources (within the meaning of the Water Act 2007), the Drought Minister must request the Murray-Darling Basin Authority provide written advice as to whether the arrangement or grant is consistent with the objects of the Water Act 2007.* > > *(2) The Authority must provide the written advice requested by the Drought Minister as soon as reasonably practicable after receiving the request.* > > *(3) The Drought Minister may make the arrangement or grant if the Authority advises the arrangement or grant is consistent with the objects of the Water Act 2007.* > > *(4) The Drought Minister must cause the publication of the Authority's advice on the Agriculture Department's website as soon as reasonably practicable after receiving the advice.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "earliest": 17,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/9"
+  },
+  {
+   "key": "federal-senate-5785",
+   "date": "2019-07-24",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-07-24.79.1) to pass the bill. In parliamentary jargon, they voted in favour of the question: > *that the [Future Drought Fund Bill 2019](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6371), as amended, and the [Future Drought Fund (Consequential Amendments) Bill 2019](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6372) be [read a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html).* ### What do these bills do? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6371) use: > *uncommitted funds from the Building Australia Fund to establish the Future Drought Fund (comprised of the Future Drought Fund Special Account and the investments of the Future Drought Fund) as a dedicated investment vehicle to provide a secure revenue stream to be used for drought resilience, preparedness and response. Also establishes the Future Drought Fund Consultative Committee.*",
+   "stage": "Third reading",
+   "ayes": 44,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 21,
+    "dated": 22,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-24/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377677",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The government has provided nearly $1.9 billion in drought support through programs including farm household allowance, rural financial counsellors, and $30 million for mental health. It introduced the Future Drought Fund Bill, creating a $3.9 billion fund (rising to $5 billion) that will generate $100 million annually for rural resilience, with an independent committee and 42-day consultation period."
+  },
+  {
+   "slug": "speech-377726",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The government is rushing the Future Drought Fund bills through the House in a single day without proper consideration, even though the funding does not take effect until 1 July 2020; the speaker called for debate to be adjourned until the following day to allow members time to review the legislation."
+  },
+  {
+   "slug": "speech-377731",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The Future Drought Fund Bill provides $100 million per year from July 2020 for drought support, with an independent consultative committee and a 42-day consultation period, plus $1.9 billion in interim measures; the speaker stressed the need for timely passage and noted the opposition voted against the bill in October."
+  },
+  {
+   "slug": "speech-377762",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The Future Drought Fund Bill 2019 delays drought funding until the 2020-21 financial year, providing only $200 million over two years rather than the claimed $5 billion, and the government is using it to dismantle the Building Australia Fund, which has rigorous infrastructure criteria. The opposition supports immediate drought funding and warns against ministerial discretion replacing transparent, evidence-based project selection."
+  },
+  {
+   "slug": "speech-377793",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Future Drought Fund Bill 2019, which establishes a $5 billion fund with $100 million drawn annually to build drought resilience and preparedness, and criticised the opposition for blocking it, accusing them of betraying farmers and country communities."
+  },
+  {
+   "slug": "speech-377794",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The Future Drought Fund Bill was supported, but with concerns raised about the $3.9 billion transfer from the Building Australia Fund and the potential for a narrow focus. A nationally consistent approach to climate adaptation for primary producers and geographically diverse board membership were urged."
+  },
+  {
+   "slug": "speech-377796",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for forcing a vote on the $5 billion Future Drought Fund Bill without adequate time to read it, claiming a broken promise to adjourn debate at 7:30 pm. They argued that climate change is a primary cause of the current drought, which the Bureau of Meteorology has rated the most severe in 120 years, and moved an amendment calling for the government to recognise a climate crisis."
+  },
+  {
+   "slug": "speech-377807",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The Manager of Opposition Business moved to suspend standing orders to force an adjournment of the House, arguing the government was cynically blocking scrutiny of the Future Drought Fund Bill and Future Drought Fund (Consequential Amendments) Bill, noting no funds would be available until July 2020 anyway, and called on the government to adjourn so debate could resume the next day."
+  },
+  {
+   "slug": "speech-377823",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-22",
+   "stage_hint": null,
+   "brief": "The government announced a $3.9 billion upfront investment for the Future Drought Fund, expected to grow to around $5 billion over a decade, with annual distributions of $100 million from 2020–2021 for drought-resilience projects managed by the Future Drought Board of Guardians. The bill transfers uncommitted funds from the Building Australia Fund without affecting National Disability Insurance Scheme funding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Future Drought Fund Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00055",
+   "assent_date": "2019-07-30"
+  }
+ ]
+}

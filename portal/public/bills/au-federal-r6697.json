@@ -1,0 +1,860 @@
+{
+ "key": "au-federal-r6697",
+ "title": "Mitochondrial Donation Law Reform (Maeve’s Law) Bill 2021",
+ "short_title": "Mitochondrial Donation Law Reform (Maeve’s Law) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6697_ems_34f56965-6288-4da6-9a02-096f5b58d3c1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6697_ems_3548f5a3-edd4-4d62-8047-e5df95ac7834%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6697_ems_8d575861-0c01-45f2-928d-2043981e3417%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6697_ems_b09371bf-82a7-4090-8d89-de6afbca4f60%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6697%22",
+   "document_date": "2021-03-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00026",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2021-03-24",
+  "sentences": [
+   "The bill would legalise mitochondrial donation techniques in Australia under a national regulatory framework.",
+   "It would amend the Prohibition of Human Cloning for Reproduction Act 2002, the Research Involving Human Embryos Act 2002, the Research Involving Human Embryos Regulations 2017, an Excluded Goods Determination, and the Freedom of Information Act 1982.",
+   "The bill would allow women carrying mitochondrial mutations to have a biological child without inheriting those mutations, and would permit further research and training before broader clinical use."
+  ],
+  "changes": [
+   "Legalise mitochondrial donation for research and human reproductive purposes.",
+   "Establish a national regulatory framework for the technology.",
+   "Allow women with mitochondrial disease risk to have a biological child without inheriting that risk.",
+   "Enable further research and training to build evidence and expertise.",
+   "Gather data on safety and efficacy before broader introduction.",
+   "Implement ethical safeguards identified through consultation."
+  ],
+  "affected": "Women whose mitochondria would predispose their children to severe mitochondrial disease, and their families.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7544",
+   "date": "2021-12-01",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2021-12-01.136.1) introduced by Menzies MP [Kevin Andrews](https://theyvoteforyou.org.au/people/representatives/menzies/kevin_andrews) (Liberal), which means they failed This was a [free vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) (also known as a conscience vote), which means our MPs voted according to their own beliefs rather than strictly along party lines. ### What would this amendment do? MP Andrews [explained that](https://www.openaustralia.org.au/debate/?id=2021-12-01.136.1): > *These amendments go to what I believe is a fundamental area of difference in terms of the ethical consideration of this matter, and I'll put it in this context: there are essentially five techniques which are provided for in this bill, but they can be split into two categories. There's a category of mitochondrial techniques which involve the transfer of material between eggs—namely, the maternal spindle transfer and the geminal vesicle transfer. They don't involve any destruction of an embryo in order to undertake those techniques. There are three other techniques that involve transfer of material between zygotes or embryos—namely, pronuclear transfer, first polar body transfer and second polar body transfer. These three techniques involve, necessarily as part of the undertaking of the procedure, the destruction of a zygote or an embryo.* > > *I note in passing that under the bill only two techniques—namely, maternal spindle transfer and pronuclear transfer—are permitted for the clinical trial licence phase. But one of these techniques—namely, pronuclear transfer—involves the destruction of the zygote or the embryo. Accordingly, these amendments, when taken together, would remove from the bill those techniques or procedures which result in the destruction of the embryo. It would allow mitochondrial research to b",
+   "stage": "Consideration in detail",
+   "ayes": 93,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 7
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 6,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-12-01/3"
+  },
+  {
+   "key": "federal-senate-7592",
+   "date": "2022-02-09",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-02-09.178.1) introduced by NSW Senator [Deborah O'Neill](https://theyvoteforyou.org.au/people/senate/nsw/deborah_o'neill) (Labor), which means it failed. This amendment would have changed the definition of \"gene technology.\" Speaking in opposition to the amendment, Queensland Senator [Murray Watt](https://theyvoteforyou.org.au/people/senate/queensland/murray_watt) (Labor) [explained that](https://www.openaustralia.org.au/senate/?gid=2022-02-09.179.1): > *This amendment would change the definition of 'gene technology' to include mitochondrial donation. This would, in practice, require the Office of the Gene Technology Regulator to become involved in the regulation of mitochondrial donation.* This was a [free vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than strictly along party lines. ### Amendment text > *(1) Schedule 1, page 3 (before line 3), before the heading specifying Prohibition of Human Cloning for Reproduction Act 2002, insert:* > > *Gene Technology Act 2000* > > *1A Subsection 10(1) (definition of gene technology)* > > *Repeal the definition, substitute:* > > *gene technology means:* > > *(a) any technique for the modification of genes or other genetic material; and* > > *(b) a mitochondrial donation technique (within the meaning of Part 2 of the Research Involving Human Embryos Act 2002);* > > *but does not include:* > > *(c) sexual reproduction; or* > > *(d) homologous recombination; or* > > *(e) any other technique specified in the regulations for the purposes of this paragraph.* ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd065): > *Mitochondrial disease is a group of conditions that can cause serious h",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 6,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 23,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-09/5"
+  },
+  {
+   "key": "federal-senate-7593",
+   "date": "2022-02-09",
+   "house": "senate",
+   "question": "The majority voted in favour of a motion that section 47 in item 103 of schedule 1 stand as printed. In other words, they voted to keep that section unchanged. This was a [free vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than strictly along party lines. ### Text of Section 47 > *47 Interaction with the Gene Technology Act 2000* > > *(1) A mitochondrial donation technique is taken not to be gene technology for the purposes of the Gene Technology Act 2000 when used as authorised or purportedly authorised by a mitochondrial donation licence.* > > *(2) In this section:* > >> **mitochondrial donation licence** *includes a purported mitochondrial donation licence.* ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd065): > *Mitochondrial disease is a group of conditions that can cause serious health issues and, in severe cases, can cause death in childhood. There is no known cure for mitochondrial disease.* > > *Mitochondrial donation is an assisted reproductive technology (ART) that can assist women to avoid passing mitochondrial DNA disease to their biological child. This technology is not a cure for mitochondrial disease but is rather a way to prevent children from inheriting mitochondria that can cause mitochondrial disease.* > > *Under the current legislative framework, mitochondrial donation is illegal under the Prohibition of Human Cloning for Reproduction Act 2002 (Cth) and the Research Involving Human Embryos Act 2002 (Cth). The Mitochondrial Donation Law Reform (Maeve’s Law) Bill 2021 (the Bill) amends relevant Acts and associated Regulations to make mitochondrial donation legal for research, training and human reproductive purposes. The overall aim is for women at risk of passing on mitochondrial disease t",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-09/6"
+  },
+  {
+   "key": "federal-senate-7594",
+   "date": "2022-02-09",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-02-09.192.7) (1) to (11) and (13) to (55) on sheet 1519, which means they failed. They were introduced by Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP). Senator Canavan [explained that](https://www.openaustralia.org.au/senate/?gid=2022-02-09.192.7): > *In the amendments that I will be moving tonight, I will propose that we should seek to remove the stage 2 licences from this bill. These amendments would not stop mitochondrial donation research and trials from continuing. As I've outlined, they've got 10 years of those to go—at least. These amendments would not stop that from occurring and the progression of this technology happening. All that agreeing to this amendment would mean is that, at the conclusion of those trials and research, the government of that day, or members and senators at that time, would put forward additional legislation which would then govern the regulatory framework for clinical practice trials.* This was a [free vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than strictly along party lines. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd065): > *Mitochondrial disease is a group of conditions that can cause serious health issues and, in severe cases, can cause death in childhood. There is no known cure for mitochondrial disease.* > > *Mitochondrial donation is an assisted reproductive technology (ART) that can assist women to avoid passing mitochondrial DNA disease to their biological child. This technology is not a cure for mitochondrial disease but is rather a way to prevent children from inheriting mitochondria that can cause mi",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-09/7"
+  },
+  {
+   "key": "federal-senate-7600",
+   "date": "2022-02-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2022-02-10.49.2) that [sections 28F and 28G](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6697_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6697_first-reps%2F0000%22;rec=0) in item 17 of schedule 1 remain unchanged. In parliamentary jargon, they voted that those sections *stand as printed*. This was a [free vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than strictly along party lines. ### Text of sections 28F and 28G > *28F What a clinical practice research and training licence authorises* > > *(1) A clinical practice research and training licence authorises carrying out any of the activities mentioned in subsection (2) that are specified in the licence, at an accredited ART centre, in undertaking research and training for the purpose of doing all of the following in preparation for using the permitted technique specified in the licence in a clinical practice setting:* > >> *(a) developing protocols for using the technique safely and effectively, in a clinical practice setting, for the purpose of minimising the risk of women’s offspring inheriting mitochondria that would predispose them to mitochondrial disease;* >> >> *(b) ensuring that each embryologist nominated under subsection 28H(5) has technical competence in the use of the technique in accordance with those protocols;* >> >> *(c) ensuring that the holder’s facilities, equipment, processes and protocols for using the technique are suitable for using the technique in a clinical practice setting.* > > *(2) The activities are as follows:* > >> *(a) creation of human embryos other than by fertilisation of a human egg by a human sperm, using the permitted technique specified in the licence, a",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 8,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-10/6"
+  },
+  {
+   "key": "federal-senate-7602",
+   "date": "2022-02-10",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-02-10.51.1) introduced on behalf of NSW Senator [Deborah O'Neill](https://theyvoteforyou.org.au/people/senate/nsw/deborah_o'neill) (Labor), which means they failed. Victorian Senator [Raff Ciccone](https://theyvoteforyou.org.au/people/senate/victoria/raff_ciccone) (Labor) [explained that](https://www.openaustralia.org.au/senate/?gid=2022-02-10.51.1): > *This amendment proposed by Senator O'Neill will introduce a threshold where outcomes on 20 trial participants are required and published before the mitochondrial donation clinical licences are granted. The lack of data from the United Kingdom, the only jurisdiction where these practices are legal, should impel us to raise the threshold on these experimental gene editing techniques before we proceed in granting them a licence. The impacts and efficacy of these proposed techniques are still in theory, and thus a large number of trials should be undertaken and the results should be shared before these techniques are permitted to go ahead.* This was a [free vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than strictly along party lines. ### Amendment text > *(1) Schedule 1, page 6 (after line 37), after item 10, insert:* > > *10A At the end of Division 1 of Part 2* > > *Add:* > > *9A Minimum data required before clinical practice stage* > > *Before the Governor-General makes regulations declaring a mitochondrial donation technique for the purposes of the definition of permitted technique in section 8, the Minister must be satisfied that:* > > *(a) there is sufficient clinical evidence that the technique has been used on at least 20 trial participants; and* > > *(b) the outcomes of the use of the technique on the trial participants have been published.* ### What does",
+   "stage": "In committee",
+   "ayes": 25,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-10/8"
+  },
+  {
+   "key": "federal-senate-7603",
+   "date": "2022-02-10",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-02-10.159.5) introduced by Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means it failed. This was a [free vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than strictly along party lines. ### Amendment text > *(1) Schedule 1, item 17, page 34 (after line 11), at the end of Division 4A, add:* > > *Subdivision G — Other requirements relating to mitochondrial donation licences* > > *28Y Annual reports* > > *(1) The NHMRC Licensing Committee must, within 1 month after the end of each reporting period, give the Minister a report in accordance with subsection (2).* > > *(2) The report must include the following de-identified information in relation to the reporting period:* > >> *(a) the number of each kind of mitochondrial donation licence issued under section 28J; and* >> >> *(b) the outcomes of the activities carried out under each licence issued under section 28J, including:* >> >>> *(i) the number of births of children as a result of pregnancies achieved using a mitochondrial donation technique under a clinical trial licence or a clinical practice licence; and* >>> >>> *(ii) the number of adverse events notified to the NHMRC Licensing Committee under paragraph 28S(3)(a); and* >> >> *(c) all clinical data obtained as a result of the activities carried out under each licence issued under section 28J, including:* >> >>> *(i) experimental data obtained from the use of the permitted technique specified in the licence; and* >>> >>> *(ii) clinical data about each child born as a result of a pregnancy achieved using the permitted technique specified in the licence.* > > *(3) The Minister must table a copy of the report in each House of the Parli",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 23,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-10/9"
+  },
+  {
+   "key": "federal-senate-7604",
+   "date": "2022-02-10",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping [item 55A](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6697_third-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6697_third-reps%2F0000%22;rec=0) of schedule 1 unchanged. In parliamentary jargon, they voted that that item *stand as printed*. This was a [free vote](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor/) (also known as a conscience vote), which means our senators voted according to their own beliefs rather than strictly along party lines. ### Text of item 55A > *55A At the end of section 19* > > *Add:* > >> *(4) A report under this section must not include information about any of the following matters unless the NHMRC Licensing Committee considers that the information does not identify, and is not reasonably capable of being used to identify, any person:* > >> *(a) approvals under subsection 28P(3) (including applications for such approvals and the outcomes of those applications);* >> >> *(b) births of children as a result of pregnancies achieved using a mitochondrial donation technique under a clinical trial licence or a clinical practice licence;* >> >> *(c) adverse events notified to the NHMRC Licensing Committee under paragraph 28S(3)(a).* ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd065): > *Mitochondrial disease is a group of conditions that can cause serious health issues and, in severe cases, can cause death in childhood. There is no known cure for mitochondrial disease.* > > *Mitochondrial donation is an assisted reproductive technology (ART) that can assist women to avoid passing mitochondrial DNA disease to their biological child. This technology is not a cure for mitochondrial disease but is rather a way to prevent children from inheriting mitochondria that can cause mitochondrial disease.* > > *",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 8,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 23,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-10/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-405163",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-24",
+   "stage_hint": null,
+   "brief": "The speaker moved to legalise mitochondrial donation in Australia through the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, named after five-year-old Maeve Hood from his electorate. The bill establishes a two-stage pathway—starting with lab research and a trial at one licensed clinic, then potential broader clinical use—to allow women at risk of passing on severe mitochondrial disease to have healthy biological children, with a free conscience vote granted across parties."
+  },
+  {
+   "slug": "speech-415979",
+   "speaker": "Mark Christopher Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, arguing for a cautious, staged approach to allow maternal spindle transfer and pronuclear transfer techniques to prevent severe mitochondrial disease, which affects 2,000–5,000 Australians and causes one baby per week to be born with the often-fatal condition. He criticised the late release of government amendments but indicated he would personally support them, and noted the bill was a conscience vote named after Maeve Hood."
+  },
+  {
+   "slug": "speech-415982",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, arguing it would prevent about 60 Australian babies per year from severe mitochondrial disease by replacing the mother's mitochondrial DNA with donor DNA, and rejected claims that the procedure constitutes three-parent IVF or cloning. The bill includes a ten-year research and training phase."
+  },
+  {
+   "slug": "speech-416109",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The speaker supported maternal spindle transfer research but opposed pronuclear transfer due to ethical concerns about creating and destroying embryos, and warned that limited egg supply could create commercial incentives with social consequences."
+  },
+  {
+   "slug": "speech-416393",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker announced support for the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, arguing it would maximise individual freedom by eliminating mitochondrial disease, which affects one in 200 Australians, and noted the United Kingdom's similar law has been positive over six years. He thanked Dr Doug Lingard and Professor Carolyn Sue for their guidance."
+  },
+  {
+   "slug": "speech-416394",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, stating it offers hope to families with mitochondrial disease by allowing them to conceive genetically related children without passing on defective genes. He noted that about 50 to 60 children are born with severe mitochondrial disorders in Australia each year and thanked the Minister for Health, Mark Butler, Chris Bowen, Katie Allen, the Mito Foundation led by Sean Murray, and the National Health and Medical Research Council led by John Rasko."
+  },
+  {
+   "slug": "speech-416395",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, which would legalise mitochondrial donation in Australia to prevent the inheritance of severe mitochondrial diseases, noting that around 120,000 Australians carry a mutation and about 56 children are born each year with severe forms, often dying within five years. The bill proposes a two-stage implementation: initially for research and a pilot program, then broader clinical use."
+  },
+  {
+   "slug": "speech-416396",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, which would allow mitochondrial donation IVF techniques to prevent children inheriting mitochondrial disease, and shared a personal story about her grandson Liam, who has the disease. She also noted that a fundraiser, the Bloody Long Walk, raised $175,000 for research."
+  },
+  {
+   "slug": "speech-416397",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, arguing it would allow women with hereditary mitochondrial disease to have healthy children, is consistent with existing Australian medical and ethical practices like IVF, and would be regulated by the Embryo Research Licensing Committee. They cited the case of Cooper Tierney, who died from Leigh syndrome at six months, and stated that mitochondrial donation is not germline genetic modification, as the UK parliament had determined."
+  },
+  {
+   "slug": "speech-416398",
+   "speaker": "Andrew Charles Laming",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, which would allow a staged introduction of mitochondrial donation techniques in Australia, noting that about 60 children per year are affected by the severe form of mitochondrial disease and that the bill follows the UK's lead with a two-stage regulatory approach. They also acknowledged policy adviser Catherine McMahon for her work on the campaign."
+  },
+  {
+   "slug": "speech-416400",
+   "speaker": "Katie Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, which would legalise mitochondrial donation in Australia to prevent severe mitochondrial disease, describing it as a safe, regulated technique distinct from 'three-parent IVF' and urging MPs to support the bill for the sake of affected families."
+  },
+  {
+   "slug": "speech-416401",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, which allows mitochondrial donation techniques for research and reproductive purposes to prevent mitochondrial disease. The bill creates a two-stage implementation process over 10–12 years, and the speaker noted that about one in 5,000 Australians develop severe mitochondrial disease, with the bill named after eight-year-old Maeve, whose grandfather lives in Warringah."
+  },
+  {
+   "slug": "speech-416402",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve’s Law) Bill 2021, arguing it gives hope and could save up to 60 babies a year by preventing mitochondrial disease, and highlighted the story of constituent Toni Catton and her daughter Alana, who died from the disease at age eight."
+  },
+  {
+   "slug": "speech-416403",
+   "speaker": "Andrew Keith Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-29",
+   "stage_hint": null,
+   "brief": "The member for Fenner conducted deliberative democracy forums with randomly selected constituents on mitochondrial donation, and will vote in favour of the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021 based on the overwhelming support expressed in those forums."
+  },
+  {
+   "slug": "speech-416727",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, which allows IVF using a healthy donor egg to prevent mitochondrial disease affecting 120,000 Australians. He named Maeve, a five-year-old with the disease, and stated the bill gives parents the chance to have a healthy child."
+  },
+  {
+   "slug": "speech-416728",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, citing no reported live births from the UK in five years, unknown risks of altering the human genome, creation and destruction of embryos, and future genetic identity complications from three-parent DNA."
+  },
+  {
+   "slug": "speech-416729",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, citing risks of heritable genetic modification, insufficient safety data, and ethical concerns about creating three-parent embryos and destroying embryos. They noted that mitochondrial donation is banned in the US, has no confirmed live births in the UK since 2017, and is not permitted elsewhere, while safer alternatives like IVF, adoption, and fostering exist."
+  },
+  {
+   "slug": "speech-416731",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, arguing for a staged, closely monitored legalisation of mitochondrial donation, citing annual healthcare savings of $33–66 million and the prevention of severe disease in 56 children a year, with a donor register allowing children to learn donor identity at age 18."
+  },
+  {
+   "slug": "speech-416732",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021 was argued to prevent mitochondrial disease by allowing a regulated IVF process that replaces a mother's faulty mitochondria with a donor's healthy mitochondria, without creating designer babies or three-parent children. The bill is implemented in stages, initially for research and clinical trials, inspired by the UK model, and aims to help the approximately 56 Australian children born each year with severe mitochondrial disease, for which there is no cure."
+  },
+  {
+   "slug": "speech-416733",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to allow a specific schedule for debating the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, including extended debate, member statements, and adjournment until 9:30 am on 1 December 2021, with deferred divisions."
+  },
+  {
+   "slug": "speech-416735",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve’s Law) Bill 2021, arguing that mitochondrial donation would prevent severe genetic disease while citing figures such as 1 in 200 Australians predisposed and 56 children born annually with severe forms. The speaker also highlighted the staged regulatory approach, privacy protections, and constituent Bethany Hodge’s hopes to have a healthy child."
+  },
+  {
+   "slug": "speech-416736",
+   "speaker": "Lucy Elizabeth Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021 but opposed the pronuclear transfer technique and a provision allowing sex selection of male embryos, and would support amendments to remove both."
+  },
+  {
+   "slug": "speech-416749",
+   "speaker": "Tanya Joan Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, arguing that mitochondrial donation should be legal to prevent children from inheriting mitochondrial disease, which affects about one baby a week and currently has no cure."
+  },
+  {
+   "slug": "speech-416750",
+   "speaker": "Trent Zimmerman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, noting that 120,000 Australians carry a mitochondrial mutation and 56 children are born each year with potential for disease, and argued the bill provides hope for families through a cautious, staged approach."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Mitochondrial Donation Law Reform (Maeve’s Law) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00026",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

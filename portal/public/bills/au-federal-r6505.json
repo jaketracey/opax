@@ -1,0 +1,228 @@
+{
+ "key": "au-federal-r6505",
+ "title": "Health Insurance Amendment (General Practitioners and Quality Assurance) Bill 2020",
+ "short_title": "Health Insurance Amendment (General Practitioners and Quality Assurance) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2020-06-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6505_ems_3eac2a60-e04f-4673-9ea5-e0768a2c7a07%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6505%22",
+   "document_date": "2020-02-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00050",
+   "document_date": "2020-06-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-27",
+  "sentences": [
+   "The bill would change how general practitioners are recognised for Medicare purposes.",
+   "It would link Medicare eligibility to the national registration system overseen by the Medical Board of Australia and the Australian Health Practitioner Regulation Agency.",
+   "The bill would remove references to the repealed Health Care (Appropriation) Act 1998 and replace them with the Federal Financial Relations Act 2009."
+  ],
+  "changes": [
+   "Align Medicare eligibility for general practitioners with National Registration and Accreditation Scheme registration requirements.",
+   "Remove references to repealed legislation in the definition of a quality assurance activity.",
+   "Repeal the Health Practitioner Regulation (Consequential Amendments) Act 2010.",
+   "Require consequential amendments to the Health Insurance Regulations 2018 and the General Medical Services Table 2019."
+  ],
+  "affected": "General practitioners, Services Australia, the Royal Australian College of General Practitioners, the Australian College of Rural and Remote Medicine, the Medical Board of Australia, and the Australian Health Practitioner Regulation Agency.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:20Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6343",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the second reading motion unchanged. A [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is a motion to agree with the main idea of the bill. This vote was put after the MP for McMahon [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen) proposed the following amendment: > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House expresses its concern at the Government’s cuts and changes to Medicare, particularly those changes that have made access to medical practitioners more difficult in the regions, including:* > > *(1) cuts to rural bulk billing incentives;* > > *(2) changes to the District of Workforce Shortage and Distribution Priority Area health workforce classifications; and* > > *(3) abolition of the Rural Other Medical Practitioners program\".*",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 66
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-05-14/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-389245",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-27",
+   "stage_hint": null,
+   "brief": "The bill amends the Health Insurance Act 1973 to automate GP Medicare eligibility via data exchange with Ahpra, aligning with the National Registration and Accreditation Scheme, and removes legal ambiguity in the definition of quality assurance activities, with grandfathering arrangements for existing GPs."
+  },
+  {
+   "slug": "speech-391297",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "Labor supported the Health Insurance Amendment Bill 2020, which simplifies higher Medicare rebates for eligible GPs, but moved a second reading amendment criticising government changes that cut bulk-billing incentives in 433 areas, altered workforce shortage definitions affecting 250 regions, and abolished the ROMPs program—citing clinic closures in Maryborough and a two-week wait for appointments."
+  },
+  {
+   "slug": "speech-391301",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (General Practitioners and Quality Assurance) Bill 2020 is supported, as it simplifies Medicare payments and ties GP eligibility to the National Registration and Accreditation Scheme, reducing administrative burdens. The government is criticised for an ad hoc approach to GP recruitment and primary care, particularly in outer metropolitan, rural, and regional areas, and for the chaotic rollout of My Health Record."
+  },
+  {
+   "slug": "speech-391302",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The MP argued that GP clinics in Frankston and Carrum Downs cannot recruit enough doctors because the region is not classified as a distribution priority area, and called for reclassification to improve access. She also urged people not to delay health check-ups during the COVID-19 pandemic."
+  },
+  {
+   "slug": "speech-391306",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (General Practitioners and Quality Assurance) Bill 2020 simplifies Medicare recognition for GPs by aligning eligibility with the National Registration and Accreditation Scheme, removes duplicative continuing professional development reporting to Medicare, and includes transitional provisions to maintain current eligibility for higher rebates."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (General Practitioners and Quality Assurance) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00050",
+   "assent_date": "2020-06-16"
+  }
+ ]
+}

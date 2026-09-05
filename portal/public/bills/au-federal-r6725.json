@@ -1,0 +1,566 @@
+{
+ "key": "au-federal-r6725",
+ "title": "National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Bill 2021",
+ "short_title": "National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "National Disability Insurance Scheme",
+ "status": "passed",
+ "status_as_of": "2021-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6725_ems_23022de7-3c70-4780-9010-50a19b95d92b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6725_ems_f9b25eec-bab1-4d84-bec0-81c56027bb30%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6725%22",
+   "document_date": "2021-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00116",
+   "document_date": "2021-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-03",
+  "sentences": [
+   "This bill would increase protections for National Disability Insurance Scheme participants.",
+   "It would strengthen the NDIS Commissioner's enforcement and compliance powers and allow more information sharing between agencies.",
+   "The changes would start the day after the bill becomes law."
+  ],
+  "changes": [
+   "Strengthens compliance and enforcement powers of the NDIS Commissioner.",
+   "Clarifies provider registration rules.",
+   "Allows effective information sharing across government authorities or prescribed persons or bodies.",
+   "Clarifies the Commissioner's powers based on early implementation experience."
+  ],
+  "affected": "NDIS participants, the NDIS Commissioner, providers, and government authorities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7459",
+   "date": "2021-10-20",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-10-20.21.1) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that whilst the disability community was variably consulted during the course of the Robertson Review, it was not consulted on this bill and the implementation of the recommendations that emerged from the final report of the Robertson Review; and* > > *(b) is strongly of the view that the Government and its departments and agencies must properly consult the disability community and their publicly funded disability representative bodies, and publish exposure drafts before introducing legislation, to ensure that policies, systems, and services are designed by and for disabled people.*",
+   "stage": "Second reading",
+   "ayes": 19,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 22,
+    "dated": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-20/4"
+  },
+  {
+   "key": "federal-senate-7469",
+   "date": "2021-10-21",
+   "house": "senate",
+   "question": "The majority voted against amendments (1) to (3) on [sheet 1443](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6725_amend_ebf32a7d-3003-40d8-8d98-4ba9a9d38f00%22), moved by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means the amendments failed. The amendments concerned adding a framework review and a [sunset clause](https://en.wikipedia.org/wiki/Sunset_provision).",
+   "stage": "In committee",
+   "ayes": 21,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 20,
+    "dated": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-21/3"
+  },
+  {
+   "key": "federal-senate-7470",
+   "date": "2021-10-21",
+   "house": "senate",
+   "question": "The majority voted against amendment (1) on [sheet 1444](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6725_amend_d09c076f-875d-4dc6-9af9-582b5914f8ba%22) as moved by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. The [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6725_amend_d09c076f-875d-4dc6-9af9-582b5914f8ba%22) related to the commencement of the bill, and required that it not commence \"*earlier than the day after the day the Minister is given a written report of the review into the NDIS quality and safeguarding framework.*\"",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 22,
+    "dated": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-21/4"
+  },
+  {
+   "key": "federal-senate-7471",
+   "date": "2021-10-21",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) to (13)](https://www.openaustralia.org.au/senate/?gid=2021-10-21.14.1) on [sheet 1426](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6725_amend_6d812f60-5878-438f-af49-4e479bdf42bb%22), moved by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means the amendments failed. The amendments concerned privacy and information sharing and related to disclosure.",
+   "stage": "In committee",
+   "ayes": 23,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 22,
+    "dated": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-21/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-411636",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the government rushed the NDIS amendment bill without consulting disability stakeholders, more than a year after Ann-Marie Smith's death from neglect and 51 weeks after receiving the Robertson review's 10 recommendations, of which only five are being legislated. Labor will support the bill in the House but move amendments in the Senate to address consultation and privacy issues."
+  },
+  {
+   "slug": "speech-411637",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Bill 2021 makes technical amendments to strengthen protections for NDIS participants, implementing recommendations from the Robertson review on information sharing, banning orders, and provider registration."
+  },
+  {
+   "slug": "speech-411640",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The NDIS Amendment Bill 2021 strengthens protections for participants by expanding the NDIS Quality and Safeguards Commission's powers, improving information sharing, and tightening provider registration and banning orders, following the death of Ann-Marie Smith and the Robertson review; the government committed an additional $17.1 billion in NDIS funding."
+  },
+  {
+   "slug": "speech-411641",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Morrison government's handling of the NDIS has left participants exposed and at risk, citing low vaccination rates (26.9% of eligible NDIS participants fully vaccinated) and the death of Ann-Marie Smith, and welcomed the National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Bill 2021 as insufficient, urging genuine consultation with people with disability and advocates."
+  },
+  {
+   "slug": "speech-411642",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS Amendment Bill 2021 strengthens protections for participants by expanding the NDIS Commissioner's powers, improving information sharing, and clarifying provider obligations, citing the case of Ann-Marie Smith and noting that 466,000 Australians now receive NDIS support. They also highlighted workforce challenges and praised local providers like Sunraysia Residential Services in the Mallee electorate."
+  },
+  {
+   "slug": "speech-411643",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS Amendment Bill, prompted by Ann‑Marie Smith’s death and the Robertson review, makes only narrow improvements and fails to address systemic failures in quality, transparency and accountability under the Morrison government, including inadequate provider regulation, poor consultation and cost‑cutting. The speaker also questioned Liberal candidate Stephanie Asher’s past scepticism about the NDIS’s place in Geelong and announced Labor will move amendments to strengthen participant privacy protections in information sharing."
+  },
+  {
+   "slug": "speech-411644",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The Morrison government argued the NDIS Amendment Bill 2021 implements Robertson review recommendations after the death of participant Ann-Marie Smith, lowering the threshold for information-sharing between the NDIS Quality and Safeguards Commission and the NDIA, and extending regulatory obligations to key personnel such as CEOs and boards to better protect at-risk participants."
+  },
+  {
+   "slug": "speech-411645",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The Labor MP welcomed the NDIS bill's measures but argued the Morrison government failed to consult participants, delayed action on the Robertson review for 11 months after the report and 16 months after Ann‑Marie Smith's death, and mismanaged the NDIS—citing a $4.6 billion cut and 12,000 deaths of people with disability waiting for funding."
+  },
+  {
+   "slug": "speech-411646",
+   "speaker": "Ross Vasta",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for the National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Bill 2021, responding to the Robertson review into the death of Ann-Marie Smith. The bill removes qualifiers like 'serious' for information sharing between the NDIS Commission and the National Disability Insurance Agency, strengthens registration and oversight of providers, and clarifies reportable incidents to better protect participants from abuse and neglect."
+  },
+  {
+   "slug": "speech-411648",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's handling of the NDIS and COVID-19 vaccination rollout, noting only 26% of NDIS participants are vaccinated and that carers also face access issues. They argued the government broke trust by proposing independent assessments without consultation, and highlighted slow NDIS decision-making, lack of vaccine hubs in areas like the Blue Mountains and Hawkesbury, and the need to train and support disability workers."
+  },
+  {
+   "slug": "speech-411649",
+   "speaker": "Warren Entsch",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Bill 2021 strengthens protections for participants, particularly those at risk of harm, by expanding the NDIS Quality and Safeguards Commissioner's powers, lowering information-sharing thresholds, and allowing rules on provider suitability—actions responding to the Robertson review of Ann‑Marie Smith’s death."
+  },
+  {
+   "slug": "speech-411650",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "Labor argued that the Morrison government's response to the Robertson review into the death of NDIS participant Ann-Marie Smith was too little, too late, and called for a broader independent inquiry. They highlighted that $4.6 billion had been cut from the NDIS, 1,200 people with disabilities died while waiting for funding, and less than 25% of NDIS participants in residential care had received one vaccine dose."
+  },
+  {
+   "slug": "speech-411651",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Bill 2021, which lowers the threshold for sharing information between the NDIS Commission and the NDIA to protect vulnerable participants, and highlighted the NDIS's economic benefits—$2 million per child with severe autism and $28 billion in total funding—while criticising Labor for politicising disability issues."
+  },
+  {
+   "slug": "speech-411652",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS Amendment Bill responds to the death of Ann-Marie Smith but is limited, failing to address systemic governance issues highlighted by the Robertson review, including recommendations for sole carers, responsible persons, and community visitors. The speaker criticised inadequate consultation and the government's narrow focus on Smith's case, noting other deaths like Tim Rubenach, David Harris, and Liam Danher."
+  },
+  {
+   "slug": "speech-411653",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Bill 2021, arguing it strengthens protections for vulnerable participants by lowering the threshold for information sharing, broadening reportable incidents, and improving oversight of quality auditors, in response to the death of Ann-Marie Smith and the Robertson review."
+  },
+  {
+   "slug": "speech-411654",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-411815",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-24",
+   "stage_hint": null,
+   "brief": "The Morrison government has mismanaged the NDIS, underspending $4.6 billion and contributing to 1,200 deaths of Australians with a disability while waiting for funding; the bill is supported but fails to address safeguard gaps and privacy concerns, with Labor planning amendments."
+  },
+  {
+   "slug": "speech-411816",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-24",
+   "stage_hint": null,
+   "brief": "The member for Shortland announced Labor’s support for the NDIS Amendment Bill, with Senate amendments to clarify participant information sharing and require a ministerial review. The speech criticised the government’s independent assessments, citing a child’s plan cut from $100,000 to $8,000, and said the NDIS Quality and Safeguards Commission is ineffective and understaffed."
+  },
+  {
+   "slug": "speech-411817",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-24",
+   "stage_hint": null,
+   "brief": "The MP argued that eight years of Liberal government mismanagement has left the NDIS in shambles, citing the deaths of Ann‑Marie Smith and David Harris, and the cases of Shelby from Jesmond, who faces homelessness, and Rodney Fisher, whose eligibility was reassessed."
+  },
+  {
+   "slug": "speech-411861",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the NDIS is failing participants like Rodney Fisher, who waited six months for eligibility reassessment, and Tayla Porter, who received an inappropriate wheelchair, and criticised the closure of Newcastle's dedicated NDIS vaccination hub—which had vaccinated 5,000 people in 10 weeks—as reckless, blaming the government's botched vaccine rollout for leaving vulnerable people without accessible options."
+  },
+  {
+   "slug": "speech-411862",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "Labor supported the NDIS Amendment Bill but argued it was insufficient, noting a 12-month delay in responding to the Robertson review and 16 months after Ann-Marie Smith's death, and citing $4.6 billion in cuts and 1,200 deaths of Australians with disability while waiting for NDIS funding."
+  },
+  {
+   "slug": "speech-411863",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's COVID-19 vaccine rollout for people with disability has been a negligent failure, noting that only about 26.9% of NDIS participants aged over 16 and fewer than 50% of those in group homes are fully vaccinated."
+  },
+  {
+   "slug": "speech-411992",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the NDIS Amendment Bill 2021, which implements the Robertson review’s recommendations following the death of Ann-Marie Smith, and argued the NDIS is a transformative social reform that must be protected from government cuts and delays, particularly for participants with severe disabilities, early intervention, and housing."
+  },
+  {
+   "slug": "speech-411993",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the second reading amendment calling on the government to take responsibility for all deaths by neglect in the NDIS and commit to genuine consultation with disability representatives, citing the case of Ann‑Marie Smith, who died after her NDIS provider was fined only $12,600, and criticised the government for implementing only five of the Robertson review’s ten recommendations without formal consultation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment (Improving Supports for At Risk Participants) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00116",
+   "assent_date": "2021-10-28"
+  }
+ ]
+}

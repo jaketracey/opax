@@ -1,0 +1,557 @@
+{
+ "key": "au-federal-r7102",
+ "title": "Paid Parental Leave Amendment (More Support for Working Families) Bill 2023",
+ "short_title": "Paid Parental Leave Amendment (More Support for Working Families) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2024-03-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7102_ems_20c1c456-8c88-4d4c-82ea-52830b75ef90%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7102%22",
+   "document_date": "2023-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00007",
+   "document_date": "2024-03-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8648",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-11-27.164.2) to the usual second reading amendment, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Deakin MP [Michael Sukkar](https://theyvoteforyou.org.au/people/representatives/deakin/michael_sukkar) (Liberal). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the Coalition's strong record supporting government funded paid parental leave;* >> >> *(b) the former Government's commitment to supporting women's participation in the workforce saw women's participation reach record highs;* >> >> *(c) at both the 2010 and 2013 federal elections, the Coalition's paid parental leave policy sought to deliver 26 weeks paid parental leave based on actual wage;* >> >> *(d) both Labor and the Greens opposed the Coalition's paid parental leave policy; and* >> >> *(e) the current paid parental leave scheme disproportionately adversely impacts smaller businesses, imposing an additional red-tape burden on small businesses by making them the pay clerk for the Government's paid parental leave scheme; and* > > *(2) calls on the Government to amend the Paid Parental Leave Act to require the Secretary, as defined by the Act, to pay parental leave pay instalments directly to employees of small businesses except in cases where a small business opts to pay parental leave pay instalments directly to an employee\".*",
+   "stage": "Second reading",
+   "ayes": 55,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-07/4"
+  },
+  {
+   "key": "federal-senate-8724",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7102_amend_cd45bd2d-b1c9-4e27-876d-cd1f3aba7e65%22;rec=0) to the usual second reading motion, which is that the bill be read for a second time (parliamentary jargon for agreeing with the main idea of the bill). This means that the original second reading motion will remain unchanged. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to compensate small businesses for the time required to administer the payment of instalments of parental leave pay under the Paid Parental Leave Act 2010, whether by direct payment or tax offset\".*",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/3"
+  },
+  {
+   "key": "federal-senate-8725",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "The majority voted against [amendment requests (1) and (2) on Sheet 2062](https://www.openaustralia.org.au/senate/?id=2024-03-18.22.1), which means they were unsuccessful. They had been introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens). ### What was the purpose of these amendments? Senator Waters [explained that](https://www.openaustralia.org.au/senate/?id=2024-03-18.22.1): > *These are the amendments that would say, 'Why are women having to wait for superannuation to be paid on their paid parental leave until 1 July of next year?' We welcome the fact that the government has finally and belatedly announced that superannuation will be added to the government portion of paid parental leave, but there is still no justification for why women are being asked to wait for—what is it?—16 months until that meagre top-up, important though it may be, will be added to their PPL. This amendment says to the government, 'Stop making women wait for the good things.' Paid parental leave is the only entitlement upon which superannuation is not currently paid. It is also the only entitlement that is predominantly taken by women. Ergo, it is gender discrimination.* > > *We're pleased that the government have said that they will fix this, but there is no justification for making women wait. This amendment says that you will be able to get superannuation paid on your paid parental leave from 1 July of this year; you don't have to wait until 1 July of next year. Making women wait until after the next election to receive super on paid parental leave is an outrage. This is a government that said that they were meant to be for women, but they keep making us wait for some small positive improvements. I've got some other amendments that go to the broader reforms that actually women and young parents and all parents deserve, which would extend out the amount and the length of PPL that can be taken, but this particul",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/4"
+  },
+  {
+   "key": "federal-senate-8726",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-18.25.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. They concerned small business employers. ### Amendment text > *(1) Clause 2, page 2 (table item 1), omit the table item, substitute:* > > *(2) Schedule 1, items 16 and 17, page 11 (line 2) to page 13 (line 17), omit \"this Act\" (wherever occurring), substitute \"this Schedule\".* > > *(3) Page 14 (after line 18), at the end of the Bill, add:* > >> *Schedule 2 — Other amendments* >> >> *Paid Parental Leave Act 2010* >> >> *1 Section 6* >> >>> *Insert:* >>> >>> *small business employer: see subsection 101(7).* >> >> *2 After paragraph 101(1)(c)* >> >>> *Insert:* >>> >>> *(ca) the employer is not a small business employer; and* >> >> *3 Subsection 101(2)* >> >>> *Omit \"and (c)\", substitute \", (c) and (ca)\".* >> >> *4 At the end of section 101* >> >>> *Add:* >>> >>> *Meaning of small business employer* >>> >>> *(7) An employer is a small business employer at a particular time if the employer employs fewer than 20 employees at that time.* >> >> *5 Subparagraph 207(3)(a)(i)* >> >>> *Omit \"or (c)\", substitute \", (c) or (ca)\".* >> >> *6 Subsection 207(3) (note 2)* >> >>> *Omit \"and (c)\", substitute \", (c) and (ca)\".* >> >> *7 Subparagraph 224(2)(a)(i)* >> >>> *Omit \"or (c)\", substitute \", (c) or (ca)\".* >> >> *8 Subsection 224(2) (note 2)* >> >>> *Omit \"and (c)\", substitute \", (c) and (ca)\".* >> >> *9 Application of amendments* >> >>> *The amendments of the Paid Parental Leave Act 2010 made by this Schedule apply in relation to claims made on or after the commencement of this item.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/5"
+  },
+  {
+   "key": "federal-senate-8727",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-18.31.1) introduced by South Australian Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) (Liberal), which means they failed. They concerned small business employers. ### Amendment text > *(1) Schedule 1, items 16 and 17, page 11 (line 2) to page 13 (line 17), omit \"this Act\" (wherever occurring), substitute \"this Schedule\".* > > *(2) Page 14 (after line 18), at the end of the Bill, add:* > >> *Schedule 2 — Other amendments* >> >> *Paid Parental Leave Act 2010* >> >> *1 Section 6* >> >>> *Insert:* >>> >>> *small business employer: see subsection 101(7).* >> >> *2 After paragraph 101(1)(c)* >> >>> *Insert:* >>> >>> *(ca) the employer is not a small business employer; and* >> >> *3 Subsection 101(2)* >> >>> *Omit \"and (c)\", substitute \", (c) and (ca)\".* >> >> *4 At the end of section 101* >>> >>> *Add:* >>> >>> *Meaning of small business employer* >>> >>> *(7) An employer is a small business employer at a particular time if the employer employs fewer than 20 employees at that time.* >> >> *5 Subparagraph 207(3)(a)(i)* >> >>> *Omit \"or (c)\", substitute \", (c) or (ca)\".* >> >> *6 Subsection 207(3) (note 2)* >> >>> *Omit \"and (c)\", substitute \", (c) and (ca)\".* >> >> *7 Subparagraph 224(2)(a)(i)* >> >>> *Omit \"or (c)\", substitute \", (c) or (ca)\".* >> >> *8 Subsection 224(2) (note 2)* >> >>> *Omit \"and (c)\", substitute \", (c) and (ca)\".* >> >> *9 Application of amendments* >> >>> *The amendments of the Paid Parental Leave Act 2010 made by this Schedule apply in relation to claims made on or after the commencement of this item.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/6"
+  },
+  {
+   "key": "federal-senate-8728",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "Paid Parental Leave Amendment (More Support for Working Families) Bill 2023 - in Committee - 12 months of leave by 2030",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/7"
+  },
+  {
+   "key": "federal-senate-8729",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-18.49.1) introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means they were unsuccessful. ### What do these amendments do? Senator Waters [explained that](https://www.openaustralia.org.au/senate/?gid=2024-03-18.49.1): > *This bill would increase the amount of PPL [paid parental leave] up to 26 weeks by 2026. We support the increase to 26 weeks, but why do you need to wait until 2026 to do the good thing? Do the good thing now. That's what this amendment says. Make those 26 weeks available for new parents from this year, not 2026.* ### Amendment text > *(1) Schedule 1, item 4, page 3 (lines 13 to 18), omit the item, substitute:* > >> *4 Paragraph 21(1)(a)* >> >> *Omit \"10\", substitute \"20\".* > > *(2) Schedule 1, item 12, page 8 (lines 24 to 29), omit paragraphs 31ABA(1)(b) to (d), substitute:* > >> *(b) for a child born on or after 1 July 2024—130 flexible PPL days for the child.* > > *(3) Schedule 1, item 12, page 9 (lines 11 to 16), omit paragraphs 31ABA(2)(b) to (d), substitute:* > >> *(b) for a child born on or after 1 July 2024—110 flexible PPL days for the child.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/8"
+  },
+  {
+   "key": "federal-senate-8730",
+   "date": "2024-03-18",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-18.52.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. The amendments related to small business employers who employ fewer than 20 employees at a time. These amendments were moved because [previous amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-18.25.1) were unsuccessful. ### Amendment text See [OpenAustralia.org.au](https://www.openaustralia.org.au/senate/?gid=2024-03-18.52.1) for the amendment text.",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-18/9"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Paid Parental Leave Amendment (More Support for Working Families) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00007",
+   "assent_date": "2024-03-20"
+  }
+ ]
+}

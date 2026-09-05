@@ -1,0 +1,259 @@
+{
+ "key": "au-federal-r6493",
+ "title": "Farm Household Support Amendment (Relief Measures) Bill (No. 1) 2020",
+ "short_title": "Farm Household Support Amendment (Relief Measures) Bill (No. 1) 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Drought and Emergency Management",
+ "status": "passed",
+ "status_as_of": "2020-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6493_ems_4f8d9a64-4f71-4331-941c-6a0d0e667c59%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6493%22",
+   "document_date": "2020-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00035",
+   "document_date": "2020-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-13",
+  "sentences": [
+   "The bill would change how the Farm Household Allowance program works for farmers in financial hardship.",
+   "It would remove the annual reconciliation of business income that currently adjusts payments and creates possible debts.",
+   "The bill would also remove the 28-day deadline for completing a farm financial assessment, allowing more flexibility to find a suitable assessor."
+  ],
+  "changes": [
+   "The bill would end business income reconciliation for Farm Household Allowance recipients.",
+   "The bill would remove the 28-day time limit to finish a farm financial assessment.",
+   "The bill would base payment rates on current income rather than reconciled tax returns."
+  ],
+  "affected": "Farmers and other recipients of the Farm Household Allowance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:18:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6243",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "question": "The majority voted against an amendment introduced by member for Hunter [Joel Fitzgibbon](https://theyvoteforyou.org.au/people/representatives/hunter/joel_fitzgibbon) to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) that \"*the bill be read for a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *''whilst not declining to give the bill a second reading, the House criticises the Government on its failed record in assisting drought affected farmers\"*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-26/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-388130",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The government moved the Farm Household Support Amendment (Relief Measures) Bill No. 1 2020 to remove the business income reconciliation provision and the 28-day time limit for Farm Financial Assessments, building on earlier changes that simplified the farm household allowance—including making it available for four years in every 10, increasing the activity supplement to $10,000, and simplifying assets to a single $5.5 million threshold."
+  },
+  {
+   "slug": "speech-388897",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The Labor member moved an amendment criticising the government's failed record on drought assistance, challenged the claimed $8 billion in drought spending as misleading, and argued for a national drought plan and bipartisan support for zero net emissions by 2050 to benefit farmers."
+  },
+  {
+   "slug": "speech-388900",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The member for Nicholls argued in support of the Farm Household Support Amendment (Relief Measures) Bill (No. 1) 2020, highlighting simplified application processes, an increased asset threshold to $5.5 million, lump sum exit payments for farmers on the allowance for four years out of ten, and relaxed on-farm assessment rules. The speaker also criticised Labor's water and energy policies as harmful to farmers and noted the program has assisted over 13,000 farmers with more than $400 million distributed over six years."
+  },
+  {
+   "slug": "speech-388901",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-388902",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The government's amendments simplify farm household allowance by basing payments on current income rather than past reconciliation, removing the taper for a single payment rate, and removing the 28-day time limit for farm financial assessments, while previous changes lifted the net worth cap to $5 million and extended eligibility to four years in each ten-year period."
+  },
+  {
+   "slug": "speech-388903",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Farm Household Support Amendment (Relief Measures) Bill and an amendment, citing severe drought in Tasmania's Southern Midlands and east coast, with farmers like John Medhurst and Edwin Batt struggling due to lack of water; they criticised the Tasmanian government for not declaring a drought in the Southern Midlands and called for a statewide water strategy, while also noting broader poverty issues and backing Labor's net zero emissions policy as an opportunity for farmers to diversify income."
+  },
+  {
+   "slug": "speech-388908",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Farm Household Support Amendment (Relief Measures) Bill (No. 1) 2020, highlighting amendments that prevent retrospective debts by using income estimates, raised the asset test to $5.5 million, increased the off-farm income offset to $100,000 per couple, extended support to four years out of ten, and added a supplementary payment for those finishing their four-year support period."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support Amendment (Relief Measures) Act (No. 1) 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00035",
+   "assent_date": "2020-03-26"
+  }
+ ]
+}

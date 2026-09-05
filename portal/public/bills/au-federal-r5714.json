@@ -1,0 +1,380 @@
+{
+ "key": "au-federal-r5714",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Petroleum Pools and Other Measures) Bill 2016",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Petroleum Pools and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5714_ems_f8ffa26f-d01f-483d-ab62-a72cb799c188%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5714_ems_e52d9c0f-6ee0-4aed-8356-5ad368a98780%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5714%22",
+   "document_date": "2016-09-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00011",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4522",
+   "date": "2017-02-08",
+   "house": "senate",
+   "question": "The majority voted to agree with the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5714)'s main idea, which means the bill can now be discussed in more detail. In parliamentary jargon, they voted to [read the bill for a second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### Main idea of the bill The bill is rather technical. According to the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd023), its purpose is to: * *clarify apportionment arrangements relating to certain petroleum deposits that straddle state and Commonwealth jurisdictions*; and * *ensure the capacity of the [National Offshore Petroleum Safety and Environmental Management Authority](https://en.wikipedia.org/wiki/National_Offshore_Petroleum_Safety_and_Environmental_Management_Authority) (NOPSEMA) to refund fees paid to it where necessary*.",
+   "stage": "Second reading",
+   "ayes": 48,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 14,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-08/1"
+  },
+  {
+   "key": "federal-senate-4523",
+   "date": "2017-02-08",
+   "house": "senate",
+   "question": "Nick Xenophon I moved a second reading amendment calling on the government: … to make further amendments to the Offshore Petroleum and Greenhouse Gas Storage Act 2006 to improve competitive tension in the retention lease approval process in order to facilitate the earliest possible commercialisation of the exploration licence area and increase the gas supply to the Australian market. That was opposed by the government, but I understand that the minister will set out his reasons. I apologise for the fact that Senator Moore indicated that the opposition was supporting the second reading amendment. I am very grateful for that support. To Senator Moore I say: I didn't hear it. I put that down to the Elvis Costello concert I went to in 1977, where I lost a bit of my hearing and I have never got it back. I am very grateful for the support of the opposition in relation to this, because it is a commonsense second reading amendment. I would be grateful if the government would indicate what its views are on this, because there is particularly in Bass Strait seven trillion cubic feet, potentially, of gas that could really do something to alleviate our energy crisis in this country. Matthew Canavan I am happy to clarify the government's position on this. I apologise for not getting the opportunity before the second reading amendment was moved. It is a very important issue that Senator Xenophon has raised, and the government recognises that. We of course did not support your second reading amendment, Senator Xenophon. We do already have a review of our offshore petroleum resource management process in place, which includes and encompasses an examination of the retention lease framework. Consultation on that review was completed late last year, around November. I am working with my department to respond to that sometime this year, and I am more than happy to work with Senator Xenophon on that issue. It is a very important issue. There is a balance that we need to strike in that f",
+   "stage": "In committee",
+   "ayes": 48,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 14,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-08/2"
+  },
+  {
+   "key": "federal-senate-4524",
+   "date": "2017-02-08",
+   "house": "senate",
+   "question": "The majority voted to pass the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5714) in the Senate. Since the bill had already passed in the House of Representatives, it will now become law. In parliamentary jargon, the Members of Parliament (MPs) voted to [read the bill for a third time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What does the bill do? The bill is rather technical. According to the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd023), its purpose is to: * *clarify apportionment arrangements relating to certain petroleum deposits that straddle state and Commonwealth jurisdictions*; and * *ensure the capacity of the [National Offshore Petroleum Safety and Environmental Management Authority](https://en.wikipedia.org/wiki/National_Offshore_Petroleum_Safety_and_Environmental_Management_Authority) (NOPSEMA) to refund fees paid to it where necessary*.",
+   "stage": "Third reading",
+   "ayes": 39,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 12,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-08/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-334060",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-15",
+   "stage_hint": null,
+   "brief": "The bill amends the Offshore Petroleum and Greenhouse Gas Storage Act to allow apportionment agreements for multiple petroleum pools across jurisdictional boundaries, ensuring the validity of agreements such as the Torosa gas field apportionment, and clarifies regulation-making powers for refunding environment plan and safety case levies."
+  },
+  {
+   "slug": "speech-336789",
+   "speaker": "Tim Hammond",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Offshore Petroleum and Greenhouse Gas Storage Amendment (Petroleum Pools and Other Measures) Bill 2016, which provides royalty certainty for multiple petroleum pools straddling Commonwealth-state boundaries, particularly for the Browse Basin project. The speaker also criticised Western Australia Nationals leader Brendon Grylls' proposed $5-per-tonne iron ore mining tax, arguing it would destroy jobs, undermine investment certainty, and fail to address state budget issues."
+  },
+  {
+   "slug": "speech-336791",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The Offshore Petroleum and Greenhouse Gas Storage Amendment (Petroleum Pools and Other Measures) Bill 2016 was commended, with amendments ensuring the ongoing validity of apportionment agreements under section 54 of the OPGGS Act for areas with multiple petroleum pools, and providing a clear regulation-making power for refunds and remittal of environmental plan levies and safety case levies for the National Offshore Petroleum Safety and Environmental Management Authority. Defence of Western Australian Nationals leader Brendon Grylls was made against disparaging remarks, while Western Australian Labor leader Mark McGowan was criticised for having no vision, plan or policies ahead of the 11 March 2017 state election."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Petroleum Pools and Other Measures) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00011",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

@@ -1,0 +1,262 @@
+{
+ "key": "au-federal-r7434",
+ "title": "Health Legislation Amendment (Improving Choice and Transparency for Private Health Consumers) Bill 2026",
+ "short_title": "Health Legislation Amendment (Improving Choice and Transparency for Private Health Consumers) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "before_parliament",
+ "status_as_of": "2026-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7434_ems_acfcf6bb-d220-48cb-bebf-0b44fa2b2157%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7434_ems_08165c74-1666-4a7d-b249-bcfb5d5cdb78%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7434_ems_49375daa-810c-4f10-af59-a7b8bf7dd497%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7434_ems_3c836900-e7b9-46ce-bd8a-2ac4257c0d7a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7434%22",
+   "document_date": "2026-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2026-02-12",
+  "sentences": [
+   "This bill would let the Department of Health, Disability and Ageing publish doctors' fees and likely out-of-pocket costs for private healthcare.",
+   "It would also require private health insurers to get ministerial approval for premiums on new and changed products.",
+   "The new premium approval process is based on the current rules for changing premiums on existing products."
+  ],
+  "changes": [
+   "The Department of Health, Disability and Ageing could publish information on medical fees and out-of-pocket costs.",
+   "Insurers would need ministerial approval for premiums on new private health insurance products.",
+   "Insurers would also need ministerial approval for premiums on existing products where certain changes are proposed."
+  ],
+  "affected": "Medical practitioners, private health insurers, and consumers of private healthcare.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10334",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "question": "Dan Repacholi It's an absolute pleasure to do this speech in front of so many of my colleagues. I am standing here today in support of the Health Legislation Amendment (Improving Choice and Transparency for Private Health Consumers) Bill 2026. At its core, this bill is about something pretty simple. It's about making sure Aussies know what they are going to be paying for their health care. It's about giving people confidence in their private health insurance and it's about making sure the system is fair. Right now, for too many people, it unfortunately is not. While we're focused on making the system fairer and more transparent, those opposite have been very clear about their views on Medicare. They have argued that the system is unsustainable and that more of the burden should fall on individuals. I've spoken to plenty of people across the Hunter who have walked out of a GP appointment with their referral to a specialist only to hesitate, not because they don't want the care but because they don't know what it's going to cost them. That uncertainty is a real problem. We know that more than 800,000 Australians have delayed or missed specialist care because of cost. That is not just a number. That is people putting off treatment, and that is conditions getting worse. It is families worrying about bills instead of focusing on getting better. As somebody who serves as Special Envoy for Men's Health, I see this play out in a very real way. Blokes are already less likely to go to their doctor. They already tend to put things off. If you add in cost uncertainty on top of that, it becomes another reason to delay, another reason to say, 'I'll deal with this later.' I've had men in my electorate tell me straight up they did not follow through with a specialist appointment because they were worried about getting hit with a bill they just couldn't afford. Tim, a young bloke from Kurri Kurri, told me he was referred to a cardiologist. He had a young family, a mortgage and risin",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 81
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-25/1"
+  },
+  {
+   "key": "federal-representatives-10335",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendment moved by the honourable member for Kooyong be agreed to.",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 70
+    }
+   },
+   "party_coverage": {
+    "dated": 81
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-25/2"
+  },
+  {
+   "key": "federal-representatives-10336",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "question": "Monique Ryan by leave—I move amendments (1) to (6), circulated in my name, together: (1) Schedule 1, item 1, page 4 (after line 11), after paragraph 124ZY(2)(b), insert: (ba) information about amounts of medical expenses incurred in respect of particular kinds of professional services, including median and interquartile ranges for particular kinds of professional services; (bc) information about amounts of medical expenses incurred in respect of particular kinds of professional services that exceed the high fee threshold for those kinds of professional services; (2) Schedule 1, item 1, page 4 (line 21), at the end of subsection 124ZY(2), add: ; (e) quality indicators such as complications rates, re-admissions and patient-reported outcomes for particular medical professionals; (f) information on professional services rendered by or on behalf of particular medical practitioners that incur upfront fees; (g) information on professional services rendered by or on behalf of particular medical practitioners that utilise gap cover arrangements. (3) Schedule 1, item 1, page 4 (after line 21), after subsection 124ZY(2), insert: (2A) The Minister must publish any formula used to work out an amount of medical expenses for the purposes of publication under this section. (2B) If the Minister publishes information about medical expenses in respect of particular kinds of professional services rendered by or on behalf of particular medical practitioners, and the Minister becomes aware of a material reduction in those expenses, the Minister must update the published information as soon as practicable after becoming so aware. (4) Schedule 1, item 1, page 4 (after line 36), after subsection 124ZY(6), insert: (6A) The Minister must, by legislative instrument, determine formulas for working out amounts of medical expenses in relation to particular kinds of professional services. (6B) The amount worked out in relation to a particular kind of professional service, in accordance with a form",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 69,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-25/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1200189",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201772",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201775",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204001",
+   "speaker": "Dan Repacholi",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,169 @@
+{
+ "key": "au-federal-alrc-5051",
+ "title": "Migration Amendment (Reinstatement of Temporary Protection Visas) Bill 2013 [No. 2]",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-28",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2013-06-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-2415",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Migration Amendment (Reinstatement of Temporary Protection Visas) Bill 2013 [No. 2] - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 63,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/4"
+  },
+  {
+   "key": "federal-senate-2416",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Migration Amendment (Reinstatement of Temporary Protection Visas) Bill 2013 [No. 2] - Second Reading - Read a second time",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 63,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-822136",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-28",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Reinstatement of Temporary Protection Visas) Bill 2013 [No. 2] was introduced to amend the Migration Act 1958 and reinstate temporary protection visas."
+  },
+  {
+   "slug": "speech-825228",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The speaker moved to have the Marine Engineers Qualifications Bill 2013 (No. 2) and the Migration Amendment (Reinstatement of Temporary Protection Visas) Bill 2013 [No. 2] considered under a temporary order; the motion was agreed to."
+  }
+ ],
+ "acts": []
+}

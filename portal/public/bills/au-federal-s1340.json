@@ -1,0 +1,124 @@
+{
+ "key": "au-federal-s1340",
+ "title": "Road Vehicle Standards (Consequential and Transitional Provisions) Amendment Bill 2022",
+ "short_title": "Road Vehicle Standards (Consequential and Transitional Provisions) Amendment Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-03-30",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development and Communications",
+ "status": "passed",
+ "status_as_of": "2022-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1340_ems_40f1f453-7df6-4884-a414-8b9c917142b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1340%22",
+   "document_date": "2022-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00017",
+   "document_date": "2022-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-419825",
+   "speaker": "Catherine Fiona King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-31",
+   "stage_hint": null,
+   "brief": "Labor supported the government's request for a further extension to the Road Vehicle Standards Bill, originally passed in 2018, but criticised the government's incompetence and repeated delays, noting the bill has been extended twice and still lacks proper implementation, IT systems and industry consultation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Road Vehicle Standards (Consequential and Transitional Provisions) Amendment Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00017",
+   "assent_date": "2022-04-01"
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-r7460",
+ "title": "Australian Citizenship Amendment (Stripping Terrorists of Australian Citizenship) Bill 2026",
+ "short_title": "Australian Citizenship Amendment (Stripping Terrorists of Australian Citizenship) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-03-30",
+ "originating_house": "representatives",
+ "sponsor": "JOYCE, Barnaby, MP",
+ "sponsor_party": "One Nation",
+ "sponsor_person_id": "10350",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7460%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7460%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7460_ems_546aabe4-c835-4e2e-9191-af6afc93e7a3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7460%22",
+   "document_date": "2026-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

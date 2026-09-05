@@ -1,0 +1,395 @@
+{
+ "key": "au-federal-r5542",
+ "title": "Food Standards Australia New Zealand Amendment (Forum on Food Regulation and Other Measures) Bill 2015",
+ "short_title": "Food Standards Australia New Zealand Amendment (Forum on Food Regulation and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2016-02-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5542_ems_0c02f9d0-bbf2-4b81-8f05-21b496ccc90e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5542_ems_bb6bcd10-938d-4ca7-b392-680c6fbac876%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5542%22",
+   "document_date": "2015-09-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00007",
+   "document_date": "2016-02-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3954",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "question": "Stephen Jones by leave—I move amendments (1) and (2) as circulated in my name: (1) Clause 2, page 2 (table item 4), omit the table item. (2) Schedule 2, page 21 (line 1) to page 26 (line 13), omit the Schedule. Labor's amendments, modest but important, delete the proposed changes within the bill to the composition of the board. If the amendments are accepted, the board will continue in its current composition—finely balanced and independent. If you want a reason why it is necessary to retain the independence of the board, you need look no further than the contribution from the member for Lyons. He was passionate but he was ill informed. He criticised the food standards authority, and the unknown bureaucrats who work within the organisation, for knocking off his passionate support—and that of the people he presumably represents—for cannabis which is produced as a food product. I can inform the member for Lyons and the House that the board of FSANZ, and indeed the expert bodies, have referred to the ministerial council propositions which would authorise the production and sale of cannabis for food products within Australia. It was the ministerial council which knocked off this proposal. And that in a nutshell demonstrates the importance of having a proper tension between experts and elected politicians who sit on the ministerial council as opposed to the scientists, the health experts and the industry experts who sit on the board. That demonstrates in a nutshell why that is necessary, because were it not for the scientific expertise and the health expertise of the people on the board that proposition would never have got to the ministerial council. It would have been killed before it got there. It proves in a nutshell why we need to have independent expertise across a range of areas not subject to the appointment and discretion of the minister, whoever he or she may be from day to day. We argue that the current arrangements are serving us well. The assistant minister",
+   "stage": "Consideration in detail",
+   "ayes": 43,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-10-14/5"
+  },
+  {
+   "key": "federal-senate-4049",
+   "date": "2016-02-03",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org.au/senate/?gid=2016-02-03.27.1) that would have included the [Gene Technology Regulator](https://www.ausgovboards.gov.au/boards/gene-technology-regulator) as an appropriate government agency in the bill. The amendment was introduced by Greens Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert), who explained: > *We are deeply concerned about what impact removing the Gene Technology Regulator as an appropriate government agency would have in decision making and, in particular, in the process of how GM [[genetic modification](https://en.wikipedia.org/wiki/Genetic_engineering)] and GMO [[genetically modified organism](https://en.wikipedia.org/wiki/Genetically_modified_organism)] products are addressed by FSANZ [[Food Standards Australia New Zealand](https://en.wikipedia.org/wiki/Food_Standards_Australia_New_Zealand)] and by the OGTR [[Office of the Gene Technology Regulator](https://en.wikipedia.org/wiki/Office_of_the_Gene_Technology_Regulator)].* ### Motion text > *(1) Schedule 1, item 1, page 3 (after line 13), after paragraph (b) of the definition of appropriate government agency, insert:* >> *(ba) the Gene Technology Regulator; or* > *(2) Schedule 1, item 4, page 3 (lines 24 to 29), omit the item, substitute:* >> *4 Subsection 4(1) (definition of New Zealand lead Minister on the Council )* >> *Repeal the definition.*",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 9,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-02-03/2"
+  },
+  {
+   "key": "federal-senate-4050",
+   "date": "2016-02-03",
+   "house": "senate",
+   "question": "Rachel Siewert by leave—I move Greens amendments (1) to (3) on sheet 7817: (1) Schedule 1, item 14, page 5 (lines 6 to 8), to be opposed. (2) Schedule 1, item 32, page 8 (lines 4 to 6), to be opposed. (3) Schedule 1, item 87, page 14 (lines 24 to 27), to be opposed. I did listen to and note the comments the minister made about the regulation impact statement. Unfortunately, it does not address the issues of our concerns. We believe that this amendment would in fact strengthen the regulatory process and protections. As I said, often it is the best explanation of why changes are being made, so we believe that this amendment would be a stronger approach than the approach that the minister outlined during her contribution. I commend the amendments to the chamber. Fiona Nash We as government do not support the amendment. So as not to take up any more time of the Senate chamber, I refer to my earlier statements in my summing up speech. We do believe that this is the most appropriate way forward. Katy Gallagher Labor will not be supporting this amendment. We are satisfied that the provisions contained in the government bill provide for a regulatory impact statement to be prepared as appropriate. The CHAIRMAN: The question is that amendments (1) to (3) on sheet 7817 be considered. The question will be that items 14, 32 and 87 of schedule 1 stand as printed. Question agreed to. by leave—I move opposition amendments (1) and (2) on sheet 7804: (1) Clause 2, page 2 (table item 4), omit the table item. (2) Schedule 2, page 21 (line 1) to page 26 (line 13), to be opposed. I did cover off these amendments during my earlier speech. They relate to the composition of the FSANZ board and the fact that we are not supporting the changes to the composition of the FSANZ board. This is on the bases that it is currently finely balanced and we are concerned that the proposed amendments by the government give the minister discretion to appoint a bloc of members to the board from a range of cr",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "earliest": 5,
+    "member": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-02-03/3"
+  },
+  {
+   "key": "federal-senate-4051",
+   "date": "2016-02-03",
+   "house": "senate",
+   "question": "Fiona Nash I move: That this bill be now read a third time. Stephen Parry The question is that this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-02-03/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-319359",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-17",
+   "stage_hint": null,
+   "brief": "The bill amends the Food Standards Australia New Zealand Act 1991 to reflect the renaming of the food regulation forum, improve legislative clarity and regulatory efficiency, and change FSANZ Board composition and appointment processes to include a competitive selection method. Consequential changes to the Food Standards Australia New Zealand Regulations 1994 are also included."
+  },
+  {
+   "slug": "speech-320274",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "The bill was presented as an administrative measure to improve regulatory efficiency and flexibility, including renaming the forum and reducing consultation red tape. Australian agrifood exports reached nearly $40 billion, with growth driven by Asian markets and free trade agreements."
+  },
+  {
+   "slug": "speech-320442",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Food Standards Australia New Zealand Amendment Bill and argued against amendments proposed by the member for Throsby, noting that Labor state ministers agreed with the changes. They criticised the delay in approving industrial hemp for food consumption in Australia, citing Tasmania as a key producer and pointing to successful international examples like Canada."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Food Standards Australia New Zealand Amendment (Forum on Food Regulation and Other Measures) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00007",
+   "assent_date": "2016-02-11"
+  }
+ ]
+}

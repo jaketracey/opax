@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-s1281",
+ "title": "Defence Amendment (Parliamentary Approval of Overseas Service) Bill 2020",
+ "short_title": "Defence Amendment (Parliamentary Approval of Overseas Service) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2020-12-07",
+ "originating_house": "senate",
+ "sponsor": "STEELE-JOHN, Sen Jordon",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10901",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-03-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-03-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1281_ems_1c042b23-54d8-4de2-b398-0485f41f8a74%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1281%22",
+   "document_date": "2020-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-07",
+  "sentences": [
+   "This bill would require approval from both Houses of Parliament before Australian Defence Force personnel can be sent overseas for warlike actions.",
+   "It would insert a new section into the Defence Act 1903, with exceptions for emergencies where the Governor-General could authorise deployment on the Prime Minister's written advice.",
+   "Emergency proclamations would cease after seven days if Parliament is prorogued, and the Minister for Defence must report to Parliament every two months on any ongoing deployment."
+  ],
+  "changes": [
+   "Requires parliamentary approval for overseas warlike service of Defence Force members.",
+   "Allows emergency deployments by Governor-General proclamation on Prime Minister's advice.",
+   "Sets a seven-day limit on emergency proclamations when Parliament is prorogued.",
+   "Requires the Minister for Defence to report to Parliament every two months on deployments.",
+   "Exempts normal non-warlike overseas service from the approval requirement."
+  ],
+  "affected": "Australian Defence Force personnel, the Parliament, the Governor-General, the Prime Minister, and the Minister for Defence.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8064",
+   "date": "2023-03-29",
+   "house": "senate",
+   "question": "Defence Amendment (Parliamentary Approval of Overseas Service) Bill 2020 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-29/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1201255",
+   "speaker": "David Shoebridge",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-03-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1201855",
+   "speaker": "David Shoebridge",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-03-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

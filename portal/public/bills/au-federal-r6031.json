@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-r6031",
+ "title": "Identity-matching Services Bill 2018",
+ "short_title": "Identity-matching Services Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6031%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6031%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6031%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6031_ems_faf1ba43-d9a2-46d6-b626-e5df9ec6f504%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6031%22",
+   "document_date": "2018-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-02-07",
+  "sentences": [
+   "This bill would set up a system for governments to automatically exchange identity information with each other.",
+   "It would give the Department of Home Affairs the legal authority to run an interoperability hub and a national driver licence database for that purpose.",
+   "The explanatory memorandum says the bill is part of an intergovernmental agreement agreed by COAG in October 2017."
+  ],
+  "changes": [
+   "Create a legal basis for the Department of Home Affairs to collect, use and share identification data for identity-matching services.",
+   "Define the scope of identity-matching services, including who can use them and for what purposes.",
+   "Add accountability measures such as yearly reporting, a required review and penalties for unauthorised disclosure of information."
+  ],
+  "affected": "The Commonwealth, state and territory governments and their agencies are affected, particularly those issuing driver licences, passports, visas and citizenship documents.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-358381",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The Identity-matching Services Bill 2018 implements the Intergovernmental Agreement on Identity Matching Services to enable facial image sharing for national security, law enforcement, and community safety, with the Department of Home Affairs authorised to operate a central interoperability hub and new criminal penalties for misuse."
+  },
+  {
+   "slug": "speech-358389",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-07",
+   "stage_hint": null,
+   "brief": "The bill amends the Australian Passports Act 2005 to allow the foreign minister to automate the sharing of passport data with Commonwealth, state and territory agencies for national security and identity verification, following a 5 October 2017 COAG decision. It aims to protect Australians from terrorism and identity crime, including real-time detection at events such as the upcoming Commonwealth Games."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,70 @@
+{
+ "key": "au-federal-r5765",
+ "title": "Fair Work Amendment (Protecting Christmas) Bill 2016",
+ "short_title": "Fair Work Amendment (Protecting Christmas) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-21",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "&#34;Australian Greens&#34;",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2017-06-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5765%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5765%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5765%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5765_ems_08dcf52c-d3d6-4ab5-a871-a97b72af3a27%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5765_ems_9060257e-cd16-4d1f-a58e-c430ba6088d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5765%22",
+   "document_date": "2016-11-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-337652",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Greens introduced the Fair Work Amendment (Protecting Christmas) Bill 2016 to ensure workers receive public holiday penalty rates on Christmas Day (25 December) and New Year's Day (1 January), regardless of state or territory declarations. The bill responds to the Victorian Labor government's decision not to declare Christmas Day a public holiday when it falls on a Sunday, which the Greens argued would deny Victorian workers penalty rates."
+  }
+ ],
+ "acts": []
+}

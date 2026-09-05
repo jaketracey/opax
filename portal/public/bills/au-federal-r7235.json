@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-r7235",
+ "title": "National Health Amendment (Technical Changes to Averaging Price Disclosure Threshold and Other Matters) Bill 2024",
+ "short_title": "National Health Amendment (Technical Changes to Averaging Price Disclosure Threshold and Other Matters) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-08-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2024-09-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7235_ems_2f758b1f-1b97-4299-bab8-d936ca595660%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7235%22",
+   "document_date": "2024-08-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00088",
+   "document_date": "2024-09-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-08-21",
+  "sentences": [
+   "The bill makes technical corrections to the Pharmaceutical Benefits Scheme to clarify how price reductions work for certain medicines.",
+   "It changes sections 99ADH and 99ADHC of the National Health Act 1953 to remove confusion about the 12.5 per cent average unadjusted price reduction test and what counts as a previous data collection period for designated brands.",
+   "The changes are stated to be for avoidance of doubt only and do not alter how the provisions have operated since 1 July 2022."
+  ],
+  "changes": [
+   "Clarifies the 12.5 per cent average unadjusted price reduction test in section 99ADH.",
+   "Defines 'previous data collection period' in section 99ADHC for designated brands.",
+   "Confirms that all consequences of being a designated brand start on the same date."
+  ],
+  "affected": "Pharmaceutical companies responsible for medicines listed under the Pharmaceutical Benefits Scheme, and the Department of Health which administers the scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:39:14Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "National Health Amendment (Technical Changes to Averaging Price Disclosure Threshold and Other Matters) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00088",
+   "assent_date": "2024-09-26"
+  }
+ ]
+}

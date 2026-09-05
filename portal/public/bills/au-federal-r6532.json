@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-r6532",
+ "title": "Appropriation Bill (No. 5) 2019-2020",
+ "short_title": "Appropriation Bill (No. 5) 2019-2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-04-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2020-04-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-04-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6532_ems_676cabef-1401-46bb-b360-272a43e4d63e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6532%22",
+   "document_date": "2020-04-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00039",
+   "document_date": "2020-04-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-390630",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to rearrange the day's sitting, prioritising debate on the Coronavirus Economic Response Package (Payments and Benefits) Bill 2020, the Coronavirus Economic Response Package Omnibus (Measures No. 2) Bill 2020, and Appropriation Bills Nos 5 and 6 of 2019-2020. The motion, agreed with the Manager of Opposition Business, sets debate until 2 pm, cancels the Federation Chamber, and prescribes grouped voting on amendments."
+  },
+  {
+   "slug": "speech-390666",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The speech argued that the government's COVID-19 economic response packages, while welcome, have gaps that exclude casual employees, pay-as-you-go contractors, temporary visa holders, and self-funded retirees, and urged extensions of support to these groups, as well as greater oversight for commercial tenancies and childcare."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 5) 2019-2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00039",
+   "assent_date": "2020-04-09"
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "key": "au-federal-s1473",
+ "title": "Environment and Other Legislation Amendment (Low Emissions Future) Bill 2025",
+ "short_title": "Environment and Other Legislation Amendment (Low Emissions Future) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-29",
+ "originating_house": "senate",
+ "sponsor": "HUME, Sen Jane",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10853",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-10-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1473%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1473%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1473_ems_12d1d99e-1ebc-4611-a62f-da91a9efd862%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1473%22",
+   "document_date": "2025-10-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

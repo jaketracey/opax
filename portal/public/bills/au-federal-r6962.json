@@ -1,0 +1,333 @@
+{
+ "key": "au-federal-r6962",
+ "title": "Private Health Insurance Legislation Amendment (Medical Device and Human Tissue Product List and Cost Recovery) Bill 2022",
+ "short_title": "Private Health Insurance Legislation Amendment (Medical Device and Human Tissue Product List and Cost Recovery) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-03-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6962_ems_7934ff76-4e63-4895-add9-416eaac395aa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6962_ems_298e3844-40ed-4fe4-9219-4b02b0a2720d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6962%22",
+   "document_date": "2022-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00008",
+   "document_date": "2023-03-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-12-01",
+  "sentences": [
+   "This bill is part of a three-bill package that implements the first stage of a 2021-22 Budget measure to modernise the Private Health Insurance Prostheses List.",
+   "The bill would amend the Private Health Insurance Act 2007 to define medical devices and human tissue products, aligning those definitions with the Therapeutic Goods Act 1989, and to set up cost recovery arrangements for a renamed list of benefits.",
+   "The explanatory memorandum says further legislative changes and instruments are expected to fully implement the Budget measure, and that the bill renames the existing rules to the Private Health Insurance (Medical Devices and Human Tissue Products) Rules."
+  ],
+  "changes": [
+   "defines the products eligible for the Prostheses List using terms from the Therapeutic Goods Act 1989",
+   "renames the current rules and the list of benefits to reflect medical devices and human tissue products",
+   "authorises the Minister for Health and Aged Care to set fees for activities related to the list",
+   "allows items to be removed from the list or processing to stop if fees or levies are unpaid",
+   "provides for late payment penalties, recovery, and waivers on fees and levies",
+   "updates the Private Health Insurance (Transitional Provisions and Consequential Amendments) Act 2007 for related changes"
+  ],
+  "affected": "private health insurers, consumers, and suppliers of medical devices and human tissue products",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:30:34Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7970",
+   "date": "2023-03-07",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-07.5.1) moved by West Australian Senator [Jordan Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means it failed. It would have amended the wording of the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" (known as agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) the Australian Government has announced that, on average, private health insurance premiums will increase in April 2023 by 2.9%,* >> >> *(ii) the Australian community is relying on private health insurance policies to avoid delays in the public system, which is underfunded and in crisis,* >> >> *(iii) the major parties received nearly $2 million from private health insurers and pharmaceutical companies in their party annual returns for the 2021-22 financial year,* >> >> *(iv) the community perceives a link between donations to political parties and their policy priorities; and* > > *(b) is of the opinion that the Australian community should not have to rely on private health insurance to access health care in a timely manner\".*",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "earliest": 2,
+    "dated": 32,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-07/1"
+  },
+  {
+   "key": "federal-senate-7971",
+   "date": "2023-03-07",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2023-03-07.10.1) moved by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it failed. It would have amended the wording of the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is \"*that the bill be read a second time*\" (known as agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \"and that the order of the Senate of 25 March 1999, relating to an order for the production of periodic reports by the Australian Competition and Consumer Commission on private health insurance, be varied as follows:* > > *(1) There be laid on the table as soon as practicable after the end of each period of 12 months ending on or after 30 June 2023, a report by the Australian Competition and Consumer Commission containing an assessment of any anticompetitive or other practices by health funds or providers which reduce the extent of health cover for consumers and increase their out-of-pocket medical and other expenses.* > > *(2) Each report must also include:* > >> *(a) an assessment of the savings on prostheses that are being achieved through the operation of the Memorandum of Understanding for the policy parameters of the Prostheses List Reforms between the Minister for Health and Aged Care and the Medical Technology Association of Australia, signed on 14 March 2022; and* >> >> *(b) an assessment of the extent to which these savings are being passed onto consumers by private health insurers.\".*",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "earliest": 2,
+    "dated": 36,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-07/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-826997",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "Several bills were referred to the Federation Chamber for further consideration, including amendments to private health insurance, therapeutic goods, and export control legislation."
+  },
+  {
+   "slug": "speech-826999",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The Coalition argued for three bills to modernise the Prostheses List, which sets minimum insurers’ payments for surgical implants, and allocated $22 million over four years to lower medical device costs and improve private health insurance affordability. The speaker criticised the Albanese Labor government for lacking transparency by leaving key details like eligibility criteria and cost recovery specifications to unsighted subordinate legislation."
+  },
+  {
+   "slug": "speech-827066",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The package of three bills modernises the Private Health Insurance Prostheses List to improve transparency and reduce costs for implantable medical devices, with hip replacements costing over $4,000 in Australia compared to under $2,000 in the UK and New Zealand. The reforms aim to lower private health insurance premiums by reducing device costs and updating cost recovery arrangements."
+  },
+  {
+   "slug": "speech-827320",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-08",
+   "stage_hint": null,
+   "brief": "The speaker introduced three bills to modernise the Private Health Insurance Prostheses List (renamed the Prescribed List), aiming to reduce costs and improve affordability for privately insured Australians who paid $26 billion in premiums in 2021–22, with no additional out-of-pocket costs for consumers."
+  },
+  {
+   "slug": "speech-828109",
+   "speaker": "Jenny McAllister",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The government initiated a six-week consultation on bundling arrangements for medical devices, with the bill commencing 1 July, and rejected an amendment for the ACCC to report on whether $900 million in savings would be passed to consumers. Senator Ruston raised concerns about the removal of over 400 items from the Prostheses List and its impact on procedures like bariatric surgery, but the minister took those questions on notice."
+  },
+  {
+   "slug": "speech-828219",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The government moved an amendment to the Private Health Insurance Legislation Amendment (Medical Device and Human Tissue Product List and Cost Recovery) Bill 2022, requiring the minister to consider whether removing listings or blocking activities over unpaid fees would harm patients or limit clinicians' professional freedom. The amendment was agreed to."
+  },
+  {
+   "slug": "speech-828308",
+   "speaker": "Raff Ciccone",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "Scrutiny Digest 2 of 2023 was tabled, assessing 18 bills and 11 ministerial responses. The Minister for Health and Aged Care agreed to amend the Private Health Insurance Legislation Amendment (Medical Device and Human Tissue Product List and Cost Recovery) Bill 2022 to require consideration of patient interests and medical practitioner freedom, while the committee requested advice from the Treasurer and Minister for Home Affairs on automated decision-making in the Treasury Laws Amendment (2023 Measures No. 1) Bill 2023 and the Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance Legislation Amendment (Medical Device and Human Tissue Product List and Cost Recovery) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00008",
+   "assent_date": "2023-03-16"
+  }
+ ]
+}

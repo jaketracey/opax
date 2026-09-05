@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-s1043",
+ "title": "Water Legislation Amendment (Sustainable Diversion Limit Adjustment) Bill 2016",
+ "short_title": "Water Legislation Amendment (Sustainable Diversion Limit Adjustment) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-15",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2016-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1043_ems_842c7b9e-c7e9-41c4-af0a-abea963dbecf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4921191%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1043%22",
+   "document_date": "2016-09-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00072",
+   "document_date": "2016-11-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-337175",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The Water Legislation Amendment (Sustainable Diversion Limit Adjustment) Bill 2016 extends the deadline for basin jurisdictions to notify a second package of sustainable diversion limit adjustment measures to 30 June 2017, and requires the Murray-Darling Basin Authority to present its determination by 15 December 2017, following the notification of 36 supply and efficiency measures on 5 May 2016."
+  },
+  {
+   "slug": "speech-337176",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Water Legislation Amendment Bill and highlighted the successful local resolution of Hume Dam management issues, including poor communication and flawed airspace rules, by convening a roundtable meeting that led to commitments to review the early warning system and convene a working group. They called for a review of the rules governing airspace allocation in the dam to balance irrigation, flood mitigation, and environmental protection."
+  },
+  {
+   "slug": "speech-337177",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-09",
+   "stage_hint": null,
+   "brief": "The opposition will support the Water Legislation Amendment (Sustainable Diversion Limit Adjustment) Bill 2016, maintaining bipartisan agreement on the Murray-Darling Basin Plan. The speaker urged states to deliver projects meeting environmental benchmarks for 650 gigalitres of water, warning that environmental standards will not be lowered and that failure would lead to further buybacks or Commonwealth powers being activated."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Water Legislation Amendment (Sustainable Diversion Limit Adjustment) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00072",
+   "assent_date": "2016-11-23"
+  }
+ ]
+}

@@ -1,0 +1,216 @@
+{
+ "key": "au-federal-s1216",
+ "title": "Intellectual Property Laws Amendment (Productivity Commission Response Part 2 and Other Measures) Bill 2019",
+ "short_title": "Intellectual Property Laws Amendment (Productivity Commission Response Part 2 and Other Measures) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2020-02-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1216_ems_2d30b94a-4f04-46e8-bbe4-4be1e39bad05%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1216_ems_f72c231a-ab5a-4563-8aaa-f78983def254%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1216%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00009",
+   "document_date": "2020-02-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-5933",
+   "date": "2019-10-16",
+   "house": "senate",
+   "question": "The majority voted in favour of leaving [schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fs1216_first-senate%2F0001;query=Id%3A%22legislation%2Fbills%2Fs1216_first-senate%2F0000%22;rec=0) of the bill unchanged. In parliamentary jargon, they voted \"*that schedule 1 stand as printed.*\" This vote occurred after South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Centre Alliance) [proposed that that schedule](https://www.openaustralia.org.au/senate/?gid=2019-10-16.53.1) should be opposed. ### What does schedule 1 do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd042), Schedule 1 phases out the innovation patent system: > *The innovation patent was introduced in 2001 to provide a lower cost, lower inventive threshold, shorter term patent to encourage incremental innovation and to be more accessible to small and medium businesses and private inventors.*",
+   "stage": "In committee",
+   "ayes": 42,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 23,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-16/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-387090",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "The bill phases out the innovation patent, introduces an objects clause into the Patents Act, and improves transparency and accountability for Crown use and compulsory licensing of patents and designs."
+  },
+  {
+   "slug": "speech-387091",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "The opposition negotiated amendments to the bill to require a statutory review of the IP system for small business and extend the transition period after abolishing the innovation patent, but criticised the government's broader record on innovation, citing falling R&D spending, declining STEM enrolments, low industry-research collaboration, and a drop in Australia's global innovation ranking. The speaker moved a second reading amendment calling for the government to re-engage innovation as a productivity driver and address these issues."
+  },
+  {
+   "slug": "speech-387094",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Intellectual Property Laws Amendment Bill 2019 but argued that abolishing the innovation patent system without an alternative would harm small and medium enterprises, and proposed amendments to extend the grandfathering period. They also noted Australia's falling ranking on the Global Innovation Index and criticised the Prime Minister's lack of enthusiasm for innovation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Intellectual Property Laws Amendment (Productivity Commission Response Part 2 and Other Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00009",
+   "assent_date": "2020-02-26"
+  }
+ ]
+}

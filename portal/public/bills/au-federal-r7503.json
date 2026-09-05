@@ -1,0 +1,310 @@
+{
+ "key": "au-federal-r7503",
+ "title": "Treasury Laws Amendment (Fuel Excise Relief No. 2) Bill 2026",
+ "short_title": "Treasury Laws Amendment (Fuel Excise Relief No. 2) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7503_ems_c22e5ecd-6ae6-42ab-b40d-787f61da643d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7503%22",
+   "document_date": "2026-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00059",
+   "document_date": "2026-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-10279",
+   "date": "2026-06-23",
+   "house": "representatives",
+   "question": "Alison Penfold Fuel security is economic security and fuel security is national security. Recent events have exposed how vulnerable Australia remains. We are one of the world's great energy producing nations, yet we remain heavily dependent on imported liquid fuels. We've allowed refining capacity to decline, and we've failed to build sufficient storage capacity. We continue to rely on international supply chains for a resource that underpins almost every aspect of modern life. No fuel means no freight and no food, and no food means empty shelves. Regional Australia sits at the front line of that vulnerability. The lesson from this crisis is clear. Australia needs more than temporary tax relief. Australia needs a long-term fuel security strategy. We need stronger fuel reserves. We need greater storage capacity. We need stronger sovereign capability, and we need more resilient supply chains. We need governments willing to think beyond the next headline and beyond the next election cycle. What Australians want is not another temporary fix. They want a government that understands what is happening to their country, and, increasingly, Australians are concluding that this government does not, because, after four years of the Albanese Labor government, Australians are paying more for almost everything and getting less in return. There are higher power bills, higher grocery bills, higher fuel bills, higher insurance costs, higher housing costs and higher taxes. This government likes to blame global events for Australia's problems. It blames wars. It blames supply chains. It blames international markets. But Australians know better. The cost-of-living crisis did not begin in the Middle East. The housing crisis did not begin in the Middle East. The energy crisis did not begin in the Middle East. Australia's fuel security vulnerabilities did not begin in the Middle East. These problems were foreseeable. They were identifiable, and they required leadership. Instead, Australian",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 71
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 85
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-23/2"
+  },
+  {
+   "key": "federal-senate-10645",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Treasury Laws Amendment (Fuel Excise Relief No. 2) Bill 2026. I will first deal with the second reading amendment circulated by One Nation. The question is that the amendment on sheet 3906 be agreed to. _One Nation's circulated amendment_ At the end of the motion, add \", but the Senate: (a) notes that increasing the price of fuel in the middle of a cost-of-living crisis will make life harder for everyday Australians and for small businesses; and (b) calls on the Government to cancel the 16 cents per litre increase in the fuel excise in this bill and suspend indexation increases permanently with a review in June 2028\".",
+   "stage": "Limitation of debate",
+   "ayes": 5,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/22"
+  },
+  {
+   "key": "federal-senate-10646",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the second reading amendment circulated by the Australian Greens. The question is that the amendment on sheet 3907 be agreed to. _Australian Greens' circulated amendment_ At the end of the motion, add \", but the Senate: (a) notes that coal mining companies are the biggest recipient of the multi-billion dollar annual expenditure for Fuel Tax Credits and that expenditure for this sector is growing at the fastest rate of all sectors; (b) acknowledges that subsidising the burning of fossil fuels with public money is making the climate crisis worse; and (c) is of the opinion that the fossil fuel extraction industry should not be eligible for Fuel Tax Credits\".",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/23"
+  },
+  {
+   "key": "federal-senate-10647",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with Committee of the Whole amendments circulated by the Australian Greens. The question is that the amendment on sheet 3890 be agreed to. _Greens_ _'__circulated_ _amendment—_ (1) Schedule 1, page 6 (after line 2), at the end of the Schedule, add: _Fuel Tax Act 2006_ 10 Subsection 43-5(1) (note) Omit \"section 43-10\", substitute \"sections 43-10 and 43-15\". 11 At the end of Subdivision 43-A Add: 43-15 Cap on fuel tax credits _Annual credits cap_ (1) This section reduces your fuel tax credits for taxable fuel so as to ensure the sum of those credits over the course of any 12-month period does not exceed $50,000,000 (which is the _annual credits cap_). _Reduction so as not to exceed annual credits cap_ (2) The \\*amount of your fuel tax credits for taxable fuel that you: (a) acquire in, or import into, the indirect tax zone on a day; or (b) both: (i) manufacture in the indirect tax zone; and (ii) enter for home consumption (within the meaning of the _Excise Act 1901_) on a day; is reduced by so much of your aggregated annual credits for that day as exceeds the annual credits cap. Example 1: Sarah acquires taxable fuel on 5 January 2026. The effective fuel tax payable on the fuel is $65,000,000. The amount of Sarah's fuel tax credits for the fuel is reduced to $50,000,000. Sarah is, on 5 January 2026, in excess of the annual credits cap and will not receive fuel tax credits for any taxable fuel she acquires, imports or manufactures for 12 months after that day. Example 2: Tom acquires taxable fuel to use for travelling on a public road as follows: (a) on 3 September 2025 he acquires fuel for which the effective fuel tax is $30,000,000 and the road user charge is $300,000; (b) on 3 January 2026 he acquires fuel for which the effective fuel tax is $40,000,000 and the road user charge is $400,000; (c) on 3 May 2026 he acquires fuel for which the effective fuel tax is $20,000,000 and the road user charge is $200,000. Tom receives $29,700,000 in fuel",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/24"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1203584",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203701",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204297",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Fuel Excise Relief No. 2) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00059",
+   "assent_date": "2026-06-30"
+  }
+ ]
+}

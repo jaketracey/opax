@@ -1,0 +1,596 @@
+{
+ "key": "au-federal-r6538",
+ "title": "Treasury Laws Amendment (More Flexible Superannuation) Bill 2020",
+ "short_title": "Treasury Laws Amendment (More Flexible Superannuation) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6538_ems_2a7c0606-40fa-41da-ad87-d7aa4428d24c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6538%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00045",
+   "document_date": "2021-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6512",
+   "date": "2020-08-31",
+   "house": "representatives",
+   "question": "Paul Fletcher I would like to thank those members who have contributed to the second reading debate on the Treasury Laws Amendment (More Flexible Superannuation) Bill 2020. This bill will extend access to the bring-forward arrangements to people aged 65 and 66 years. From 1 July 2020, people in this age group will be able to make up to three years worth of non-concessional contributions into their superannuation in a single year. This is an important change, which delivers on the government's commitment in the 2019-20 budget and 2019 election. The bring-forward measure, together with the government's changes to the work test and spouse contributions rules, improves the flexibility of the superannuation system to assist older Australians to save for their retirement. I commend this bill to the House. Tony Smith The question is that the words proposed to be omitted stand part of the question.",
+   "stage": "Second reading",
+   "ayes": 44,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 6,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-08-31/5"
+  },
+  {
+   "key": "federal-representatives-7648",
+   "date": "2021-06-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2021-06-17.129.1) \"*That the amendments be agreed to.*\" The amendments were passed in the Senate and returned to the House for our MPs' consideration. Because this vote was successful, this bill will [now become law](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). ### What does the bill do? The bill was introduced in order \"*to enable individuals aged 65 and 66 to make up to three years of non-concessional superannuation contributions under the bring forward rule.*\" [According to](https://www.openaustralia.org.au/debates/?id=2021-06-17.129.1) the Shadow Assistant Treasurer and Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor): > *This is a provision which benefits a large group of politicians but a very small group of Australians. At a time when we are trying to resolve the complex issues around superannuation, it is extraordinary in the extreme that this is the priority of this government—a measure that benefits a large group of politicians but a very small group of Australians who earn over $275,000 a year. It's not a priority and Labor won't be supporting the measure.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-17/9"
+  },
+  {
+   "key": "federal-senate-7650",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2021-06-17.45.1) \"*That the bill be reported,*\" which means the Senate can continue to discuss the bill in detail. ### What does the bill do? The bill was introduced in order \"*to enable individuals aged 65 and 66 to make up to three years of non-concessional superannuation contributions under the bring forward rule.*\" [According to](https://www.openaustralia.org.au/debates/?id=2021-06-17.129.1) the Shadow Assistant Treasurer and Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor): > *This is a provision which benefits a large group of politicians but a very small group of Australians. At a time when we are trying to resolve the complex issues around superannuation, it is extraordinary in the extreme that this is the priority of this government—a measure that benefits a large group of politicians but a very small group of Australians who earn over $275,000 a year. It's not a priority and Labor won't be supporting the measure.*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 29,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/1"
+  },
+  {
+   "key": "federal-senate-7651",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2021-06-17.53.3) \"*That the bill be reported,*\" which means the Senate can continue to discuss the bill in detail. ### What does the bill do? The bill was introduced in order \"*to enable individuals aged 65 and 66 to make up to three years of non-concessional superannuation contributions under the bring forward rule.*\" [According to](https://www.openaustralia.org.au/debates/?id=2021-06-17.129.1) the Shadow Assistant Treasurer and Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor): > *This is a provision which benefits a large group of politicians but a very small group of Australians. At a time when we are trying to resolve the complex issues around superannuation, it is extraordinary in the extreme that this is the priority of this government—a measure that benefits a large group of politicians but a very small group of Australians who earn over $275,000 a year. It's not a priority and Labor won't be supporting the measure.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/2"
+  },
+  {
+   "key": "federal-senate-7652",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-17.55.1) introduced by Queensland Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (One Nation), which means they will now become part of the bill. Senator Hanson [explained the amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-17.55.1): > *... with COVID last year, people were given the opportunity to draw out of their superannuation $10,000 in the first year and another $10,000 in the second year. These amendments will allow those Australians who have withdrawn their money the opportunity to put that money back into their account by 2030. This is a way of saving—for people to put their money back into their account with no penalties. I think it would be great for the Australian people to actually have the opportunity to put it in.* > > *[..]* > > *The second sheet of amendments I put up here is to do with people who have put in amounts past their $25,000 concessional cap. They pay tax on it on the way in. Actually, if they pay over the $25,000 threshold, they are paying full tax on it. They are given the opportunity to pull that money out in a certain period of time after the end of the financial year, but they are penalised another three per cent. Remember that they have already paid their full tax on it, and you want to penalise them again by having them pay another three per cent on that money. This will get rid of that three per cent and they can draw out their money within a specified period of time. So I think it would help a lot of people if they want it to.* ### What does the bill do? The bill was introduced in order \"*to enable individuals aged 65 and 66 to make up to three years of non-concessional superannuation contributions under the bring forward rule.*\" [According to](https://www.openaustralia.org.au/debates/?id=2021-06-17.129.1) the Shadow Assistant Treasurer and Whitlam MP [Stephen Jones](h",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/3"
+  },
+  {
+   "key": "federal-senate-7653",
+   "date": "2021-06-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-06-17.58.1), \"*That this bill now be read a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/),*\" which is parliamentary jargon for agreeing to pass the bill in the Senate. Because the Senate agreed to several amendments, the bill will now return to the House of Representatives, where our MPs will decide on whether they agree with the changes. ### What does the bill do? The bill was introduced in order \"*to enable individuals aged 65 and 66 to make up to three years of non-concessional superannuation contributions under the bring forward rule.*\" [According to](https://www.openaustralia.org.au/debates/?id=2021-06-17.129.1) the Shadow Assistant Treasurer and Whitlam MP [Stephen Jones](https://theyvoteforyou.org.au/people/representatives/whitlam/stephen_jones) (Labor): > *This is a provision which benefits a large group of politicians but a very small group of Australians. At a time when we are trying to resolve the complex issues around superannuation, it is extraordinary in the extreme that this is the priority of this government—a measure that benefits a large group of politicians but a very small group of Australians who earn over $275,000 a year. It's not a priority and Labor won't be supporting the measure.*",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 28,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-17/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391036",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (More Flexible Superannuation) Bill 2020 extends the superannuation bring-forward arrangement to people aged 65 and 66 from 1 July 2020, and includes further measures allowing those aged 65–66 to make voluntary contributions without a work test and those aged 70–74 to receive spouse contributions."
+  },
+  {
+   "slug": "speech-393745",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the net superannuation balance declined for the first time in three decades, calling it a tragedy and warning against government attacks on superannuation and pensions. They supported the Treasury Laws Amendment bill but opposed broader cuts, criticised the early super access scheme for widespread fraud, and demanded the immediate release of the Retirement Income Review report."
+  },
+  {
+   "slug": "speech-393746",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Coalition is ideologically undermining superannuation through measures like the early release scheme (which drained 600,000 accounts) and opposing the super guarantee increase, while refusing to increase the pension for the first time in 25 years. They challenged the government to put $3 trillion on the table if they think they can run super better, and criticised Tony Abbott, Senator Hume and Senator Andrew Bragg for opposing compulsory super increases."
+  },
+  {
+   "slug": "speech-394013",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The speaker defended Australia's superannuation system against government cuts, arguing the legislated super guarantee increase should proceed and that early access had cost Australians over $100 billion in savings, including $347 million withdrawn by 48,000 Territorians. They also highlighted that 23 per cent of women aged 60–64 have no superannuation and called the government's stance a broken election promise."
+  },
+  {
+   "slug": "speech-394014",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "Labor will support the Treasury Laws Amendment (More Flexible Superannuation) Bill 2020, which aligns superannuation concessions with the higher pension age, but warns against Liberal efforts to delay the scheduled superannuation increase to 12 per cent, arguing that past wage stagnation and failed penalty-rate cuts show such delays will not boost wages or jobs."
+  },
+  {
+   "slug": "speech-394015",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (More Flexible Superannuation) Bill 2020, calling it a rare sensible move by the government, while criticising the Liberal Party’s history of attacking industry superannuation funds. They defended industry super funds as the most trusted and high-performing, noted union and employer equal representation on boards, and warned that dismantling universal super would destroy jobs and economic growth."
+  },
+  {
+   "slug": "speech-394016",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to extend non-concessional superannuation contributions to ages 65 and 66, but argued the Morrison government is undermining universal superannuation through early access withdrawals that will leave young Australians over $51 billion worse off, and by failing to release the Retirement Income Review or increase the pension."
+  },
+  {
+   "slug": "speech-394017",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "Labor supports the Treasury Laws Amendment (More Flexible Superannuation) Bill 2020 but argues it fails to address serious superannuation inequities, particularly affecting women, young people, and older Australians. The speaker criticised the government for breaking its own election commitment to raise the superannuation guarantee to 12% by 2025, enabling young people to withdraw superannuation during the pandemic, and allowing women over 55 to become the fastest growing homeless cohort."
+  },
+  {
+   "slug": "speech-394018",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The speaker argued against the government's plan to cut superannuation, stating it would reduce workers' wages and retirement savings, and defended super as a key part of pay. They highlighted Labor's role in creating the system, noted the $2.8 trillion national savings pool projected to reach $10 trillion by 2040, and criticised the government's opposition to superannuation and its use of the pandemic as cover for cuts."
+  },
+  {
+   "slug": "speech-394020",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The speaker defended superannuation as a Labor legacy, arguing the government's COVID-19 early withdrawal scheme forced 600,000 Australians to empty their accounts and could cost a 20-year-old $120,000 in lost retirement savings. He supported the second reading amendment calling for scheduled super guarantee increases and adequate aged pension funding."
+  },
+  {
+   "slug": "speech-394021",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Coalition has a history of breaking promises on superannuation increases, and that the government's early release scheme and committee inquiries are undermining the system. They stated that the legislated superannuation increase to 12% should proceed, and criticised the early release scheme for causing $2,881 billion in total superannuation to fall to $2,864 billion, with half a million Australians zeroing out their accounts and funds being spent on gambling and discretionary items."
+  },
+  {
+   "slug": "speech-394022",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The speaker supported an amendment to the Treasury Laws Amendment (More Flexible Superannuation) Bill 2020 to ensure all Australians have a dignified retirement, opposing any delay to the legislated superannuation guarantee increase to 12% by 2025, and cited that the 2014 freeze cost the average worker over $4,300 in super and $1,000 in take-home pay."
+  },
+  {
+   "slug": "speech-394023",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (More Flexible Superannuation) Bill 2020, which raises the spouse contribution age to 75 and the work test age to 67, and argued the government must address the super gap for women, citing that women retire with 47% less super than men and 70% of women over 65 have less than $150,000 in super."
+  },
+  {
+   "slug": "speech-394172",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The amnesty penalises businesses for failing to complete the SGC form even when superannuation has been paid, with no ATO discretion to waive accrued costs, and the speaker urged the Treasurer to address this disproportionate penalty. The speaker also welcomed the Treasury Laws Amendment (More Flexible Superannuation) Bill 2020 but called for further policies to reduce inequality, especially for women."
+  },
+  {
+   "slug": "speech-394173",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (More Flexible Superannuation) Bill 2020 is misleadingly named, as it merely realigns existing acts rather than providing meaningful flexibility, and noted the government is preparing to abandon its election commitment to increase the superannuation guarantee from 9.5% to 12%."
+  },
+  {
+   "slug": "speech-394264",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-31",
+   "stage_hint": null,
+   "brief": "The bill extends bring-forward arrangements to people aged 65 and 66, allowing up to three years of non-concessional superannuation contributions in a single year from 1 July 2020, delivering on a government commitment from the 2019-20 budget and 2019 election."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (More Flexible Superannuation) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00045",
+   "assent_date": "2021-06-22"
+  }
+ ]
+}

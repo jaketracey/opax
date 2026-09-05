@@ -1,0 +1,291 @@
+{
+ "key": "au-federal-r5518",
+ "title": "Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5518_ems_34beb496-0eea-4137-87da-28294f7ae6b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5518%22",
+   "document_date": "2015-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00149",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3917",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "question": "Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Bill 2015 - Second Reading - Against the bill",
+   "stage": "Second reading",
+   "ayes": 52,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-09-14/1"
+  },
+  {
+   "key": "federal-representatives-3918",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "question": "Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Bill 2015 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 85,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-09-14/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-318600",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "Labor opposed the Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Bill 2015, arguing it would gut transparency for the roughly 2,000 firms earning over $100 million and exempt all private firms, and moved an amendment to block the bill. The party promoted its own $7.2 billion multinational tax package as an alternative, referencing Wayne Swan and David Bradbury's 2013 reforms."
+  },
+  {
+   "slug": "speech-318603",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Bill 2015, arguing it would exempt Australian-owned private companies from disclosure and normalise tax avoidance. They criticised BHP Billiton and Rio Tinto for using Singapore marketing hubs to shift profits and avoid paying fair tax in Australia, citing $5.7 billion and $4.5 billion in profits booked in Singapore respectively, with effective tax rates well below the corporate average."
+  },
+  {
+   "slug": "speech-318604",
+   "speaker": "Matt Williams",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Bill 2015, arguing it punishes successful private companies and invades their privacy, and supported an amendment by the member for Fraser."
+  },
+  {
+   "slug": "speech-318605",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The Bill reduces the number of employees required for a company's tax information to be made public from 250 to 100, aiming to increase transparency of large private companies' tax practices."
+  },
+  {
+   "slug": "speech-318608",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it would reduce tax transparency by exempting private companies from publishing tax information, and criticised the government for cutting 4,700 ATO staff and reopening $1.1 billion in tax loopholes. They promoted Labor's alternative policy to raise over $500 million annually through measures including a worldwide gearing ratio and increased ATO compliance."
+  },
+  {
+   "slug": "speech-318609",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The bill repeals a Labor-era requirement for private companies with turnover over $100 million to publicly disclose tax records, arguing it protects privacy, prevents commercial exploitation, and encourages entrepreneurial activity, while contrasting coalition achievements like repealing carbon and mining taxes with Labor’s record."
+  },
+  {
+   "slug": "speech-318610",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's tax transparency bill weakens Labor's legislation and fails to crack down on multinational tax avoidance, which costs Australia billions. They cited specific figures: the government's tax avoidance effort is worth only $30 million over four years compared to Labor's $1.9 billion plan, and 29% of ASX 200 companies pay an effective tax rate of 10% or less, resulting in an estimated $8.4 billion annual revenue loss."
+  },
+  {
+   "slug": "speech-318611",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that exempting Australian-owned private companies from publishing tax information is necessary to protect their commercial confidentiality and market security, citing risks to intellectual property and profit margins. They criticised Labor for not applying similar transparency to unions and emphasised the coalition’s commitment to implementing OECD anti-tax avoidance measures like country-by-country reporting."
+  },
+  {
+   "slug": "speech-318616",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The bill exempts Australian-owned private companies from public tax disclosure requirements, arguing the measure protects their privacy and competitiveness while preserving the ATO's enforcement powers. The government also announced broader actions against multinational tax avoidance, including new anti-avoidance rules, GST on foreign digital services, and doubled penalties for large companies using profit-shifting schemes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (Better Targeting the Income Tax Transparency Laws) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00149",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

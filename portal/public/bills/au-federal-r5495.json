@@ -1,0 +1,511 @@
+{
+ "key": "au-federal-r5495",
+ "title": "Shipping Legislation Amendment Bill 2015",
+ "short_title": "Shipping Legislation Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure and Regional Development",
+ "status": "lapsed",
+ "status_as_of": "2015-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5495_ems_d26159f7-ed95-407e-ab4c-3ea6eebedde0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5495%22",
+   "document_date": "2015-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-25",
+  "sentences": [
+   "This bill would replace the current three-tier coastal shipping licence with a single permit that lasts 12 months and is available to both Australian and foreign vessels.",
+   "It would create minimum employment conditions for seafarers on foreign ships that carry coastal cargo for more than 183 days and require those ships to have two senior crew who are Australian citizens, residents or visa holders.",
+   "Vessels on the Australian International Shipping Register would no longer need to have a collective agreement before registration, and the requirement for them to mainly trade internationally would drop to 90 days a year."
+  ],
+  "changes": [
+   "Replaces the three-tier licensing system under the Coastal Trading (Revitalising Australian Shipping) Act 2012 with a single Coastal Shipping Permit.",
+   "Renames the Coastal Trading (Revitalising Australian Shipping) Act 2012 to the Coastal Shipping Act 2015.",
+   "Applies the Seagoing Industry Award to seafarers on foreign vessels with a coastal permit when the Fair Work Act 2009 covers them, and to Australian International Shipping Register vessels not trading internationally.",
+   "Creates an enforcement mechanism for seafarers to recover unpaid amounts if a foreign vessel trades for more than 183 days contrary to its permit.",
+   "Requires foreign vessels trading in coastal shipping for over 183 days to have two senior crew eligible to work in Australia as citizens, residents or visa holders.",
+   "Allows registration on the Australian International Shipping Register if a vessel engages in international shipping for 90 days or more a year, and removes the requirement for a collective agreement before registration."
+  ],
+  "affected": "Owners and operators of Australian and foreign vessels engaged in coastal shipping, seafarers on those vessels, and the Australian government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:08Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3952",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "question": "Warren Truss I thank members who have contributed to this debate. It has been a fulsome debate. I would have to say that I think it has been a partisan debate, but it is reasonable that people will want to make their contributions to what is really an important area of reform. I would just like to make a few observations about the legislation and some of the comments that have been made. The government has made it clear that it is committed to safe, secure and efficient transport systems, and this is unambiguously the case for coastal shipping. The current system has clearly failed. Just look at the facts. Under Labor the fleet of major Australian registered ships over 2,000 deadweight tonnes with coastal licences plummeted from 30 vessels, in 2006-07, to just 15, in 2013-14. The number of ships on the Transitional General Licence Register has dropped from 16 to just eight. Between 2000 and 2012, shipping's share of Australia's freight fell from 27 per cent to just under 17 per cent, while the volume of freight across Australia grew by 57 per cent. Over the first two years of Labor's coastal trading act, there was a 63 per cent decline in the carrying capacity of the major Australian coastal trading fleet. Looking forward, at this rate Australia's overall freight task is expected to grow by 80 per cent, come 2030, but coastal shipping will increase by only 15 per cent. This is not to mention the increase in freight rates reported by some shipping users, or the many instances where the current system has proved inflexible, cumbersome and, frankly, impractical. For instance, Gypsum Resources Australia outlined in their submission to the Senate committee how they are losing business to Thailand under the current system. They said: In February 2014 GRA applied for, and was subsequently denied, a temporary licence (TL) to enable it to compete for gypsum sales in Brisbane. The dominant factor in the denial was an objection by a GL holder to the granting of a TL to GRA. Th",
+   "stage": "Second reading",
+   "ayes": 51,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 48,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-10-14/3"
+  },
+  {
+   "key": "federal-representatives-3953",
+   "date": "2015-10-14",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-10-14/4"
+  },
+  {
+   "key": "federal-senate-4005",
+   "date": "2015-11-26",
+   "house": "senate",
+   "question": "Ricky Muir One of the great things about this job is that I get to learn of things that I had no idea about prior to taking my seat. Today's topic is Australian coastal shipping. It has been an interesting voyage, and I have navigated my way through some strong arguments. I have been involved in a lot of consultation on the government's Shipping Legislation Amendment Bill 2015 since it was introduced, and I would like to thank all those who have made contact with my office. The purpose of the Shipping Legislation Amendment Bill 2015 is to increase access to Australian coastal shipping for foreign crewed ships in an attempt to make coastal shipping cheaper. The bill was referred to the Rural and Regional Affairs and Transport Legislation Committee, and some of the submissions were quite concerning. In its submission to the Senate committee, The Australia Institute stated: Foreign flagged and crewed ships already have considerable access to the Australian coastal shipping market, making Australian coastal shipping possibly the only service sector facing competition that can use foreign labour while actually operating in Australia. The Australia Institute's submission also notes that the cost-benefit analysis estimates only 88 Australian seafarer jobs will remain under the department's preferred option for policy change. This represents a loss of 1,089 Australian seafarer jobs, or 93 per cent of the current workforce. The MUA stated in its submission that the passage of the Shipping Legislation Amendment Bill 2015 will 'destroy the Australian shipping industry' and, according to its own modelling, will have an impact of removing over 2,000 jobs. Maritime Industry Australia Limited stated in its submission that the passage of this bill 'will lead to the complete demise of the Australian flagged trading ship fleet.' I do want to provide a bit of perspective however. Approximately 96 per cent of Australian shipping is for exporting Australian products overseas. This is no",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 39,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-26/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-314868",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-06-25",
+   "stage_hint": null,
+   "brief": "The Shipping Legislation Amendment Bill 2015 simplifies coastal shipping regulation by replacing the existing tiered licensing system with a single 12-month permit for both Australian and foreign ships, aiming to reduce costs and increase competition. It notes that the Australian-flagged coastal fleet fell from 30 vessels in 2006-07 to 15 in 2013-14, and that shipping freight from Bell Bay Aluminium rose 63% from $18.20 to $29.70 per tonne in the first year of the 2012 Act."
+  },
+  {
+   "slug": "speech-319803",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The Shipping Legislation Amendment Bill 2015 was opposed for allowing foreign-flagged vessels paying lower wages to operate on Australian coastal routes, which the speaker argued would destroy Australian jobs, compromise maritime safety and national security, and harm the environment. The speaker moved an amendment to reject the bill and called for preserving Australian shipping industry protections."
+  },
+  {
+   "slug": "speech-319806",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The Shipping Legislation Amendment Bill 2015 aims to address the decline in Australia's coastal shipping industry, which the speaker attributes to the previous Labor government's Coastal Trading Act and union influence. The speaker cited a 63% increase in freight costs for Bell Bay Aluminium from 2011 to 2012, a drop in coastal freight loaded from over 59 million tonnes in 2007-08 to 49 million tonnes in 2012-13, and a decline in major Australian registered ships with coastal licences from 30 in 2006-07 to 13 by 2012-13."
+  },
+  {
+   "slug": "speech-319807",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Shipping Legislation Amendment Bill 2015, arguing it would strip Australian maritime workers of employment conditions and replace them with foreign crews, citing the case of the Alexander Spirit. They defended the 2012 Labor Coastal Trading Act reforms as providing a level playing field and warned the bill would risk the jobs of 2,000 seafarers and up to 8,000 land-based workers, attributing the government's push to ideological hostility toward unions like the Maritime Union of Australia."
+  },
+  {
+   "slug": "speech-319810",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "Labor opposed the Shipping Legislation Amendment Bill 2015, arguing it would destroy Australian shipping jobs and reintroduce \"Work Choices on water.\" The speaker claimed over 90% of shipping jobs were at risk, with the Australia Institute estimating only 88 Australian-employed seafarer jobs would remain if the bill passed."
+  },
+  {
+   "slug": "speech-319811",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The Assistant Minister to the Deputy Prime Minister argued that the Shipping Legislation Amendment Bill 2015 will deregulate coastal shipping by replacing the three-tiered licence system with a single permit for all ships, reducing costs and increasing competition. He cited specific figures including a 63% decline in the Australian coastal trading fleet's carrying capacity since 2012, a 63% increase in shipping freight rates for Bell Bay Aluminium under Labor's 2012 legislation, and claimed that 1,200 deaths at sea occurred under Labor's border protection policies."
+  },
+  {
+   "slug": "speech-319813",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The Shipping Legislation Amendment Bill is necessary reform that should be supported by both sides of the House, but the opposition will not support it due to obstructionism, while the government side will."
+  },
+  {
+   "slug": "speech-319814",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Shipping Legislation Amendment Bill 2015, arguing it would eliminate over 1,000 of 1,100 Australian shipping jobs and undermine wages, environmental protections, and national security, while defending Labor’s 2012 shipping reforms as a viable alternative."
+  },
+  {
+   "slug": "speech-319834",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Shipping Legislation Amendment Bill 2015, arguing it would replace 10,000 Australian jobs with foreign labour on flag-of-convenience vessels, undermine safety and environmental laws, and harm the Great Barrier Reef. They supported the member for Grayndler's amendment, citing Labor's 2012 reforms and warning of \"WorkChoices on water.\""
+  },
+  {
+   "slug": "speech-319835",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Shipping Legislation Amendment Bill 2015 is needed because the previous Coastal Trading (Revitalising Australian Shipping) Act 2012 failed, causing a 63% cost increase for Bell Bay Aluminium and harming other Tasmanian industries. The bill will replace the tiered permit system with a single permit for all ships, treat Australian and foreign vessels equally, and protect jobs by extending award entitlements to seafarers on foreign ships engaged in coastal shipping for over 183 days."
+  },
+  {
+   "slug": "speech-319836",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The member opposed the Shipping Legislation Amendment Bill 2015, arguing it would accelerate the loss of critical maritime skills (such as harbour masters and pilots) needed for efficient port operations, and noted that only 2% of Australian exports are carried by Australian-flagged ships. He cited a report by RMIT's Victor Gekara showing the decline of domiciled shipowners and training, and used Port Hedland's record of shipping 264,000 tonnes of iron ore in a single day as an example of the logistical capacity dependent on blue-water experience."
+  },
+  {
+   "slug": "speech-319837",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Shipping Legislation Amendment Bill 2015 would fix damage from Labor's 2012 coastal shipping laws, citing a 63% freight rate increase for Bell Bay Aluminium, a halving of the coastal trading fleet, and support from the Productivity Commission and Tasmanian business groups."
+  },
+  {
+   "slug": "speech-319838",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Shipping Legislation Amendment Bill 2015, arguing it would decimate Australian shipping and maritime jobs, citing 600 job losses at Forgacs in Newcastle and 10,000 direct/indirect jobs nationally. They claimed 88% of the bill's savings come from replacing Australian workers with 90% foreign crews, and referenced a Senate inquiry where a government official advised a cruise operator to sack Australian staff."
+  },
+  {
+   "slug": "speech-319992",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Shipping Legislation Amendment Bill 2015, arguing it would allow foreign vessels to access Australian coastal trade without paying Australian wages or observing safety standards, putting at least 2,000 direct maritime jobs at risk and potentially dismantling the domestic shipping industry. They supported amendments by the member for Grayndler and noted the government advised an Australian operator (Mr Milby of North Star Cruises) to register overseas and hire foreign workers."
+  },
+  {
+   "slug": "speech-319993",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Shipping Legislation Amendment Bill 2015, arguing that previous Labor laws had failed and caused a 63% decline in coastal shipping carrying capacity, a 63% increase in freight costs for Bell Bay Aluminium, and a drop in Australian registered ships from 30 to 15. He also highlighted the need for efficient shipping to support free trade agreements and promoted the Bundaberg port as a potential site for a submarine maintenance base."
+  },
+  {
+   "slug": "speech-319994",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The Shipping Legislation Amendment Bill 2015 was condemned as a brutal attack on Australian workers, threatening 10,000 jobs and deregulating coastal shipping by allowing foreign flagged ships to operate for up to 183 days before being subject to Australian wage and conditions standards. The speaker argued the bill would reduce Australian seafarer jobs to just 88, replace Australian wages with Third World standards, and effectively reintroduce the Work Choices industrial relations system."
+  },
+  {
+   "slug": "speech-319995",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The Shipping Legislation Amendment Bill 2015 would replace Australian wage standards with foreign lower wages, with 88% of claimed savings from that replacement, and could reduce the Australian seafarer workforce from 1,177 to under 100. The speaker argued the bill should be rejected, noting that comparable nations like the US regulate coastal shipping and that the government's cost-benefit analysis ignored losses to Australian workers."
+  },
+  {
+   "slug": "speech-319996",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Shipping Legislation Amendment Bill 2015, arguing it would deregulate coastal shipping, remove preference for Australian-flagged and crewed vessels, and replace 10,000 Australian workers with foreign crews paid Third World wages—calling it \"Work Choices on water\" and noting that major trading partners like the US, Japan, Canada, and the EU protect their own coastal shipping."
+  },
+  {
+   "slug": "speech-319997",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Shipping Legislation Amendment Bill 2015 eliminates preference for Australian-flagged ships, establishes a single-permit system for foreign vessels, and deletes revitalising Australian shipping as a policy objective, with the Australia Institute estimating 93% of jobs will disappear and 88% of gains coming from replacing Australian workers. The speaker also cited examples of abandoned foreign-crewed ships and criticised the government's attitude toward job losses."
+  },
+  {
+   "slug": "speech-319998",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Shipping Legislation Amendment Bill 2015 would remove support for the Australian shipping industry, erode worker protections, and replace Australian seafarers with foreign crews at lower wages, citing that 88% of projected savings come from replacing Australian workers with 90% foreign crews. The speech also highlighted that shipping carries 99% of Australia's trade and employs 10,000 Australian workers."
+  },
+  {
+   "slug": "speech-320158",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speech argued against the Shipping Legislation Amendment Bill 2015, claiming 88% of projected savings would come from replacing Australian workers with foreign crews and that the bill would undermine seafarer training and environmental protections for areas like the Great Barrier Reef, citing incidents involving the MV Pacific Adventurer and MV Shen Neng1."
+  },
+  {
+   "slug": "speech-320162",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Shipping Legislation Amendment Bill 2015, arguing it would cost 230 jobs in Tasmania and deter SeaRoad’s $100 million vessel investment, and called for scrapping the bill in favour of policies to expand the Australian flagged fleet, such as a Jones Act equivalent."
+  },
+  {
+   "slug": "speech-320163",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Shipping Legislation Amendment Bill 2015 should be withdrawn, claiming it would destroy Australian maritime jobs by allowing foreign-flagged, lower-wage vessels to replace Australian-flagged ships. They cited a decline in Australian-flagged vessels from 55 in 1996 to 13 currently, and referenced the Jones Act in the United States as a model for protecting domestic shipping and jobs."
+  },
+  {
+   "slug": "speech-320169",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Shipping Legislation Amendment Bill 2015, arguing it would deregulate Australian shipping, sacrifice national sovereignty, and repeat the mistakes documented in the bipartisan 1992 Ships of Shame report—which warned against lowering standards to flags of convenience. They claimed 88 per cent of the bill’s regulatory savings come from Australian seafarers’ wages and conditions."
+  }
+ ],
+ "acts": []
+}

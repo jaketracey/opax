@@ -1,0 +1,208 @@
+{
+ "key": "au-federal-r5143",
+ "title": "Customs Amendment (Anti-Dumping Commission Transfer) Bill 2013",
+ "short_title": "Customs Amendment (Anti-Dumping Commission Transfer) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2013-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5143_ems_5d5bf599-d9f9-4bfa-a34e-7882b73e6a73%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5143%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00139",
+   "document_date": "2013-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-280435",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280437",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826166",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280484",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280487",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826235",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826357",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": "The speech announced the transfer of the Anti-Dumping Commission to the Department of Industry, changes to social security including a 35-year Australian working life residence requirement for overseas pensioners and a $7,500 annual child care rebate cap, and amendments to submarine cable protection legislation to align with UNCLOS and streamline permit processes."
+  },
+  {
+   "slug": "speech-826815",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "Moved to schedule non-controversial government bills for consideration from 12:45 pm, including amendments to the Australian Civilian Corps, Import Processing Charges, Grape and Wine Authority, Offshore Petroleum, Rural Research and Development, and Customs Anti-Dumping Commission. Also moved to set general business order for the day, prioritising Senator Moore's motion on pre-election commitments and government document orders."
+  },
+  {
+   "slug": "speech-826852",
+   "speaker": "Nick Xenophon",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": "The speaker opposed transferring the Anti-Dumping Commission to the department, citing the Brumby review’s concerns about investigative powers and integrity standards, and asked how department staff would meet the same thresholds as customs officers. He also reiterated support for reversing the onus of proof in dumping cases."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Anti-Dumping Commission Transfer) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00139",
+   "assent_date": "2013-12-13"
+  }
+ ]
+}

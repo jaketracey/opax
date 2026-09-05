@@ -1,0 +1,97 @@
+{
+ "key": "au-federal-s1090",
+ "title": "Medicinal Cannabis Legislation Amendment (Securing Patient Access) Bill 2017",
+ "short_title": "Medicinal Cannabis Legislation Amendment (Securing Patient Access) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-12",
+ "originating_house": "senate",
+ "sponsor": "DI NATALE, Sen Richard",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10755",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2018-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1090%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1090%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1090%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1090%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1090%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1090%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1090%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1090_ems_e49872c5-6961-4385-a503-5bd271deb1f1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1090%22",
+   "document_date": "2017-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-12",
+  "sentences": [
+   "The bill would change customs and narcotic drugs laws to improve access to medicinal cannabis for seriously ill patients.",
+   "It would prevent import permit conditions from blocking medicinal cannabis imports under the Special Access Scheme Category-A, and allow the Secretary to approve manufacturing licences for such products supplied through that scheme.",
+   "The changes would apply to goods imported on or after the day after the bill receives Royal Assent, and the Secretary must consider relevant matters in the Act when deciding on a manufacturing licence."
+  ],
+  "changes": [
+   "Amends the Customs Act 1901 to ensure import permit conditions cannot block medicinal cannabis imports under the Special Access Scheme Category-A.",
+   "Amends the Narcotic Drugs Act 1967 to allow medicinal cannabis products produced in Australia to be available via the Special Access Scheme Category-A.",
+   "Adds a condition under which the Secretary may approve a manufacturing licence for drugs containing cannabis for seriously ill patients."
+  ],
+  "affected": "Seriously ill patients whose death is reasonably likely within months or who face premature death without early treatment, and medical practitioners supplying medicinal cannabis under the Special Access Scheme Category-A.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:38Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

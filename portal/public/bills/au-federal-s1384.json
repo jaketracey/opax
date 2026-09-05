@@ -1,0 +1,110 @@
+{
+ "key": "au-federal-s1384",
+ "title": "Migration Amendment (Overseas Organ Transplant Disclosure and Other Measures) Bill 2024",
+ "short_title": "Migration Amendment (Overseas Organ Transplant Disclosure and Other Measures) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-22",
+ "originating_house": "senate",
+ "sponsor": "SMITH, Sen Dean",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10768",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1384_ems_09f43122-4656-4925-ab57-95d05167cfbe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1384%22",
+   "document_date": "2023-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-22",
+  "sentences": [
+   "The bill changes the Migration Act so that people coming into Australia must answer questions on their passenger card about organ transplants they have had abroad in the past five years.",
+   "It also lets the minister deny or cancel a visa when there is a reasonable suspicion that the person took part in conduct that amounts to an offence related to organ trafficking.",
+   "The changes start six months after the bill receives royal assent, and the minister must table an annual report in Parliament that counts the answers but does not name the medical facilities."
+  ],
+  "changes": [
+   "Adds a new section requiring incoming passengers to declare overseas organ transplants within the last five years and provide details of the country, city, and facility name.",
+   "Requires the minister to prepare and table an annual report in both houses of Parliament on the number of such declarations and the places named, excluding facility names.",
+   "Adds an express reference to organ trafficking offences in the character test, allowing visa refusal or cancellation based on reasonable suspicion, even if the conduct occurred before the bill starts.",
+   "Sets the commencement date as the day after six months from royal assent."
+  ],
+  "affected": "People entering Australia who have had organ transplants overseas, the Minister, and the Australian Parliament.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

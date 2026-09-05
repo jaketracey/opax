@@ -1,0 +1,127 @@
+{
+ "key": "au-federal-s1479",
+ "title": "Higher Education Support Amendment (Reverse Job-Ready Graduates Fee Hikes and End 50k Arts Degrees) Bill 2025",
+ "short_title": "Higher Education Support Amendment (Reverse Job-Ready Graduates Fee Hikes and End 50k Arts Degrees) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-25",
+ "originating_house": "senate",
+ "sponsor": "FARUQI, Sen Mehreen",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10912",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2026-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1479%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1479%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1479%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1479%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1479_ems_7810cfec-4b7f-4e15-81a0-dd99fae1f317%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1479%22",
+   "document_date": "2025-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10553",
+   "date": "2026-07-01",
+   "house": "senate",
+   "question": "Mehreen Faruqi I rise to speak to the Greens Higher Education Support Amendment (Reverse Job-Ready Graduates Fee Hikes and End 50k Arts Degrees) Bill 2025. This bill does something very meaningful and long overdue: it scraps the JRG fee hikes. In 2020, the Morrison government took a wrecking ball to universities, draining funding and implementing cruel, unfair and completely unjustified hikes. And yes, these fee hikes were brought to students by the coalition government almost six years ago, but they have been kept in place by the Albanese Labor government for the past four years. In that time, the cost of humanities degrees has skyrocketed to $56,000. This bill takes a significant step towards reversing the worst of Job-ready Graduates by reversing punitive fee hikes that have seen the cost of degrees and the burden of student debt skyrocket for students in law, accounting, administration, economics, commerce, society and culture, communications, medicine, dentistry and veterinary science. This bill reverts the cost of these units to pre-JRG levels. The impact of this would be to halve the cost of an arts degree. It is really difficult to overstate just how widely JRG has been condemned as a flawed and failed policy. In the Senate inquiry into this bill recently, it was called one of the five worst policy mistakes made by the Commonwealth this century. All but one of the 74 submissions to the Senate inquiry into this bill supported this bill itself or supported the intent to reverse the JRG fee hikes urgently. Students, staff, their unions, universities and VCs all want to see the back of JRG, and they want to see it scrapped urgently. Even the Liberal Party, which is responsible for this train wreck of a policy, is now embarrassed about it and made the point that it has been in place under this current government longer than it was under the Liberal government who actually introduced it. I'm glad that the Liberals are taking some talking points from the Greens now",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-01/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1198919",
+   "speaker": "Mehreen Faruqi",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1198920",
+   "speaker": "Mehreen Faruqi",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-11-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204568",
+   "speaker": "Mehreen Faruqi",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-07-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

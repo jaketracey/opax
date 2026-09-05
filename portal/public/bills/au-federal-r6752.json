@@ -1,0 +1,1027 @@
+{
+ "key": "au-federal-r6752",
+ "title": "Electoral Legislation Amendment (Political Campaigners) Bill 2021",
+ "short_title": "Electoral Legislation Amendment (Political Campaigners) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6752_ems_bb9e441e-9dfb-42c3-a2b5-534ddaa963c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6752_ems_2afd292a-bcbf-42eb-86db-ea691a553183%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6752_ems_a6d41fd6-01ab-4d14-a7d7-2904f4f16aa8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6752_ems_43d0206f-1f19-4f76-ae22-83086ffd55d7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6752%22",
+   "document_date": "2021-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00137",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2021-08-12",
+  "sentences": [
+   "The bill would lower the spending limit that triggers a registration requirement for political campaigners.",
+   "It would rename 'political campaigner' as 'significant third party' and broaden who counts as an associated entity.",
+   "The new registration threshold for a significant third party would be $250,000 in a financial year."
+  ],
+  "changes": [
+   "The bill reduces the expenditure thresholds for registration as a political campaigner.",
+   "It replaces the term 'political campaigner' with 'significant third party' throughout the Electoral Act.",
+   "It expands the criteria for who must register and disclose as a significant third party.",
+   "It expands the list of entities that can be considered associated with an associated entity."
+  ],
+  "affected": "Individuals and organisations that spend on electoral matters.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7499",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to *disagree* with an [amendment](https://www.openaustralia.org.au/debate/?id=2021-11-22.131.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means the amendment failed. ### Amendment text > *That all words after \"whilst\" be omitted with a view to substituting the following words:* > > *\"noting the importance of this reform, the House:* > > *(1) notes the Government broke with convention and introduced a significant addition to this bill, tripling it in size within a matter of hours, and preventing the crossbench from having an opportunity to review, contemplate or be briefed on the amended bill;* > > *(2) notes that if the Government wanted to truly level the playing field when it comes to political donations, it could lower the AEC disclosure threshold from the current rate of $14,500 to $1,000; and* > > *(3) calls on the Government to postpone the second reading vote on this bill until another sitting day, as is the convention with new bills\".*",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 38,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-22/1"
+  },
+  {
+   "key": "federal-representatives-7500",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-11-22.139.1) to *disagree* with an amendment moved by MP for Scullin [Andrew Giles](https://theyvoteforyou.org.au/people/representatives/scullin/andrew_giles) (Labor), which means the amendment failed. The amendment would have changed the text of the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the bill's main idea). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes that the bill's explanatory memorandum states that the amendments are intended to enhance public confidence in Australia's political processes;* > > *(2) notes further that Labor has two bills before the Senate which would actually enhance public confidence in Australia's political processes, by lowering the disclosure threshold from the current $14,500 indexed to inflation to a fixed $1,000 and requiring real time disclosure of political donations; and* > > *(3) calls on the Coalition Government to end its attacks on groups impacted by this change, including charities and instead support Labor's political donations reforms\".* ### What is the bill's main idea? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500 000 to $100 000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), w",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 38,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-22/2"
+  },
+  {
+   "key": "federal-representatives-7501",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2021-11-22.129.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that they can now consider it in greater detail. ### What is the bill's main idea? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500 000 to $100 000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Liberal": {
+     "ayes": 38,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-22/3"
+  },
+  {
+   "key": "federal-representatives-7502",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/debates/?id=2021-11-22.143.1), which means they passed and will now be part of the bill. They were introduced by Goldstein MP [Tim Wilson](https://theyvoteforyou.org.au/people/representatives/goldstein/tim_wilson) (Liberal) and related to registration requirements and financial disclosure. ### What does the bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500 000 to $100 000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Consideration in detail",
+   "ayes": 69,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 38,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-22/4"
+  },
+  {
+   "key": "federal-representatives-7503",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "question": "The majority voted is favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-11-22.147.1) \"*that [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), as amended, be agreed to.*\" This means they can now vote on whether to read the bill for a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) before sending it to the Senate for their consideration. ### What does the bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500 000 to $100 000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Consideration in detail",
+   "ayes": 69,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 38,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-22/5"
+  },
+  {
+   "key": "federal-representatives-7504",
+   "date": "2021-11-22",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2021-11-22.149.1) to pass the bill. In parliamentary jargon, they voted to read the bill [for a third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that the bill will now be sent to the Senate for their consideration. ### What is the bill's main idea? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500 000 to $100 000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Third reading",
+   "ayes": 69,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 38,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-11-22/6"
+  },
+  {
+   "key": "federal-senate-7520",
+   "date": "2021-11-24",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?id=2021-11-24.163.2): > *That the [Electoral Legislation Amendment (Political Campaigners) Bill 2021](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752) be referred to the Finance and Public Administration Legislation Committee for inquiry and report by 3 February 2022.* This means the motion failed and so the bill will not be sent to that Committee for their consideration. ### What does the bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500 000 to $100 000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Reference to Committee",
+   "ayes": 25,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 18,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-11-24/3"
+  },
+  {
+   "key": "federal-senate-7556",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-12-01.210.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that the bill can now be discussed in greater detail. ### What is the bill's main idea? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500,000 to $100,000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 17,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/12"
+  },
+  {
+   "key": "federal-senate-7557",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-12-01.213.1) introduced by the government, which means it was successful. The amendment concerned the electoral expenditure amount. ### Amendment text > *(1) Schedule 1, item 1, page 3 (line 5), omit “$100,000”, substitute “$250,000”.* ### What does this bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500,000 to $100,000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 17,
+    "dated": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/13"
+  },
+  {
+   "key": "federal-senate-7558",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-12-01.215.6) introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (JLN) and South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent), which means they failed. The amendments concerned the disclosure threshold. ### Amendment text > *(1) Schedule 1, page 3 (before line 4), before item 1, insert:* > >> *1A Subsection 287(1) (definition of disclosure threshold)* >> >>> *Omit \"$13,800\", substitute \"$1,000\".* >> >> *1B Subsection 287(1) (note to the definition of disclosure threshold)* >> >>> *Repeal the note.* >> >> *1C Subsection 287(1) (paragraph (a) of the definition of third party)* >> >>> *Omit \"the disclosure threshold\", substitute \"$10,000\".* > > *(2) Schedule 1, page 3 (after line 10), after item 3, insert:* > >> *3A Section 321A* >> >>> *Repeal the section.* ### What does this bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500,000 to $100,000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 17,
+    "dated": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/14"
+  },
+  {
+   "key": "federal-senate-7559",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-12-01.217.1) introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (JLN) and South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent), which means they failed. The amendments concerned proceeds of events. ### What does this bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500,000 to $100,000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 17,
+    "dated": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/15"
+  },
+  {
+   "key": "federal-senate-7560",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-12-01.219.1) introduced by the Centre Alliance party, which means they failed. The amendments was on matters relating the commencement of the legislation. ### Amendment text > *(1) Schedule 1, item 4, page 3 (lines 11 to 15), omit the item (including the note), substitute:* > >> *4 Application of amendments* >> >> *For the purposes of Part XX of the Commonwealth Electoral Act 1918, references to financial years, in subsection 287F(1) of that Act as amended by this Schedule, are references to financial years beginning on or after this item commences.* > > *(2) Schedule 2, item 35, page 10 (lines 19 and 20), omit \"the financial year in which this item commences and later financial years\", substitute \"a financial year beginning on or after the commencement of this item\".* > > *(3) Schedule 2, item 35, page 10 (line 10), omit \"subsections 287F(1) and\", substitute \"subsection\".* > > *(4) Schedule 2, item 35, page 10 (lines 13 to 16), omit the note to subitem (1), substitute:* > >> *Note: The effect of this subitem is that a person or entity may be required to be registered as an associated entity before the end of 90 days after the commencement of this item (see subsection 287H(2) of the Commonwealth Electoral Act 1918).* ### What is the bill's main idea? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500,000 to $100,000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 17,
+    "dated": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/16"
+  },
+  {
+   "key": "federal-senate-7561",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted against [amendment (1)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6752_amend_2376b71c-3027-43db-8aec-53b980a15cdd%22;rec=0) moved by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means it failed. ### Amendment text > *(1) Clause 2, page 2 (table item 1), omit the table item, substitute:* > > *1. The whole of the Act: 1 July 2022.* ### What is the bill's main idea? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500,000 to $100,000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "earliest": 17,
+    "dated": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/17"
+  },
+  {
+   "key": "federal-senate-7562",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-12-01.224.1) to pass the bill. In parliamentary jargon, they voted to read the bill [for a third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that the bill will now be sent back to the House of Representatives, where our MPs will consider whether they agree with the amendments. ### What is the bill's main idea? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500,000 to $100,000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Third reading",
+   "ayes": 30,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 17,
+    "dated": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/18"
+  },
+  {
+   "key": "federal-representatives-7567",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-12-02.29.7) that the amendments be considered immediately. ### What is the bill's main idea? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6752), the bill: > *Amends the Commonwealth Electoral Act 1918 to reduce from $500,000 to $100,000 the threshold for electoral expenditure that can be incurred by an individual or organisation before they are required to register as a political campaigner.* More detail is included in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd015), which is produced by the parliamentary library and is a useful nonpartisan document.",
+   "stage": "Consideration of Senate message",
+   "ayes": 55,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 60
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-12-02/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-411336",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The Electoral Legislation Amendment (Political Campaigners) Bill 2021 lowers the registration threshold for political campaigners from $500,000 to $100,000 in electoral expenditure, and introduces a new requirement to register if spending at least $14,500 and one-third of revenue. The bill implements recommendation 18 of the JSCEM report on the 2019 federal election to align transparency rules for political actors with those for parties and candidates."
+  },
+  {
+   "slug": "speech-415065",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "Labor opposed the Electoral Legislation Amendment (Political Campaigners) Bill 2021, arguing it would lower the political campaigner threshold for charities and not-for-profits from $500,000 or two-thirds of annual income to $100,000 or one-third, imposing heavy disclosure requirements and foreign-donation bans that silence critics. The speaker moved a second reading amendment calling for the donation disclosure threshold to be reduced from $14,500 to a fixed $1,000 with real-time disclosure, and criticised the Morrison government for failing to deliver a national anti-corruption commission and for pursuing voter ID laws."
+  },
+  {
+   "slug": "speech-415067",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral Legislation Amendment (Political Campaigners) Bill 2021 is needed to expose hidden political donations and front groups, accusing Labor and unions of funneling money into campaigns and criticising groups like Climate 200, OpenAustralia Foundation, and law firm Maurice Blackburn (which donated $100,000 to Labor on the same day the Victorian government allowed contingency fees)."
+  },
+  {
+   "slug": "speech-415069",
+   "speaker": "Lucy Elizabeth Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the Electoral Legislation Amendment (Political Campaigners) Bill 2021 would enhance transparency by requiring organisations spending over $100,000 or $14,500 (if over a third of annual revenue) on electoral expenditure to register as political campaigners, implementing recommendation 18 of the 2019 election inquiry. The speaker also detailed personal experiences of abuse during the 2019 campaign in the marginal seat of Robertson, including a verbal tirade at Woy Woy pre-poll, and condemned such behaviour as undemocratic."
+  },
+  {
+   "slug": "speech-415210",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The bill extends donation disclosure requirements to all political campaigners, not just political parties, to reduce foreign interference and increase transparency in electoral funding. The reforms follow the 2019 election inquiry which heard about intimidation of candidates, including the member for Boothby."
+  },
+  {
+   "slug": "speech-415211",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's original provisions lowering the registration threshold for political campaigners from $500,000 to $100,000, but opposed the government's last-minute addition of 35 new provisions without consultation, moving an amendment to postpone the vote and calling for a lower disclosure threshold of $1,000."
+  },
+  {
+   "slug": "speech-415214",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The bill reduces thresholds for registering as a political campaigner, imposing retrospective compliance costs on charities and small community groups, while the speaker argued it is a cynical attempt to protect the major-party duopoly rather than genuinely increase transparency."
+  },
+  {
+   "slug": "speech-415215",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Electoral Legislation Amendment (Political Campaigners) Bill 2021 would silence charities and stifle democracy, contrasting it with Labor's proposed real-time disclosure of political donations with a $1,000 threshold. They noted the 'Hands Off Our Charities' coalition of 100 leading charities, including Anglicare Australia, Amnesty International, and the Australian Conservation Foundation, opposes the bill."
+  },
+  {
+   "slug": "speech-415216",
+   "speaker": "Julie Ann Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The bill lowers the threshold for registering as a political campaigner from $500,000 to $100,000 or one-third of annual income, which would burden small local advocacy groups like Save Willow Grove, Parramatta Park campaigners, and Westmead Push for Palliative Care with excessive red tape, while failing to address the need for broader transparency reforms through proper consultation."
+  },
+  {
+   "slug": "speech-415217",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral Legislation Amendment (Political Campaigners) Bill 2021 targets smaller charities, environmental groups, and unions—such as the Australian Conservation Foundation, Bob Brown Foundation, WWF, RSPCA, St Vincent de Paul, and several unions—to silence dissent and protect the government, rather than improving transparency or democracy."
+  },
+  {
+   "slug": "speech-415221",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker thanked committee members and commended the Electoral Legislation Amendment (Political Campaigners) Bill 2021 to the House, arguing it strengthens election integrity by extending funding disclosure requirements to political actors and modernising the Commonwealth Electoral Act to protect voters from being misled."
+  },
+  {
+   "slug": "speech-415228",
+   "speaker": "Adam Paul Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's 35 last-minute amendments to the Electoral Legislation Amendment (Political Campaigners) Bill 2021 would restrict freedom of speech and apply retrospectively, targeting charities and welfare groups while ignoring billionaires like Clive Palmer who buy elections. They opposed the amendments, calling the process a strategy to silence critics and pander to the far right, and demanded caps on corporate and billionaire donations instead."
+  },
+  {
+   "slug": "speech-415851",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-24",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Electoral Legislation Amendment (Voter Integrity) Bill 2021, arguing it is a voter suppression tool that would require all electors to prove identity despite vanishingly low rates of multiple voting (0.001% of 16 million voters, with only 24 referred for investigation). The speaker also criticised the government for failing to establish a national integrity commission and for allowing government members to spread COVID-19 misinformation."
+  },
+  {
+   "slug": "speech-417107",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "The independent member for Warringah criticised a deal between major parties that bargained one piece of legislation for another, opposing government amendments to the Electoral Legislation Amendment (Political Campaigners) Bill 2021 that would retroactively impose new reporting obligations and administrative burdens on non-profit organisations for their 2019 election advocacy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (Political Campaigners) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00137",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

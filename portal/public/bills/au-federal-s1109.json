@@ -1,0 +1,226 @@
+{
+ "key": "au-federal-s1109",
+ "title": "Family Law Amendment (Family Violence and Other Measures) Bill 2018",
+ "short_title": "Family Law Amendment (Family Violence and Other Measures) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-06",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-08-31",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1109_ems_1e326113-d806-4644-beff-c58f86d55541%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1109_ems_62c1af1f-e25a-4624-b2fb-50f8b06ef876%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1109_ems_c73160c1-1aa2-44e6-aaae-9ed7efe2b6b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5753213%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1109%22",
+   "document_date": "2017-12-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00097",
+   "document_date": "2018-08-31",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-367848",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-21",
+   "stage_hint": null,
+   "brief": "The Family Law Amendment (Family Violence and Other Measures) Bill 2018 was introduced to strengthen court powers to protect family violence victims, reduce the need for families to navigate multiple court systems, and implement four recommendations from the Family Law Council's 2015 and 2016 reports. The bill increases the property value threshold for state magistrates' courts to hear contested family law property matters from $20,000 (set in 1988) to a higher amount to be prescribed, and allows prescribed state and territory courts like children's courts to exercise family law parenting jurisdiction, while removing proposed criminal offences for breaching family law injunctions to expedite passage of the remaining measures."
+  },
+  {
+   "slug": "speech-368037",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Law Amendment (Family Violence and Other Measures) Bill 2018 but argued that expanding state court jurisdiction must be accompanied by adequate funding and training, and criticised the government for removing a measure to criminalise breaches of personal protection orders due to enforcement concerns. They also blamed the Turnbull government for the family law system crisis, citing delays in replacing judges and a lack of resources."
+  },
+  {
+   "slug": "speech-368038",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Law Amendment (Family Violence and Other Measures) Bill 2018, which bans direct cross-examination of family violence victims by perpetrators, but criticised the government for not providing additional funding for legal aid, noting Labor’s $43 million commitment and warning that without funding the reforms could lead to delays, injustice, and inadequate outcomes."
+  },
+  {
+   "slug": "speech-368039",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Family Law Amendment Bill but argued that extending jurisdiction to state courts requires additional funding and training, and criticised the original retrospective criminalisation of personal protection injunction breaches as impractical. They also called for 10 days paid domestic violence leave as a national employment standard."
+  },
+  {
+   "slug": "speech-368041",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker, a domestic violence survivor, argued the Family Law Amendment (Family Violence and Other Measures) Bill 2018 is important but insufficient, citing that one in four women experience emotional abuse and police handle a domestic violence incident every two minutes. They called for concrete actions including better court resourcing, family violence leave (noting 150 days taken by WA public servants in six months), addressing financial abuse, breaking cultural silence, and ending victim-blaming discourse."
+  },
+  {
+   "slug": "speech-368042",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Family Law Amendment (Family Violence and Other Measures) Bill 2018, praising the member for Cowan's personal story and calling for increased resources to avoid overburdening state and territory courts, while raising concerns about unintended consequences of the reasonable-prospect-of-success test and retrospective criminal penalties for breaches of protection orders."
+  },
+  {
+   "slug": "speech-368044",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that family violence disproportionately affects Aboriginal and Torres Strait Islander communities, particularly in the Northern Territory, citing statistics such as Aboriginal women being victims in 72% of NT cases and being 32 times more likely to be hospitalised. They criticised the Turnbull government for failing to fund recommendations from the Royal Commission into the Protection and Detention of Children in the Northern Territory and for not renewing a long-term housing commitment, which they said is essential to addressing root causes like overcrowding and alcohol abuse."
+  },
+  {
+   "slug": "speech-368045",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The speech supported the Family Law Amendment (Family Violence and Other Measures) Bill 2018, citing the government’s $100 million women’s safety package and committee recommendations to reduce legal system complexity. It highlighted the Alice Springs Women’s Shelter’s need for more funding and upgrades, and argued family violence allegations should be heard at the earliest opportunity."
+  },
+  {
+   "slug": "speech-368046",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-22",
+   "stage_hint": null,
+   "brief": "The government supported the Family Law Amendment (Family Violence and Other Measures) Bill 2018, arguing it would improve court outcomes for family violence victims by implementing expert recommendations, reducing multi-court involvement, and strengthening summary dismissal powers. The bill also removed a redundant provision on marital services, while the government delayed introducing criminal offences for breaching family law injunctions pending further review."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Law Amendment (Family Violence and Other Measures) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00097",
+   "assent_date": "2018-08-31"
+  }
+ ]
+}

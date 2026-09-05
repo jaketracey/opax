@@ -1,0 +1,476 @@
+{
+ "key": "au-federal-r5931",
+ "title": "Product Emissions Standards Bill 2017",
+ "short_title": "Product Emissions Standards Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2017-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5931_ems_8ccc9678-f4ba-4f86-b19c-6712d984688b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5931%22",
+   "document_date": "2017-08-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00104",
+   "document_date": "2017-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-10",
+  "sentences": [
+   "This bill is part of a package that creates a national framework to reduce air pollution from certain products.",
+   "It would let a minister prescribe products as emissions-controlled and set certification, exemption and penalty rules, and it triggers powers under the Regulatory Powers (Standard Provisions) Act 2014.",
+   "The first products expected to be regulated are new non-road spark ignition engines and equipment, including small engines up to 19 kilowatts and marine propulsion engines."
+  ],
+  "changes": [
+   "Establishes a national framework for product emissions standards.",
+   "Enables the minister to prescribe emissions-controlled products and make rules.",
+   "Creates offences and penalties for importing or supplying uncertified emissions-controlled products.",
+   "Triggers compliance powers under the Regulatory Powers (Standard Provisions) Act 2014.",
+   "Requires regular reviews of the bill's operation."
+  ],
+  "affected": "Manufacturers, importers and suppliers of certain products, especially new non-road spark ignition engines and equipment.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4808",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "question": "The majority voted against an amended motion: > *That the amendment, moved by the member for Port Adelaide, be agreed to:* > > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give this bill and related bills a second reading, the House:* > >> *(1) notes that:* >> >>> *(a) in addition to the products in these bills, there is a large range of products and activities that contribute the vast majority of emissions to Australia's total emissions;* >>> >>> *(b) the Government has failed to act to limit these emissions including from land clearing, the industrial sector, the transport sector and from electricity generation, which has led to emissions rising by 1.4 per cent in the last quarter alone; and* >>> >>> *(c) the Government has failed to act on climate change and is threatening our economy and precious environment for current and future generations; and* >> >> *(2) calls on the Government to take the advice it commissioned itself, and implement the central Finkel review recommendation of a Clean Energy Target for the electricity sector.\"* To give a bill a second reading is parliamentary jargon for agreeing with the main idea of the bill.",
+   "stage": "Report from Federation Chamber",
+   "ayes": 70,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-09-06/3"
+  },
+  {
+   "key": "federal-senate-4898",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-09-11.64.1) to the usual second reading motion, which is \"that the bill be read a second time\". To read a bill for a second time is to agree with the main idea of the bill. ### Amendment text > *At the end of the motion, add:* > *\"but the Senate calls upon the Government to regulate toxic emissions from coal-fired power stations.\"*",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 38,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/7"
+  },
+  {
+   "key": "federal-senate-4900",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-11.190.1) introduced by NSW Senator [David Leyonhjelm](https://theyvoteforyou.org.au/people/senate/nsw/david_leyonhjelm) (Liberal Democratic Party), which means they failed. Senator Leyonhjelm [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-11.190.1): > *Amendment (1) limits the objective of this scheme to the improvement of air quality, rather than the improvement of air quality or contributing to the Australian government meeting its obligations under climate change conventions. Amendment (2) is consequential to this in that it removes the redundant definition of 'Climate change conventions'.* > > *As I outlined in my contribution in the second reading debate, it may on occasion be appropriate to ban a product because of its detriment to air quality, but products should not be banned just to reduce Australia's greenhouse gas emissions. Until other major emitters, like China, Russia, India and Brazil, which emit more emissions in a day than Australia emits in a year, are prepared to act to reduce their emissions and not just talk about them, it amounts to economic suicide for Australia to go down this path. No matter what you believe about climate change, economic suicide is just plain dumb.* ### Amendment text > *(1) Clause 3, page 2 (lines 17 to 22), omit paragraph (b) (including the note), substitute:* > >> *(b) in doing so, to contribute to improving air quality in Australia in order to deliver associated health and environmental benefits.* > > *(2) Clause 7, page 4 (lines 10 to 22), omit the definition of Climate Change Conventions (including the note).*",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 22,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/9"
+  },
+  {
+   "key": "federal-senate-4901",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2017-09-11.197.1) introduced by South Australian Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi) (Australian Conservatives), which means they failed. Senator Bernardi [explained that](https://www.openaustralia.org.au/senate/?gid=2017-09-11.197.1): > *The purpose of this amendment is to ensure the government is true to its word in only intending to apply the scope of this bill to whipper-snippers, lawnmowers, outboard motors and other areas it has expressly identified, but expressly excluding vehicles. Vehicles are the highest source of emissions, but the government has sworn off regulating vehicle emission during this term of government.* ### Amendment text > *(1) Clause 7, page 5 (after line 4), after the definition of mark, insert:* > >> *motor vehicle:* >> >> *(a) means a vehicle that uses, or is designed to use, volatile spirit, gas, oil, electricity or any other power (not being human or animal power) as the principal means of compulsion; and* >> >> *(b) includes a vehicle not designed for use on public roads or not permitted to be used on public roads.* > > *(2) Clause 7, page 5 (lines 7 to 10), omit the definition of product, substitute:* > >> *product has the meaning given by subsection (5).* > > *(3) Clause 7, page 6 (after line 4), at the end of the clause, add:* > >> *(5) Subject to subsection (6), a product means a thing (including a substance or mixture of substances) that is:* >> >>> *(a) manufactured; or* >>> >>> *(b) prescribed by the rules for the purposes of this definition.* >> >> *(6) A product does not include a motor vehicle.* >> >> *Note: For the regulation of emissions in relation to road motor vehicles, see the Motor Vehicle Standards Act 1989.*",
+   "stage": "In committee",
+   "ayes": 7,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 26,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-350949",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The Product Emissions Standards (Excise) Charges Bill 2017 imposes a charge on domestically manufactured products prescribed under product emissions standards legislation, enabling full cost recovery of regulatory costs alongside companion bills."
+  },
+  {
+   "slug": "speech-350950",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The Product Emissions Standards (Customs) Charges Bill 2017 imposes a charge on importing products prescribed under product emissions standards legislation, enabling full cost recovery of regulation costs alongside the Excise Charges Bill and the Product Emissions Standards Bill 2017."
+  },
+  {
+   "slug": "speech-350951",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-10",
+   "stage_hint": null,
+   "brief": "The bill amends the Customs Act 1901 to clarify that goods imported or exported in breach of product emissions standards are not forfeited to the Crown, ensuring compliance and enforcement remain solely with the Department of the Environment and Energy."
+  },
+  {
+   "slug": "speech-352755",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The opposition supported the Product Emissions Standards Bill for small engines (e.g., lawnmowers, leaf blowers), which will phase in US-equivalent standards by July 2018–2019 without affecting manufacturing jobs, but moved a second reading amendment criticising the government’s failure to adopt mandatory light-vehicle emissions standards, noting a 2014 Climate Change Authority blueprint that would save $7,000 per vehicle and cut CO2 emissions by 45% per kilometre."
+  },
+  {
+   "slug": "speech-352758",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-05",
+   "stage_hint": null,
+   "brief": "The speaker moved that the Product Emissions Standards Bill 2017, the Product Emissions Standards (Excise) Charges Bill 2017, the Product Emissions Standards (Customs) Charges Bill 2017, and the Product Emissions Standards (Consequential Provisions) Bill be referred to the Federation Chamber for further consideration."
+  },
+  {
+   "slug": "speech-353128",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Product Emissions Standards Bill 2017, which introduces air pollution standards for small petrol engines, equipment, and outboard motors. The bill implements a key action from the December 2015 National Clean Air Agreement, with non-compliant product imports banned from 1 July 2018 and sales fully prohibited from 1 July 2019, aiming to deliver an estimated $1.7 billion in avoided health costs."
+  },
+  {
+   "slug": "speech-353130",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2017-09-06",
+   "stage_hint": null,
+   "brief": "The speaker supported the Product Emissions Standards Bill 2017 as a long-overdue but very small step for regulating small engine emissions, while sharply criticising the government for ignoring coal-fired power stations, which emit far more toxic pollution and are linked to 1,590 premature deaths annually in Australian cities."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Product Emissions Standards Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00104",
+   "assent_date": "2017-09-14"
+  }
+ ]
+}

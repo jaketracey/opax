@@ -1,0 +1,524 @@
+{
+ "key": "au-federal-r6432",
+ "title": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia’s Anti-Doping Capability) Bill 2019",
+ "short_title": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia’s Anti-Doping Capability) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Youth and Sport",
+ "status": "passed",
+ "status_as_of": "2020-06-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6432_ems_73799ab4-f25e-4dc4-b49b-96ad2ed597e6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6432%22",
+   "document_date": "2019-10-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00051",
+   "document_date": "2020-06-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-17",
+  "sentences": [
+   "The bill would give the Australian Sports Anti-Doping Authority stronger tools to investigate and respond to doping in sport.",
+   "It would make several changes to the ASADA Act, including simplifying how doping rule violations are handled before a hearing, extending legal protections to more people involved in anti-doping work, allowing ASADA to share more information with national sporting bodies, and toughening the rules for issuing disclosure notices.",
+   "The changes follow the 2018 Wood Review, which found doping was more common and harder to detect and that current laws did not support intelligence-led investigations."
+  ],
+  "changes": [
+   "Streamlines the process for dealing with doping rule violations before a formal hearing.",
+   "Extends legal protection from civil lawsuits to additional people carrying out anti-doping duties.",
+   "Improves how ASADA can share information with national sporting organisations by strengthening legal safeguards for that information.",
+   "Strengthens the regime for ASADA to issue disclosure notices."
+  ],
+  "affected": "The Australian Sports Anti-Doping Authority, national sporting organisations, and people involved in anti-doping rule violation functions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:05Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6110",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019 - Second Reading - Stop Sturt MP from speaking",
+   "stage": "Second reading",
+   "ayes": 58,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/7"
+  },
+  {
+   "key": "federal-representatives-6111",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion, which is that the bill should be read a second time, which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government's revolving door of sports ministers—no less than five (plus a briefly acting minister) in just six years—have made ad hoc, one-off and non-ongoing funding announcements that have made it extremely difficult for national sports organisations, such as the Australian Sports Anti-Doping Authority, to make detailed plans beyond the constraints of a single budget cycle, including for the enhancement of their own integrity capabilities\".*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/8"
+  },
+  {
+   "key": "federal-representatives-6112",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019 - Third Reading - Stop MP for Watson from speaking",
+   "stage": "Third reading",
+   "ayes": 72,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/9"
+  },
+  {
+   "key": "federal-representatives-6113",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019 - Third Reading - Stop the MP for McMahon from speaking",
+   "stage": "Third reading",
+   "ayes": 72,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/10"
+  },
+  {
+   "key": "federal-representatives-6114",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019 - Third Reading - Stop MP for Shortland from speaking",
+   "stage": "Third reading",
+   "ayes": 72,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/11"
+  },
+  {
+   "key": "federal-representatives-6115",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 72,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/12"
+  },
+  {
+   "key": "federal-representatives-6116",
+   "date": "2019-12-04",
+   "house": "representatives",
+   "question": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019 - Third Reading - Suspend the usual procedural rules",
+   "stage": "Third reading",
+   "ayes": 75,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-04/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-386077",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill but criticised the government's revolving door of five sports ministers in six years and ad hoc funding, and raised stakeholder concerns about lowering disclosure notice thresholds from \"reasonable belief\" to \"reasonable suspicion\", removing the right against self-incrimination, and granting protection from civil action."
+  },
+  {
+   "slug": "speech-386181",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "Australia expects its athletes to compete fairly, and the Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill strengthens ASADA's powers to combat doping, including abolishing the Anti-Doping Rule Violation Panel and improving information protections."
+  },
+  {
+   "slug": "speech-386211",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "Labor supported the third reading of the Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019, which implements the Wood review and strengthens ASADA's powers following doping scandals at Manly and Essendon. The speaker also criticised the opposition for attempting to shut down parliament and noted that five sports ministers in six years had created funding instability for national sports organisations."
+  },
+  {
+   "slug": "speech-386218",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The bill establishes Sports Integrity Australia from July 2020, consolidating existing agencies like ASADA and the National Integrity of Sport Unit into a single body to coordinate anti-doping, integrity monitoring, intelligence, and education, with enhanced information-sharing powers and privacy protections."
+  },
+  {
+   "slug": "speech-386223",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Sports Anti-Doping Authority Amendment (Enhancing Australia's Anti-Doping Capability) Bill 2019, which establishes Sport Integrity Australia from July 2020 by merging ASADA, the National Integrity of Sport Unit, and relevant Sports Australia functions. The bill aims to protect Australian sport from integrity threats, building on the Wood review released in late 2018."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Sports Anti-Doping Authority Amendment (Enhancing Australia’s Anti-Doping Capability) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00051",
+   "assent_date": "2020-06-16"
+  }
+ ]
+}

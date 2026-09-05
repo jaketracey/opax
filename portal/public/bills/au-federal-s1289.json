@@ -1,0 +1,248 @@
+{
+ "key": "au-federal-s1289",
+ "title": "Industry Research and Development Amendment (Industry Innovation and Science Australia) Bill 2021",
+ "short_title": "Industry Research and Development Amendment (Industry Innovation and Science Australia) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-17",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Science and Technology",
+ "status": "passed",
+ "status_as_of": "2021-09-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1289_ems_e16a4ce8-1d86-41ac-8ea6-34193beacd96%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1289%22",
+   "document_date": "2021-02-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00101",
+   "document_date": "2021-09-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-17",
+  "sentences": [
+   "This bill would change the name of the independent statutory board Innovation and Science Australia to Industry Innovation and Science Australia.",
+   "It would amend the Industry Research and Development Act 1986 and make consequential changes to other Commonwealth laws to reflect the new name.",
+   "The explanatory memorandum says the name change is part of a broader policy reform that includes new board appointments and a new Statement of Expectations."
+  ],
+  "changes": [
+   "The bill renames Innovation and Science Australia as Industry Innovation and Science Australia.",
+   "It amends the Industry Research and Development Act 1986 to give effect to the name change.",
+   "It makes consequential amendments to other Commonwealth legislation."
+  ],
+  "affected": "The independent statutory board Innovation and Science Australia, which is renamed, and Australian industry are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-410003",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-24",
+   "stage_hint": null,
+   "brief": "The bill renames Innovation and Science Australia to Industry Innovation and Science Australia (IISA). The change aims to highlight the role of industry innovation, support the $1.5 billion Modern Manufacturing Strategy, and clarify IISA's advisory function."
+  },
+  {
+   "slug": "speech-410004",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-24",
+   "stage_hint": null,
+   "brief": "The speaker noted the bill is uncontroversial with minor changes, and announced that the Labor Party, led by Ed Husic, will contribute to the debate."
+  },
+  {
+   "slug": "speech-410005",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-24",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Industry Research and Development Amendment (Industry Innovation and Science Australia) Bill 2021, which renames the statutory body to Industry Innovation and Science Australia, supports the Morrison government's focus on strengthening Australian industry and economic recovery post-COVID. The speaker highlighted the $1.5 billion Modern Manufacturing Strategy, six key manufacturing areas, and new board appointments including Patrick Houlihan, Lauren Stafford, Scott Farrell, Dr Alex Grant, and Sarah Nolet."
+  },
+  {
+   "slug": "speech-410006",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-412373",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker argued the Industry Research and Development Amendment Bill 2021 is a trivial name change that fails to support innovation, and criticised the government for neglecting manufacturing and infrastructure in the Macarthur electorate, citing 90,000 lost manufacturing jobs and Australia's decline to 23rd in the Global Innovation Index."
+  },
+  {
+   "slug": "speech-412374",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker defended primary industries such as mining and agriculture as the foundation of wealth creation that funds innovation, criticised Labor for dismissing those sectors, and noted that the bill merely adds an extra \"I\" to the acronym IIISA while the Morrison government's Modern Manufacturing Strategy focuses on supply chain resilience."
+  },
+  {
+   "slug": "speech-412377",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The bill is a mere renaming of Innovation and Science Australia to Industry Innovation and Science Australia, with no substantive support for Australian manufacturing. The speaker argued for a national reconstruction fund with a $15 billion capital pool, and highlighted opportunities in manufacturing, lithium processing, renewable hydrogen, and domestic mRNA production."
+  },
+  {
+   "slug": "speech-412378",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Industry Research and Development Amendment (Industry Innovation and Science Australia) Bill 2021, which expands the remit of Industry Innovation and Science Australia (ISA) to advise on the Modern Manufacturing Strategy, citing the $1.5 billion strategy and a record $11.9 billion science investment. They highlighted local examples like Blue Bins, Coffs Harbour Paper and Oil, and Plastic Collective, and argued the bill is critical for building sovereign capability and national resilience."
+  },
+  {
+   "slug": "speech-412380",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment condemning the Coalition government for failing to back Australian industry and innovation during the pandemic, and cited Monash University research showing that the drug Ivermectin eliminated SARS-CoV-2 in cell culture within 48 hours."
+  },
+  {
+   "slug": "speech-412392",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The amendment condemns the coalition government for failing to back Australian industry innovation during the pandemic, and the speaker quoted Professor Borody urging immediate availability of a safe treatment in aged care homes for elderly at high risk."
+  },
+  {
+   "slug": "speech-412404",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Industry Research and Development Amendment (Industry Innovation and Science Australia) Bill 2021, arguing it would boost manufacturing of breakthrough drugs like ivermectin. They cited Monash University’s Biomedicine Discovery Institute finding that ivermectin stopped SARS-CoV-2 growth in cell culture within 48 hours."
+  },
+  {
+   "slug": "speech-412416",
+   "speaker": "Gladys Liu",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Industry Research and Development Amendment (Industry Innovation and Science Australia) Bill 2021 repurposes Innovation and Science Australia into Industry Innovation and Science Australia (IISA) to sharpen its focus on industry innovation, backed by the Morrison government's record $11.9 billion investment in science and innovation and the Modern Manufacturing Strategy, which supports businesses like Atmo Biosciences in Chisholm."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Industry Research and Development Amendment (Industry Innovation and Science Australia) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00101",
+   "assent_date": "2021-09-10"
+  }
+ ]
+}

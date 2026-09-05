@@ -1,0 +1,311 @@
+{
+ "key": "au-federal-r5195",
+ "title": "Defence Force Retirement Benefits Legislation Amendment (Fair Indexation) Bill 2014",
+ "short_title": "Defence Force Retirement Benefits Legislation Amendment (Fair Indexation) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2014-04-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-04-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5195_ems_e5faf805-8548-4046-b8d6-a107ff8a75c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5195%22",
+   "document_date": "2014-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00022",
+   "document_date": "2014-04-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-20",
+  "sentences": [
+   "The bill would change how certain military retirement pensions are increased each year for pensioners aged 55 or older.",
+   "From 1 July 2014, those pensions would be indexed using the same method as age and service pensions, comparing consumer price index, living cost index and male total average weekly earnings.",
+   "The new indexation would apply to DFRB and DFRDB retirement, invalidity and reversionary pensions, but not to child and orphan pensions."
+  ],
+  "changes": [
+   "Indexes DFRB and DFRDB pensions for recipients aged 55 or older from 1 July 2014.",
+   "Uses the age and service pension indexation method instead of the current CPI-only method.",
+   "Applies to retirement, invalidity and reversionary pensions, but excludes child and orphan pensions."
+  ],
+  "affected": "Defence Force Retirement Benefits and Defence Force Retirement and Death Benefits pensioners aged 55 or older, including surviving spouses and associates from family law splits.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-286900",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286939",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286942",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286943",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286944",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286950",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286953",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286954",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286956",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286957",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286959",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286961",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286962",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286963",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286968",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286969",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286971",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286998",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287630",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Force Retirement Benefits Legislation Amendment (Fair Indexation) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00022",
+   "assent_date": "2014-04-09"
+  }
+ ]
+}

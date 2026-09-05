@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1266",
+ "title": "Fair Work Amendment (One in, All in) Bill 2020 [No. 2]",
+ "short_title": "Fair Work Amendment (One in, All in) Bill 2020 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-16",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1266%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1266%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1266%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1266_ems_47801a57-3563-45c6-8eee-72d2b44d5d31%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1266%22",
+   "document_date": "2020-06-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-16",
+  "sentences": [
+   "This bill would let the Fair Work Commission handle disputes about whether an employee qualifies for the Jobkeeper payment.",
+   "The Commission could order that an employee is eligible for the payment, but must follow the 'one in, all in' rule that requires employers to nominate all eligible employees.",
+   "The Commission cannot make an order after the Jobkeeper scheme ends, which is currently 28 September 2020."
+  ],
+  "changes": [
+   "Gives the Fair Work Commission power to resolve disputes over employee eligibility for the Jobkeeper payment.",
+   "Allows the Commission to make orders enforcing the 'one in, all in' principle.",
+   "Bars the Commission from making orders after the Jobkeeper scheme's end date of 28 September 2020."
+  ],
+  "affected": "Employees and employers covered by the Jobkeeper scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

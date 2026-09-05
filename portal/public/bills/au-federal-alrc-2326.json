@@ -1,0 +1,196 @@
+{
+ "key": "au-federal-alrc-2326",
+ "title": "Customs Amendment (Anti-Dumping Commission) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2013-03-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-02-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-02-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-25",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-03-14",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-03-30",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00032",
+   "document_date": "2013-03-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-269590",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269594",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269596",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269600",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269601",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269602",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269693",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-02-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-269695",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822540",
+   "speaker": "Richard Colbeck",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": "The coalition supported the Customs Amendment (Anti-Dumping Commission) Bill 2013 to establish the Australian Anti-Dumping Commission, but criticised the government for belatedly adopting opposition policy and raised concerns about the source of $24.4 million in funding, citing failed anti-dumping cases that cost jobs at Kimberly-Clark, SPC Ardmona and CSR Viridian."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Anti-Dumping Commission) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00032",
+   "assent_date": "2013-03-30"
+  }
+ ]
+}

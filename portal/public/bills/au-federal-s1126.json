@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1126",
+ "title": "Criminal Code and Other Legislation Amendment (Removing Commonwealth Restrictions on Cannabis) Bill 2018",
+ "short_title": "Criminal Code and Other Legislation Amendment (Removing Commonwealth Restrictions on Cannabis) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-09",
+ "originating_house": "senate",
+ "sponsor": "LEYONHJELM, Sen David",
+ "sponsor_party": "Liberal Democratic Party",
+ "sponsor_person_id": "10832",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1126%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1126%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1126_ems_e60454f5-17fb-4fe1-a7ee-2ef3124fbb14%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1126%22",
+   "document_date": "2018-05-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-09",
+  "sentences": [
+   "The bill would let state and territory governments decide whether to legalise and regulate cannabis.",
+   "It would stop federal regulations and ministerial decisions from listing cannabis as a controlled or border controlled substance.",
+   "The changes would take effect one year after the bill receives royal assent."
+  ],
+  "changes": [
+   "Removes cannabis from lists of controlled and border controlled drugs, plants and precursors in Commonwealth criminal law.",
+   "Excludes cannabis from offences for importing psychoactive substances and from the definition of narcotic drugs under the Crimes (Traffic in Narcotic Drugs and Psychotropic Substances) Act 1990.",
+   "Repeals regulations that list cannabis as a controlled plant and removes related definitions from the Defence Force Discipline Act 1982."
+  ],
+  "affected": "State and territory governments, adults who use cannabis, and Commonwealth law enforcement agencies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:50:59Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

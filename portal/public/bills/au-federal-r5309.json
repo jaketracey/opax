@@ -1,0 +1,244 @@
+{
+ "key": "au-federal-r5309",
+ "title": "Military Rehabilitation and Compensation Amendment Bill 2014",
+ "short_title": "Military Rehabilitation and Compensation Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-07-17",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2014-09-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5309_ems_a34dbc88-9fb5-4687-aa01-22302cd22e0b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5309%22",
+   "document_date": "2014-07-17",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00104",
+   "document_date": "2014-09-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-295622",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295636",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296123",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296124",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296125",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296126",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296127",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-08-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296450",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296451",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296452",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296453",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Military Rehabilitation and Compensation Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00104",
+   "assent_date": "2014-09-24"
+  }
+ ]
+}

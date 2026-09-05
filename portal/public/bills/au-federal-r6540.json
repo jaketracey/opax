@@ -1,0 +1,244 @@
+{
+ "key": "au-federal-r6540",
+ "title": "Great Barrier Reef Marine Park Amendment (Coronavirus Economic Response Package) Bill 2020",
+ "short_title": "Great Barrier Reef Marine Park Amendment (Coronavirus Economic Response Package) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Water and the Environment",
+ "status": "passed",
+ "status_as_of": "2020-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6540_ems_981f58fb-3d1e-4ea2-9293-6b882d22aa72%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6540%22",
+   "document_date": "2020-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00063",
+   "document_date": "2020-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-14",
+  "sentences": [
+   "The bill would waive environmental management charges owed by Great Barrier Reef Marine Park permission holders for the first three months of 2020.",
+   "Permission holders would no longer need to pay fixed charges for that quarter, and the government would give them grants to offset visitor-collected charges they would otherwise have to remit.",
+   "The waiver covers the period from 1 January 2020 to 31 March 2020, and the bill is intended to provide financial relief to the tourism industry affected by the COVID-19 pandemic."
+  ],
+  "changes": [
+   "Waives the requirement for permission holders to remit fixed charges for the 1 January 2020 to 31 March 2020 quarter.",
+   "Provides grants to permission holders equal to amounts they collected from visitors for that quarter, effectively waiving the obligation to remit those collected amounts.",
+   "Amends the Great Barrier Reef Marine Park Act 1975 to give effect to the waiver."
+  ],
+  "affected": "Great Barrier Reef Marine Park permission holders, including tourism operators, and the Great Barrier Reef Marine Park Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6379",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-06-15.132.9) to leave the original second reading motion unchanged. A second reading motion is \"*that the bill be read for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\", which is parliamentary jargon for agreeing with the main idea of the bill. This motion was put after Griffith MP [Terri Butler](https://theyvoteforyou.org.au/people/representatives/griffith/terri_butler) (Labor) introduced an amendment to the second reading motion, which was: > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that Coalition governments have mismanaged and politicised the Great Barrier Reef, which is a job-generating, economic and environmental powerhouse of global significance, that Australians need to preserve for future generations\".*",
+   "stage": "Second reading",
+   "ayes": 61,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 33,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 109
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-15/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-392241",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Great Barrier Reef Marine Park Amendment (Coronavirus Economic Response Package) Bill 2020, waiving the environmental management charge for tourism operators throughout 2020, but argued the Coalition has mismanaged the reef, downgraded its outlook to \"very poor,\" failed to address climate change and water quality, and disproportionately focused on plastics."
+  },
+  {
+   "slug": "speech-392246",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Great Barrier Reef Marine Park Amendment Bill and its second reading amendment, arguing the measure allowing operators to keep the environment management charge is minor (worth $2–3 million) and insufficient compared to the sector's losses, including $6.4 billion annual value and 64,000 jobs. They urged stronger government action on climate change, plastic pollution, and broader economic support, citing three mass-bleaching events in five years and Australia's failure to update emissions targets."
+  },
+  {
+   "slug": "speech-392362",
+   "speaker": "Ken O'Dowd",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Great Barrier Reef Marine Park Amendment Bill 2020, arguing that waiving the environmental management charge for all of 2020 will provide critical financial relief to tourism operators devastated by the pandemic, while maintaining funding for reef management. The speaker named charter boat skipper Kevie Ben, listed LNP members for several electorates, and urged the Queensland government to open borders to revive tourism from Lady Musgrave Island to Cape York."
+  },
+  {
+   "slug": "speech-392364",
+   "speaker": "Warren Entsch",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued in full support of the Great Barrier Reef Marine Park Amendment (Coronavirus Economic Response Package) Bill 2020, specifically backing the waiving of the environmental management charge for marine operators. He stated the initiative saved over 7,000 businesses, including Quiksilver up to $2.8 million, and criticised the Queensland Labor government for border closure uncertainty costing the region $10 million per week, while defending the reef's health and management against negative claims."
+  },
+  {
+   "slug": "speech-392367",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's swift support for Great Barrier Reef tourism operators contrasts with its slow delivery of a $76 million bushfire tourism package, of which only $5.3 million (7%) had been spent after six months, and called for targeted marketing and funding for bushfire-affected regions like north-east Victoria, which lost up to 1.6 million visitor nights, $640 million in tourism expenditure, and up to 6,400 jobs."
+  },
+  {
+   "slug": "speech-392374",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The bill waives the Great Barrier Reef environmental management charge for one year—January to March via this amendment and the rest of the year through a prior appropriations bill—as COVID-19 economic relief for tourism operators. The speaker defended the Morrison government’s response and questioned the member for Griffith’s motion to end the politicisation of the reef."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Great Barrier Reef Marine Park Amendment (Coronavirus Economic Response Package) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00063",
+   "assent_date": "2020-06-19"
+  }
+ ]
+}

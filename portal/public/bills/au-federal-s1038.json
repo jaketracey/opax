@@ -1,0 +1,248 @@
+{
+ "key": "au-federal-s1038",
+ "title": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2016",
+ "short_title": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-15",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1038_ems_09fb2548-12c9-4365-8a98-903f6510a16a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1038_ems_d9ee0331-e153-432f-a19d-9e5ab763ed2a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1038_ems_63c66b5a-2279-4e8b-8513-fbf7e81e3672%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1038%22",
+   "document_date": "2016-09-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00082",
+   "document_date": "2016-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4394",
+   "date": "2016-11-08",
+   "house": "senate",
+   "question": "Counter-Terrorism Legislation Amendment Bill (No. 1) 2016 - Second Reading - Agree to the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 16,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-08/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-338121",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The Counter-Terrorism Legislation Amendment Bill (No. 1) was introduced to strengthen Australia's national security laws, including allowing control orders for persons aged 14 and over, new monitoring powers, an offence of advocating genocide, and amendments to ASIO Act section 35P. The speech cited that around 110 Australians are fighting with terrorist groups in Syria and Iraq, at least 62 have been killed, 40 have returned, and 55 people have been charged in counter-terrorism operations since September 2014."
+  },
+  {
+   "slug": "speech-338122",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "Labor supported the Counter-Terrorism Legislation Amendment Bill (No. 1) 2016 with amendments, including mandatory legal representation for minors subject to control orders and a special advocate scheme, while stressing that bipartisanship does not mean a blank cheque for the government."
+  },
+  {
+   "slug": "speech-338123",
+   "speaker": "Michael Danby",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Counter-Terrorism Legislation Amendment Bill (No. 1) 2016 is appropriate and commended the bipartisan process of the Parliamentary Joint Committee on Intelligence and Security, including public hearings. He highlighted 20 amendments recommended by the committee to balance security with civil liberties, referenced Australian Daesh fighters and radicalised youth in Parramatta and Endeavour Hills, and criticised the Minister for Foreign Affairs for dismissing the committee's role."
+  },
+  {
+   "slug": "speech-338124",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Counter-Terrorism Legislation Amendment Bill (No. 1) 2016, which extends control orders to minors as young as 14 and introduces a new offence of advocating genocide. The speaker noted that only six control orders have been issued since 2005 and that the bill includes 20 amendments recommended by the Parliamentary Joint Committee on Intelligence and Security, such as requiring a lawyer for young people and making their best interests a primary consideration."
+  },
+  {
+   "slug": "speech-338125",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The member supported the Counter-Terrorism Legislation Amendment Bill (No. 1) 2016, arguing for the use of control orders to avoid detaining children and urging Australia to ratify the Optional Protocol to the Convention against Torture."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Counter-Terrorism Legislation Amendment Act (No. 1) 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00082",
+   "assent_date": "2016-11-29"
+  }
+ ]
+}

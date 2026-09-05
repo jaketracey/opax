@@ -1,0 +1,177 @@
+{
+ "key": "au-federal-r7027",
+ "title": "Appropriation Bill (No. 3) 2022-2023",
+ "short_title": "Appropriation Bill (No. 3) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-05-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2023-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7027_ems_1c32afe2-9a42-41f0-bd6a-10331854716f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7027%22",
+   "document_date": "2023-05-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00020",
+   "document_date": "2023-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-8160",
+   "date": "2023-06-16",
+   "house": "senate",
+   "question": "The majority voted against adding the text below to the usual second reading motion, which is \"*that the bills be read a second time*\". To read the bills a second time is to agree with the bills' main idea. The motion was introduced by WA Senator [Dorinda Cox](https://theyvoteforyou.org.au/people/senate/wa/dorinda_cox) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate notes that Labor's second Budget:* > >> *(a) gives a $24.85 a day tax cut to politicians and billionaires, but only $2.85 a day to jobseekers;* >> >> *(b) gives $16.8 billion over the forward estimates in handouts to wealthy property moguls, but no new money for direct investment in new social and affordable housing;* >> >> *(c) includes $41 billion over the forward estimates in fossil fuel subsidies, which is more than all the investment in Australia becoming a renewable energy superpower; and* >> >> *(d) is a betrayal of the people who were promised that no one would be left behind\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-16/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829901",
+   "speaker": "Carol Brown",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "Documents on proposed expenditure for 2023‑24 and additional expenditure for 2022‑23 were tabled, and a motion was passed to refer them, together with the final budget outcome for 2021‑22 and advances under annual Appropriation Acts, to committees for examination and report."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 3) 2022-2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00020",
+   "assent_date": "2023-06-19"
+  }
+ ]
+}

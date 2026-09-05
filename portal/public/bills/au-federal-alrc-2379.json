@@ -1,0 +1,535 @@
+{
+ "key": "au-federal-alrc-2379",
+ "title": "Fair Work Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2013-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-28",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00073",
+   "document_date": "2013-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1113",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "question": "Fair Work Amendment Bill 2013 - Consideration in Detail - Workplace bullying",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-06/2"
+  },
+  {
+   "key": "federal-representatives-1114",
+   "date": "2013-06-06",
+   "house": "representatives",
+   "question": "Fair Work Amendment Bill 2013 — Consideration in Detail — Right of entry",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 67,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 54,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-06/3"
+  },
+  {
+   "key": "federal-senate-2983",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Eric Abetz The Senate is debating the latest instalment of the 400 pages of amendments to Labor's so-called perfect Fair Work laws. Remember the laws that were so good they were sacrosanct? The right balance had been achieved! No change was needed! Well, here we are, 400 pages of amendments later, in circumstances where Labor have previously said that there should be no change, especially before an election. Indeed, whilst Labor themselves were in government, way back when they actually had principled ministers and a principled government, right back when they used to know what they believed in, they were concerned to ensure that a genuinely right balance was achieved in workplace relations law, when they were about reform, and when they were about the national interest. They had a Minister for Industrial Relations, one Ralph Willis, who in 1987 said: The government has decided not to go ahead with the industrial relations bill this session. The legislation will not be debated and will be left to lie on the table. There is already a large measure of agreement between employer groups, the union movement and the government on the legislation, but some significant differences remain. This government has constantly pursued a process of consultation rather than confrontation. Because of the remaining differences of view over the legislation, the government will have discussions … That was the principled stand way back in 1987. Isn't it a pity that the current Minister for Workplace Relations, the man who thinks the job of Minister for Workplace Relations is simply that of an upmarket trade union boss, cannot show us the same sort of integrity, the same sort of commitment to the national interest. That was Mr Willis all those years ago. It is interesting when you consider that, only last year, the current Minister for Workplace Relations had this to say in relation to some amendments proposed by the coalition: The reason we are opposing the amendments is that we had a pol",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/15"
+  },
+  {
+   "key": "federal-senate-2984",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Fair Work Amendment Bill 2013 - Second Reading - Workplace Bullying",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 59,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/16"
+  },
+  {
+   "key": "federal-senate-2985",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Fair Work Amendment Bill 2013 - Second Reading - Right of entry",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 60,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/17"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-823084",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-21",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee presented its fourth report of 2013, recommending 18 bills be referred to various Senate committees for inquiry and report by specific dates, and that certain other bills not be referred."
+  },
+  {
+   "slug": "speech-274428",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274429",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274430",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274435",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274444",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274448",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274449",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-274450",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823960",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275467",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275471",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275472",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275475",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275487",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275495",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275501",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275503",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275618",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275619",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275629",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275642",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-06",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00073",
+   "assent_date": "2013-06-28"
+  }
+ ]
+}

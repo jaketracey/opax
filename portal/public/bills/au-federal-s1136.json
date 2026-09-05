@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1136",
+ "title": "Freedom of Speech Legislation Amendment (Insult and Offend) Bill 2018",
+ "short_title": "Freedom of Speech Legislation Amendment (Insult and Offend) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-27",
+ "originating_house": "senate",
+ "sponsor": "LEYONHJELM, Sen David",
+ "sponsor_party": "Liberal Democratic Party",
+ "sponsor_person_id": "10832",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1136%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1136%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1136%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1136_ems_9c46a5c8-4101-4062-be2f-17175be7a5ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1136%22",
+   "document_date": "2018-06-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-27",
+  "sentences": [
+   "The bill would remove bans on speech that someone finds insulting or offensive from 23 Commonwealth laws.",
+   "It would leave in place existing prohibitions on other types of harmful speech, such as defamatory, threatening or obscene content.",
+   "The bill would not change the Racial Discrimination Act 1975, which is dealt with by a separate bill, and would start the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "Removes restrictions on insulting or offensive speech across 23 Acts.",
+   "Keeps existing bans on speech that is defamatory, threatening, obscene, or commercially sensitive.",
+   "Does not alter the Racial Discrimination Act 1975 or prohibitions on sexual harassment or insulting witness questioning."
+  ],
+  "affected": "People and organisations whose speech is regulated by Commonwealth law.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

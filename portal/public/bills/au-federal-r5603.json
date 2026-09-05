@@ -1,0 +1,317 @@
+{
+ "key": "au-federal-r5603",
+ "title": "Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013 [No. 2]",
+ "short_title": "Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2016-04-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-04-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5603_ems_16a1755b-7834-459f-814d-ce36b7e7ddf0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5603%22",
+   "document_date": "2016-02-02",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-02",
+  "sentences": [
+   "This bill is part of a package that re-establishes the Australian Building and Construction Commission.",
+   "It would repeal the Fair Work (Building Industry) Act 2012 and make transitional provisions for preserving staff entitlements and legal proceedings.",
+   "The explanatory memorandum says the bill is budget neutral and does not limit the Acts Interpretation Act 1901."
+  ],
+  "changes": [
+   "Repeals the Fair Work (Building Industry) Act 2012.",
+   "Makes minor consequential amendments to Commonwealth laws.",
+   "Sets transitional rules for name changes, staff entitlements, and existing safety accreditation."
+  ],
+  "affected": "People and organisations involved in the building and construction industry, including staff of affected agencies and holders of senior positions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:50:43Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4054",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "question": "Rob Mitchell If it suits the House, I will state the question in the form that the amendment be agreed to. The question now is that the amendment be agreed to. Russell Matheson The building and construction industry employs more than a million people, representing approximately nine per cent of the Australian workforce. It is a critical part of the fabric that makes this country productive, prosperous and internationally competitive. The people of Macarthur understand the importance of the building and construction sector to the economy. They know that cost blowouts and project delays as a result of industrial bullying cost time and money, which ultimately costs us all. I stand here today, proud to be part of a coalition government which recognises the importance of an industry that is vital to job creation and essential to Australia's economy. I believe the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] is a positive step forward. It encourages productivity and high levels of employment in the building and construction industry. It will ensure that the government's policy to deliver the infrastructure of the 21st century is delivered. In my electorate alone, this bill will protect jobs and investment by ensuring thousands of employers and workers in the industry can get on with the job without fear of intimidation. One of the most crucial parts of this bill is the regulation to uphold and promote respect for the law to ensure respect for the rights of everyone in the building industry. It contains provisions to ensure that unlawful actions, including unlawful industrial actions, are dealt with appropriately. It also ensures the ability for the courts to impose significant penalties for individuals and organisations that participate in this unlawful action. The Australian Building and Construction Commission was a strong and productive watchdog. It was established by the coalition in 2005 following the 2002 Royal Commission into the Bu",
+   "stage": "Second reading",
+   "ayes": 84,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-04/1"
+  },
+  {
+   "key": "federal-representatives-4057",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "question": "Christopher Pyne I move: That the bill be now read a third time. Clare O'Neil Could I just start by expressing my absolute disgust at those on the other side trying to gag my contribution to this bill. Deputy Speaker, I represent 100,000 people in this chamber. Christopher Pyne I move: That the question be put.",
+   "stage": "Third reading",
+   "ayes": 83,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-02-04/4"
+  },
+  {
+   "key": "federal-representatives-4190",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Christopher Pyne I ask leave of the House to move a motion requesting that the Senate resume consideration of the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2], and the Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013 [No. 2]. Tony Smith Is leave granted? Tony Burke We have made it clear that we are ready to debate this in the Senate so, on that basis, leave is granted. Leave granted. Christopher Pyne I thank the House, and I move: That: (1) the House requests the Senate to resume consideration of the bills entitled a Bill for an Act to re-establish the Australian Building and Construction Commissioner, and for related purposes, and a Bill for an Act to deal with consequential and transitional matters arising from the enactment of the Building and Construction Industry (Improving Productivity) Act 2013, and for related purposes, which were transmitted to the Senate for its concurrence during the last session of the Parliament; and (2) the House's requests be conveyed to the Senate in a separate message for each bill. Adam Bandt Mr Speaker, I move that— Christopher Pyne I move: That the question be now put. Tony Smith The question is that the motion be put.",
+   "stage": "Bill",
+   "ayes": 85,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/6"
+  },
+  {
+   "key": "federal-representatives-4191",
+   "date": "2016-04-18",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the motion moved by the Leader of the House be agreed to.",
+   "stage": "Bill",
+   "ayes": 85,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-04-18/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-326153",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued for re-establishing the Australian Building and Construction Commission (ABCC) to reverse Labor's 2012 abolition, citing a 2013 election commitment and citing threats to contractors in the Macquarie electorate and CFMEU actions in Adelaide. The bill introduces a new building code, prevents contractors breaching safety or migration laws from Commonwealth-funded work, and imposes penalties for unlawful industrial action."
+  },
+  {
+   "slug": "speech-331149",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-04-18",
+   "stage_hint": null,
+   "brief": "Moved to resume consideration of the Building and Construction Industry (Improving Productivity) Bill 2013 [No. 2] and the Building and Construction Industry (Consequential and Transitional Provisions) Bill 2013 [No. 2]."
+  }
+ ],
+ "acts": []
+}

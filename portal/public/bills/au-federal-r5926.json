@@ -1,0 +1,222 @@
+{
+ "key": "au-federal-r5926",
+ "title": "Migration Amendment (Validation of Decisions) Bill 2017",
+ "short_title": "Migration Amendment (Validation of Decisions) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2017-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5926_ems_3db4d81d-3562-42ab-ba83-d192cdd01a29%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/5495388%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5926%22",
+   "document_date": "2017-06-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00095",
+   "document_date": "2017-09-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4874",
+   "date": "2017-09-04",
+   "house": "senate",
+   "question": "The majority voted to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd024) (a document prepared by the parliamentary library): > *The purpose of the Migration Amendment (Validation of Decisions) Bill 2017 (the Bill) is to amend the Migration Act 1958 (Cth) (the Act) to safeguard the validity of character decisions made by the Department, in the case of a successful High Court challenge to the validity of section 503A of the Act.*",
+   "stage": "Second reading",
+   "ayes": 47,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 31,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-04/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-351782",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "Labor announced support for the Migration Amendment (Validation of Decisions) Bill 2017, which preserves existing visa refusal or cancellation decisions on character grounds that relied on protected information from intelligence agencies, and referred the bill to a Senate inquiry reporting on 4 September 2017."
+  },
+  {
+   "slug": "speech-351783",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Migration Amendment (Validation of Decisions) Bill 2017, arguing it was crucial for national security and visa integrity, while criticising Minister Dutton for using the issue as a \"cheap political tool\" and for incompetence. The speaker noted concerns raised by the Parliamentary Joint Committee on Human Rights, including due process, non-refoulement, and family separation risks, and called for a Senate inquiry to address them."
+  },
+  {
+   "slug": "speech-351784",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The minister argued that the Migration Amendment (Validation of Decisions) Bill 2017 is needed to uphold visa cancellations and refusals on character grounds for non‑citizens who have committed serious crimes, and to protect intelligence‑sharing with law enforcement agencies; he also criticised the Labor Party’s record on border protection, claiming 1,200 people drowned at sea under their government and that Labor would return to that policy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Validation of Decisions) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00095",
+   "assent_date": "2017-09-05"
+  }
+ ]
+}

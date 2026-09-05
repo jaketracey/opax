@@ -1,0 +1,769 @@
+{
+ "key": "au-federal-r7494",
+ "title": "Workplace Relations Legislation Amendment (Building Cooperative Workplaces No. 1) Bill 2026",
+ "short_title": "Workplace Relations Legislation Amendment (Building Cooperative Workplaces No. 1) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2026-07-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-07-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7494_ems_0a90fc6f-f7fb-48fa-8d5c-66e8328866e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7494%22",
+   "document_date": "2026-06-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00062",
+   "document_date": "2026-07-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-10323",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "question": "Michael McCormack The Housing Industry Association's executive director for compliance and workplace relations, Stuart Collins, has some advice for this Labor government. He said: This bill— the Workplace Relations Legislation Amendment (Building Cooperative Workplaces No. 1) Bill 2026— is being sold as a modest administrative tidy-up of the Fair Work Commission. It is not. He's right. Mr Collins said: It contains wide-ranging reforms with significant implications for the residential construction industry, procurement frameworks, workforce costs and the capacity of builders to deliver the homes Australians need. There's a lot in that sentence, and there are a lot of construction companies going out backwards thanks to the policies of this failed Labor government. What our small-business sector does not need right now is more onerous costs and compliance. On the capacity of builders to deliver the homes Australians need, how many homes was it that this Labor government said they were going to build? Was it a million? Then they changed the figure. But, on their watch, they've built hardly a home. Mr Collins added this: The Federal Government is making a bad habit of tabling substantial workplace relations reforms with no notice, no industry engagement and no consideration of cumulative impact. This is particularly concerning given the large number of legislative reviews currently underway that will impose future workplace relations reforms. HIA's immediate concerns with this Bill are numerous. But it's not just the HIA; it is so many other stakeholders besides. And yet this government just want to ram onerous legislation that is going to make it so much more difficult, particularly in the small-business sector, through the House of Representatives because they can and because they have the majority. They think that that mandate gives them permission to ride roughshod over stakeholders who happen to employ a lot of Australians and are sick to the back teeth of complian",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    }
+   },
+   "party_coverage": {
+    "dated": 81
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-24/1"
+  },
+  {
+   "key": "federal-representatives-10324",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2026-06-24.112.1) to read the bill for a second time. In other words, they voted in favour of a motion to agree with the main idea of the bill and can now discuss it in more detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd069), which is a document prepared by the parliamentary library: > *The Workplace Relations Legislation Amendment (Building Cooperative Workplaces No. 1) Bill 2026 (the Bill) would amend the Fair Work Act 2009 (FW Act) and related legislation to effect industrial relations changes. The key measures are:* > > * *Expanding powers of the Fair Work Commission (FWC) to deal with applications.* > * *Allowing the Commonwealth to preference employers with enterprise agreements for procurement and grants, and for other contractual purposes.* > > *Some changes to the FWC’s powers would respond to the Federal Court decision in Coles Supply Chain Pty Ltd v Milford [2020] FCAFC 152 , so that the FWC is no longer required to determine whether a disputed dismissal actually occurred before conferencing or conciliation.* > > *Other changes to the FWC’s powers would mean that the FWC could make vexatious proceeding orders, dismiss a wider range of matters, determine certain matters without hearings, and allow the FWC President to delegate more powers.* > > *Limited exceptions to the prohibition of adverse action, coercion and discrimination under the FW Act would be made to allow the Commonwealth to preference employers with enterprise agreements in procurement, grant, and other contractual activities. This aspect of the Bill has attracted the most stakeholder comment.* > > *At the time of writing, the Bill had not been referred to or reported on by any parliamentary committees.*",
+   "stage": "Second reading",
+   "ayes": 88,
+   "noes": 45,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 86,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-24/2"
+  },
+  {
+   "key": "federal-representatives-10325",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "question": "Milton Dick The question before the House is the bill be agreed to. In accordance with the resolution agreed to yesterday, the question now is the amendments circulated by the member for Wentworth be agreed to. Before I call the member for Wentworth, I'll just explain to the House that we did receive identical amendments from the member for Wannon and the member for Wentworth. The member for Wentworth's amendments were the first to be circulated, so this means they will be dealt with first, as are the traditions and customs of the House. When the House has made a decision on the member for Wentworth's amendments, the member for Wannon's amendments may not be considered by the House, because they're the same piece of work. That's in accordance with standing order 150(e)—if people want to follow where we're at, that's what we're dealing with—and _House of Representatives Practice_ on page 299 and page 375. _Member for_ _Wentworth_ _'s circulated amendment_ _s_ (1) Schedule 1, Part 9, page 18 (line 1) to page 21 (line 25), omit the Part. [exemption from general protections in certain circumstances] (2) Schedule 1, item 62, page 26 (lines 8 to 15), omit Division 7. [exemption from general protections in certain circumstances] Allegra Spender The problem the amendments address is that part 9 of the bill hands the minister sweeping new powers with no statutory limits, no required consultation and no meaningful parliamentary oversight to determine who can access Commonwealth grants, procurement contracts and funding arrangements across an $830 billion annual budget. That is 26.8 per cent of GDP. It is a record, and this bill enables it to be filtered through an industrial relations test. My amendments would omit this part, retaining the other practical measures of the bill. Even though the government is not compelled to use these powers and has indicated it does not plan to use them for the construction industry, I am concerned. I am concerned that, by creating new excepti",
+   "stage": "Consideration in detail",
+   "ayes": 44,
+   "noes": 88,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-24/3"
+  },
+  {
+   "key": "federal-representatives-10326",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the bill be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 87,
+   "noes": 43,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 85,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-24/4"
+  },
+  {
+   "key": "federal-senate-10640",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I'll now deal with the Workplace Relations Legislation Amendment (Building Cooperative Workplaces No. 1) Bill 2026. The question is that this bill be now read a second time.",
+   "stage": "Limitation of debate",
+   "ayes": 32,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/17"
+  },
+  {
+   "key": "federal-senate-10641",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Committee of the Whole amendment circulated by the opposition. The question is that, in schedule 1, part 9 and division 7 in item 62 stand as printed. _Opposition's circulated amendment—_ (1) Schedule 1, Part 9, page 18 (line 1) to page 21 (line 25), to be opposed. (2) Schedule 1, item 62, page 26 (lines 8 to 15), Division 7 to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 32,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/18"
+  },
+  {
+   "key": "federal-senate-10642",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with amendments circulated by the Australian Greens. The question is that amendments on sheet 3824 be agreed to. _Australian Greens_ _'__circulated amendments—_ (1) Schedule 1, page 21 (after line 25), after Part 9, insert: Part 9A — Certain mandatory terms of workplace determinations must not be less favourable _Fair Work Act 2009_ 58A Section 270A (heading) Repeal the heading, substitute: 270A Certain terms must not be less favourable 58B After subsection 270A(2) Insert: (2A) A term that is included in the determination to comply with subsection 273(2), (4), (5) or (6) must be not less favourable to each of those employees, and any employee organisation that was a bargaining representative of any of those employees, than a term of the enterprise agreement that deals with the same matter as the term included in the determination. Note: In addition, the delegates' rights term included in compliance with subsection 273(6) must not be less favourable than the delegates' rights term in any modern award that covers a workplace delegate to whom the determination applies (see subsection 273(7)). 58C At the end of section 270A Add: (5) For the avoidance of doubt, subsection (2A) does not apply to any agreed term for the determination that: (a) is of a kind referred to in subsection 273(3), (4) or (5); or (b) is a delegates' rights term for the workplace delegates to whom the determination applies. 58D Subsections 273(4) and (5) Repeal the subsections, substitute: _Flexibility term_ (4) Unless the FWC is satisfied that an agreed term for the determination would, if the determination were an enterprise agreement, satisfy paragraph 202(1)(a) and section 203 (which deal with flexibility terms in enterprise agreements), the determination must include: (a) unless paragraph (b) applies—the model flexibility term; or (b) if the model flexibility term does not comply with subsection 270A(2A)—a term that complies with that subsection and that would, if the",
+   "stage": "Limitation of debate",
+   "ayes": 32,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/19"
+  },
+  {
+   "key": "federal-senate-10643",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the amendments circulated by Senator David Pocock. The question is that amendments on sheet 3905 be agreed to. _Senator David Pocock's circulated amendments—_ (1) Clause 2, page 2 (table item 4), omit the table item, substitute: (2) Clause 2, page 2 (after line 9), at the end of the clause, add: (3) For the purposes of item 4A of the table in subsection (1), a relevant inquiry report means an inquiry report prepared under section 164 of the _National Anti-Corruption Commission Act 2022_ following a public inquiry conducted under section 161 of that Act into: (a) corruption risks and vulnerabilities in Commonwealth agencies arising from the design, implementation, administration or enforcement of preferences in Commonwealth procurement, grants or contractual arrangements, including preferences that are required or authorised in Commonwealth-linked supply chains, based on whether employees of an employer are covered, or are proposed to be covered, by: (i) an enterprise agreement; or (ii) a kind of enterprise agreement; or (iii) an enterprise agreement that covers an employee organisation; and (b) measures to prevent corruption in Commonwealth agencies in connection with those preferences, including safeguards relating to the following: (i) probity and conflicts of interest; (ii) transparency and record-keeping; (iii) supplier selection and tender evaluation; (iv) grants administration; (v) subcontractor and supply-chain requirements that are imposed, required or authorised through Commonwealth procurement, grants or contractual arrangements; (vi) the use of procurement-connected policies, grants-connected policies, codes, guidelines or model contract terms, including any policy or code known as the Secure Australian Jobs Code; (vii) any legislative instrument that could be made under subsection 354(2C) or section 378A of the _Fair Work Act 2009_ if Part 9 of Schedule 1 to this Act commences; (viii) any contractual arrangement, or Commonw",
+   "stage": "Limitation of debate",
+   "ayes": 24,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/20"
+  },
+  {
+   "key": "federal-senate-10644",
+   "date": "2026-06-29",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Limitation of debate",
+   "ayes": 31,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-29/21"
+  },
+  {
+   "key": "federal-representatives-10504",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "question": "Amanda Rishworth I move: That the amendments be considered immediately. _Senate's amendments_ (1) Schedule 1, page 21 (after line 25), after Part 9, insert: Part 9A — Certain mandatory terms of workplace determinations must not be less favourable _Fair Work Act 2009_ 58A Section 270A (heading) Repeal the heading, substitute: 270A Certain terms must not be less favourable 58B After subsection 270A(2) Insert: (2A) A term that is included in the determination to comply with subsection 273(2), (4), (5) or (6) must be not less favourable to each of those employees, and any employee organisation that was a bargaining representative of any of those employees, than a term of the enterprise agreement that deals with the same matter as the term included in the determination. Note: In addition, the delegates' rights term included in compliance with subsection 273(6) must not be less favourable than the delegates' rights term in any modern award that covers a workplace delegate to whom the determination applies (see subsection 273(7)). 58C At the end of section 270A Add: (5) For the avoidance of doubt, subsection (2A) does not apply to any agreed term for the determination that: (a) is of a kind referred to in subsection 273(3), (4) or (5); or (b) is a delegates' rights term for the workplace delegates to whom the determination applies. 58D Subsections 273(4) and (5) Repeal the subsections, substitute: _Flexibility term_ (4) Unless the FWC is satisfied that an agreed term for the determination would, if the determination were an enterprise agreement, satisfy paragraph 202(1)(a) and section 203 (which deal with flexibility terms in enterprise agreements), the determination must include: (a) unless paragraph (b) applies—the model flexibility term; or (b) if the model flexibility term does not comply with subsection 270A(2A)—a term that complies with that subsection and that would, if the determination were an enterprise agreement, satisfy paragraph 202(1)(a) and section 203. _Con",
+   "stage": "Consideration of Senate message",
+   "ayes": 93,
+   "noes": 44,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-30/1"
+  },
+  {
+   "key": "federal-representatives-10505",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "question": "Amanda Rishworth I move: That the amendments be agreed to. The amendments are a sensible reform to Labor's intractable bargaining reforms to ensure they operate as intended, to ensure mandatory terms included in workplace determinations are not less favourable than the corresponding terms in the previous enterprise agreement, and I commend the amendments to the House. Tony Burke I move: That the question be put. Milton Dick The question before the House is that the question be put.",
+   "stage": "Consideration of Senate message",
+   "ayes": 91,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-30/2"
+  },
+  {
+   "key": "federal-representatives-10506",
+   "date": "2026-06-30",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendments be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 97,
+   "noes": 42,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-30/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1203885",
+   "speaker": "Allegra Spender",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203892",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2026-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204113",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204292",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204296",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204458",
+   "speaker": "Maria Kovacic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-30",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Workplace Relations Legislation Amendment (Building Cooperative Workplaces No. 1) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00062",
+   "assent_date": "2026-07-06"
+  }
+ ]
+}

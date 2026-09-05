@@ -1,0 +1,1214 @@
+{
+ "key": "au-federal-r6584",
+ "title": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020",
+ "short_title": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2020-10-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6584_ems_79c2b067-a1b7-4c5d-949a-73e246023baa%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6584_ems_83be00d4-bab9-48e1-9590-3ab27d90e7eb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6584_ems_17e137e3-4e13-45f0-98b3-ea9529953fbe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6584_ems_afa58665-d5c4-4f6e-bdf9-04a1832c78e9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6584%22",
+   "document_date": "2020-08-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00093",
+   "document_date": "2020-10-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-08-26",
+  "sentences": [
+   "The bill would overhaul how Australia pays for higher education and make universities more accountable for student results.",
+   "It would amend the Higher Education Support Act to tie funding to graduate job outcomes and to give regional and Indigenous Australians more places.",
+   "The explanatory memorandum does not specify the dollar amounts or the exact start date of the changes."
+  ],
+  "changes": [
+   "Encourage universities to produce graduates with skills the job market needs.",
+   "Expand study opportunities for people in rural and remote areas, including Aboriginal and Torres Strait Islander students.",
+   "Toughen student protection and require universities to be more answerable for what their students achieve."
+  ],
+  "affected": "Higher education providers, students, and taxpayers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6524",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 41,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-01/5"
+  },
+  {
+   "key": "federal-representatives-6525",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Second Reading - Keep second reading motion unchanged",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-01/6"
+  },
+  {
+   "key": "federal-representatives-6526",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-01/7"
+  },
+  {
+   "key": "federal-representatives-6528",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-01/9"
+  },
+  {
+   "key": "federal-representatives-6529",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-01/10"
+  },
+  {
+   "key": "federal-representatives-6530",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with a [motion](https://www.openaustralia.org.au/debate/?id=2020-09-01.131.4) to adjourn debate. In other words, they voted to keep debating the bill.",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-01/11"
+  },
+  {
+   "key": "federal-representatives-6531",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-01/12"
+  },
+  {
+   "key": "federal-representatives-6532",
+   "date": "2020-09-01",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-01/13"
+  },
+  {
+   "key": "federal-representatives-6628",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-10-08.104.3): > *That the amendments requested by the Senate be considered immediately.* In other words, they voted in favour of speeding things along by immediately debating and voting on the amendments to [the bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6584) as suggested by the Senate. this motion was put by Calare MP [Andrew Gee](https://theyvoteforyou.org.au/people/representatives/calare/andrew_gee) (Nationals).",
+   "stage": "Consideration of Senate message",
+   "ayes": 43,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-08/1"
+  },
+  {
+   "key": "federal-representatives-6629",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 41,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-08/2"
+  },
+  {
+   "key": "federal-representatives-6630",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Consideration of Senate Message - Agree with requests",
+   "stage": "Consideration of Senate message",
+   "ayes": 43,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-08/3"
+  },
+  {
+   "key": "federal-senate-6641",
+   "date": "2020-10-08",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi (Greens), which means it failed. The usual second reading motion is \"*that the bill be read [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\". Reading a bill for a second time is the same as agreeing with its main idea. ### Amendment text > *Omit all words after \"That\", insert:* > > *\", the bill be withdrawn; and* > > *(a) The Senate condemns the Morrison Government and Minister Tehan for attempting to ram legislation through the Parliament which would irreversibly damage Australia's higher education system and harm and disadvantage students, university staff and communities; and* > > *(b) The Senate condemns the bill which will:* > >> *(i) hike fees, pushing students into decades of debt as they face rising unemployment and hurting women and First Nations students the most,* >> >> *(ii) slash billions in funding from teaching, including from STEM subjects, which will mean bigger classes, fewer teachers and a worse education, particularly in regional areas,* >> >> *(iii) force universities to do more with less,* >> >> *(iv) fail to create anywhere near enough new places to educate school leavers and people who want to study during the recession,* >> >> *(v) shift the overall costs of university education away from the Commonwealth and onto students,* >> >> *(vi) fail to encourage students to do STEM courses,* >> >> *(vii) punish struggling students by unfairly and unnecessarily forcing them out of Commonwealth Supported Places instead of helping them, and* >> >> *(viii) fail to save a single university worker's job and worsen the research funding crisis; and* > > *(c) The Senate calls on the Government to:* > >> *(i) fully-fund university education and research, and provide ongoing funding cer",
+   "stage": "Second reading",
+   "ayes": 7,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 20,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-10-08/1"
+  },
+  {
+   "key": "federal-senate-6642",
+   "date": "2020-10-08",
+   "house": "senate",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-10-08/2"
+  },
+  {
+   "key": "federal-senate-6647",
+   "date": "2020-10-08",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2020-10-08.50.3) to keep item 40 and division 2 of schedule 4 unchanged. in parliamentary jargon, they voted for them to \"*stand as printed.*\" ## What do these opposed parts do? [Item 40](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6584_first-reps%2F0004;query=Id%3A%22legislation%2Fbills%2Fr6584_first-reps%2F0000%22;rec=0) of schedule 4 introduced a requirement that Commonwealth Supported Students \"*successfully complete at least 50 per cent of the units in their first full-time (or equivalent) year of study if they are in a bachelor degree or above, or at least 50 per cent of the units in their first full-time (or equivalent) semester of study if they are in a sub-bachelor course, except if special circumstances apply*\" (see the bills digest). [Division 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6584_first-reps%2F0004;query=Id%3A%22legislation%2Fbills%2Fr6584_first-reps%2F0000%22;rec=0) of schedule 4 relates to the application of certain provisions. That is, the division states when the provisions begin to apply and for whom. ### What does the bill do? This bill will implement part of the government's [Job Ready Graduates Package](https://www.dese.gov.au/job-ready) and includes major proposed higher education funding changes, including how the government currently subsidises university tuition costs. If successful in its current form, the bill will decrease the subsidy for most areas of the humanities and social science as well as in engineering, science, surveying, environmental studies and other areas. On the other hand, it will increase the subsidy for most health fields, education, mathematics and other areas. At the same time, the bill will set new maximum student contribution amounts, which means the degree costs for students are going to change sig",
+   "stage": "Must pass 50% of first year",
+   "ayes": 28,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 22,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-10-08/7"
+  },
+  {
+   "key": "federal-senate-6648",
+   "date": "2020-10-08",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2020-10-08.54.7) introduced by the government, which means they'll now form part of the bill. ### What do the amendments do? The amendments will reintroduce a [10% discount](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6584_ems_83be00d4-bab9-48e1-9590-3ab27d90e7eb%22;rec=0) on up-front payments made by HECS-HELP students and the [Student Learning Entitlement](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6584_ems_83be00d4-bab9-48e1-9590-3ab27d90e7eb%22;rec=0) (SLE). ### What does the bill do? This bill will implement part of the government's [Job Ready Graduates Package](https://www.dese.gov.au/job-ready) and includes major proposed higher education funding changes, including how the government currently subsidises university tuition costs. If successful in its current form, the bill will decrease the subsidy for most areas of the humanities and social science as well as in engineering, science, surveying, environmental studies and other areas. On the other hand, it will increase the subsidy for most health fields, education, mathematics and other areas. At the same time, the bill will set new maximum student contribution amounts, which means the degree costs for students are going to change significantly. Humanities, law and commerce degrees are going to increase in price while mathematics, agriculture and certain science degrees will decrease. Sometimes, such as in the case of engineering, the changes appear somewhat contradictory: both the subsidy for engineering and the maximum student contribution rate is being reduced. [According to Science and Technology Australia](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd012) (\"STA\"): > *...the proposed reductio",
+   "stage": "HECS discount + Student Learning Entitlement",
+   "ayes": 29,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 22,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-10-08/8"
+  },
+  {
+   "key": "federal-senate-6649",
+   "date": "2020-10-08",
+   "house": "senate",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Agree to remaining stages",
+   "stage": "Agree to remaining stages",
+   "ayes": 28,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 23,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-10-08/9"
+  },
+  {
+   "key": "federal-senate-6650",
+   "date": "2020-10-08",
+   "house": "senate",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 26,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 22,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-10-08/10"
+  },
+  {
+   "key": "federal-senate-6651",
+   "date": "2020-10-08",
+   "house": "senate",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 28,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 24,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-10-08/11"
+  },
+  {
+   "key": "federal-representatives-6652",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2020-10-19.30.2) to consider the Senate amendments immediately.",
+   "stage": "Consideration of Senate message",
+   "ayes": 53,
+   "noes": 44,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 96
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-19/1"
+  },
+  {
+   "key": "federal-representatives-6653",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Consideration of Senate Message - Speed things along",
+   "stage": "Consideration of Senate message",
+   "ayes": 51,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 97
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-19/2"
+  },
+  {
+   "key": "federal-representatives-6654",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "question": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 - Consideration of Senate Message - Pass the bill",
+   "stage": "Consideration of Senate message",
+   "ayes": 53,
+   "noes": 45,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 97
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-19/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-393801",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-26",
+   "stage_hint": null,
+   "brief": "The bill creates 39,000 additional university places by 2023 and 100,000 over ten years, with cheaper degrees in teaching, nursing, and other areas of expected job demand, including a 42% reduction for teaching and languages, 59% for agriculture and maths, and 18% for science and IT. It also establishes a $900 million National Priorities and Industry Linkage Fund, implements Napthine review recommendations on regional and Indigenous student support, and introduces grandfathering to protect current students."
+  },
+  {
+   "slug": "speech-394507",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The speaker moved to reject the Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020, arguing it makes university harder and more expensive, with 40% of students facing fee increases up to $14,500 per year and some degrees more than doubling in cost. They claimed the bill cuts billions from universities, fails to address youth unemployment or demand for places, and would reduce funding for teaching engineering, science, and maths by 16–32%, contrary to the government’s stated aims."
+  },
+  {
+   "slug": "speech-394510",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 is a tax on students that increases fees—humanities by 113%, law and commerce by 28%, and 40% of students facing fees of $14,500 a year—while cutting university funding, with UWA losing 3–4% revenue, Curtin University $60 million, and 21,000 staff jobs at risk."
+  },
+  {
+   "slug": "speech-394511",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 because it implements key Napthine review recommendations, including $160 million in tertiary access payments, guaranteed Commonwealth places for Indigenous regional students, and increased funding for regional universities, but called for the Senate to refer the bill to the Education and Employment Legislation Committee for review due to concerns over rushed, evidence‑poor changes to student fees that disproportionately affect regional students."
+  },
+  {
+   "slug": "speech-394512",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020, arguing it would increase humanities fees by up to 113%, making university unaffordable for low- and middle-income families, disproportionately affecting women and Indigenous Australians, and representing government interference in students' career choices. He called for the bill to go to a Senate inquiry."
+  },
+  {
+   "slug": "speech-394513",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "Labor opposed the Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020, arguing it would increase student fees, cut Commonwealth funding, shift debt to students, and harm universities, particularly affecting young people in Corangamite and Victoria during COVID-19."
+  },
+  {
+   "slug": "speech-394660",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The bill was opposed for redirecting university funding toward STEM at the expense of humanities, arts, commerce and law, and for including a punitive 50 per cent completion rule that removes loan eligibility; the government was urged to delay implementation by at least two years, grandfather existing students' fees, extend the Indigenous eligibility definition to all Indigenous persons, and refer the bill to the Senate Education and Employment Legislation Committee. Specific concerns included a $4,758 per-student shortfall for science degrees, a rise in student contribution share from 42 to 52 per cent, and a predicted 30 per cent increase in suicides among 15- to 24-year-olds over five years due to COVID-19."
+  },
+  {
+   "slug": "speech-394661",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The bill makes it harder and more expensive for young Australians to go to university, with 40% of students facing fee increases of up to 113%—including humanities degrees rising from $27,216 to $58,000—while cutting guaranteed university funding by around a billion dollars a year, and the speaker argued this will limit access to humanities education for disadvantaged students and undermine critical thinking skills needed for future jobs."
+  },
+  {
+   "slug": "speech-394664",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The bill was opposed for increasing student fees and cutting university funding, with regional students and universities disproportionately affected. Specific criticisms included a $1 billion annual funding cut, a 7% average fee increase, humanities degree fees rising from $27,216 to $58,000, and the exclusion of universities from JobKeeper."
+  },
+  {
+   "slug": "speech-394665",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020, arguing it would double the cost of many degrees, increase the student share of university funding from 42% to 48%, and deter young people from higher education, while advocating for free education funded by taxing billionaires and corporations."
+  },
+  {
+   "slug": "speech-394666",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020 was opposed for increasing student fees—with 40% of students facing $14,500 per year—reducing university funding for STEM courses, and disproportionately harming disadvantaged students and those from Western Sydney, while the government provided no additional university places or JobKeeper for university staff."
+  },
+  {
+   "slug": "speech-394668",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020, arguing it cuts $1 billion from universities, raises student fees by up to 113% for humanities, and removes loadings from enabling programs at the University of Newcastle despite its regional campuses in Taree, Moree, Orange, Port Macquarie and Coffs Harbour. They criticised the Morrison government for excluding universities from JobKeeper and warned that 21,000 university jobs face elimination within six months."
+  },
+  {
+   "slug": "speech-394670",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Amendment bill, arguing it would cut university funding by around $1 billion per year, increase student fees by an average of 7% (with humanities fees doubling to $58,000), and harm regional universities, women, and First Nations students, citing cuts to per-student funding for engineering (16%), nursing (8%), and teaching (6%)."
+  },
+  {
+   "slug": "speech-395932",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Bill 2020, arguing it entrenches privilege rather than allowing access based on merit, and criticised cuts of $3 billion from TAFE and a reduction of 140,000 apprentices and trainees under the government."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (Job-Ready Graduates and Supporting Regional and Remote Students) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00093",
+   "assent_date": "2020-10-27"
+  }
+ ]
+}

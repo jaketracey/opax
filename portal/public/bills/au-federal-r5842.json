@@ -1,0 +1,203 @@
+{
+ "key": "au-federal-r5842",
+ "title": "ASIC Supervisory Cost Recovery Levy Bill 2017",
+ "short_title": "ASIC Supervisory Cost Recovery Levy Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-06-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5842_ems_b684665d-84e9-4f11-9d83-cc24c46fdd63%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5842%22",
+   "document_date": "2017-03-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00043",
+   "document_date": "2017-06-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-03-30",
+  "sentences": [
+   "This bill is part of a package that would introduce an industry funding model for ASIC starting on 1 July 2017.",
+   "The package would require ASIC to annually explain its regulatory priorities, resource allocation, and improve its data collection from financial entities.",
+   "The government estimates the package would add $308.7 million to the budget over four years and increase compliance costs by $21.1 million each year."
+  ],
+  "changes": [
+   "Introduce an industry funding model for ASIC.",
+   "Require ASIC to report annually on its regulatory priorities and resource use.",
+   "Require ASIC to collect and use more data from financial entities."
+  ],
+  "affected": "ASIC, financial entities, and consumers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-345193",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The ASIC Supervisory Cost Recovery Levy (Collection) Bill 2017 was introduced to implement an industry funding model requiring all ASIC-regulated entities to pay levies offsetting regulatory costs. Unpaid levies attract 20 per cent annual penalty interest, mandatory activity reporting is required with failure to report an offence, and dishonest reporting incurs a shortfall penalty of twice the levy avoided."
+  },
+  {
+   "slug": "speech-345194",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-30",
+   "stage_hint": null,
+   "brief": "The ASIC Supervisory Cost Recovery Levy (Consequential Amendments) Bill 2017 introduces an industry funding model for ASIC, requiring annual publication of regulatory costs and empowering ASIC to take administrative action against entities that fail to pay levies or penalties within a year. The bill also abolishes the existing market supervision cost recovery regime from 1 July 2017."
+  },
+  {
+   "slug": "speech-347540",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "Labor supported the ASIC Supervisory Cost Recovery Levy Bill 2017, which shifts $240 million in regulatory costs from taxpayers to the corporate and financial services sectors, with levies ranging from $5 for small companies to $662,000 for large listed firms. The opposition criticised the coalition for cutting $120 million from ASIC's funding in 2014, called for a banking royal commission, and announced a package to crack down on phoenix activity, including a director identification number."
+  },
+  {
+   "slug": "speech-347541",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The ASIC Supervisory Cost Recovery Levy Bill 2017 implements the Murray inquiry's recommendation that industries pay for ASIC's costs based on the time spent regulating them, with poor-conduct sectors paying more. The government is also taking actions including creating the Australian Financial Complaints Authority (welcomed by Gerard Brody), introducing up to $200 million fines for executive accountability, and launching an ACCC competition inquiry into mortgage pricing, contrasting with the opposition's inaction when it held office from 2010 to 2013."
+  },
+  {
+   "slug": "speech-347542",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the ASIC Supervisory Cost Recovery Levy Bill 2017, which shifts ASIC’s $240 million regulatory costs from taxpayers to industry from 2017–18, but argued the government only introduced it due to Labor’s calls for a royal commission and that a royal commission remains necessary to address banking misconduct and restore trust."
+  },
+  {
+   "slug": "speech-347543",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the ASIC Supervisory Cost Recovery Levy Bill, which shifts ASIC’s regulatory costs from taxpayers to the corporate and financial services sector, with an estimated $240 million to be recovered next year. He flagged a problem: the model requires government to provide upfront funding for any expansion of ASIC’s capability, which may not be forthcoming, and he called for a royal commission into banking to examine the culture and systemic issues behind misconduct."
+  },
+  {
+   "slug": "speech-347544",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-05-30",
+   "stage_hint": null,
+   "brief": "The ASIC Supervisory Cost Recovery Levy Bill 2017 introduces an industry funding model to make regulated entities pay for ASIC's costs, shifting the burden from taxpayers. The bill also grants ASIC enforcement powers including penalty interest and licence suspension, building on a $127.2 million funding package from 2016."
+  }
+ ],
+ "acts": [
+  {
+   "title": "ASIC Supervisory Cost Recovery Levy Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00043",
+   "assent_date": "2017-06-19"
+  }
+ ]
+}

@@ -1,0 +1,380 @@
+{
+ "key": "au-federal-r5616",
+ "title": "Business Services Wage Assessment Tool Payment Scheme Amendment Bill 2016",
+ "short_title": "Business Services Wage Assessment Tool Payment Scheme Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2016-03-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5616_ems_da6ac0ba-16e2-4c8b-b6c6-2d5747c3b024%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5616%22",
+   "document_date": "2016-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00021",
+   "document_date": "2016-03-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-11",
+  "sentences": [
+   "This bill would give around 10,000 eligible people a larger one-off payment under an existing scheme and make related changes to how the scheme is run.",
+   "The payment would rise from half to 70 per cent of the gap between what a person was actually paid and what they would have been paid using only the productivity part of the assessment tool.",
+   "People who already received a payment would get a top-up automatically, and the requirement to get legal advice before payment would become optional instead of mandatory."
+  ],
+  "changes": [
+   "Increases the payment rate from 50 per cent to 70 per cent of the wage difference.",
+   "Makes the requirement to obtain legal advice voluntary rather than compulsory.",
+   "Extends all relevant payment scheme dates by 12 months to give people more time to register and apply."
+  ],
+  "affected": "Around 10,000 eligible people who were employed and assessed using the Business Services Wage Assessment Tool, including those who have already received a payment under the scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4110",
+   "date": "2016-03-01",
+   "house": "senate",
+   "question": "Mathias Cormann These bills are being introduced together. After debate on the motion for the second reading has been adjourned, I shall move a motion to have the bills listed separately on the _Notice Paper_. I move: That these bills may proceed without formalities, may be taken together and be now read a first time. _(Quorum formed)_ Question agreed to. Bills read a first time. I seek leave to move a motion to exempt these bills from the bills cut-off order. Leave not granted. Sam Dastyari You get nothing! Mathias Cormann Pursuant to contingent notice standing in the name of the Leader of the Government in the Senate, I move: That so much of the standing orders be suspended as would prevent the moving of a motion to provide for the consideration of a matter, namely, a motion to give precedence to a motion to exempt these bills from the bills cut-off order. What is happening here is one massive filibuster. This is not even in relation to a piece of legislation that Labor has any concerns about. What Labor is doing in this chamber today—we heard Senator Dastyari yell across the chamber, 'You get nothing!'—is playing games. This is Labor not making judgements about what is in the public interest. This is a bill that I suspect Labor might even end up not opposing. I think everyone across Australia well understands what is happening here. We have the union politics and student politics brought back into the chamber by some very juvenile people on the Labor side. I commend to the Senate to support this suspension. Doug Cameron I think that is the most pathetic argument—if you could even call it an argument—as to why the proper process in this place should not go ahead. This is a government that is an absolute chaos. They are an absolute rabble. Really, they should not bring the rabble that is their party room into this place, because that is what this is. They as a government just do not what is going on from day to day. To say that we should not follow process on this,",
+   "stage": "Bill",
+   "ayes": 39,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 44,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-01/3"
+  },
+  {
+   "key": "federal-senate-4111",
+   "date": "2016-03-01",
+   "house": "senate",
+   "question": "Mitch Fifield I move: That a motion to exempt these bills from the bills cut-off order may be moved immediately and have precedence over all other business today until determined. Stephen Conroy The rabble that this government have descended into has again been demonstrated right here. We have a government that are in paralysis in their own party room. They cannot even make the case— Ian Macdonald What have you got against disabled people? Stephen Conroy You do not even know the start date for these bills. The government have got no idea so they are desperate for a distraction right now. Unfortunately, to cover their embarrassment they can now call on their new besties the Greens. The government have failed to make the case on these bills. It is a simple fact that not one government member who spoke in this debate in this chamber made the case for why these need to go through the cut-off. We do know that, due to the filthy deal that has been done between the Greens and this government, we are going to a double-D on 2 July, because what we have had is the turkeys vote for an early Christmas. Senator Cormann is smooth. He has actually talked them into voting for their own execution. That is good. Paul Keating once said: in politics always back self-interest. These guys have voted for their own execution. It did take some special expertise by Senator Cormann on this. Ian Macdonald Mr Deputy President, I rise on a point of order. I am wondering if you or Senator Conroy could explain how what Senator Conroy has said so far has anything to do with the subject of the motion. All he has talked about is the Greens and deals. This, as I understand it, is a very formal motion. I would like you to rule on whether Senator Conroy is being relevant to the motion. Stephen Conroy Mr Deputy President, on the point of order: Senator Macdonald is deludedly sitting over there ignoring the fact that this debate and what I have been saying go to the heart of why we oppose this motion—beca",
+   "stage": "Bill",
+   "ayes": 37,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 41,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-01/4"
+  },
+  {
+   "key": "federal-senate-4113",
+   "date": "2016-03-01",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 40,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-03-01/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-329459",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The bill amends the Business Services Wage Assessment Tool Payment Scheme to increase back pay for people with disability from 50% to 70% of the wage difference, implementing a settlement reached after a class action. The speaker also urges the government to finalise a new non-discriminatory wage assessment tool and address funding shortfalls for Australian disability enterprises."
+  },
+  {
+   "slug": "speech-329460",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker supported the Business Services Wage Assessment Tool Payment Scheme Amendment Bill 2016, which provides 70% back pay to workers with intellectual disability underpaid due to a discriminatory wage assessment tool, and called it an improvement over a prior 50% offer from the Abbott-Turnbull government, respecting claimants' wishes and the class action settlement."
+  },
+  {
+   "slug": "speech-329461",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Business Services Wage Assessment Tool Payment Scheme Amendment Bill 2016, which provides 70% compensation to supported employees underpaid via the discriminatory BSWAT, and urged the government to finalise a new non-discriminatory wage tool. They highlighted local disability enterprises like Radius Disability Services and Bendigo Access Employment, and raised concerns about the tool's misuse, such as a Bendigo traffic management business underpaying workers at $2 an hour to win contracts."
+  },
+  {
+   "slug": "speech-329462",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The member supported the bill, which implements a settlement raising compensation for supported wage employees to 70% of their alleged loss, up from 50% under the 2014 legislation, with automatic top-up payments for those already paid. The member also noted the unresolved discriminatory BSWAT tool is being addressed through Fair Work Australia conciliation before Deputy President Anna Booth, and defended the role of Australian Disability Enterprises such as Flagstaff Group and Greenacres Employment Solutions."
+  },
+  {
+   "slug": "speech-329463",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The Labor member for Kingsford Smith announced support for the Business Services Wage Assessment Tool Payment Scheme Amendment Bill 2016, which increases one-off compensation payments for eligible supported employees with intellectual disability from 50 per cent to 70 per cent of the difference between their actual wage and the BSWAT productivity-only amount, following the 2015 class action settlement. The speech also highlighted the work of Australian disability enterprises in the electorate, specifically naming Windgap Foundation Limited, and urged the government to quickly implement a new non-discriminatory wage assessment tool."
+  },
+  {
+   "slug": "speech-329464",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-29",
+   "stage_hint": null,
+   "brief": "The Business Services Wage Assessment Tool Payment Scheme Amendment Bill 2016 increases payments to eligible supported employees from 50% to 70% of the wage difference under a productivity-only assessment, extends registration deadlines by 12 months, and makes legal advice voluntary to speed up payments. The bill implements a settlement agreement in the Federal Court case *Nojin v Commonwealth* (2012), resolving litigation to provide certainty for Australian Disability Enterprises and their 20,000 workers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Business Services Wage Assessment Tool Payment Scheme Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00021",
+   "assent_date": "2016-03-18"
+  }
+ ]
+}

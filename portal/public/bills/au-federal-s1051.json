@@ -1,0 +1,309 @@
+{
+ "key": "au-federal-s1051",
+ "title": "Telecommunications and Other Legislation Amendment Bill 2017",
+ "short_title": "Telecommunications and Other Legislation Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-09",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2017-09-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1051_ems_257c2e01-5768-4235-b4e4-90ac187ac7cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1051_ems_8da24fbc-fe40-42de-bb10-3967698e7e9f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1051_ems_37a7641a-7411-409c-82d9-1f5b945486c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1051%22",
+   "document_date": "2016-11-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00111",
+   "document_date": "2017-09-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-11-09",
+  "sentences": [
+   "The bill would create a risk-based security framework for Australia's telecommunications infrastructure.",
+   "It would impose a duty on carriers and service providers to protect their networks from unauthorised access, and give the Attorney-General new powers to direct them to act or stop acting when a security risk arises.",
+   "The Attorney-General would need an adverse security assessment from ASIO before using the existing direction power, which the bill would move to a new section."
+  ],
+  "changes": [
+   "Creates a new security obligation for carriers, carriage service providers and intermediaries to protect networks and facilities from unauthorised access and interference.",
+   "Gives the Attorney-General a new power to direct a provider to do or not do something if there is a security risk.",
+   "Grants the Secretary of the Attorney-General's Department power to obtain information and documents from providers to check compliance with the new security obligation.",
+   "Introduces a notification requirement for carriers and providers nominated under the TIA Act to tell the CAC about proposed changes to networks or services that could materially affect their ability to meet the new security duty.",
+   "Allows the CAC to exempt providers from the notification requirement in full or part, based on an ASIO recommendation.",
+   "Lets providers submit an annual Security Capability Plan instead of individual notifications."
+  ],
+  "affected": "Carriers, carriage service providers and carriage service intermediaries in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:43:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4860",
+   "date": "2017-08-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2017-08-14.21.11) to read the bill for a second time. In other words, they agreed with the main idea of the bill and can now discuss it in more detail. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd009): > *The purpose of the Bill is to create a regulatory framework for industry and government to collaboratively manage national security risks of espionage, sabotage and foreign interference to Australia’s telecommunications networks and facilities.* > > *The Bill will provide the Attorney-General with a new power to direct a carrier or carriage service provider (CSP) or a carriage service intermediary (intermediary) to do or not do a specified thing on security related grounds (for example, alter a procurement assessed as giving rise to security risks).* The key elements listed were: > * *The regime will have a delayed commencement (12 months), including the development of administrative guidelines website.* > > * *The regime established by the Bill will apply to carriers, CSPs and intermediaries to varying degrees.* > > * *A new security obligation is imposed on carriers and CSPs to ‘do their best’ to manage risks related to unauthorised access and interference to networks and facilities they own, operate or use to ensure the availability and integrity of networks and facilities and to protect the confidentiality of information stored on and carried across them.* > > * *A new notification requirement is imposed on carriers and certain CSPs to notify the government of planned changes to their systems and services that are likely to make the network or facility vulnerable to unauthorised access and interference.* > > * *The Secretary of the AGD is provided with coercive information gathering powers in relation to carriers, CSPs and intermediaries subject to the new regime to facilitat",
+   "stage": "Second reading",
+   "ayes": 46,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 31,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-14/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-353919",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The Telecommunications and Other Legislation Amendment Bill 2016 was introduced to strengthen Australia’s telecommunications network security by placing obligations on carriers and service providers to protect against unauthorised interference and access, supported by a light-touch regulatory framework with safeguards; the bill followed bipartisan recommendations from the Parliamentary Joint Committee on Intelligence and Security, including those under Andrew Hastie’s chairmanship, and formed part of the 2016 Australian Cyber Security Strategy."
+  },
+  {
+   "slug": "speech-353920",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The Telecommunications and Other Legislation Amendment Bill 2017 establishes a regulatory framework to manage national security risks such as espionage, sabotage and foreign interference in Australia's telecommunications networks. The bill includes security obligations for carriers, notification requirements, Attorney-General direction powers, and information-sharing mechanisms, and implements 12 recommendations from the Parliamentary Joint Committee on Intelligence and Security, all of which the government accepted."
+  },
+  {
+   "slug": "speech-353921",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-354180",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications and Other Legislation Amendment Bill is necessary to protect Australia’s networks from espionage, sabotage and foreign interference, and confirmed Labor’s support subject to all 12 recommendations from the Parliamentary Joint Committee on Intelligence and Security. The bill introduces a security obligation requiring carriers to “do their best” to prevent unauthorised access, and gives the Attorney-General power to issue directions to manage security risks."
+  },
+  {
+   "slug": "speech-354181",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Telecommunications and Other Legislation Amendment Bill, which strengthens national security measures for telecommunications networks. The bill formalises security obligations for carriers and service providers, including notification of offshore infrastructure changes, following 12 recommendations from the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-354184",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's NBN rollout, stating that in their Kingsford Smith electorate only new developments have received it and that promised 2017 delivery has been delayed to 2018. They supported the Telecommunications and Other Legislation Amendment Bill 2017, which creates a regulatory framework for managing national security risks like espionage and foreign interference in telecommunications networks."
+  },
+  {
+   "slug": "speech-354186",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The bill establishes a new security framework for telecommunications, moving from voluntary industry cooperation to mandatory obligations for carriers and providers, including network protection, notification of key changes, and enhanced government–industry information sharing. The speaker endorsed all 12 recommendations from the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-354187",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The Telecommunications and Other Legislation Amendment Bill 2017 places a legal obligation on all carriage service providers to protect networks from unauthorised interference and access, supported by a notification requirement with exemptions, after the existing voluntary framework was deemed inadequate."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications and Other Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00111",
+   "assent_date": "2017-09-18"
+  }
+ ]
+}

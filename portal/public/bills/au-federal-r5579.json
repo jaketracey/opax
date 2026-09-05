@@ -1,0 +1,291 @@
+{
+ "key": "au-federal-r5579",
+ "title": "Competition and Consumer Amendment (Payment Surcharges) Bill 2015",
+ "short_title": "Competition and Consumer Amendment (Payment Surcharges) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5579_ems_c2611900-0c41-4bbd-899c-758c5e79d384%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5579%22",
+   "document_date": "2015-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00009",
+   "document_date": "2016-02-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-03",
+  "sentences": [
+   "The bill would ban payment surcharges that are higher than the cost of accepting the payment method.",
+   "The ban would apply to payments covered by a Reserve Bank standard or regulations, and the Australian Competition and Consumer Commission would be the main enforcement agency.",
+   "The ban would start on the day the bill becomes law, but would only take effect once a new Reserve Bank standard or regulations set the allowed surcharge."
+  ],
+  "changes": [
+   "The bill would establish a framework to ban excessive payment surcharges.",
+   "The bill would make the Australian Competition and Consumer Commission the primary enforcement agency with enforcement powers.",
+   "The bill would set the commencement date as the day of Royal Assent, with substantive effect tied to new standards or regulations."
+  ],
+  "affected": "Businesses and consumers involved in payment transactions covered by Reserve Bank standards or regulations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4080",
+   "date": "2016-02-22",
+   "house": "senate",
+   "question": "Peter Whish-Wilson I wish to move amendments, but I actually seek clarification from the Clerk as to exactly how I move these, because I still do not have a schedule in front of me. The Acting Deputy President I advise that there is not a running sheet. You can by leave move all your amendments together. Peter Whish-Wilson by leave—I move all Greens amendments on sheet 7841 together: (1) Schedule 1, item 2, page 3 (after line 27), after subsection (2F), insert: (2G) In addition to the effect that this Act (other than Parts IIIA, VIIA and X) has as provided by another subsection of this section, this Act (other than Parts IIIA, VIIA and X) has, by force of this subsection, the effect it would have if: (a) each reference in Part IVD to an ATM transaction were a reference to an ATM transaction that occurs: (i) by means of a postal, telegraphic, telephonic, or other like service (including electronic communication); or (ii) by means of an automatic teller machine provided by a bank (other than a State bank), or any other institution engaged in banking, in the course of banking (within the meaning of section 51(xiii) of the Constitution); and (b) each reference to a corporation included a reference to a person not being a corporation. (2) Schedule 1, item 3, page 10 (after line 32), after Part IVC, insert: Part IVD—ATM transactions Division 1—Preliminary 55P Object of this Part The object of this Part is to ensure that: (a) account holders are not charged for ATM transactions made using automatic teller machines owned or leased by the persons with whom their accounts are held; and (b) amounts charged for other ATM transactions: (i) are not excessive; and (ii) reflect the reasonable costs of allowing a person to make an ATM transaction. 55Q Definitions In this Part: _ ATM transaction_ means a cash deposit to, a cash withdrawal from, or an enquiry about the balance of, an account that is made by means of an automatic teller machine. 55R Part not to apply to State banking T",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 9,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-02-22/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-325920",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The opposition supported the Competition and Consumer Amendment (Payment Surcharges) Bill 2015, which bans excessive credit card surcharges based on the Murray report’s recommendation. The speaker criticised Treasurer for confusion over surcharge figures in a media interview and argued the bill improves fairness, competition, and consumer protection, with enforcement by the ACCC."
+  },
+  {
+   "slug": "speech-325921",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Payment Surcharges) Bill 2015, which bans excessive card payment surcharges and empowers the ACCC to issue infringement notices. He cited airline surcharges of $7 to $8.50 as unfair, particularly affecting his electorate of Braddon in Tasmania."
+  },
+  {
+   "slug": "speech-325923",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Payment Surcharges) Bill 2015, which bans excessive surcharging on card transactions and gives the ACCC enforcement powers, and noted that the deficit is larger now than when the government changed hands."
+  },
+  {
+   "slug": "speech-325924",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Payment Surcharges) Bill 2015 bans excessive surcharges on card payments that exceed actual processing costs, with fines of up to $108,000 for listed corporations, $10,800 for other corporations, and over $2,000 for unincorporated entities, enforced by the ACCC."
+  },
+  {
+   "slug": "speech-325925",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The Greens supported the bill to ban excessive credit card surcharges but argued it should be extended to ATM fees, where banks charge up to $3 per transaction while the cost is about 77 cents. They will move amendments to limit ATM fees to reasonable costs."
+  },
+  {
+   "slug": "speech-325926",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The Competition and Consumer Amendment (Payment Surcharges) Bill 2015 bans merchants from charging excessive payment surcharges above their actual cost of acceptance, with the ACCC enforcing penalties of up to $108,000 for corporations. The bill responds to the Financial System Inquiry's recommendation and aims to address the $2.826 billion in merchant fees paid by Australians in 2014–15, including an estimated $17.4 million annually from the electorate of Dobell alone."
+  },
+  {
+   "slug": "speech-325928",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Payment Surcharges) Bill 2015, arguing that surcharges exceeding cost recovery are misleading or deceptive conduct, but urged the ACCC and Reserve Bank to account for merchant risks such as chargebacks when defining excessive surcharges."
+  },
+  {
+   "slug": "speech-325929",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Payment Surcharges) Bill 2015, arguing for consumer protections against unexpectedly large credit card surcharges. They acknowledged the member for Hughes' faith in market competition but expressed concern about market failure and the concentration of power."
+  },
+  {
+   "slug": "speech-325934",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-02",
+   "stage_hint": null,
+   "brief": "The Turnbull government introduced the Competition and Consumer Amendment (Payment Surcharges) Bill 2015 to ban excessive card surcharges above merchant costs, enforced by the ACCC with fines of up to $108,000 for listed corporations. The speaker also criticised Labor for six years of economic inaction and a $47 billion deficit, while claiming the government has improved the budget by $90 billion."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Payment Surcharges) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00009",
+   "assent_date": "2016-02-25"
+  }
+ ]
+}

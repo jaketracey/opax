@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1137",
+ "title": "Freedom of Speech Legislation Amendment (Security) Bill 2018",
+ "short_title": "Freedom of Speech Legislation Amendment (Security) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-27",
+ "originating_house": "senate",
+ "sponsor": "LEYONHJELM, Sen David",
+ "sponsor_party": "Liberal Democratic Party",
+ "sponsor_person_id": "10832",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1137%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1137%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1137%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1137_ems_29c261bc-f05d-4c51-867c-81394883e21f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1137%22",
+   "document_date": "2018-06-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-27",
+  "sentences": [
+   "The bill would remove limits on speech in national security laws that are not needed to protect Australians.",
+   "It would change disclosure offences for security operations and offences about advocating terrorism and genocide.",
+   "Parts 2 and 3 of Schedule 1, which cover controlled operations, would start only if related provisions in another bill have not already commenced."
+  ],
+  "changes": [
+   "Decriminalise reporting and public discussion of security agency operations that do not endanger health or safety.",
+   "Decriminalise disclosures by security agency staff and associates that do not endanger health or safety, leaving such matters to management.",
+   "Remove criminal penalties for people held under preventative detention orders who communicate with authorised contacts.",
+   "Repeal separate offences of advocating terrorism and genocide, arguing existing incitement offences are sufficient."
+  ],
+  "affected": "Journalists, the general public, and staff and associates of security agencies would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

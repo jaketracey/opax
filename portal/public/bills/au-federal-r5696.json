@@ -1,0 +1,561 @@
+{
+ "key": "au-federal-r5696",
+ "title": "Family Assistance Legislation Amendment (Jobs for Families Child Care Package) Bill 2016",
+ "short_title": "Family Assistance Legislation Amendment (Jobs for Families Child Care Package) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "passed",
+ "status_as_of": "2017-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5696_ems_c766f19f-8199-479c-b840-a818e3db13d6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5696%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00022",
+   "document_date": "2017-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-01",
+  "sentences": [
+   "This bill would create a new Child Care Subsidy and an Additional Child Care Subsidy to replace existing payments.",
+   "The new system would set eligibility rules and payment calculations, with the Additional Child Care Subsidy targeting vulnerable families such as those at risk of abuse or experiencing financial hardship.",
+   "The main changes would start in July 2018, while some amendments would begin on Royal Assent or from July 2017."
+  ],
+  "changes": [
+   "Introduces a new Child Care Subsidy and an Additional Child Care Subsidy.",
+   "Replaces the current Child Care Benefit and Child Care Rebate.",
+   "Establishes eligibility criteria and payment calculation processes.",
+   "Provides targeted support for disadvantaged or vulnerable families.",
+   "Closes enrolment advance payments and allows their recovery from July 2017.",
+   "Sets out transition rules from the old system to the new one from July 2018."
+  ],
+  "affected": "Families using child care, approved child care providers, and the Department of Social Services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:46:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4599",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "question": "Family Assistance Legislation Amendment (Jobs for Families Child Care Package) Bill 2016 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-22/5"
+  },
+  {
+   "key": "federal-representatives-4600",
+   "date": "2017-03-22",
+   "house": "representatives",
+   "question": "The majority voted to agree with the main idea of the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5696). In parliamentary jargon, they voted to read the bill for a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that they can now discuss the bill in more detail. ### Main idea of the bill According to the bill's digest, if passed the bill will introduce *a new child care fee assistance payment, the Child Care Subsidy (CCS), replacing two current payments: [Child Care Benefit](https://www.humanservices.gov.au/customer/services/centrelink/child-care-benefit) (CCB) and [Child Care Rebate](https://www.humanservices.gov.au/customer/services/centrelink/child-care-rebate) (CCR).* It will also introduce a new supplementary payment, called the Additional Child Care Subsidy (ACCS), which will: > *additional financial assistance for children at risk of abuse or neglect, families experiencing temporary financial hardship, families transitioning to work from income support, grandparent carers on income support, and low income families in certain circumstances. The ACCS partly replaces a number of current payments including Special Child Care Benefit, Grandparent Child Care Benefit and the Jobs, Education and Training Child Care Fee Assistance payment.*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 71,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-22/6"
+  },
+  {
+   "key": "federal-senate-4645",
+   "date": "2017-03-23",
+   "house": "senate",
+   "question": "Sarah Hanson-Young I would like to refer interested senators to the Greens amendment on sheet 8109. This is in relation to lifting the number of hours in the safety net from 12 to 15. We have heard consistently from the sector, the childcare providers as well as education experts, that we should not be reducing the number of hours available for vulnerable and low-income families, and children in particular. This safety net can only operate as a safety net if it indeed gives children the protection that ensures they are able to succeed and benefit from the care and educational experience and opportunities they are given. This amendment goes to put into practice the idea that two days of child care and early childhood education would be available to vulnerable and low-income families. These are families who do not meet the activity test for a variety of reasons. This might include single parent families or families where one parent is at home and not able to work or is transitioning through different work arrangements. I heard the minister in his speech just now trying to argue that 12 hours of care is sufficient, but it is just not. Currently, these families have access to 24 hours of care a week. The current bill, unless this amendment is accepted, would halve that access for some of the most vulnerable and disadvantaged families we have. I would like to keep it at 24 hours per week, but I am being realistic here tonight that there has been a lot of consultation and compromise from people on many fronts to accept that 15 hours would be the bare minimum. The rationale for 15 hours is that it is neatly split between two days, at 7½ hours per day, which ensures children can get the maximum benefit from that care. We also know that from a provider's perspective—that is, each individual childcare centre—that it is more realistic for them to be able to operate a system where they can provide 7½ hours of care each day, or 15 hours of care split evenly over two days. It mak",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 15,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-23/3"
+  },
+  {
+   "key": "federal-senate-4646",
+   "date": "2017-03-23",
+   "house": "senate",
+   "question": "Sarah Hanson-Young The next amendment that I would like to move is on sheet 8110. This is in relation to the income threshold for the safety net. We have just now seen One Nation and the Nick Xenophon political party line up with the government to cut in half the access to child care for some of the country's most vulnerable children. We have just seen the Nick Xenophon political party slash in half care to vulnerable children overnight. We have seen the Nick Xenophon political party, One Nation and the government line up and say to those low-income families: 'It doesn't matter. It doesn't matter whether you struggle or whether you live in an area where there is massive unemployment, where you have been retrenched, where Holden has closed its doors, where Hazelwood Power Station has had to close or a rural or regional area where there just isn't job security. It doesn't matter about that. Because you don't have two people working your kids don't deserve proper access to child care.' Families have just been kicked in the guts tonight. They have lost 12 hours of care just like that, despite everything the experts have said and despite the promises that have previously been made. I do not think that the member for Mayo, Rebekha Sharkie, is going to be particularly happy when she has to go back to her electorate and explain that she was not able to keep her promise of protecting two days of child care for South Australian children. I do not think that families in Queensland, particularly those in rural and regional areas, are going to be particularly happy to hear that Pauline Hanson and One Nation have just kicked them in the guts. Their children, apparently, do not matter. Unless, as a child, your parents are both working, apparently your access to child care does not matter. You are not as valuable to this government; you are not as valuable to One Nation and you are not as valuable to the Nick Xenophon political party unless both your parents are working. Why are th",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 14,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-23/4"
+  },
+  {
+   "key": "federal-senate-4647",
+   "date": "2017-03-23",
+   "house": "senate",
+   "question": "David Leyonhjelm by leave—I move Liberal Democratic Party amendments (1) to (5) on sheet 8103: (1) Schedule 1, item 41, page 36, (lines 26 and 27), omit step 4 of the method statement, substitute: Step 4. Work out the hourly rate of CCS for the individual for each of those sessions of care (see clause 2). If the applicable percentage is 0% for each of those sessions of care, the amount of child care subsidy for the individual for the week, for those sessions, is nil. Otherwise, go to step 5. (2) Schedule 1, item 41, page 38 (after line 8), at the end of subclause 2(1), add: Note: If the applicable percentage for a session of care is 0% (see table item 5 of subclause 3(1)), the hourly rate of CCS for the individual for the session of care is nil. (3) Schedule 1, item 41, page 39 (table item 5), omit \"20%\", substitute \"0%\". (4) Schedule 1, item 41, page 40 (line 16), omit \"$184,290\", substitute \"$134,290\". (5) Schedule 1, item 41, page 40 (line 18), omit \"$274,290\", substitute \"$284,290\". I did not give a speech during the second reading debate on the bill, so I have a few remarks to make now. I do not like this bill. Putting more money into child care is a bad idea, and $1.6 billion is a lot of money. Childcare subsidies take money from taxpayers and give it to people who have children and choose to send those children to child care or family day care. The taxpayers who pay this money are both rich and poor. Some have children and some do not. Many of them enjoyed no subsidised child care when they were a child. They might have been raised by a stay-at-home parent, a relative or a neighbour, or their parents may have paid for their child care without a subsidy. So why do we subsidise child care? It is true that childcare subsidies go to disadvantaged families, for whom child care represents an important complement to their personal efforts to raise their own children. But childcare subsidies also go to families that are not disadvantaged, for whom child care is no be",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 13,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-23/5"
+  },
+  {
+   "key": "federal-senate-4648",
+   "date": "2017-03-23",
+   "house": "senate",
+   "question": "The majority voted to pass the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5696) in the Senate. In parliamentary jargon, they voted to read the bill for a [third time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). But since new amendments were agreed to in the Senate, the bill won't be made into law yet. First it needs to go back to the House of Representatives where they'll decide to either: (1) agree with the amendments so the bill will become law; or (2) disagree with the amendments and ask the Senate if they insist on them (if the Senate does, the bill can't become law because both levels of Parliament must agree on the wording of a bill). ### What is this bill? According to the bill's digest, if passed the bill will introduce *a new child care fee assistance payment, the Child Care Subsidy (CCS), replacing two current payments: [Child Care Benefit](https://www.humanservices.gov.au/customer/services/centrelink/child-care-benefit) (CCB) and [Child Care Rebate](https://www.humanservices.gov.au/customer/services/centrelink/child-care-rebate) (CCR).* It will also introduce a new supplementary payment, called the Additional Child Care Subsidy (ACCS), which will: > *additional financial assistance for children at risk of abuse or neglect, families experiencing temporary financial hardship, families transitioning to work from income support, grandparent carers on income support, and low income families in certain circumstances. The ACCS partly replaces a number of current payments including Special Child Care Benefit, Grandparent Child Care Benefit and the Jobs, Education and Training Child Care Fee Assistance payment.*",
+   "stage": "Third reading",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 13,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-23/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332942",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The bill funds the Jobs for Families Child Care Package by reforming family payments, including increasing Family Tax Benefit Part A fortnightly rates by $10.08 per child, phasing out end-of-year supplements, and restructuring Family Tax Benefit Part B from 2017-18. It also aligns youth allowance rates for under-18s and extends some FTB B eligibility for single parents and grandparent carers."
+  },
+  {
+   "slug": "speech-332943",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The bill introduces the Jobs for Families Child Care Package, investing around $40 billion over four years, including a new means-tested childcare subsidy with rates from 85% for low-income families down to 20% for high-income families, an activity test linking subsidised hours to work or study, and an additional subsidy for disadvantaged children. The package also includes strengthened compliance measures and is contingent on passing savings from the Family Payments Reform Bill."
+  },
+  {
+   "slug": "speech-343764",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the Family Assistance Legislation Amendment (Jobs for Families Child Care Package) Bill 2016 is a lost opportunity that would leave one in three families worse off, cut minimum child care hours from 24 to 12, and disadvantage vulnerable children through a flawed activity test. They cited research showing a 16-fold return on investment in early childhood education and listed organisations opposing the bill, including the Australian Childcare Alliance and the Brotherhood of St Laurence."
+  },
+  {
+   "slug": "speech-343765",
+   "speaker": "Emma Husar",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Family Assistance Legislation Amendment (Jobs for Families Child Care Package) Bill, arguing it cuts funding for low-income, single-parent, and Indigenous families. They cited ANU research that 330,000 families would be worse off, with 71,000 families earning under $65,000 specifically affected."
+  },
+  {
+   "slug": "speech-343768",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-03-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Family Assistance Legislation Amendment (Jobs for Families Child Care Package) Bill 2016 fails rural and regional Australia because it is designed for centre-based care and does not address communities without childcare centres, noting that the government rejected amendments to test the reforms' effectiveness. The speaker also called on the Regional Ministerial Task Force to develop a coherent regional policy, citing the need for long-term, needs-based funding rather than short-term grants."
+  },
+  {
+   "slug": "speech-344220",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the current childcare system makes it cheaper for parents to stay home on welfare than to work, citing a constituent paying $1,200 a week for care during school holidays after hitting the $7,500 cap. They supported the Family Assistance Legislation Amendment (Jobs for Families Child Care Package) Bill to make childcare affordable and incentivise workforce participation."
+  },
+  {
+   "slug": "speech-344280",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "Labor did not oppose amendments cutting subsidies for high-income families but argued the package would halve early childhood education access for vulnerable children from 24 to 12 hours per week, criticizing a Senate deal with Nick Xenophon and One Nation."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Assistance Legislation Amendment (Jobs for Families Child Care Package) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00022",
+   "assent_date": "2017-04-04"
+  }
+ ]
+}

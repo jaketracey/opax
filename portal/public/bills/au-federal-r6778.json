@@ -1,0 +1,387 @@
+{
+ "key": "au-federal-r6778",
+ "title": "Aged Care and Other Legislation Amendment (Royal Commission Response No. 2) Bill 2021",
+ "short_title": "Aged Care and Other Legislation Amendment (Royal Commission Response No. 2) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-03-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6778_ems_8107953a-5507-4d9e-a123-96e8b67ca15e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6778_ems_273b5a92-6a08-4ce9-87a0-d6db25c9143c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6778_ems_1345302e-87f8-433a-899a-c13c43a88979%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6778_ems_c9d8120f-173f-4486-9a66-aa4d968460a8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6778_ems_013398d0-2426-4967-b2ad-a74236c701cd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6778%22",
+   "document_date": "2021-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7483",
+   "date": "2021-10-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an amendment, which would have added the text below to the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). A second reading motion is \"*that the bill be read a second time,*\" which is parliamentary jargon for agreeing with the main idea of [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6778). Because this vote passed, the amendment failed. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes the:* > >> *(a) systemic, ongoing failures in Australia's aged care system as evidenced by the Royal Commission into Aged Care Quality and Safety, including, but not limited to, poor levels of transparency, accountability and provider governance;* >> >> *(b) inadequacy of the Government's response to the Royal Commission, including deferred and curtailed legislative action on key issues and an unclear plan for reform implementation; and* >> >> *(c) Government's failures in providing safe and high-quality care for aged care residents due to their historic cuts and poor management of the aged care sector; and* > > *(2) calls on the Government to clearly explain why they have ignored, deferred or curtailed so many of the Royal Commission into Aged Care Quality and Safety's important recommendations to fix the aged care sector and deliver the care that older Australians and their families deserve\".*",
+   "stage": "Second reading",
+   "ayes": 57,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 33,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 107
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-10-25/7"
+  },
+  {
+   "key": "federal-senate-7688",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted in favour of a [Greens amendment](https://www.openaustralia.org.au/senate/?gid=2022-03-30.247.2) to the usual second reading motion \"*that the bill be read a second time.*\" Giving a bill a [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is parliamentary jargon for agreeing with the main idea of the bill. These amendments don't make any legal changes to the bill itself, but express an opinion of the Senate. ### Amendment text > *At the end of the motion, add \", but:* > > *(a) the Senate affirms the importance of implementing the recommendations of the Royal Commission into Aged Care Quality and Safety;* > > *(b) the Senate notes that:* > >> *(i) the aged care sector is in crisis due to this government's failure to support aged care residents, providers and workers,* >> >> *(ii) the Minister for Senior Australians and Aged Care Services and the Prime Minister have refused to characterise this as a crisis, despite the number of deaths occurring on a daily basis,* >> >> *(iii) the government has failed to support the case for a 25 per cent pay increase for aged care workers, which would provide the support they need and deserve, and* >> >> *(iv) the government has failed to ensure that allied health services receive the funding they deserve to support aged care residents; and* > > *(c) the Senate calls on the government to respond to the crisis in the aged care sector with the urgency that is required.*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 18,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/16"
+  },
+  {
+   "key": "federal-senate-7689",
+   "date": "2022-03-30",
+   "house": "senate",
+   "question": "The majority voted in favour of an [Opposition amendment](https://www.openaustralia.org.au/senate/?gid=2022-03-30.249.1) to the usual second reading motion \"*that the bill be read a second time.*\" Giving a bill a [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is parliamentary jargon for agreeing with the main idea of the bill. This amendment doesn't make any legal changes to the bill itself, but expresses an opinion of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes the:* > >> *(i) systemic, ongoing failures in Australia's aged care system as evidenced by the Royal Commission into Aged Care Quality and Safety and 21 other expert reports since 2013,* >> >> *(ii) inadequacy of the Government's response to the Royal Commission, including an unclear plan for reform implementation and deferred and curtailed legislative action on key issues including, but not limited to, transparency on the use of public aged care funding by aged care providers, and* >> >> *(iii) Government's failures in providing safe, secure and high-quality care for aged care residents due to their historic cuts and poor management of the aged care sector; and* > > *(b) acknowledges the:* > >> *(i) significant issues and concerns raised with the bill by stakeholders including providers, unions and the advocates of older Australians,* >> >> *(ii) particular concerns raised about the consequences of this bill on the ability for aged care providers to recruit and retain staff to provide safe and quality care to older Australians,* >> >> *(iii) Government's lack of action to recruit and retain workers to resolve the growing aged care workforce shortage crisis, and* >> >> *(iv) foundation of any successful reform in the aged care sector must include ensuring there are more workers and that those workers are better paid; and* > > *(c) calls on the Government to urg",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 18,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-03-30/17"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-412639",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The bill introduces the Australian National Aged Care Classification (AN-ACC) to replace the Aged Care Funding Instrument for residential aged care subsidies, establishes national pre-employment screening and a code of conduct for aged-care workers, extends the Serious Incident Response Scheme to home care from 1 July 2022, strengthens provider governance, enhances information sharing across care sectors, increases financial and prudential oversight, and expands the Independent Health and Aged Care Pricing Authority."
+  },
+  {
+   "slug": "speech-414163",
+   "speaker": "Amanda Louise Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued the Aged Care and Other Legislation Amendment (Royal Commission Response No. 2) Bill 2021 fails to properly implement over half of the royal commission's 148 recommendations, citing inadequate consultation and ongoing neglect such as 80,000 new home-care packages against a waitlist of 100,000 people."
+  },
+  {
+   "slug": "speech-414164",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The Morrison government cannot be trusted to fix aged care, with more than half of the 148 royal commission recommendations not implemented or not properly implemented; the Aged Care and Other Legislation Amendment (Royal Commission Response No. 2) Bill 2021 falls short, lacks consultation, and omits key items, so Labor will move to refer it to the Senate Community Affairs Legislation Committee for inquiry."
+  },
+  {
+   "slug": "speech-414165",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's aged care response is inadequate, criticising the lack of a full 24/7 registered nurse requirement, and highlighted that 766 aged care deaths, a $2.1–2.5 billion funding gap, a 110,000-worker shortage, and over 100,000 people waiting for home-care packages stem from Coalition mismanagement and broken promises."
+  },
+  {
+   "slug": "speech-414167",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s bill fails to implement over half of the royal commission’s 148 recommendations, and criticised inadequate funding, workforce shortages, and lack of consultation, citing her mother’s 16‑kilogram weight loss from malnutrition and a former worker leaving due to low pay."
+  },
+  {
+   "slug": "speech-414168",
+   "speaker": "Graham Douglas Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government has failed to address the aged-care crisis, citing $1.7 billion in funding cuts when Morrison was Treasurer, over half of the royal commission’s 148 recommendations ignored, and a home-care package waitlist of 100,000. They also criticised the lack of consultation on the bill and said only a Labor government would reverse the neglect."
+  },
+  {
+   "slug": "speech-414169",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's measures were not cuts but necessary to curb expenditure growth exploited by aged-care companies SDR, Japara, and Regis, which he said used the system to maximise taxpayer funding. He also claimed that from 2004 to 2016, private sector involvement significantly improved aged care quality in Australia."
+  },
+  {
+   "slug": "speech-414171",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The bill was welcomed for implementing 11 royal commission recommendations, but the member criticised the lack of sector consultation, vague conduct codes, and gaps such as the absence of mandated 24/7 registered nurses, poor staff ratios, and ongoing age discrimination between NDIS and aged-care packages."
+  },
+  {
+   "slug": "speech-414173",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The bill fails to implement key royal commission recommendations, including 24/7 nursing and a national registration scheme, and the government has not responded to about half of the 148 recommendations. The Prime Minister cut $2 billion from aged care, and 28,000 seniors died while waiting for home-care packages."
+  },
+  {
+   "slug": "speech-414174",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-25",
+   "stage_hint": null,
+   "brief": "The Aged Care and Other Legislation Amendment (Royal Commission Response No. 2) Bill 2021 was introduced to deliver the second stage of aged-care reform, including new subsidy calculation methods, pre-employment screening, an enforceable code of conduct, extension of the serious incident response scheme to home services, strengthened provider governance, a suitability test replacing disqualified individual arrangements, information-sharing mechanisms, and increased financial and prudential oversight through the Independent Hospital and Aged Care Pricing Authority."
+  }
+ ],
+ "acts": []
+}

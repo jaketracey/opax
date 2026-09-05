@@ -1,0 +1,263 @@
+{
+ "key": "au-federal-r6414",
+ "title": "Protection of the Sea (Prevention of Pollution from Ships) Amendment (Air Pollution) Bill 2019",
+ "short_title": "Protection of the Sea (Prevention of Pollution from Ships) Amendment (Air Pollution) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Cities and Regional Development",
+ "status": "passed",
+ "status_as_of": "2019-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6414_ems_d4cc69e6-4fc6-405b-8a7d-6a443ceb3a34%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6414%22",
+   "document_date": "2019-09-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00123",
+   "document_date": "2019-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-18",
+  "sentences": [
+   "This bill updates Australian law to meet international rules on ship air pollution.",
+   "It would ban ships from carrying fuel with more than 0.50 per cent sulphur content for combustion from 1 March 2020, and allow alternative compliance methods like exhaust scrubbers.",
+   "The bill also exempts naval and foreign government vessels and clarifies duties of fuel suppliers."
+  ],
+  "changes": [
+   "Implements a global sulphur cap of 0.50 per cent mass/mass on fuel oil used in ships from 1 January 2020.",
+   "Prohibits carrying high sulphur fuel oil for combustion on ships from 1 March 2020.",
+   "Allows equivalent compliance methods such as exhaust gas cleaning systems.",
+   "Exempts naval and foreign government vessels from the Act.",
+   "Clarifies obligations of fuel oil suppliers and local suppliers.",
+   "Supports reporting obligations when compliant fuel oil is unavailable."
+  ],
+  "affected": "Ships, shipping companies, fuel oil suppliers, and the Australian government are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6155",
+   "date": "2019-12-05",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2019-12-05.54.1) adding the text below to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is that the bill be read a second time (or, in other words, that the majority agree with the bill's main idea). ### Motion text > *At the end of the motion, add:* > > *\", but the Senate:* > > *(1) notes that:* > >> *(a) shipping could produce as much as 17 per cent of global greenhouse gas emissions by 2050 if not mitigated;* >> >> *(b) open-loop exhaust gas cleaning systems or scrubbers have been described as 'cheat devices' that enable compliance with sulphur-emission requirements while discharging contaminated washwater overboard;* >> >> *(c) a range of jurisdictions including Belgium, China, Germany, Ireland, the United Arab Emirates and the United States have implemented restrictions on open-loop scrubbers; and* >> >> *(d) without sulphur limits, ship pollution causes approximately 400 000 premature deaths from lung cancer and cardiovascular disease, and 14 million cases of childhood asthma each year; and* > > *(2) calls on the Government to:* > >> *(a) implement strict discharge standards, including appropriate independent monitoring, for any exhaust gas cleaning systems; and* >> >> *(b) advocate through the International Maritime Organization for stronger standards to protect our marine environment.\"*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 12,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-12-05/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-382844",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill to implement new international sulphur emission limits for ships but criticised the government for allowing the number of Australian-flagged vessels to fall to just 14, moving a second reading amendment that notes the government’s record of undermining Australian shipping and reaffirms the need for a strong domestic industry."
+  },
+  {
+   "slug": "speech-382982",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "Supported the Protection of the Sea (Prevention of Pollution from Ships) Amendment (Air Pollution) Bill 2019 to reduce sulphur emissions, citing poor health of Moreton Bay waterways and the 2009 Pacific Adventurer oil spill that leaked 270 tonnes of oil across 56 kilometres of coastline."
+  },
+  {
+   "slug": "speech-382983",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Protection of the Sea (Prevention of Pollution from Ships) Amendment (Air Pollution) Bill 2019, which implements the International Maritime Organization's 0.5 per cent sulphur cap on ship fuel oil from 1 January 2020. They criticised Labor for claiming to support a domestic maritime fleet while overseeing its decline, and argued the bill will reduce air and ocean pollution, protect coastal communities like Mackellar, and align Australia with global trading partners such as China."
+  },
+  {
+   "slug": "speech-382984",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Protection of the Sea (Prevention of Pollution from Ships) Amendment (Air Pollution) Bill 2019, which implements a global 0.5% sulphur cap on ship fuel from 1 January 2020 and a carriage ban from 1 March 2020, citing benefits for the polluted Botany Bay area. They also opposed the New South Wales Liberal government's proposed cruise ship terminal in Yarra Bay, arguing it would damage the environment, disrupt the Aboriginal community, and harm the seagrass sanctuary, while advocating for Garden Island, Newcastle, or Wollongong as alternatives."
+  },
+  {
+   "slug": "speech-382985",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The member for Macnamara welcomed the Protection of the Sea (Prevention of Pollution from Ships) Amendment (Air Pollution) Bill 2019, noting that it reduces sulphur content in ship fuel to 0.5%, but argued for further reduction to match Sydney Harbour's 0.1% limit, and acknowledged TT-Line's planned introduction of two new Spirit of Tasmania ships in 2021."
+  },
+  {
+   "slug": "speech-382987",
+   "speaker": "Scott Buchholz",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Protection of the Sea (Prevention of Pollution from Ships) Amendment (Air Pollution) Bill 2019 is necessary to implement a new global sulphur standard reducing ship fuel sulphur content from 3.5% to 0.5% by weight from 1 January 2020, with allowances for high-sulphur fuel if ships use exhaust gas cleaning systems, and a carriage ban on high-sulphur fuel from 1 March 2020."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Protection of the Sea (Prevention of Pollution from Ships) Amendment (Air Pollution) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00123",
+   "assent_date": "2019-12-12"
+  }
+ ]
+}

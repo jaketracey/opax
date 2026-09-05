@@ -1,0 +1,242 @@
+{
+ "key": "au-federal-r7501",
+ "title": "Universities Accord (Opening the Doors of Opportunity) Bill 2026",
+ "short_title": "Universities Accord (Opening the Doors of Opportunity) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7501_ems_6158ae36-feb5-4d94-b3b3-4d08fd66df7f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7501_ems_f688d957-a960-450c-a2fd-5c89784a263d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7501_ems_bac186c9-f784-4ca9-bbc9-00ad0a1cc281%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7501%22",
+   "document_date": "2026-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-25",
+  "sentences": [
+   "This bill overhauls how the government pays for university places, steering funds toward students who have historically missed out on higher education.",
+   "The Australian Tertiary Education Commission would hand out Commonwealth-supported places to universities using a new managed-growth pot, and extra needs-based grants would go to institutions enrolling disadvantaged learners.",
+   "The bill backs this with $2.5 billion in new government money and is expected to add 200,000 first-year domestic students over the next ten years."
+  ],
+  "changes": [
+   "The bill creates a Managed Growth Funding System for Commonwealth-supported places.",
+   "It sets up Needs-based Funding grants for universities that enroll students from poorer families, Indigenous students, and those at regional campuses.",
+   "It gives the Australian Tertiary Education Commission the job of allocating those places and international student places when the minister decides.",
+   "It lets the minister set rules for how international student places are handed out.",
+   "It changes information-sharing laws so the commission can get data from the Ombudsman and the Tertiary Education Quality and Standards Agency."
+  ],
+  "affected": "Universities and higher education providers, along with students from low-income, Indigenous, and regional or remote backgrounds, plus international students when the government manages their numbers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:11Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10620",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "question": "Kate Chaney by leave—I move amendments (1) to (10), as circulated in my name, together: (1) Schedule 1, item 2, page 5 (after line 20), after subsection 30-5(8), insert: _Publication of reasons for determination or variation_ (8A) The Minister must ensure that, within 14 days after the day on which the Minister makes or varies a \\*total allocation pool determination, a written statement setting out the Minister's reasons for making or varying the determination is published on the Department's website or on the ATEC's website. (2) Schedule 1, item 17, page 30 (line 30) to page 31 (line 4), omit the item, substitute: 17 Paragraph 36-10(1)(a) Repeal the paragraph, substitute: (a) if the unit is the first unit that the person has undertaken that forms part of a particular \\*course of study being undertaken with the provider—that course of study is one: (i) for which the provider has been allocated one or more Commonwealth supported places for the year in which the person is undertaking the unit; or (ii) that is a \\*demand driven higher education course; and (3) Schedule 1, page 31 (after line 4), after item 17, insert: 17A After subsection 36-10(1) Insert: _Changes in status of course of study after enrolment in unit have no effect_ (1A) Subsection (1B) applies if: (a) the condition in paragraph (1)(a) is satisfied in relation to a person and a unit of study at the time when the person enrols in the unit; and (b) at some time after the person enrols in the unit of study, the unit ceases (for whatever reason) to form part of a \\*course of study: (i) for which the provider has been allocated one or more Commonwealth supported places for the year in which the person is undertaking the unit; or (ii) that is a \\*demand driven higher education course. (1B) To avoid doubt, in a case where this subsection applies, nothing in paragraph (1)(a) prohibits a higher education provider from advising the person that the person is a \\*Commonwealth supported student in relation to the un",
+   "stage": "Consideration in detail",
+   "ayes": 90,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 82,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-08-20/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1204667",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204669",
+   "speaker": "Tom French",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205190",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205349",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205396",
+   "speaker": "Louise Miller-Frost",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205398",
+   "speaker": "Ben Small",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205642",
+   "speaker": "Gabriel Ng",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205693",
+   "speaker": "Madonna Jarrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-19",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

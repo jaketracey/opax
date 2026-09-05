@@ -1,0 +1,339 @@
+{
+ "key": "au-federal-r7044",
+ "title": "Public Service Amendment Bill 2023",
+ "short_title": "Public Service Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister and Cabinet",
+ "status": "passed",
+ "status_as_of": "2024-06-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7044_ems_e5292a1c-434e-4a6c-9e7f-f1f74af6ca99%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7044_ems_b26bce81-b441-471d-a5fa-09fef1620988%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7044%22",
+   "document_date": "2023-06-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00044",
+   "document_date": "2024-06-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-14",
+  "sentences": [
+   "The bill would amend the Public Service Act 1999 to reform the Australian Public Service based on recommendations from the 2019 Thodey Review.",
+   "It would add a new APS value of Stewardship, require capability reviews and long-term insights reports, and clarify that ministers cannot direct agency heads on individual staffing decisions.",
+   "Agency heads would need to publish annual employee census results and create action plans in response, and the bill includes a technical update to align with new regulations."
+  ],
+  "changes": [
+   "Adds a new APS Value of Stewardship.",
+   "Requires the Secretaries Board to prepare an APS purpose statement.",
+   "Requires agency heads to uphold the APS purpose statement.",
+   "Requires regular, independent capability reviews.",
+   "Requires publication of annual APS employee census results and action plans.",
+   "Includes a technical amendment consequential to the Public Service Regulations 2023."
+  ],
+  "affected": "The Australian Public Service, its employees, agency heads, the Secretaries Board, and ministers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8208",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2023-08-01.93.2) introduced by Goldstein MP [Zoe Daniel](https://theyvoteforyou.org.au/people/representatives/goldstein/zoe_daniel). The amendment would have amended a previous amendment introduced by Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent), which was to add the words below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Ms Chaney's amendment > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"The House declines to give the bill a second reading until such time as the report on the Robodebt Royal Commission is handed down\".* ### Ms Daniel's amendment > *That all words after \"time\" be omitted with a view to substituting the following words:* > > *\"as the government responds to the recommendations of the Robodebt Royal Commission, the results of the Secretaries Board Integrity Taskforce review are made public and the recommendations of the Thodey Review on appointments and termination of Secretaries are acted upon\".*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 53,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 65
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-01/1"
+  },
+  {
+   "key": "federal-representatives-8209",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2023-08-01.96.1) introduced by Fowler MP [Dai Le](https://theyvoteforyou.org.au/people/representatives/fowler/dai_le) (Independent), which means they were unsuccessful. ### What do the amendments do? The amendments would have required workplace diversity programs to be established to promote diversity. ### Amendment text > *(1) Schedule 1, page 3 (after line 16), after item 2, insert:* > >> *2A Paragraph 10A(1)(g)* >> >> *Repeal the paragraph, substitute:* >> >> *(g) recognises and promotes the diversity of the Australian community and fosters a diverse perspective in the workplace.* > > *(2) Schedule 1, page 5 (after line 8), after item 5, insert:* > >> *5A Section 18* >> >> *Repeal the section, substitute:* >> >> *18 Promotion of employment equity* >> >> *An Agency Head must:* >> >> *(a) establish a workplace diversity program:* >> >>> *(i) to allow for the proactive development of individuals of diverse backgrounds; and* >>> >>> *(ii) to assist in giving effect to the APS Employment Principles; and* >> >> *(b) promote diverse and inclusive recruitment within the Agency to give effect to the APS Employment Principles.*",
+   "stage": "Consideration in detail",
+   "ayes": 14,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 66
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-01/2"
+  },
+  {
+   "key": "federal-representatives-8210",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-08-01.100.1) introduced by Mackellar MP [Sophie Scamps](https://theyvoteforyou.org.au/people/representatives/mackellar/sophie_scamps), which means they failed. ### What did the amendment do? Dr Scamps [explained that](https://www.openaustralia.org.au/debate/?id=2023-08-01.100.1): > *In short, these amendments dictate that, when a department secretary is to be appointed, the Public Service Commissioner would be required to conduct a robust selection process, including publishing selection criteria for the appointment, widely consulting for candidates, rigorously considering candidates against the selection criteria and preparing a shortlist of at least three candidates for the Prime Minister to consider. If the Prime Minister decides to select somebody for the position who is not on the shortlist, they must table a report within seven sitting days of the appointment naming the person and providing reasons why that person has the appropriate qualifications, skills and experience for the role.* > > *For the appointment of the Public Service Commissioner, the so-called 'guardian of an impartial Australian Public Service', as described by Thodey, there are a couple of additional requirements: that the independent panel be chaired by a former judge, and that the Prime Minister consult with the Leader of the Opposition on the appointment. This is in recognition that the Australian Public Service Commissioner is a unique role and reinforces to the Australian public the independence and impartiality of both the commissioner and the Australian Public Service.* ### Amendment text > *(3) Schedule 1, page 8 (after line 25), after item 8, insert:* > >> *8A Section 45* >> >>> *Before \"The Commissioner\", insert \"(1)\".* >> >> *8B At the end of section 45* >> >>> *Add:* >>> >>> *Requirements for appointments* >>> >>> *(2) Before recommending to the Governor-General on or after the commencement",
+   "stage": "Consideration in detail",
+   "ayes": 14,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 64
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-01/3"
+  },
+  {
+   "key": "federal-senate-8934",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "Public Service Amendment Bill 2023 - Second Reading - Whistleblower protections",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 6,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/41"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Public Service Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00044",
+   "assent_date": "2024-06-11"
+  }
+ ]
+}

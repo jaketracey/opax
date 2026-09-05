@@ -1,0 +1,1088 @@
+{
+ "key": "au-federal-r6917",
+ "title": "National Anti-Corruption Commission Bill 2022",
+ "short_title": "National Anti-Corruption Commission Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2022-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6917_ems_8ca94541-584a-4100-8c52-2be6478cff68%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6917_ems_984a9aad-dce6-4910-bc40-33eba70f687e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6917_ems_abfd0061-a0b9-4ff3-8317-7a46d85a8286%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6917_ems_83d30697-8c49-4724-b581-aa0de684abc5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6917%22",
+   "document_date": "2022-09-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00088",
+   "document_date": "2022-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-09-28",
+  "sentences": [
+   "This bill is part of a package that would establish an independent federal corruption watchdog.",
+   "The agency would investigate and report on serious or systemic misconduct in the Commonwealth public sector, refer criminal evidence for prosecution, and run prevention activities.",
+   "The commissioner would have the power to compel documents, obtain search warrants, and hold hearings, which would normally be private but could be public in exceptional circumstances."
+  ],
+  "changes": [
+   "Creates the National Anti-Corruption Commission as an independent agency.",
+   "Gives the commissioner broad powers to investigate corruption issues and hold public inquiries.",
+   "Defines corrupt conduct to include conduct that adversely affects public officials' honest performance of duties.",
+   "Provides protections for whistleblowers who report corruption issues.",
+   "Requires agency heads to refer serious or systemic corruption allegations to the commission.",
+   "Establishes a Parliamentary Joint Committee to oversee the commission and approve appointees."
+  ],
+  "affected": "Commonwealth ministers, parliamentarians, public servants, government contractors, military members, statutory office holders, and people providing services on behalf of the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7859",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.19.6) to *disagree* with [amendments (5) and (6)](https://www.openaustralia.org.au/debate/?id=2022-11-24.14.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means they failed. #### Rebellion Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) [crossed the floor](https://theyvoteforyou.org.au/help/faq#rebel) to vote \"No\" against the rest of the Liberal party, who voted \"Yes\". ### What did the amendment do? Dr Haines [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.14.1): > *Amendment (5) will strike out the unnecessary and alarming exceptional circumstances requirement. In my mind, this is the single most important change to this bill. My amendment will ensure that the commissioner may decide to hold public hearings if the commissioner is satisfied that it would be in the public interest—tested, simple and safe.* > > *... amendment (6) will make it mandatory for the commissioner to consider certain factors when deciding whether to hold a public hearing, including unfair prejudice to a person's reputation, privacy, safety or wellbeing caused by a public hearing. This amendment boosts the protection of people who would be affected by the decision to hold a hearing in public.* Read more about the bill in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd035). ### Amendment text > *(5) Clause 73, page 68 (lines 10 to 14), omit subclause (2), substitute:* > >> *(2) The Commissioner may decide to hold a hearing, or part of a hearing, in public if the Commissioner is satisfied that it is in the public interest to do so.* > > *(6) Clause 73, page 68 (line 16), omit \"may\", substitute \"must\".*",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 91
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/1"
+  },
+  {
+   "key": "federal-representatives-7860",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.24.4) to *disagree* with [amendment (7)](https://www.openaustralia.org.au/debate/?id=2022-11-24.21.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means it failed. #### Rebellion Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) [crossed the floor](https://theyvoteforyou.org.au/help/faq#rebel) to vote \"No\" against the rest of the Liberal party, who voted \"Yes\". ### What did the amendment do? Dr Haines [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.21.1): > *If exceptional circumstances is to remain in this bill, it should be defined. The public deserves to know what circumstances justify the holding of a public hearing. My amendment will define 'exceptional circumstances' to mean 'circumstances where it is preferable or appropriate for evidence to be heard in public'. This will ensure the number of private hearings are not unreasonably increased due to the ambiguity of the phrase.* Read more about the bill in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd035). ### Amendment text > *(7) Clause 73, page 69 (after line 10), at the end of the clause, add:* > >> *Meaning of exceptional circumstances* >> >> *(6) For the purposes of paragraph (2)(a), exceptional circumstances means circumstances in which it is preferable or appropriate for evidence to be given in public.*",
+   "stage": "Consideration in detail",
+   "ayes": 55,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 70
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/2"
+  },
+  {
+   "key": "federal-representatives-7861",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.33.4) to *disagree* with [amendments (1) to (4)](https://www.openaustralia.org.au/debate/?id=2022-11-24.26.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means they failed. #### Rebellion Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) [crossed the floor](https://theyvoteforyou.org.au/help/faq#rebel) to vote \"No\" against the rest of the Liberal party, who voted \"Yes\". ### What did the amendment do? Dr Haines [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.26.1): > *These amendments are really important. They put beyond doubt that pork-barrelling falls within the definition of 'corrupt conduct' when it meets the threshold of being serious or systemic. Pork-barrelling under this amendment will be defined as any conduct 'that involves the allocation of public funds and resources to targeted electors for partisan political purposes'.* > > *[...]* > > *These amendments also ensure that the conduct of any person—and, notably, third persons—that could impair public confidence in public administration can be investigated by the NACC, when it meets the threshold of being serious and systemic.* Read more about the bill in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd035). ### Amendment text > *(1) Clause 8, page 14 (after line 20), after paragraph (1)(d), insert:* > >> *(da) any conduct of a public official that involves the allocation of public funds or other resources to targeted electors for partisan political purposes;* > > *(2) Clause 8, page 14 (after line 23), after subclause (1), insert:* > >> *(1A) Corrupt conduct is also any conduct of any person (whether or not a public official) that impairs, or that could impair, public confidence in public admini",
+   "stage": "Consideration in detail",
+   "ayes": 59,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 73
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/3"
+  },
+  {
+   "key": "federal-representatives-7862",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.38.4) to *disagree* with [amendments (8) and (9)](https://www.openaustralia.org.au/debate/?id=2022-11-24.35.1) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means they failed. #### Rebellion Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) [crossed the floor](https://theyvoteforyou.org.au/help/faq#rebel) to vote \"No\" against the rest of the Liberal party, who voted \"Yes\". ### What did the amendment do? Dr Haines [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.35.1): > *These amendments enhance budgetary transparency and oversight of the National Anti-Corruption Commission.* > > *... This amendment will also require the minister to table a statement of reasons if they deviate from the recommendations of the National Anti-Corruption Commission joint select oversight committee in relation to the budget. The amendment provides an additional layer of oversight and transparency over the National Anti-Corruption Commission's budget by requiring the government of the day to respond to a report regarding the adequacy of the NACC's budget.* > > *... My amendments also require the parliamentary joint committee to review the Anti-Corruption Commission's budget every 12 months. This amendment will ensure regular review of the NACC's budgets and prevent the powerful budget oversight power from going unused.* Read more about the bill in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd035). ### Amendment text > *(8) Clause 177, page 144 (line 19), before \"to review\", insert \"at least once every 12 months,\".* > > *(9) Clause 177, page 144 (after line 30), after subclause (2), insert:* > >> *(2A) If:* >> >>> *(a) in a report mentioned in paragraph (1)(g), the Committee make",
+   "stage": "Consideration in detail",
+   "ayes": 50,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 33,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 65
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/4"
+  },
+  {
+   "key": "federal-representatives-7863",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.42.6) to *disagree* with [amendment (10)](https://www.openaustralia.org.au/debate/?id=2022-11-24.40.4) introduced by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means it failed. ### What did the amendment do? Dr Haines [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.40.4): > *This is a very important amendment because it speaks to independence again—the separation of the National Anti-Corruption Commission from the executive arm of government in a way that brings full transparency and accountability to this incredibly important legislation ...* > > *This amendment will strengthen the all-important parliamentary oversight committee's role in keeping the NACC independent. This amendment requires that a majority of the parliamentary joint committee, when considering whether to approve or reject the appointment of a commissioner, a deputy commissioner or an inspector, must include at least two non-government members. The amendment will ensure that decision to approve or reject recommendations for the incredibly important appointment of the commissioner—the appointment of the commissioner is a make or break deal. We must make sure that it has the support of the whole parliament. So this amendment will ensure that that decision to approve or reject the recommendations for the appointment of the commissioner, deputy commissioner or inspector is a true consensus decision of this oversight committee, and not a government fait accompli.* > > *This amendment adopts the appointment clause from my own bill, the Australian Federal Integrity Commission Bill, and I believe it's a very fair amendment. It ensures that the appointment decision has multipartisan support. It prevents the government appointing the commissioner, deputy commissioner or inspector when the proposal is only supported b",
+   "stage": "Consideration in detail",
+   "ayes": 56,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 69
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/5"
+  },
+  {
+   "key": "federal-representatives-7864",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.49.3) to *disagree* with [amendments (1) to (3)](https://www.openaustralia.org.au/debate/?id=2022-11-24.44.1) introduced by Fowler MP [Dai Le](https://theyvoteforyou.org.au/people/representatives/fowler/dai_le) (Independent), which means they failed. ### What did the amendment do? Ms Le [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.44.1): > *The amendments I have risen to move will do the following: increase cooperation between the commission and individuals of multicultural backgrounds; and assist those with language barriers to be fully understood and also to clearly communicate with the commission. Amendment (1) will ensure translation and interpretation services are available to Australians who require them. It means the commission will need to provide contact details for translator services in a situation where there is a language barrier. This amendment will ensure that is followed through to summons and the commission's investigative processes. Amendments (2) and (3) will ensure the commission will provide individuals with appropriate mental health resources and support through the commission process. Being called in front of an integrity commission can be daunting, can be shocking and can lead to suicide—and it has led to suicides. I want to ensure that, when the commission is established, investigating corruption is not at the cost of life, especially a life who was not corrupt or may have never been found corrupt.* Read more about the bill in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd035). ### Amendment text > *(1) Clause 63, page 64 (line 10), at the end of subclause (4), add:* > >> *; and (c) include contact details for translator services.* > > *(2) Page 65 (after line 19), after clause 66, insert:* > >> *66A Services that must be provided to persons appearing at hearings* >>",
+   "stage": "Consideration in detail",
+   "ayes": 73,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/6"
+  },
+  {
+   "key": "federal-representatives-7865",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.53.6) to *disagree* with [amendments (4) and (5)](https://www.openaustralia.org.au/debate/?id=2022-11-24.51.1) introduced by Fowler MP [Dai Le](https://theyvoteforyou.org.au/people/representatives/fowler/dai_le) (Independent), which means they failed. ### What did the amendment do? Ms Le [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.51.1): > *My fourth amendment will seek to ensure that, when the commissioner plans to make a public statement about an investigation, they must consider the need to, firstly, provide the context in which a witness is called; and, secondly, provide support against the onslaught of public scrutiny that may arise throughout the investigation. The fifth amendment aims to sure that those who are facing an inquiry will be able to at least share the fact that they have been summoned with their spouse, unless the spouse is also under investigation, to alleviate pressures and provide support during a time that is no doubt stressful and, in some cultures, tremendously humiliating.* Read more about the bill in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd035). ### Amendment text > *(4) Clause 73, page 69 (line 10), at the end of subclause (5), add:* > >> *; (c) the context in which the witness is appearing at the hearing;* >> >> *(d) the need for the public not to scrutinise a witness before the corruption investigation has been completed.* > > *(5) Clause 95, page 82 (lines 9 and 10), omit subclause (2), substitute:* > >> *(2) The notation must permit disclosure of information to:* >> >>> *(a) the spouse of the recipient of the notice to produce or private hearings summons (unless the spouse is a subject of the corruption investigation in relation to which the notice or summons is given); and* >>> >>> *(b) any mental health professional who is providing mental health care",
+   "stage": "Consideration in detail",
+   "ayes": 79,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 4
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 7
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/7"
+  },
+  {
+   "key": "federal-representatives-7866",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.58.7) to *disagree* with [amendments (3) to (7)](https://www.openaustralia.org.au/debate/?id=2022-11-24.56.1) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means they failed. ### What did the amendment do? Ms Steggall [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.56.1): > *Amendment (5) relates to setting a deadline for the tabling of reports from inquiries. Section 149 of the bill requires a commissioner to prepare a report on an investigation, and section 154 requires him or her to give a report to certain persons but provides no time frame in which that report should be provided. Parties subject to an investigation should have certainty around when a report will be released. This is so we don't have a situation such as the current one in New South Wales with the investigation into Gladys Berejiklian, where the report's release keeps getting delayed with no clear explanation, creating uncertainty for all sides. My proposal is that the report should be tabled within a year of the completion of public hearings or, where public hearings were not held, within a year of the last private hearing. This amendment will also require the tabling of reports to parliament to improve the transparency and accountability of the commission.* > > *Amendments (6) and (7) set a deadline for the opportunity to respond to findings. Section 157 of the bill provides for the opportunity for any persons who have an adverse finding against them in a report to have a reasonable opportunity to respond. I believe this should be replaced with a fixed time frame in which to respond. The amendment proposes changing a reasonable opportunity to three months or such longer period as determined by the commissioner. Again, it is all about trying to provide a timeliness framework to inv",
+   "stage": "Consideration in detail",
+   "ayes": 46,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 6
+    },
+    "Labor": {
+     "ayes": 32,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/8"
+  },
+  {
+   "key": "federal-representatives-7867",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.61.5) to *disagree* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-11-24.60.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means it failed. #### Rebellion Bass MP [Bridget Archer](https://theyvoteforyou.org.au/people/representatives/bass/bridget_archer) (Liberal) [crossed the floor](https://theyvoteforyou.org.au/help/faq#rebel) to vote \"No\" against the rest of the Liberal party, who voted \"Yes\". ### What did the amendment do? Ms Spender [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.60.1): > *Politicisation damages public institutions and our democracy, and we cannot afford to undermine the NACC. My amendment addresses the risk of such politicisation without affecting the government's control over the parliamentary committee's other functions. It prevents the committee's chair from having the casting vote when it comes to appointing the commissioner, deputy commissioner or inspector. That means the majority of all committee members would be required to approve these appointments, including at least one crossbench or opposition member. My amendment will ensure that the people chosen for these critical roles enjoy multipartisan support and that they are truly independent from government. It is a commonsense way to ensure this commission delivers what the public expects.* Read more about the bill in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd035). ### Amendment text > *(1) Clause 178, page 146 (after line 17), after subclause (2), insert:* > >> *(2A) If the proposed recommendation is for the appointment of the Commissioner or a Deputy Commissioner, or the Inspector:* >> >>> *(a) the decision to approve or reject the recommendation is to be determined by a majority of all o",
+   "stage": "Consideration in detail",
+   "ayes": 47,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 40,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 62
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/9"
+  },
+  {
+   "key": "federal-representatives-7868",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.64.3) to *disagree* with [amendment (1) and (2)](https://www.openaustralia.org.au/debate/?id=2022-11-24.63.1) introduced by Mayo MP [Rebekha Sharkie](https://theyvoteforyou.org.au/people/representatives/mayo/rebekha_sharkie) (Centre Alliance), which means they failed. ### What did the amendment do? Ms Sharkie [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.63.1): > *The first really relates to the fact that I think it's important to provide as much clarity as possible with respect to what must be put into the review. I'm sure it is self-explanatory. You would expect these points—the role of the NACC, the oversight of the NACC, the use and conduct of hearings, and emerging best practice—to be in a review. But this is really to make sure that we don't assume that it is really quite plain and simple.* > > *Amendment (2) is to ensure that the minister—whoever the minister of the day is, for many parliaments to come—does provide to the parliament in a very timely manner a copy of the report of the review. What we have seen in the past—perhaps not in this parliament but in the past in parliaments gone by—is that sometimes ministers of the day have held on to reviews for a very long period of time and perhaps also released them at times when the rest of Australia is not paying attention. So this is really just about timeliness and about some detail of what is in that review.* Read more about the bill in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd035). ### Amendment text > *(1) Clause 278, page 219 (after line 8), after subclause (1), insert:* > >> *(1A) Without limiting subsection (1), the review must consider and report on the following:* >> >>> *(a) the role of the NACC;* >>> >>> *(b) oversight of the NACC;* >>> >>> *(c) the use and conduct of hearings;* >>> >>> *(d) emerging best practice.* > > *",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/10"
+  },
+  {
+   "key": "federal-representatives-7869",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "National Anti-Corruption Commission Bill 2022 - Consideration in Detail - Journalist activities not corrupt conduct",
+   "stage": "Consideration in detail",
+   "ayes": 35,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/11"
+  },
+  {
+   "key": "federal-representatives-7870",
+   "date": "2022-11-24",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2022-11-24.71.1) to *disagree* with [amendments (1) to (8), (10) to (17) and (19) to (34)]() introduced by Berowra MP [Julian Leeser](https://theyvoteforyou.org.au/people/representatives/berowra/julian_leeser) (Liberal), which means they failed. ### What did the amendment do? Mr Leeser [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-24.71.1): > *The coalition amendments are designed to improve the integrity, safeguards and operation of the National Anti-Corruption Commission. The National Anti-Corruption Commission has a very broad scope. It applies to parliamentarians and their staff, every Canberra public servant, our Defence Force, the Australian Federal Police, our diplomats and embassies around the world, and every contractor and every subcontractor who engages with the Commonwealth. It applies to almost every person exercising power under a law of the Commonwealth: pharmacists, NDIS workers, aged-care workers and Indigenous rangers.* > > *... Our amendments also seek to further clarify the definition of corruption by amending section 8(1)(a) to remove the vague and superfluous phrase 'or that could adversely affect', consistent with the Law Council's submission, given that 'conspiracy' is included in section 8(10). We also seek to delete section 9(1)(c), which defines a corruption issue in relation to something that someone will do in the future. A person cannot be investigated and punished for actions they have not taken.* > > *... Our amendments also adopt provisions from the coalition's Commonwealth Integrity Commission Bill to make it an offence to make vexatious referrals or to disclose that a person has been referred to the NACC.* > > *On the issue of privileges, our amendments seek to give effect to the Law Council's recommendation. Because the privilege against self-incrimination is waived, material that is elicited by the Anti-Corruption Commiss",
+   "stage": "Consideration in detail",
+   "ayes": 83,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Labor": {
+     "ayes": 70,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/12"
+  },
+  {
+   "key": "federal-senate-7888",
+   "date": "2022-11-29",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-29.37.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it failed. ### What did the amendment do? Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-29.37.1): > *This amendment, if accepted, would fill a gap in the bill. The bill as proposed, in its principles and objects, does not contain one key statement of principle, which is that we are establishing an independent national anticorruption commission. We heard in the committee, from witnesses very familiar with the New South Wales commission, that that clear statement of intent in the objects of the bill, stating unambiguously that we are establishing an independent national anticorruption commission, will be important, because, if there is any ambiguity about how the act should operate, and it faces legal challenge, one of the first things a court will do is go back to the objects and say, 'What was parliament trying to establish here?' Surely we can unite on this and say that one of the key objects of this bill is to establish an independent national anticorruption commission.* ### Amendment text > *(1) Clause 3, page 3 (line 7), at the end of clause, add:* > > *; (e) to establish an independent National Anti-Corruption Commission.*",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "earliest": 25,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-29/1"
+  },
+  {
+   "key": "federal-senate-7889",
+   "date": "2022-11-29",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-11-29.43.1) introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means they failed. ### What do the amendments do? Senator Cash described her amendments during her [second reading speech](https://www.openaustralia.org.au/senate/?gid=2022-11-28.222.3). ### Amendment text See OpenAustralia.org.au for [amendment text](https://www.openaustralia.org.au/senate/?gid=2022-11-29.43.1).",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "earliest": 35,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-29/2"
+  },
+  {
+   "key": "federal-senate-7890",
+   "date": "2022-11-29",
+   "house": "senate",
+   "question": "The majority voted against [amendments (2) and (3) on sheet 1730](https://www.openaustralia.org.au/senate/?id=2022-11-29.4.2) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means they failed. ### What do the amendments do? Regarding amendment (2), Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-29.49.1): > *Amendment (2) seeks to re-insert a provision that was stripped out by the other place in relation to the definition of 'corruption' found in section 8 of the bill.* Regarding amendment (3), he [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-29.52.1): > *our amendment (3) is simply to put in a notation to the definition of corruption that provides, by way of guidance, that corrupt conduct may include conduct that constitutes pork-barrelling or political donations for the purpose of influencing a decision or policy made by a public official.* ### Amendment text > *(2) Clause 8, page 15 (line 20), at the end of subclause (1), add:* > >> *; (e) any conduct of a public official in that capacity that constitutes, involves or is engaged in for the purpose of corruption of any other kind.* > > *(3) Clause 8, page 15 (after line 20), at the end of subclause (1), add:* > >> *Note: Corrupt conduct may include conduct that constitutes pork barrelling or political donations for the purpose of influencing a decision or policy made by a public official.*",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    }
+   },
+   "party_coverage": {
+    "dated": 14,
+    "earliest": 25,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-29/3"
+  },
+  {
+   "key": "federal-senate-7891",
+   "date": "2022-11-29",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6917_amend_e3890526-cfb6-4c45-91d6-6d6215214722%22;rec=0) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. ### What did these amendments do? Regarding amendments (1) to (4), Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-29.55.1): > *These amendments were [moved by the member for Indi](https://theyvoteforyou.org.au/divisions/representatives/2022-11-24/3), [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines), in the lower house. Again, I would like to thank her for her work on this issue over many years.* > > *These amendments make clear that pork-barrelling is corruption. We've seen concerns in communities across the country with the way that public funds have been allocated for political gain. This makes it clear that that can be investigated. I'm also concerned that this bill falls short when it comes to conduct by third parties that could impair public confidence in public administration—in particular, practices of collusive tendering, dishonestly obtaining benefit from public funding decisions and defrauding public revenue. This makes it clear that those are included.* Regarding amendments (5) and (6), [he explained](https://www.openaustralia.org.au/senate/?gid=2022-11-29.61.1): > *This amendment will require the minister to table a statement of reasons if they deviate from the recommendations of the NACC joint select oversight committee in relation to the budget. This does not bind the government to giving them that money; it simply provides an extra piece of transparency so that Australians know if we are short-changing the body that is going to be tasked with holding people in these places, public servants and others",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 27,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-29/4"
+  },
+  {
+   "key": "federal-senate-7892",
+   "date": "2022-11-29",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-29.195.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it failed. ### What did this amendment do? Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-29.195.1): > *This amendment seeks to remove the restraint on the National Anti-Corruption Commission in terms of holding public hearings.* ### Amendment text > *(1) Clause 73, page 70 (lines 20 to 24), omit subclause (2), substitute:* > >> *(2) The Commissioner may decide to hold a hearing, or part of a hearing, in public if the Commissioner is satisfied that it is in the public interest to do so.*",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 25,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-29/5"
+  },
+  {
+   "key": "federal-senate-7893",
+   "date": "2022-11-29",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-11-29.233.1) by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means they failed. ### What do the amendments do? Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-29.233.1): > *Taken together, these amendments will expressly empower the oversight committee to request draft estimates—the draft budget, effectively—for the National Anti-Corruption Commission. They will then require the NACC to provide those draft estimates to the committee and then allow the committee expressly to make recommendations to both houses of parliament and to the Attorney-General on those draft estimates. In other words, if there's not enough money in the kitty for the NACC, if there's not enough money being provided for them to do their job, then the committee can recommend what the level of funding should be during the budget process.* > > *As I said before, and I won't repeat the submissions we made about how this already works for the National Audit Office, these amendments seek to draw from that experience and the longstanding provisions for the National Audit Office. It simply repeats those workable, functioning provisions for the National Audit Office for the National Anti-Corruption Commission.* ### Amendment text > *(7) Page 147 (after line 12), after clause 176, insert:* > >> *176A Committee may request draft estimates for NACC* >> >> *(1) The Committee may request the Commissioner to submit to the Committee draft estimates for the NACC for a financial year before the annual Commonwealth budget for that financial year.* >> >> *(2) The Commissioner must comply with the request in time to allow the Committee to consider the draft estimates and make recommendations on them before the budget.* > > *(8) Clause 177, page 148 (after line 18), after paragraph (1)(f), insert:* > >> *(fa) to consider",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 23,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-29/6"
+  },
+  {
+   "key": "federal-senate-7894",
+   "date": "2022-11-29",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-29.239.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) and NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it failed. ### What does the amendment do? Senator Shoebridge [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-29.240.1): > *This amendment would provide for the oversight committee when it's considering just two critical issues, which are the appointment of the commissioner and the appointment of the inspector. It would provide that the oversight committee could only make that decision by a simple majority of members—not a super majority but a simple majority of members. It also provides that when determining that majority the provisions that provide for a casting vote of the chair do not apply. So, in other words, 50 per cent plus one of the members in attendance of the committee have to agree to the appointment of a commissioner or an inspector. Why is that important? It's important because it's hard to think of a more critical job for the oversight committee than determining who the commissioner and inspector of the NACC will be. On the current drafting, where the committee is six members of the government chosen from both houses and six non-government members—four of the opposition and two of the crossbench—chosen from each house, if there is an equality of votes then the government chair gets to determine the outcome. That effectively hands complete control to the government of the day in that critical decision about the appointment of a commissioner.* ### Amendment text > *(1) Clause 178, page 150 (after line 17), after subclause (2), insert:* > >> *(2A) If the proposed recommendation is for the appointment of the Commissioner or the Inspector:* >> >>> *(a) the decision to approve or reject the recom",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 24,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-29/7"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "National Anti-Corruption Commission Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00088",
+   "assent_date": "2022-12-12"
+  }
+ ]
+}

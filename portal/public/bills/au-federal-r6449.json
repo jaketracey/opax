@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6449",
+ "title": "National Self-exclusion Register (Cost Recovery Levy) Bill 2019",
+ "short_title": "National Self-exclusion Register (Cost Recovery Levy) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2019-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6449_ems_936d55f1-ea80-462c-9e87-cab20a4a7ba7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6449%22",
+   "document_date": "2019-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00128",
+   "document_date": "2019-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-386067",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Interactive Gambling Amendment (National Self-exclusion Register) Bill 2019 and its associated cost recovery levy, which would establish a national register allowing individuals to self‑exclude from all online wagering services for periods from three months to permanent, but criticised the government for taking four years since the Review of Illegal Offshore Wagering and one year after the National Consumer Protection Framework, and raised concerns about outsourcing the register given the government’s poor IT procurement record, citing robodebt and the Medicare card data breach."
+  },
+  {
+   "slug": "speech-386068",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Interactive Gambling Amendment (National Self-exclusion Register) Bill and the National Self-exclusion Register (Cost Recovery Levy) Bill, which establish a single national register for individuals to self-exclude from all licensed online wagering services, but criticised the government for taking a year to introduce the legislation, delaying implementation until at least mid-2021."
+  },
+  {
+   "slug": "speech-386071",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-12-03",
+   "stage_hint": null,
+   "brief": "The Interactive Gambling Amendment (National Self-Exclusion Register) Bill 2019 and the National Self-Exclusion Register (Cost Recovery Levy) Bill 2019 will establish a national register allowing Australians to self-exclude from all licensed online wagering services through a single process, with costs recovered from providers via a levy, targeting approximately 240,000 Australians already experiencing harm from online wagering."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Self-exclusion Register (Cost Recovery Levy) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00128",
+   "assent_date": "2019-12-12"
+  }
+ ]
+}

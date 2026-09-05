@@ -1,0 +1,222 @@
+{
+ "key": "au-federal-r6643",
+ "title": "Australian Immunisation Register Amendment (Reporting) Bill 2020",
+ "short_title": "Australian Immunisation Register Amendment (Reporting) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-02-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6643_ems_a82d2598-3369-416d-9a92-cd34aea926b1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6643%22",
+   "document_date": "2020-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00001",
+   "document_date": "2021-02-15",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-03",
+  "sentences": [
+   "This bill would make it compulsory for vaccination providers to report certain vaccines they give to the Australian Immunisation Register.",
+   "The Secretary of the Department of Health could demand information from providers who fail to meet this reporting duty, with civil penalties for non-compliance.",
+   "Mandatory reporting would start on 1 March 2021 for COVID-19 and influenza vaccinations, and on 1 July 2021 for all National Immunisation Program vaccinations."
+  ],
+  "changes": [
+   "Requires recognised vaccination providers to report information about vaccinations they administer, including those given outside Australia.",
+   "Gives the Secretary of the Department of Health power to compel information from providers who do not comply with the reporting requirement.",
+   "Introduces civil penalties for vaccination providers who do not follow the legislated reporting rules.",
+   "Authorises the collection and use of Commonwealth assigned identifiers called 'provider identification information'."
+  ],
+  "affected": "Recognised vaccination providers and the Department of Health.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-399717",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The bill makes it mandatory for all vaccination providers to report all administered vaccines, including COVID-19 vaccines, to the Australian Immunisation Register while keeping vaccination voluntary; the government has secured over 134 million doses of COVID-19 vaccines from multiple suppliers at a cost of $3.3 billion."
+  },
+  {
+   "slug": "speech-401508",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The Labor Party will support the Australian Immunisation Register Amendment (Reporting) Bill 2020 without amendment, making reporting of vaccinations mandatory but not vaccination itself, with start dates of 1 March for COVID-19 and flu vaccines and 1 July for other National Immunisation Program vaccines, and penalties for non-compliance with an escalating approach; the speaker noted current upload rates for over-70s are only about 40% for pneumococcal and shingles vaccines."
+  },
+  {
+   "slug": "speech-401509",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The member recommended the Australian Immunisation Register Amendment (Reporting) Bill 2020, which would make vaccination reporting mandatory for providers while stopping short of mandatory vaccination, and framed it as strengthening the register for the COVID-19 vaccine rollout and ongoing safety monitoring. The speaker cited underreporting of adult vaccines (about 40 per cent for herpes zoster and pneumococcal, 50 per cent for flu) against Australia's high childhood vaccination rates (95 per cent of five-year-olds, over 97 per cent of Indigenous five-year-olds), and noted government investments of $3.3 billion in vaccine candidates, $363 million in research, and nearly $2 billion for the rollout."
+  },
+  {
+   "slug": "speech-401510",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register Amendment (Reporting) Bill 2020, highlighting that over 96% of First Nations children are immunised and that Australia has led the world in vaccination advances. They also raised concerns about data privatisation—specifically the sale of the breast cancer registry to Telstra Health in 2016 and Accenture's role as data partner—and called for clearer details on the COVID-19 vaccine rollout for disadvantaged and remote communities."
+  },
+  {
+   "slug": "speech-401511",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Immunisation Register Amendment (Reporting) Bill 2020, praised health leaders including Premier Annastacia Palaszczuk and Dr Jeannette Young, and criticised the member for Hughes for spreading dangerous COVID-19 misinformation, urging the Prime Minister to demand its removal from social media."
+  },
+  {
+   "slug": "speech-401512",
+   "speaker": "Andrew Laming",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that contrary views on vaccination must be addressed with evidence and respect, not personal attacks, and noted that COVID-19 vaccine acceptance rates are around 75% for Australians in their 20s and over 60, but only 60% for those in their 40s and 50s."
+  },
+  {
+   "slug": "speech-401519",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The Australian Immunisation Register Amendment (Reporting) Bill 2020 was supported to require all COVID-19 vaccine providers to record vaccinations in the register, ensuring accurate tracking of immunisation levels and herd immunity. The speaker also confirmed they would personally accept the vaccine when eligible."
+  },
+  {
+   "slug": "speech-401520",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The member for Warringah thanked her electorate for their COVID-19 response and advocated for better business support. She argued the Australian Immunisation Register Amendment (Reporting) Bill 2020 is vital, as it mandates vaccination providers report all COVID-19 and influenza vaccinations from 1 March 2021 and all other national immunisation program vaccines from 1 July 2021, with civil penalties for non-compliance, citing a Newspoll showing 25% of Australians did not plan to get vaccinated and the government’s 80% vaccination target."
+  },
+  {
+   "slug": "speech-401521",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-03",
+   "stage_hint": null,
+   "brief": "The government argued that mandatory reporting to the Australian Immunisation Register will improve vaccination coverage, program effectiveness, and health system policy, while noting vaccination remains voluntary but border entry may require proof."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Immunisation Register Amendment (Reporting) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00001",
+   "assent_date": "2021-02-15"
+  }
+ ]
+}

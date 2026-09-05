@@ -1,0 +1,484 @@
+{
+ "key": "au-federal-r6603",
+ "title": "Appropriation Bill (No. 1) 2020-2021",
+ "short_title": "Appropriation Bill (No. 1) 2020-2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2020-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6603_ems_b406d1a7-c1a9-4bc6-9db9-fc78c7a3210f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6603%22",
+   "document_date": "2020-10-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00109",
+   "document_date": "2020-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-06",
+  "sentences": [
+   "This bill would allocate money from the government's main fund to cover its day-to-day running costs.",
+   "It would provide about five-twelfths of the estimated annual funding for these services, plus extra amounts agreed after the last main appropriation act.",
+   "The explanatory memorandum does not specify the exact total amount or the date the funding would start."
+  ],
+  "changes": [
+   "The bill would propose spending from the Consolidated Revenue Fund for ordinary annual services.",
+   "It would supplement the funding already provided by the Supply Acts.",
+   "It would include measures agreed since the previous appropriation act."
+  ],
+  "affected": "The government and its departments and agencies that receive funding for ordinary annual services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6749",
+   "date": "2020-11-30",
+   "house": "senate",
+   "question": "Appropriation Bill (No. 1) 2020-2021 - in Committee - ANAO funding",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "earliest": 17,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-30/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-395421",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-06",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2020-2021 seeks approval for $14.9 billion from the Consolidated Revenue Fund, including nearly $8.5 billion for Defence, $2.5 billion for Agriculture, Water and the Environment, and $1.4 billion for Infrastructure, Transport, Regional Development and Communications, with a revised $6 billion advance to the finance minister."
+  },
+  {
+   "slug": "speech-396399",
+   "speaker": "Maria Vamvakinou",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the federal budget failed to address the social housing and homelessness crisis, noting a national shortfall of over 433,000 properties and calling for a revival of social housing with Commonwealth leadership; they highlighted that 900 people in Calwell are experiencing homelessness, and criticised the government for not adopting Labor's plan for a $500 million investment in repairs and new construction."
+  },
+  {
+   "slug": "speech-396400",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's 2020-21 budget fails to support those hardest hit by the recession, particularly women, and misses opportunities in childcare, social housing, renewable energy, and manufacturing. Labor's alternative plans include cutting childcare fees, investing in social housing repairs, and modernising the energy grid."
+  },
+  {
+   "slug": "speech-396401",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-20",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 1) 2020-21, Appropriation Bill (No. 2) 2020-2021, and Appropriation (Parliamentary Departments) Bill (No. 1) 2020-21 were referred to the Federation Chamber for further consideration."
+  },
+  {
+   "slug": "speech-396621",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government is withdrawing COVID-19 support too quickly, citing cuts to the coronavirus supplement removing $7.36 million per fortnight from Ballarat, equivalent to around 2,822 local jobs, while the region also missed out on infrastructure commitments like the Western Ring Road. They also accused the government of pork-barrelling, pointing to Deputy Prime Minister Michael McCormack's comment that Ballarat's lack of funding was due to its Labor MP, and highlighted the Leppington Triangle airport land purchase as a $30 million scandal where land worth only $3 million was bought."
+  },
+  {
+   "slug": "speech-396627",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The Morrison government's 2020-2021 budget shifts from crisis management to recovery, focusing on job creation and business support through measures including the JobMaker Hiring Credit, JobTrainer ($1 billion), personal income tax relief of up to $2,745 for 36,500 taxpayers in north-west Tasmania, instant asset write-off, $2 billion for the National Water Infrastructure Development Fund, $250 million for Project Marinus, and an additional $1 billion for the Local Roads and Community Infrastructure Program."
+  },
+  {
+   "slug": "speech-396630",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The member for Berowra argued that the 2020-2021 budget is a necessary response to COVID-19, highlighting measures including tax relief for 72,500 local taxpayers, instant asset write-off for 19,900 businesses, JobKeeper support for 6,400 businesses, wage subsidies for apprentices, the JobMaker Hiring Credit for 450,000 positions, and a record $5.7 billion investment in mental health, with the economy forecast to grow 4.5% and unemployment to fall to 6.5% by June 2022."
+  },
+  {
+   "slug": "speech-396633",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the appropriation bills, which allocate $36.8 billion, $14.9 billion, and $141.7 million for parliamentary functions, and detailed COVID-19 response measures including $101 billion for JobKeeper, $17.8 billion in tax relief, and $245 million for an Edith Cowan University campus."
+  },
+  {
+   "slug": "speech-396639",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The MP argued the Morrison government's budget fails regional Australia, citing a $1 trillion debt, 33,000 local JobKeeper recipients and 14,000 JobSeeker recipients on the North Coast, $1.7 billion in aged-care cuts, and a $33 million Southern Cross University funding shortfall. They also criticised the lack of a federal integrity commission and state Liberal-National decisions on koala protection and shark mitigation."
+  },
+  {
+   "slug": "speech-396644",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The member for Curtin argued that the 2020-21 budget builds on existing COVID-19 support measures to drive economic recovery, citing JobKeeper payments supporting 6,700 local businesses, tax relief for 66,000 Curtin taxpayers, and new initiatives including the JobMaker hiring credit, instant asset write-off extension, and record health funding of $93.8 billion."
+  },
+  {
+   "slug": "speech-396650",
+   "speaker": "Ken O'Dowd",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-21",
+   "stage_hint": null,
+   "brief": "The member for Flynn supported the 2020-2021 appropriation bills, highlighting $20 million for the John Petersen Bridge, upgrades to the Springsure-Tambo road, the Dawson Highway, and the Philip Street four-lane project in Gladstone. He also announced federal funding for the Cooranga, Bardwell, and Paranui weirs, and argued for an inland rail line from Gladstone to Toowoomba, citing the resource industry's $290 billion annual contribution and the need for water infrastructure to boost agriculture from $60 billion to $100 billion."
+  },
+  {
+   "slug": "speech-396845",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the 2020-2021 budget, arguing that JobKeeper and JobSeeker payments prevented economic collapse, and highlighted measures including an uncapped instant asset write-off for businesses with turnover under $5 billion, a tax loss carry-back, a wage subsidy for young people, and confirmation of defence spending on Attack class submarines and Hunter class frigates in South Australia."
+  },
+  {
+   "slug": "speech-396853",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's budget fails to meet the needs of Australians during the pandemic and climate crisis, with no medium- or long-term planning for public education, health, infrastructure, or the environment. They noted the government doubled national debt before the pandemic, has not delivered a single surplus despite its 2013 \"debt and deficit emergency\" platform, and is running a deficit larger than the net debt inherited in 2013."
+  },
+  {
+   "slug": "speech-397365",
+   "speaker": "Fiona Martin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The member for Reid backed the 2020 budget as delivering tax relief, record health funding ($93.8 billion), mental health support ($5.7 billion), NDIS funding ($1.2 billion additional), and more home-care packages, while arguing business investment incentives and job programs like JobMaker and $1.2 billion for apprenticeships will drive recovery. The speech also cited local benefits, including tax relief for over 90,000 Reid taxpayers and JobKeeper supporting businesses such as Pasticceria Papa."
+  },
+  {
+   "slug": "speech-397374",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The member for Gilmore argued the budget failed to address key community needs, including targeted support for travel agents, increased social and affordable housing, better public transport, and full spending of the $2 billion bushfire recovery fund. She called for an end to age discrimination in the job hiring incentive, a permanent rise in the JobSeeker rate, a federal ICAC, and more funding for mental health, public schools, aged care, and renewable energy."
+  },
+  {
+   "slug": "speech-397378",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued for an integrated trade and manufacturing strategy, criticising the government's reliance on rebranding gimmicks rather than deeds and dollars, and announced Labor's plan for a future made in Australia, including a national rail manufacturing plan and the findings of an Indo-Pacific trade task force. Key figures cited include Victoria's two-way trade with South-East Asia growing 30% to $15.3 billion over the last decade, and the $5 billion Northern Australia Infrastructure Facility (NAIF) with only about $40 million spent."
+  },
+  {
+   "slug": "speech-397384",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the federal budget fails to support the Werriwa electorate, particularly older unemployed workers and women, and criticised the government for spending $30 million on airport land valued at $3 million while neglecting social housing, domestic violence services, and local infrastructure. They also noted the JobMaker hiring credit excludes those over 35, leaving 900,000 older Australians on unemployment benefits without assistance."
+  },
+  {
+   "slug": "speech-397612",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-28",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's budget for excluding women, unemployed people over 35, and those needing aged care, and opposed the JobMaker hiring credit's age limit. They promoted Labor's alternative plans, including a National Rail Manufacturing Plan, $500 million for social housing repair, and opposition to the PEP 11 offshore gas project."
+  },
+  {
+   "slug": "speech-397941",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to alter the Federation Chamber's sitting schedule for 10–12 November 2020, allowing extended government business hours and removing constituency statements and grievance debate on specific days, to facilitate consideration of three appropriation bills."
+  },
+  {
+   "slug": "speech-398144",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker highlighted $299 billion in direct economic support measures and the $74 billion JobMaker Plan, including a $4 billion hiring credit expected to support 450,000 positions for people aged 16–35. Additional measures include 10,000 new guarantees under the First Home Loan Deposit Scheme for newly constructed homes, $17.8 billion in personal income tax cuts benefiting 11.6 million individuals, and temporary full expensing and loss carry-back for businesses."
+  },
+  {
+   "slug": "speech-398158",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The government argued its pre-COVID budget improvements of a quarter of a billion dollars over 10 years enabled record pandemic support, including a $74 billion JobMaker Plan targeting one million jobs, with a $4 billion hiring credit for 16-35-year-olds on JobSeeker, a $1 billion JobTrainer Fund for 340,000 training places, $1.2 billion for 100,000 apprenticeships, $14 billion in infrastructure for 40,000 jobs, and a $796 million Digital Business Plan."
+  },
+  {
+   "slug": "speech-398162",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The member argued that the budget's instant asset write-off and tax clawback measures increased business confidence and investment in his electorate and South Australia, and welcomed incentives for hiring young JobSeeker recipients. He also questioned the $96.7 million allocated to the Australian Electoral Commission for ICT upgrades and asked how the pandemic would impact election logistics."
+  },
+  {
+   "slug": "speech-398665",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The government extended temporary social security measures and committed $84.5 million for parenting and financial support programs, $90.3 million to revise paid parental leave work tests, and $132.6 million for frontline social services. It also announced two $250 economic support payments for 5.1 million eligible Australians, including age pensioners and disability support recipients, and spent nearly $15.5 billion on the coronavirus supplement."
+  },
+  {
+   "slug": "speech-398667",
+   "speaker": "Michelle Landry",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "The Morrison government's Appropriation Bill (No. 1) 2020-2021 provides over $40 million over three years for frontline parenting services, ongoing funding for 1800RESPECT, extension of the Help is Here domestic violence campaign, and $44 million extra over three years for Financial Wellbeing and Capability activities including the No Interest Loan Scheme."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2020-2021",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00109",
+   "assent_date": "2020-12-04"
+  }
+ ]
+}

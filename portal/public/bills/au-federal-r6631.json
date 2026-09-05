@@ -1,0 +1,810 @@
+{
+ "key": "au-federal-r6631",
+ "title": "Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020",
+ "short_title": "Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6631_ems_e0ec3db3-458c-4749-a9cf-261cc5655820%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6631%22",
+   "document_date": "2020-11-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00140",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-12",
+  "sentences": [
+   "The bill would extend several temporary coronavirus income support measures until 31 March 2021.",
+   "It would allow the minister to modify social security law by disallowable legislative instrument in response to the pandemic's economic and social impacts up to that date.",
+   "The government estimates the cost of the bill at $3.2 billion to 2024-25."
+  ],
+  "changes": [
+   "The coronavirus supplement for youth allowance recipients would be extended from 1 January 2021 to 31 March 2021.",
+   "Temporary COVID-19 exemptions from the ordinary waiting period and newly arrived resident's waiting period could not be extended beyond 31 March 2021.",
+   "Temporary rules making jobseeker payment and youth allowance easier to qualify for would run from 1 January 2021 to 31 March 2021.",
+   "The temporary exemption from the liquid assets test waiting period would be ended permanently.",
+   "A new discretionary power would let the assets tests for social security and veterans' entitlements extend the principal home temporary absence period when a person cannot return to Australia within the allowed time through no fault of their own.",
+   "JobKeeper information given to Services Australia on or before 28 March 2021 could continue to be used after that date."
+  ],
+  "affected": "Recipients of youth allowance, jobseeker payment, and other income support payments, as well as people affected by the principal home temporary absence rules.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:23:43Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6738",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the usual second reading motion - which is \"*that the bill be read a second time*\" - unchanged. Reading a bill [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is parliamentary jargon for agreeing with the main idea of a bill. This vote was put after a motion (see below) was introduced to change the wording of the usual second reading motion. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes the Government's plans to cut coronavirus support for businesses and individuals; and* > > *(2) calls on the Government to permanently increase the base rate of the JobSeeker Payment\".*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-02/2"
+  },
+  {
+   "key": "federal-representatives-6739",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "question": "Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020 - Consideration in Detail - Discontinue support",
+   "stage": "Consideration in detail",
+   "ayes": 62,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-02/3"
+  },
+  {
+   "key": "federal-representatives-6740",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to *disagree* with [amendment (2)](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/32f9c2b2-1ee9-4d5f-b741-8e194c4befdc/&sid=0000), which means the amendment failed. According to Barton MP [Linda Burney](https://theyvoteforyou.org.au/people/representatives/barton/linda_burney) (Labor), the amendment \"*will remove the government's drop-dead date of 31 March 2021 for the rate of unemployment payments to return to the old Newstart rate.*\" ### Amendment text > *(2) Schedule 1, Division 2, page 3 (line 12) to page 5 (line 25), omit the Division.*",
+   "stage": "Consideration in detail",
+   "ayes": 63,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-02/4"
+  },
+  {
+   "key": "federal-representatives-6741",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "question": "Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020 - Consideration in Detail - Liquid assets waiting period",
+   "stage": "Consideration in detail",
+   "ayes": 63,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-02/5"
+  },
+  {
+   "key": "federal-representatives-6742",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "question": "Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020 - Consideration in Detail - Not extending beneficial changes",
+   "stage": "Consideration in detail",
+   "ayes": 63,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 119
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-12-02/6"
+  },
+  {
+   "key": "federal-senate-6876",
+   "date": "2020-12-10",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an amendment to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*that the bill be read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes the Government's plans to cut coronavirus support for businesses and individuals; and* > > *(b) calls on the Government to permanently increase the base rate of the JobSeeker Payment\".*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "earliest": 23,
+    "dated": 27
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-10/9"
+  },
+  {
+   "key": "federal-senate-6877",
+   "date": "2020-12-10",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020 - Second Reading - Increase  Jobseeker Payment and Youth Allowance",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "earliest": 24,
+    "dated": 27
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-10/10"
+  },
+  {
+   "key": "federal-senate-6878",
+   "date": "2020-12-10",
+   "house": "senate",
+   "question": "Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020 - in Committee - Don't cut the supplement",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 26,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-10/11"
+  },
+  {
+   "key": "federal-senate-6879",
+   "date": "2020-12-10",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2020-12-10.173.1), which means it failed. The motion was \"*that division 2 of part 1 of schedule 1 stand as printed.*\" To stand as printed is parliamentary jargon for remaining unchanged. This vote was technically unsuccessful but, because a majority is needed to actually make a change to the wording of the bill, that particular division remained part of the bill as passed by both houses. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd032), the bill was introduced in order to: * *provide for the extension of the Coronavirus Supplement for Youth Allowance (Student and Apprentice) recipients from 1 January 2021 to 31 March 2021;* * *prevent any extension of the Coronavirus Supplement and the temporary COVID-19-related waivers from the ordinary waiting period, newly arrived resident’s waiting period and seasonal work preclusion period beyond 31 March 2021;* * *provide for the extension of the temporary COVID-19-related qualification rules for Youth Allowance (Student and Apprentice);* * *remove provisions relating to the COVID-19-related liquid assets test waiting period and assets test waivers (these waivers ended on 25 September 2020);* * *allow for specific provisions of social security law to be temporarily modified by the Minister by legislative instrument in response to the economic and social impacts of COVID-19 until 31 March 2021 (or 16 April 2021 for some of the provisions);* * *introduce a discretionary power under the Social Security Act 1991 and the Veterans’ Entitlement Act 1986 assets tests to extend the temporary absence provisions used in relation to determining a person’s principal home where an individual is unable to return to Australia, for reasons beyond their control, within the allowable absence period; and* * *allow for JobKeeper Payment information",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 25,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-10/12"
+  },
+  {
+   "key": "federal-senate-6883",
+   "date": "2020-12-10",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-12-10.241.2) introduced by SA Senator [Simon Birmingham](https://theyvoteforyou.org.au/people/senate/sa/simon_birmingham) (Liberal), which means it succeeded. The motion was: > *That the committee does not insist on its amendment to which the House of Representatives has disagreed.* Because this vote was successful, the bill can now become law. That is, both levels of parliament have agreed to the bill in its current form. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd032), the bill was introduced in order to: * *provide for the extension of the Coronavirus Supplement for Youth Allowance (Student and Apprentice) recipients from 1 January 2021 to 31 March 2021;* * *prevent any extension of the Coronavirus Supplement and the temporary COVID-19-related waivers from the ordinary waiting period, newly arrived resident’s waiting period and seasonal work preclusion period beyond 31 March 2021;* * *provide for the extension of the temporary COVID-19-related qualification rules for Youth Allowance (Student and Apprentice);* * *remove provisions relating to the COVID-19-related liquid assets test waiting period and assets test waivers (these waivers ended on 25 September 2020);* * *allow for specific provisions of social security law to be temporarily modified by the Minister by legislative instrument in response to the economic and social impacts of COVID-19 until 31 March 2021 (or 16 April 2021 for some of the provisions);* * *introduce a discretionary power under the Social Security Act 1991 and the Veterans’ Entitlement Act 1986 assets tests to extend the temporary absence provisions used in relation to determining a person’s principal home where an individual is unable to return to Australia, for reasons beyond their control, within the allowable absence period; and* * *allow for JobKeeper",
+   "stage": "Consideration of House message",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 28,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-12-10/16"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-399427",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The Labor member moved amendments to stop the government from cutting coronavirus support payments to around two million people at Christmas and to permanently increase the base rate of JobSeeker Payment, noting that 1.8 million Australians are projected to be on unemployment support by the end of the year and that returning to the old $40-per-day Newstart rate would cause hardship and jeopardise local jobs."
+  },
+  {
+   "slug": "speech-399429",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The speaker supported extending the coronavirus supplement for jobseekers at $150 per fortnight from 1 January to 31 March 2021, at a cost of $3.2 billion, and noted that 650,000 jobs had been recovered in the previous five months, with 80 per cent of those who lost work or had hours reduced back in employment."
+  },
+  {
+   "slug": "speech-399430",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill fails to provide certainty for Australians, criticising the government for not increasing JobSeeker above $40 a day and for planning to keep unemployment above five per cent for four years, while noting 160,000 expected job losses and 1.8 million on unemployment support by Christmas."
+  },
+  {
+   "slug": "speech-399433",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The Morrison government has delivered help to all Australians through measures including JobSeeker, countering claims from the member for Dunkley that the opposition stands up for those in need."
+  },
+  {
+   "slug": "speech-399441",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued against the government's bill to end the coronavirus supplement from 31 March 2021, stating that cutting benefits during a recession with one million unemployed would increase hardship, and supported Labor's call for a permanent increase to the JobSeeker payment base rate."
+  },
+  {
+   "slug": "speech-399514",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill cuts JobSeeker back to the old, unlivable Newstart rate during the pandemic, with 1.6 million Australians on JobSeeker and 21 jobseekers for every job in Tasmania. They announced Labor’s amendment for a permanent increase to JobSeeker, citing 58 suicides in 2019 linked to unemployment and 214 to housing and economic circumstances."
+  },
+  {
+   "slug": "speech-399515",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has failed to provide certainty for Australians by not permanently increasing JobSeeker, noting that 1.4 million Australians are on the payment and 160,000 are expected to lose jobs, while the $40‑a‑day rate forces people into poverty and harms economic recovery."
+  },
+  {
+   "slug": "speech-399517",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The member for Macarthur opposed the cut to JobSeeker and the government’s reduction of the coronavirus supplement, arguing the rate should be permanently increased and the minister should be able to extend the supplement beyond March. He supported the amendment moved by the member for Barton to abandon the “Christmas cuts” to unemployment payments and increase the JobSeeker rate."
+  },
+  {
+   "slug": "speech-399519",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill is unnecessary as the minister already has power to extend the coronavirus supplement, and criticised the reduction from $250 to $150 per fortnight from 1 January 2021 and the hard cut-off on 31 March 2021, which would return JobSeeker to $282 per week for a single person. They called for a permanent increase to the JobSeeker rate of $95 per week and for raising the age at which single parents are moved from parenting payment to JobSeeker from eight to at least 12 years."
+  },
+  {
+   "slug": "speech-399520",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's extension of the coronavirus supplement until 31 March 2021 but criticised it as a missed opportunity to permanently raise the JobSeeker rate, backing amendments to prevent a Christmas cut, increase the base rate, and retain powers for ongoing supplement payments; they also noted that parliamentarians receive $280 per day in travel allowance, equivalent to the pre-coronavirus weekly JobSeeker rate of $280."
+  },
+  {
+   "slug": "speech-399522",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill fails to permanently increase the JobSeeker base rate and will cut the coronavirus supplement at Christmas, reverting support to $40 per day from March 2021. They called for a permanent increase to JobSeeker, cited 1.8 million Australians relying on it by Christmas, and advocated for a full-employment policy based on the post-war Chifley government model."
+  },
+  {
+   "slug": "speech-399523",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speech opposed the Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020, arguing that cuts to JobKeeper and JobSeeker have caused hardship, citing tripled demand at Shortland food banks and increased domestic violence. It called for a permanent increase to JobSeeker and criticised the JobMaker hiring credit for creating only around 45,000 jobs."
+  },
+  {
+   "slug": "speech-399524",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The bill was described as a missed opportunity to permanently increase the JobSeeker base rate, with the withdrawal of the $550 coronavirus supplement from 31 March criticised as poorly timed and harmful, citing Anglicare and Foodbank warnings including a 47% rise in food relief demand. The speech also highlighted the omission of older workers aged over 50 and called for job creation in renewable energy, social housing and bushfire recovery."
+  },
+  {
+   "slug": "speech-399525",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill is a stunt that will cut unemployment benefits to $40 a day, pushing 1.5 million Australians into poverty, and criticised the government for lacking courage and misrepresenting the bill's contents. The speaker noted the government's own projections show 1.8 million Australians will rely on unemployment benefits by Christmas, and described the cut as the single greatest act by any Australian government to drive citizens into poverty."
+  },
+  {
+   "slug": "speech-399526",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill fails to permanently increase the base rate of JobSeeker payment and warned that the government's plan to end the coronavirus supplement from 31 March 2021 will hurt around two million Australians, including single parents, students, and those in regions like the Central Coast where there are 15 jobseekers per vacancy. The speaker supported Labor's amendment calling for a permanent increase to JobSeeker and ongoing flexibility to extend the supplement."
+  },
+  {
+   "slug": "speech-399527",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker opposed reducing the coronavirus supplement from $250 to $150 per fortnight, arguing it would leave recipients with about $50 per day—$15 below the poverty line—and called for a living income above the poverty line for all income support recipients, citing Australia's wealth as proof of affordability."
+  },
+  {
+   "slug": "speech-399528",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker supported amendments to the Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Bill 2020 that would prevent the government from cutting the coronavirus supplement by Christmas and permanently increase the base rate of JobSeeker, arguing that premature withdrawal would harm economic recovery and leave recipients in poverty."
+  },
+  {
+   "slug": "speech-399529",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The Labor MP criticised the government for lacking the courage to defend its own bill, which would cut hundreds of thousands of Australians back to $40 per day in March, arguing the pandemic is not over and the economic fallout will last years. The MP also recalled the Minister for Government Services falsely claiming the myGov website was hacked when it crashed, later saying \"my bad.\""
+  },
+  {
+   "slug": "speech-399654",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The speaker argued against cutting the coronavirus supplement before Christmas and supported amendments to permanently increase the JobSeeker base rate, citing OECD warnings that cuts would hamper recovery, 160,000 expected job losses by year-end, 1.8 million on unemployment support by Christmas, and seven applicants per job vacancy."
+  },
+  {
+   "slug": "speech-399655",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-02",
+   "stage_hint": null,
+   "brief": "The bill extends temporary coronavirus support measures with a new instrument-making power until 31 March 2021, costing $3.2 billion, and introduces a discretionary power for asset test exemptions while permanently repealing earlier temporary exemptions."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Extension of Coronavirus Support) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00140",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

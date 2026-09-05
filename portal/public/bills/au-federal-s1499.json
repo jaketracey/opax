@@ -1,0 +1,137 @@
+{
+ "key": "au-federal-s1499",
+ "title": "Anti-Discrimination Legislation Amendment (Sexual Orientation, Gender Identity and Sex Characteristics Discrimination Commissioner) Bill 2026",
+ "short_title": "Anti-Discrimination Legislation Amendment (Sexual Orientation, Gender Identity and Sex Characteristics Discrimination Commissioner) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-30",
+ "originating_house": "senate",
+ "sponsor": "MCKIM, Sen Nick",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10841",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1499%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1499_ems_815af868-23e9-445a-a18b-8a858490a343%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1499%22",
+   "document_date": "2026-06-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-10528",
+   "date": "2026-06-30",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-06-30.145.8): > *That so much of the standing orders be suspended as would prevent the motion being moved immediately and determined without amendment or debate.* This means that Tasmanian Senator Nick McKim (Greens) can now introduce [his motion](https://theyvoteforyou.org.au/divisions/senate/2026-06-30/19). #### Rebellion South Australian Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) rebelled against the rest of his party and voted \"no\" while the rest of the Liberal Party voted \"yes\".",
+   "stage": "First Reading",
+   "ayes": 35,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-30/18"
+  },
+  {
+   "key": "federal-senate-10529",
+   "date": "2026-06-30",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-06-30.147.1): > *That the following bill be introduced:* > > *A Bill for an Act to amend the law relating to discrimination and human rights, and for related purposes.* In other words, they voted to allow Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens) proceed with introducing the [Anti-Discrimination Legislation Amendment (Sexual Orientation, Gender Identity and Sex Characteristics Discrimination Commissioner) Bill 2026](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1499). #### Rebellion South Australian Senator [Alex Antic](https://theyvoteforyou.org.au/people/senate/sa/alex_antic) rebelled against the rest of his party and voted \"no\" while the rest of the Liberal Party voted \"yes\".",
+   "stage": "First Reading",
+   "ayes": 35,
+   "noes": 6,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-30/19"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

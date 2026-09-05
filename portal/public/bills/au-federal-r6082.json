@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6082",
+ "title": "Public Sector Superannuation Legislation Amendment Bill 2018",
+ "short_title": "Public Sector Superannuation Legislation Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-03-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2018-08-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6082_ems_3769ac47-f643-4a11-b447-10a7b2912dec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6082%22",
+   "document_date": "2018-03-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00080",
+   "document_date": "2018-08-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-361547",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-03-28",
+   "stage_hint": null,
+   "brief": "The Public Sector Superannuation Legislation Amendment Bill 2018 makes four key changes: allowing non-judge members of the Judges' Pensions Scheme to request a lump sum for the division 293 tax; fixing the calculation of lump sum superannuation guarantee safety net benefits for estates under the Parliamentary Contributory Superannuation Act; raising the minimum age for child reversionary benefits from 16 to 18 and removing the employment condition; and reducing the Commonwealth Superannuation Corporation board from 11 to nine directors."
+  },
+  {
+   "slug": "speech-367063",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "Labor supported the Public Sector Superannuation Legislation Amendment Bill 2018 for its technical changes to superannuation for public servants, judges and parliamentarians, but criticised the government for failing to address unpaid superannuation for the broader workforce, where 2.4 million workers lose $5.6 billion annually, and for proposing an amnesty that would let employers avoid penalties for unpaid super."
+  },
+  {
+   "slug": "speech-367064",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-15",
+   "stage_hint": null,
+   "brief": "The Public Sector Superannuation Legislation Amendment Bill 2018 makes four key changes: allowing non-judge members of the Judges' Pensions Scheme to release lump sums for division 293 tax, fixing the superannuation guarantee safety net calculation for parliamentary pensions, changing child reversionary benefit eligibility from age 16 to 18 and removing the employment test, and reducing the Commonwealth Superannuation Corporation Board from 11 to nine directors. It also includes minor amendments to the Parliamentary Contributory Superannuation Act, such as allowing trust resolutions without a meeting and permitting actuaries other than the Australian Government Actuary to provide advice."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Public Sector Superannuation Legislation Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00080",
+   "assent_date": "2018-08-24"
+  }
+ ]
+}

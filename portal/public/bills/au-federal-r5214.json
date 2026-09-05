@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-r5214",
+ "title": "Corporations Amendment (Simple Corporate Bonds and Other Measures) Bill 2014",
+ "short_title": "Corporations Amendment (Simple Corporate Bonds and Other Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-05-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2014-09-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5214_ems_890b3e05-9d9b-4032-a833-5edc44b6a4b1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5214%22",
+   "document_date": "2014-05-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00100",
+   "document_date": "2014-09-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-05-15",
+  "sentences": [
+   "The bill would make it easier to trade retail corporate bonds in Australia.",
+   "It changes the Corporations Act 2001 to reduce compliance costs for issuers of certain retail bonds.",
+   "The main changes start on a day set by Proclamation or six months after Royal Assent, while the rest of the bill starts the day after Royal Assent."
+  ],
+  "changes": [
+   "The bill amends the Corporations Act 2001.",
+   "It facilitates improved trading of retail corporate bonds.",
+   "It reduces compliance costs for issuers of certain retail corporate bonds."
+  ],
+  "affected": "Issuers of certain retail corporate bonds.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:09Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-294701",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294704",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294955",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Simple Corporate Bonds and Other Measures) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00100",
+   "assent_date": "2014-09-11"
+  }
+ ]
+}

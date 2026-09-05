@@ -1,0 +1,439 @@
+{
+ "key": "au-federal-r5520",
+ "title": "Social Security Legislation Amendment (Debit Card Trial) Bill 2015",
+ "short_title": "Social Security Legislation Amendment (Debit Card Trial) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5520_ems_91404ffb-3b40-4be1-a67e-2c5f2e6a1eeb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5520%22",
+   "document_date": "2015-08-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00144",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-19",
+  "sentences": [
+   "The bill would create a trial of welfare payments issued through a debit card that cannot be used for cash, alcohol, gambling or illegal drugs.",
+   "Eighty percent of a person's working-age welfare payment would go into a restricted bank account, with the remaining 20 percent available for cash and other spending.",
+   "The trial would run in up to three locations chosen for high welfare dependence and harm from alcohol, gambling or drugs."
+  ],
+  "changes": [
+   "Amends social security law to enable a trial of cashless welfare arrangements.",
+   "Requires 80 percent of working-age welfare payments to be placed in a restricted bank account.",
+   "Bans the use of the debit card for cash withdrawals, alcohol, gambling products and illegal drugs.",
+   "Allows 20 percent of payments to be used at the person's discretion.",
+   "Limits the trial to up to three locations with high welfare dependence and harm from substance abuse or gambling."
+  ],
+  "affected": "People receiving working-age welfare payments such as newstart allowance in trial locations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:53:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3955",
+   "date": "2015-10-14",
+   "house": "senate",
+   "question": "Bills — Social Security Legislation Amendment (Debit Card Trial) Bill 2015; Second Reading",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 31,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-14/1"
+  },
+  {
+   "key": "federal-senate-3958",
+   "date": "2015-10-14",
+   "house": "senate",
+   "question": "Bills — Social Security Legislation Amendment (Debit Card Trial) Bill 2015; Third Reading",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-10-14/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-318799",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Social Security Legislation Amendment (Debit Card Trial) Bill 2015 in the House but expects the government to provide a comprehensive package of support services, operational details, and a proper evaluation before supporting it in the Senate. The trial would place 80% of welfare payments into a restricted bank account for up to 10,000 people in up to three locations, including Ceduna."
+  },
+  {
+   "slug": "speech-318803",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the cashless debit card trial for Ceduna, Yalata and Oak Valley, noting local community backing, but criticised the lack of trigger mechanisms or exemptions for participants and called for additional financial literacy, wraparound and counselling support."
+  },
+  {
+   "slug": "speech-318827",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker apologised to gallery attendees for the delay and confirmed question time will begin at 2:30 pm, with the government ready and the rest of the day's debate unaffected. Debate will continue on the Social Security Legislation Amendment (Debit Card Trial) Bill 2015."
+  },
+  {
+   "slug": "speech-318829",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Security Legislation Amendment (Debit Card Trial) Bill 2015, which would trial a cashless debit card for up to 10,000 welfare recipients in up to three communities, starting in Ceduna, to restrict spending on alcohol, gambling, and cash advances. The trial aims to reduce social harm, with 80% of payments quarantined and 20% available as cash, and will be independently evaluated."
+  },
+  {
+   "slug": "speech-318830",
+   "speaker": "Gary Gray",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The bill amends social security law to enable a trial of a cashless welfare card in up to three locations, including Kununurra and Ceduna, involving up to 10,000 people as a response to Andrew Forrest’s review to address alcohol abuse in Indigenous communities."
+  },
+  {
+   "slug": "speech-318983",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The bill introduces a 12-month cashless debit card trial for Centrelink recipients in communities with high alcohol, drug and gambling problems, with the first trial site in Ceduna, South Australia, and advanced discussions for Kununurra in the East Kimberley. The card restricts purchases of alcohol and gambling products, with 80% of payments placed on the card and 20% in cash, and has local community support."
+  },
+  {
+   "slug": "speech-318984",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the debit card trial but raised concerns about its compulsory nature, lack of opt-out provisions, and potential to stigmatise responsible welfare recipients. They argued the trial lacks independent external evaluation, complementary support services, and measures to address alcohol supply and tobacco use, citing the 2013 parliamentary report on harmful alcohol use in Indigenous communities."
+  },
+  {
+   "slug": "speech-318985",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Social Security Legislation Amendment (Debit Card Trial) Bill 2015, which introduces a 12-month cashless debit card trial for up to 10,000 people in three communities, with 80% of welfare payments restricted from use on alcohol, drugs, or gambling. The trial targets areas of high welfare dependence and social harm, with Ceduna and the Kimberley region as proposed sites, and aims to reduce domestic violence and welfare-fuelled substance abuse."
+  },
+  {
+   "slug": "speech-318986",
+   "speaker": "Bob Katter",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Security Legislation Amendment (Debit Card Trial) Bill 2015 as a blanket approach that only suppresses symptoms, and argued that granting private land title deeds to Indigenous Australians is the real solution—citing his own success issuing nearly 800 deeds in Queensland. He criticised alcohol bans, highlighted Andrew Forrest’s employment of 2,000 First Australians, and contrasted Cape York Peninsula’s 154,000 head of cattle with Victoria’s 4.5 million, attributing the gap to a lack of title deeds and water licences."
+  },
+  {
+   "slug": "speech-318988",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Security Legislation Amendment (Debit Card Trial) Bill 2015, which would restrict welfare payments for alcohol and gambling in Ceduna, raises complex ethical issues but should proceed as a trial if community leaders support it, and called for a Senate inquiry to address missing details on addiction services and evaluation."
+  },
+  {
+   "slug": "speech-318989",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The member strongly supported the cashless debit card trial, arguing it would not restrict normal purchases but would limit spending on alcohol, gambling, and illicit drugs, with 20% of welfare payments available as cash for a couple with children. He noted Moree was withdrawn from the trial due to community misinformation, confirmed welfare recipients there were about 50% Aboriginal and 50% non-Aboriginal, and cited the Ceduna trial's community resolve and a new 18-bed rehabilitation centre in Moree as part of the need for such measures."
+  },
+  {
+   "slug": "speech-318990",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Security Legislation Amendment (Debit Card Trial) Bill 2015, which introduces a 12-month trial of a cashless debit card in Ceduna restricting 80% of welfare payments from alcohol and gambling, with 20% unrestricted. The speaker cited Ceduna's 4,667 sobering-up facility admissions for 4,425 residents in 2013-14 and assault hospitalisations 68 times the national average, noting community backing from the District Council of Ceduna."
+  },
+  {
+   "slug": "speech-318991",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for the cashless debit card trial in Ceduna, where 80% of welfare payments would be placed on a card that cannot be used for alcohol, gambling, or drugs. He cited 4,667 sobering-up unit admissions and a 68-times national average hospitalization rate for assault, and named community leaders including Mayor Allan Suter and Mima Smart who supported the trial."
+  },
+  {
+   "slug": "speech-318993",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia has failed to make significant progress on Closing the Gap and that accepting the status quo is not working, so policymakers must try new approaches. They announced support for the new cashless welfare debit card trial, which will be tested for 12 months in locations with high welfare dependence and social harm, and commended Parliamentary Secretary Alan Tudge for his policy development."
+  },
+  {
+   "slug": "speech-318995",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-15",
+   "stage_hint": null,
+   "brief": "The Social Security Legislation Amendment (Debit Card Trial) Bill 2015 was introduced to trial a cashless debit card in up to three locations, placing 80% of welfare payments onto a card that cannot be used for alcohol, gambling, or illicit drugs. The first trial site will be the Ceduna region in South Australia from February 2016, with additional supports including financial counselling and drug/alcohol assistance, and a second trial site is being considered in the East Kimberley region."
+  },
+  {
+   "slug": "speech-320391",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the healthy welfare card trial, centred on Ceduna, is needed to address entrenched alcohol-related harm in Indigenous communities, citing 3,000 annual deaths and 65,000 hospitalisations. He announced the bill is before the Senate, with 80% of welfare payments directed to a card blocked at liquor and gambling outlets, and criticised the Australian Greens for opposing the trial and refusing to meet with Ceduna community groups."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security Legislation Amendment (Debit Card Trial) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00144",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

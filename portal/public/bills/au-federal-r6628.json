@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6628",
+ "title": "Migration Amendment (Common Sense Partner Visa) Bill 2020",
+ "short_title": "Migration Amendment (Common Sense Partner Visa) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-11-30",
+ "originating_house": "representatives",
+ "sponsor": "HILL, Julian, MP",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10885",
+ "portfolio": "(s) HILL, Julian, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-08-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6628%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6628%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-08-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6628%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6628_ems_72e17c7e-e3ea-4c7f-b05d-41d017597cc7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6628%22",
+   "document_date": "2020-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-11-30",
+  "sentences": [
+   "The bill would temporarily allow people applying for a Subclass 309 Partner (Provisional) visa to be granted the visa while they are inside Australia.",
+   "It would suspend the current requirement that applicants be outside Australia at the time of visa grant, which the sponsor says has become difficult due to COVID-19 travel disruptions.",
+   "The change would apply from the day after Royal Assent until 31 December 2021, after which the usual off-shore requirement would resume."
+  ],
+  "changes": [
+   "Allow Subclass 309 visa applicants to be granted a visa while onshore for a specified period.",
+   "Suspend the requirement in the Migration Regulations that applicants be outside Australia at the time of visa grant.",
+   "Set the temporary period from the day after Royal Assent until 31 December 2021."
+  ],
+  "affected": "Applicants for Subclass 309 Partner (Provisional) visas who are onshore in Australia and unable to travel overseas due to COVID-19 restrictions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:13:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-398988",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-30",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Common Sense Partner Visa) Bill 2020 was introduced to let offshore partner visa applicants already in Australia have their visas granted onshore, removing the requirement to fly overseas and back during the pandemic. The speech criticised Minister Tudge and the Morrison government for failing to act, citing cases like Amelia and Bowie (who spent over $37,000 and $6,000 on a Singapore trip) and Jatinder and Amrit, and noted over 36,000 Australians remain stranded overseas while quarantine places are wasted."
+  }
+ ],
+ "acts": []
+}

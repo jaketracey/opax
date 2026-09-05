@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1041",
+ "title": "Freedom to Marry Bill 2016",
+ "short_title": "Freedom to Marry Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-13",
+ "originating_house": "senate",
+ "sponsor": "LEYONHJELM, Sen David",
+ "sponsor_party": "Liberal Democratic Party",
+ "sponsor_person_id": "10832",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1041%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1041%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1041%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1041_ems_40779080-1629-4e91-98b3-3c1a460bf2a0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1041%22",
+   "document_date": "2016-09-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-13",
+  "sentences": [
+   "The bill would allow all Australians to marry regardless of sex, sexual orientation, or gender identity.",
+   "It would repeal 2004 amendments to the Marriage Act 1961 that defined marriage under the Constitution.",
+   "The bill would not impose any conscience obligations on people who object to same-sex marriage for religious or non-religious reasons."
+  ],
+  "changes": [
+   "Repeals 2004 amendments to the Marriage Act 1961 that defined marriage.",
+   "Allows all Australians to marry regardless of sex, sexual orientation, or gender identity.",
+   "Protects conscience for those who object to same-sex marriage for religious or non-religious reasons.",
+   "Prevents the state from making claims of conscience on this matter."
+  ],
+  "affected": "All Australians, including those who object to same-sex marriage for religious or non-religious reasons.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:54Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

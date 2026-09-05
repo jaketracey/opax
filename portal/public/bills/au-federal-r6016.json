@@ -1,0 +1,336 @@
+{
+ "key": "au-federal-r6016",
+ "title": "Home Affairs and Integrity Agencies Legislation Amendment Bill 2018",
+ "short_title": "Home Affairs and Integrity Agencies Legislation Amendment Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2018-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6016_ems_0a5e6de0-36bb-4b8c-abeb-562bb9be3d6c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6016_ems_4a8c8e56-211d-45e2-ada3-c25719137065%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6016_ems_a83d19ce-c437-4215-b71a-25604b15bcc3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6016%22",
+   "document_date": "2017-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00031",
+   "document_date": "2018-05-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-12-07",
+  "sentences": [
+   "This bill updates several laws to reflect the creation of the Home Affairs portfolio and the transfer of certain responsibilities to the Attorney-General.",
+   "It allows intelligence agency officials to give AUSTRAC information to the Attorney-General for his or her functions under security-related Acts.",
+   "The bill also changes the Independent National Security Legislation Monitor Act and the Inspector-General of Intelligence and Security Act to give the Prime Minister and the relevant minister shared or clarified powers over referrals, appointments, and reporting."
+  ],
+  "changes": [
+   "Amends the Anti-Money Laundering and Counter-Terrorism Financing Act to let ASIO, defence intelligence, and ONA officials disclose AUSTRAC information to the Attorney-General.",
+   "Amends the Independent National Security Legislation Monitor Act to allow both the Prime Minister and the minister responsible for that Act to refer matters to the Monitor, with only the Prime Minister able to direct the order of references.",
+   "Amends the Inspector-General of Intelligence and Security Act to clarify the Prime Minister's role in appointing the Inspector-General and to update ministerial references."
+  ],
+  "affected": "Intelligence agency officials, the Attorney-General, the Prime Minister, the Independent National Security Legislation Monitor, the Inspector-General of Intelligence and Security, and the ministers responsible for the amended Acts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:41:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5199",
+   "date": "2018-05-09",
+   "house": "senate",
+   "question": "The majority voted to support the [main idea](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd067#_Toc504660817) of [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6016). In parliamentary jargon, they voted to read the bill [for a second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), meaning that they can now discuss the bill in more detail. ### What is the bill's main idea? The [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd067) explains that: > *On 18 July 2017, the Prime Minister announced that the Government would establish a Home Affairs portfolio that will bring together Australia’s immigration, border protection, law enforcement and domestic security agencies in a single portfolio. Australian governments had previously considered but rejected the establishment of something similar to the US Department of Homeland Security or the UK Home Office on several occasions since the early 2000s. The new portfolio will be ‘modelled loosely’ on the UK’s arrangements, comprising a central department responsible for policy and strategic planning and several agencies that will retain their statutory independence.*",
+   "stage": "Second reading",
+   "ayes": 48,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 26,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-09/3"
+  },
+  {
+   "key": "federal-senate-5200",
+   "date": "2018-05-09",
+   "house": "senate",
+   "question": "Home Affairs and Integrity Agencies Legislation Amendment Bill 2017 - in Committee - Parliamentary oversight",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 21,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-05-09/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-361787",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "Labor supported the Home Affairs and Integrity Agencies Legislation Amendment Bill 2017 as a procedural bill implementing the Turnbull government’s machinery-of-government changes, but expressed concerns that the government had not adequately explained why the sweeping reorganisation of national security and law enforcement agencies was needed, and warned that concentrating power in a single minister and department could weaken checks and balances and reduce contestability of key decisions."
+  },
+  {
+   "slug": "speech-361789",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Home Affairs and Integrity Agencies Legislation Amendment Bill 2017, citing 1,381 days without illegal boat arrivals, 3,481 visa cancellations for serious criminals, and 37 counterterrorism operations preventing six attacks. He also argued that the Greens' characterisation of Australia as a police state was \"neo-Marxist drivel\" and that security and freedom are not contradictory."
+  },
+  {
+   "slug": "speech-361923",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "The Labor MP argued that the creation of the Home Affairs portfolio has concentrated unchecked executive power in Minister Peter Dutton, citing the wrongful detention of two Australian citizens for 97 and 13 days, and called for greater transparency and adherence to parliamentary scrutiny and expert recommendations."
+  },
+  {
+   "slug": "speech-361924",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "The bill implements the Home Affairs portfolio reforms announced in July 2017, including transferring ASIO into the portfolio and clarifying the Attorney-General’s oversight role over intelligence agencies. Amendments will be introduced to reflect the Parliamentary Joint Committee on Intelligence and Security’s recommendations from its February and March reports, to make ministerial functions clear in statute."
+  },
+  {
+   "slug": "speech-361927",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-08",
+   "stage_hint": null,
+   "brief": "A supplementary explanatory memorandum to the Home Affairs and Integrity Agencies Legislation Amendment Bill 2017 was presented, and leave was sought to move government amendments (1) to (28) together."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Home Affairs and Integrity Agencies Legislation Amendment Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00031",
+   "assent_date": "2018-05-09"
+  }
+ ]
+}

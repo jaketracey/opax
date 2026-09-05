@@ -1,0 +1,245 @@
+{
+ "key": "au-federal-r5155",
+ "title": "Migration Amendment (Regaining Control Over Australia’s Protection Obligations) Bill 2013",
+ "short_title": "Migration Amendment (Regaining Control Over Australia’s Protection Obligations) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "lapsed",
+ "status_as_of": "2015-10-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5155_ems_9ecbc9bc-da0e-4aa2-929b-c19e8783681a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5155%22",
+   "document_date": "2013-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-12-04",
+  "sentences": [
+   "This bill would remove the 'complementary protection' category from the protection visa system.",
+   "The government would instead handle Australia's non-refoulement obligations through an administrative process where the minister can personally grant a visa.",
+   "The changes would take effect by amending the Migration Act 1958, but the bill does not specify a start date."
+  ],
+  "changes": [
+   "Removes the criterion for granting a protection visa on complementary protection grounds.",
+   "Shifts consideration of non-refoulement obligations under the ICCPR and CAT to an administrative process.",
+   "Allows the minister to use personal intervention powers to grant a visa when satisfied obligations are engaged."
+  ],
+  "affected": "People seeking protection who are not refugees under the Refugees Convention but face a real risk of significant harm in their home country.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:05:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3061",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org/debate/?id=2013-12-11.25.10) to read the bill a [second time](http://www.peo.gov.au/students/fact_sheets/making_law.html). This means that the majority of members agree with the main idea in the bill, which is to remove complementary protection as a ground for the grant of a protection visa.(Read more about complementary protection in Australia [here](http://www.immi.gov.au/media/fact-sheets/61a-complementary.htm). ) _Background to the bill_ Complementary protection was added as a new ground on which a protection visa can be granted by the _Migration Amendment (Complementary Protection) Act 2011_. The term 'complementary protection' is used to describe a category of protection for people who are not refugees but who still face some real risk that will suffer particular harm if returned to their home country.(More information about this bill and its background is available [here](http://parlinfo.aph.gov.au/parlInfo/download/legislation/billsdgs/2990767/upload_binary/2990767.pdf;fileType=application/pdf). ) Australia's [non-refoulement](http://en.wikipedia.org/wiki/Non-refoulement) obligation, which is the obligation to not return such people to their home countries, arises expressly or impliedly from the [International Covenant on Civil and Political Rights](http://en.wikipedia.org/wiki/International_Covenant_on_Civil_and_Political_Rights) (ICCPR), the [Convention Against Torture and other Cruel, Inhuman or Degrading Treatment or Punishment](http://en.wikipedia.org/wiki/United_Nations_Convention_against_Torture) (CAT) and the [Convention on the Rights of the Child](http://en.wikipedia.org/wiki/Convention_on_the_Rights_of_the_Child) (CROC) to which Australia is a party. This bill removes 'complementary protection' as a ground for protection visas. Instead, Australia’s non-refoulement obligations under the CAT and the ICCPR will be considered through an administrative process, as was the case prior",
+   "stage": "Second reading",
+   "ayes": 85,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 68,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-11/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-280218",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826116",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281427",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281428",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281431",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281438",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281439",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281440",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281441",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281442",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281444",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6304",
+ "title": "Native Title Legislation Amendment Bill 2019",
+ "short_title": "Native Title Legislation Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6304%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6304%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6304%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6304_ems_e602d4bc-5bc5-4f2b-bbb6-e278194278ba%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6304%22",
+   "document_date": "2019-02-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-21",
+  "sentences": [
+   "The bill would change how native title claims are resolved and how agreements are made.",
+   "It would give claim groups more flexibility to set their own internal processes and allow historical extinguishment over national and state parks to be disregarded if the parties agree.",
+   "The bill also confirms the validity of certain agreements after the McGlade v Native Title decision."
+  ],
+  "changes": [
+   "Amends the Native Title Act 1993 and the Corporations (Aboriginal and Torres Strait Islander) Act 2006.",
+   "Allows native title claim groups to impose conditions on the applicant and change the applicant's composition without further authorisation in some cases.",
+   "Requires registered native title bodies corporate to include dispute resolution pathways in their constitutions."
+  ],
+  "affected": "Native title claim groups, registered native title bodies corporate, and parties to native title agreements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:01Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376234",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-21",
+   "stage_hint": null,
+   "brief": "The Native Title Legislation Amendment Bill 2019 was introduced to amend the Native Title Act and CATSI Act, aiming to improve claims resolution, agreement-making, and post-determination land management, including validating certain mining agreements affected by the McGlade decision. Key measures include allowing majority decision-making by claim applicants, expanding body corporate Indigenous land use agreements, enabling parties to disregard historical extinguishment over national parks by agreement, and requiring native title corporations to adopt dispute resolution processes."
+  }
+ ],
+ "acts": []
+}

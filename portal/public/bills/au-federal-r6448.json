@@ -1,0 +1,370 @@
+{
+ "key": "au-federal-r6448",
+ "title": "Migration Amendment (Regulation of Migration Agents) Bill 2019",
+ "short_title": "Migration Amendment (Regulation of Migration Agents) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2020-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6448_ems_55d9f7be-a106-4e9f-8876-52a6bff1d4f4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6448%22",
+   "document_date": "2019-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00071",
+   "document_date": "2020-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-11-27",
+  "sentences": [
+   "The bill would change the rules that control how migration agents are overseen.",
+   "It would remove one group of lawyers from the migration agent system and let another group hold both statuses temporarily.",
+   "The maximum time a restricted lawyer could be both a migration agent and a lawyer would be four years, and the bill would move some time limits from the law itself to rules made later."
+  ],
+  "changes": [
+   "Removes unrestricted legal practitioners from the migration agent regulatory scheme.",
+   "Lets eligible restricted legal practitioners register as both a migration agent and a restricted legal practitioner for up to four years.",
+   "Moves the time limit for repeat registration applications into delegated legislation and removes the 12-month deadline to apply after completing a course.",
+   "Repeals outdated provisions about regulatory arrangements and clarifies that the Minister holds powers under Part 3 of the Migration Act.",
+   "Allows the Migration Agents Registration Authority to refuse an application if the applicant fails to provide information or answer questions under oath.",
+   "Requires registered migration agents to tell the MARA if they paid a lower charge but gave immigration help for profit."
+  ],
+  "affected": "Unrestricted legal practitioners, restricted legal practitioners, registered migration agents, and the Migration Agents Registration Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:33Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6214",
+   "date": "2020-02-12",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2020-02-12.122.2) to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which means it failed. The usual second reading motion is \"that the bill be read for a second time\", which is parliamentary jargon for agreeing with the main idea of the bill. The amendment was introduced by Scullin MP [Andrew Giles](https://theyvoteforyou.org.au/people/representatives/scullin/andrew_giles) (Labor). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) the recommendations that informed this bill were made in the 2014 Independent Review of the Office of the Migration Agents Registration Authority;* > > *(2) the Government first introduced these measures in 2017, but let them lapse at the end of the 45th Parliament; and* > > *(3) for over half a decade, the Government has failed to properly manage the laws relating to migration agents in Australia, to the detriment of the industry and those that rely on it\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-12/4"
+  },
+  {
+   "key": "federal-senate-6380",
+   "date": "2020-06-15",
+   "house": "senate",
+   "question": "The majority voted in favour of agreeing with the main idea of the bills. In parliamentary jargon, they voted to read the bills for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which means that they can now consider them in more detail. ### What is the main idea of the bills? NSW Senator [Marise Payne](https://theyvoteforyou.org.au/people/senate/nsw/marise_payne) (Liberal) [explained that](https://www.openaustralia.org.au/senate/?id=2020-06-15.15.1): > *The bills reflect the government's deregulation agenda and its commitment to establishing a world-class migration advice industry, and remove the unnecessary administrative burden of dual regulation of these legal practitioners who are already subject to a strict professional regulatory regime.* According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd081): > *The purpose of the [Migration Amendment (Regulation of Migration Agents) Bill 2019](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6448) (the Migration Agents Bill) is to amend the Migration Act 1958 in order to deregulate the migration advice industry, in particular to remove lawyers who hold unrestricted practicing certificates from regulation by the Migration Agents Registration Authority (MARA). Lawyers would no longer be able to register as migration agents and would be regulated by the relevant state or territory legal professional body.* > > *The purpose of the [Migration Agents Registration Application Charge Amendment (Rates of Charge) Bill 2019](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6446) (the Rates of Charge Bill) is to amend the Migration Agents Registration Application Charge Act 1997 (the Charge Act) to ensure that a migration agent who paid the non-commercial registration application charge in rel",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 20,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/1"
+  },
+  {
+   "key": "federal-senate-6381",
+   "date": "2020-06-15",
+   "house": "senate",
+   "question": "Migration Amendment (Regulation of Migration Agents) Bill 2019 and another - in Committee - Independent review",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "dated": 17,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-384955",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Regulation of Migration Agents) Bill 2019 deregulates the migration advice industry by removing lawyers with unrestricted practising certificates from Migration Agents Registration Authority regulation, extending registration periods via delegated legislation, repealing redundant provisions, closing a loophole on incomplete applications, requiring notification of changes in non-commercial registration status, and expanding definitions to include assistance with character-based visa revocation."
+  },
+  {
+   "slug": "speech-384956",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The bill amends the Migration Agents Registration Application Charge Act 1997 to require migration agents who originally registered as non-commercial but later provide commercial immigration assistance to pay a pro-rata adjusted charge, complementing changes ensuring the non-commercial charge is only available to genuine non-profit providers."
+  },
+  {
+   "slug": "speech-388042",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "Labor did not oppose the Migration Amendment (Regulation of Migration Agents) Bill 2019 and related charge bill, but moved a second reading amendment criticising the government for taking over five years to act on the 2014 Kendall review recommendations. The bills remove the requirement for lawyers with unrestricted practising certificates to register as migration agents, instead regulating them through state and territory professional bodies."
+  },
+  {
+   "slug": "speech-388044",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Regulation of Migration Agents) Bill 2019 and the Migration Agents Registration Application Charge Amendment (Rates of Charge) Bill 2019 would cut red tape by removing dual regulation for legal practitioners, saving small practices from unnecessary costs and training. The bills remove unrestricted lawyers from Migration Agents Registration Authority regulation, give restricted lawyers two years to transition, and adjust registration charges for non-commercial migration advice providers."
+  },
+  {
+   "slug": "speech-388045",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Regulation of Migration Agents) Bill and the Migration Agents Registration Application Charge Amendment (Rates of Charge) Bill 2019, which remove dual registration requirements for lawyers providing immigration assistance and update definitions, but argued the bills are long overdue—based on 2014 recommendations and first introduced in 2017—and backed Labor’s amendments for Senate scrutiny."
+  },
+  {
+   "slug": "speech-388046",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The speaker argued the bills partially implement recommendation 1 of the 2014 OMARA review, removing lawyers from the migration agents regulatory scheme to allow legal practitioners to register as migration agents, and noted previous support for the legislation."
+  },
+  {
+   "slug": "speech-388048",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-12",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Regulation of Migration Agents) Bill 2019 removes legal practitioners with unrestricted practising certificates from the OMARA regulatory scheme and allows OMARA to refuse incomplete applications, while the Migration Agents Registration Application Charge Amendment (Rates of Charges) Bill 2019 adjusts charges for agents providing commercial immigration assistance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Regulation of Migration Agents) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00071",
+   "assent_date": "2020-06-22"
+  }
+ ]
+}

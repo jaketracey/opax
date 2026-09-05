@@ -1,0 +1,143 @@
+{
+ "key": "au-federal-s1381",
+ "title": "Broadcasting Services Amendment (Ban on Gambling Advertisements During Live Sport) Bill 2023",
+ "short_title": "Broadcasting Services Amendment (Ban on Gambling Advertisements During Live Sport) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-14",
+ "originating_house": "senate",
+ "sponsor": "HENDERSON, Sen Sarah",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10790",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1381%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1381%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1381%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1381_ems_b42ec8e0-ed57-401b-bf37-d33b18a1e5a0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1381%22",
+   "document_date": "2023-06-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-14",
+  "sentences": [
+   "The bill would ban gambling advertisements during live sporting events on television, radio and streaming services.",
+   "The ban would start one hour before a match and end one hour after it finishes, enforced through industry codes registered by the Australian Communications and Media Authority.",
+   "The ban would not apply to horse racing, other racing codes, government lotteries, lotto, Keno or contests."
+  ],
+  "changes": [
+   "Bans gambling advertising during live sporting events.",
+   "Extends the ban to online content services.",
+   "Requires industry codes to be updated and registered with ACMA.",
+   "Gives the Minister power to set a transition period by legislative instrument.",
+   "Exempts horse racing, other racing codes, government lotteries, lotto, Keno and contests."
+  ],
+  "affected": "Broadcasters, streaming services, gambling advertisers and audiences of live sport.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8190",
+   "date": "2023-06-22",
+   "house": "senate",
+   "question": "Broadcasting Services Amendment (Ban on Gambling Advertisements During Live Sport) Bill 2023 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-06-22/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

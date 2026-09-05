@@ -1,0 +1,478 @@
+{
+ "key": "au-federal-r5430",
+ "title": "Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015",
+ "short_title": "Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5430_ems_eb308543-0f14-43e8-aef5-ccdc42fa0d63%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5430_ems_ceabf85e-fea9-4761-9a60-f439f33d139a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3994284%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5430%22",
+   "document_date": "2015-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00153",
+   "document_date": "2015-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3871",
+   "date": "2015-08-12",
+   "house": "representatives",
+   "question": "David Feeney by leave—I move amendments (1) and (2), as circulated in my name, together: (1) Schedule 5, page 10 (lines 1 to 26), omit the Schedule. (2) Schedule 6, page 11 (lines 1 to 23), omit the Schedule. I rise to speak to Labor's concerns about two of the proposed elements found in the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015. Labor is concerned about the insertion of 'knowingly concerned' as a secondary form of criminal liability, and the introduction of mandatory minimum sentences for firearms trafficking offences. As detailed in my speech on the second reading, we note the strong opposition held by peak law organisations with respect to these amendments, and we note the lack of consultation that has occurred with respect to this bill. Not only has the government failed to engage with stakeholders with regard to these amendments, but it has also failed to justify the need for an additional form of secondary criminal liability to apply to all offences in the Criminal Code. The government has highlighted particular categories of offences where the concept of 'knowingly concerned' is required, including drug and drug importation offences and insider trading offences. However, all of the offences identified have already been drafted in a way that addressed the concerns raised without the need to include 'knowingly concerned'. Labor believes that the proposed change in relation to the introduction of 'knowingly concerned' is a major change to the Model Criminal Code. Leading up to the adoption of the Model Criminal Code in 1995, there was a long consultation. The consultation occupied some years and included some of Australia's leading criminal practitioners. There ought to be a full consultation in relation to any proposed general change to the Model Criminal Code. As the Australian Human Rights Commission noted in a submission to the Senate committee, it is difficult to anticipate the impact of extending this form of liabilit",
+   "stage": "Consideration in detail",
+   "ayes": 46,
+   "noes": 80,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-08-12/1"
+  },
+  {
+   "key": "federal-senate-3882",
+   "date": "2015-08-19",
+   "house": "senate",
+   "question": "Penny Wright I move Australian Greens amendment (1) on sheet 7736: (1) Schedule 5, page 10 (lines 1 to 26), to be opposed. The Australian Greens share the strong concerns raised by the Law Council of Australia and others about the introduction of a new form of extended criminal liability into the Commonwealth Criminal Code. Schedule 5 would amend the Criminal Code to insert the concept of 'knowingly concerned' as an additional form of secondary criminal liability into section 11.2. That would mean that where persons are knowingly concerned in the commission of an offence under the Criminal Code and the Crimes Act they would be liable for the offence. The problem with this change is that it adds a new category of criminal liability to an already extensive secondary liability regime under the Criminal Code. The existing regime already makes it an offence to attempt or to aid and abet or to conspire with another to commit an offence. The concept of 'knowingly concerned' was specifically considered and rejected twice as a form of secondary liability when the Criminal Code was being delivered. In her wrap-up of the bill, Senator Fierravanti-Wells tried to assuage concerns I had raised about the amorphous nature of adding this concept and said that there would be a requirement to have intentionally participated in the commission of the offence, but that begs the question why then they could not be prosecuted under an existing category of criminal liability such as conspiracy or aiding and abetting. From a human rights and rule of law perspective, we should always set a high hurdle of necessity before sweeping new forms of criminal liability are introduced to Australia. In this case, legal commentators overwhelmingly agree the government has not come even close to justifying why we need this new concept of 'knowingly concerned' or what it would actually add in practical terms to the existing extended liability provisions in the Criminal Code. For these reasons, the Austral",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 12,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-19/3"
+  },
+  {
+   "key": "federal-senate-3885",
+   "date": "2015-08-19",
+   "house": "senate",
+   "question": "Gavin Marshall The committee is considering the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015 as amended and amendment (2) on sheet 7736, moved by Senator Wright. Concetta Fierravanti-Wells I want to address some of the issues that were raised by those opposite. Senator Collins made some comments in relation to the government supporting the Crimes Legislation Amendment (Psychoactive Substances and Other Measures) Bill 2014. We agreed to this legislation without the mandatory minimum sentences to ensure that other important measures contained in the bill were passed without further delay. These important measures included introducing offences for the trafficking of firearms and firearm parts into and out of Australia and expanding the offences for trafficking firearms within Australia to include parts. We took to the election a commitment to implement tougher penalties for gun-related crime, and that is why we are now reintroducing the minimum sentences into this legislation. Can I also address some of the comments that were raised in relation to the Parliamentary Joint Committee on Human Rights, in relation to a number of issues. Firstly, in relation to arbitrary detention we believe that there are appropriate limitations and safeguards in place to ensure that detention is reasonable, necessary and proportionate to each individual case. We consider that the mandatory minimum penalties for firearm trafficking are reasonable and necessary to deter people from diverting firearms into the illicit market, where they can be accessed by criminals and used in the commission of serious and violent crimes. Given that the provisions do not impose a mandatory nonparole period, the actual time a person will be incarcerated will remain at the discretion of the sentencing judge. And, consistent with these concerns raised by that committee, the government has amended the explanatory memorandum for the bill to note that the mandatory minimum sentence i",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "earliest": 5,
+    "member": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-19/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-308243",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-19",
+   "stage_hint": null,
+   "brief": "The bill introduces mandatory minimum five-year sentences for firearm trafficking, expands forced marriage offences with increased penalties of seven and nine years, and adds 'knowingly concerned' criminal liability, among other measures to strengthen law enforcement powers and criminal laws."
+  },
+  {
+   "slug": "speech-315331",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill, arguing for mandatory minimum sentences for firearms trafficking, increased penalties for forced marriage (raising maximums to seven and nine years), and reintroducing the 'knowingly concerned' offence, while also raising concerns about ice use and citing a 2013 forced marriage case involving a 12-year-old."
+  },
+  {
+   "slug": "speech-315334",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Crimes Legislation Amendment Bill 2015, which introduces mandatory minimum five-year sentences for firearm trafficking, increases maximum penalties for forced marriage (aggravated to nine years, non-aggravated to seven years), and simplifies prosecution of drug and precursor offences, with $485,925 allocated for forced marriage education."
+  },
+  {
+   "slug": "speech-315335",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The bill introduces a five-year mandatory jail sentence for importing illegal firearms, a $100 million boost to Customs screening, $50 million for CCTV, and tighter security clearances for wharf workers, as part of an election commitment to tackle organised crime and reduce illegal guns."
+  },
+  {
+   "slug": "speech-315494",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Crimes Legislation Amendment (Powers Offences and Other Measures) Bill 2015, supporting mandatory minimum five‑year sentences for firearms trafficking and advocating for national adoption of Queensland‑style anti‑gang laws, citing 1,034 firearms‑related offences in 2013 and the growth of outlaw motorcycle gangs."
+  },
+  {
+   "slug": "speech-315497",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The bill reintroduces a mandatory minimum five-year prison sentence for trafficking firearms and firearm parts, and simplifies regulation under the National Firearms Agreement. It also strengthens drug and precursor offences, expands forced marriage offences and raises their maximum penalties to seven and nine years, and makes those 'knowingly concerned' in an offence liable."
+  },
+  {
+   "slug": "speech-315498",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Crimes Legislation Amendment Bill 2015 is needed to further reduce crime, citing ABS figures showing armed robberies down 14%, unarmed robberies down 17%, and unlawful entry down 6.5% in 2014. The bill introduces a mandatory minimum five-year sentence for firearm trafficking, increases penalties for forced marriage to up to nine years, and targets methamphetamine precursor importation."
+  },
+  {
+   "slug": "speech-315499",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill's mandatory five-year minimum sentence for firearms trafficking, removal of the intent to manufacture requirement for precursor drug importation, and new forced marriage penalties. They noted ice use had almost doubled in the past year and welcomed the National Ice Action Strategy."
+  },
+  {
+   "slug": "speech-315500",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015, arguing it would simplify drug and precursor offences, increase penalties for forced marriage, and strengthen proceeds of crime laws. Specific figures cited include $870 billion in international organised crime, 86,918 drug seizures in 2012-13, a 318% rise in ice-related ambulance attendances in Victoria, and 95% of armed robberies and up to half of murders in WA linked to methamphetamine."
+  },
+  {
+   "slug": "speech-315501",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015, arguing it addresses gaps in legal security and law enforcement. The bill introduces mandatory minimum five-year sentences for firearm trafficking, strengthens drug offences including for ice, criminalises forced marriage where a party cannot give informed consent, and enhances proceeds of crime penalties."
+  },
+  {
+   "slug": "speech-315502",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The member for Paterson supported the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015, arguing it increases penalties for forced marriage (to a maximum of nine years for aggravated offences) and simplifies prosecution of drug and precursor importation, citing a local forced marriage case in Raymond Terrace and a 71% increase in ice use in the Hunter region."
+  },
+  {
+   "slug": "speech-315505",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The speaker supported the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015, arguing it delivers on the government's election commitment to tackle crime through mandatory minimum five-year sentences for illegal firearms trafficking, simplified prosecution of large-scale drug and precursor importation, and increased penalties for forced marriage offences including a presumption that children under 16 cannot consent to marriage."
+  },
+  {
+   "slug": "speech-315506",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-11",
+   "stage_hint": null,
+   "brief": "The member for Moncrieff supported the Crimes Legislation Amendment Bill 2015, stressing its importance for the Gold Coast's tourism and safety, and praised the former Newman government's VLAD laws and the coalition's joint strike force and CCTV network while criticising the previous Labor government for closing the Australian Federal Police office on the Gold Coast."
+  },
+  {
+   "slug": "speech-315555",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-12",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Crimes Legislation Amendment (Powers, Offences and Other Measures) Bill 2015, which introduces mandatory minimum sentences of five years for firearms trafficking, increases penalties for forced marriage offences, and adds a \"knowingly concerned\" measure to secondary criminal liability. The bill also strengthens war crimes offences and improves powers for law enforcement agencies including the Australian Crime Commission and the Law Enforcement Integrity Commissioner."
+  },
+  {
+   "slug": "speech-315557",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-12",
+   "stage_hint": null,
+   "brief": "The opposition moved amendments to remove schedules 5 and 6 from the bill, opposing the introduction of 'knowingly concerned' as a secondary criminal liability and mandatory minimum sentences for firearms trafficking, and called for proper consultation and increased penalty provisions instead."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Crimes Legislation Amendment (Powers, Offences and Other Measures) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00153",
+   "assent_date": "2015-11-26"
+  }
+ ]
+}

@@ -1,0 +1,307 @@
+{
+ "key": "au-federal-r5253",
+ "title": "Australian Workforce and Productivity Agency Repeal Bill 2014",
+ "short_title": "Australian Workforce and Productivity Agency Repeal Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2014-06-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-06-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5253_ems_e36ef79f-e03d-48af-81d9-ac0c095e9700%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5253%22",
+   "document_date": "2014-06-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00076",
+   "document_date": "2014-06-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-04",
+  "sentences": [
+   "This bill would abolish the Australian Workforce and Productivity Agency.",
+   "It would repeal the Australian Workforce and Productivity Agency Act 2008.",
+   "The agency's advisory functions would move to the Department of Industry."
+  ],
+  "changes": [
+   "Repeals the Australian Workforce and Productivity Agency Act 2008.",
+   "Abolishes the Australian Workforce and Productivity Agency.",
+   "Transfers the agency's functions to the Department of Industry."
+  ],
+  "affected": "The Australian Workforce and Productivity Agency and the Department of Industry.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:06:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3263",
+   "date": "2014-06-24",
+   "house": "senate",
+   "question": "Sue Lines I move the second reading amendment standing in the name of Senator Carr: At the end of the motion, add \"but the Senate notes that the Government has failed to guarantee that the critical independent research to Government and industry in relation to Australia's current, emerging and future skills and workforce development needs will continue to be carried out and made public\". The Australian Workforce and Productivity Agency is one of those interesting agencies for which there does not seem to be solid reason to abolish it. We are somewhat perplexed as to why the government would abolish an agency which, for all intents and purposes, is doing a really good job. Amazingly, on 9 June—and perhaps all the arms of government were not speaking to one another—the Hon. Andrew Robb and Senator the Hon. Michaelia Cash put out a media release in which they talked about the Skilled Occupations List and referred to the great work that the Australian Workforce and Productivity Agency does in providing annual recommendations on the Skilled Occupations List. Minister Robb went on to say: The AWPA analyses evidence such as the labour market, education and training, migration and general economic and demographic data to make sure we get the balance right. So perhaps whoever made the wise decision to abolish this agency had not told either Minister Robb or Senator Cash because as late as 9 June they were certainly extolling the virtues and the values of the Australian Workforce and Productivity Agency. Indeed, earlier this year, during the TAFE Senate inquiry, we heard surprise at this decision from Senator O'Sullivan. At the conclusion of the evidence given by the Australian Workforce and Productivity Agency, Mr Robin Shreeve, the CEO, told us that it was to be abolished. I asked Mr Shreeve: Finally, can you tell us what is happening to your board? Mr Shreeve said: We anticipate that from 1 July the functions of AWPA will be folded into the Department of Industry. I asked:",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 5,
+    "dated": 60,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-24/2"
+  },
+  {
+   "key": "federal-senate-3264",
+   "date": "2014-06-24",
+   "house": "senate",
+   "question": "Stephen Parry The question now is that the motion, as amended, be agreed to.",
+   "stage": "Second reading",
+   "ayes": 59,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 28,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 62,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-06-24/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-290388",
+   "speaker": "Ian Macfarlane",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291484",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291487",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291488",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291489",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291693",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291694",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-291696",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-17",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Workforce and Productivity Agency Repeal Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00076",
+   "assent_date": "2014-06-30"
+  }
+ ]
+}

@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r6939",
+ "title": "Supply Bill (No. 4) 2022-2023",
+ "short_title": "Supply Bill (No. 4) 2022-2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-10-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-11-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6939_ems_585e2486-6cfc-460b-ae60-ef49c1b7034b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6939%22",
+   "document_date": "2022-10-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00045",
+   "document_date": "2022-11-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-10-25",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for government services that are not part of its ordinary annual services.",
+   "It would provide about 7/12ths of the estimated annual appropriations for those non-ordinary services for the 2022-23 financial year.",
+   "The bill would also update which portfolios receive funding following a change to the Administrative Arrangements Order on 1 July 2022, including for two new departments."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for non-ordinary annual services.",
+   "Provides funding equivalent to about 7/12ths of estimated annual appropriations for those services.",
+   "Updates portfolio allocations to reflect the Administrative Arrangements Order that took effect on 1 July 2022."
+  ],
+  "affected": "Government departments and agencies that receive funding for non-ordinary annual services, including the two departments established on 1 July 2022.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:43:25Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7787",
+   "date": "2022-10-26",
+   "house": "senate",
+   "question": "Supply Bill (No. 3) 2022-2023, Supply Bill (No. 4) 2022-2023 and another - Second Reading - Repeal stage 3 tax cuts",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 19,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-10-26/1"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Supply Act (No. 4) 2022-2023",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00045",
+   "assent_date": "2022-11-03"
+  }
+ ]
+}

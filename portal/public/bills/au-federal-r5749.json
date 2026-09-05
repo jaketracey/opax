@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r5749",
+ "title": "Customs Tariff Amendment (Expanded Information Technology Agreement Implementation and Other Measures) Bill 2016",
+ "short_title": "Customs Tariff Amendment (Expanded Information Technology Agreement Implementation and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2016-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5749_ems_4d2791da-be4e-4924-9f02-e83e000004a1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5749%22",
+   "document_date": "2016-10-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00084",
+   "document_date": "2016-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-20",
+  "sentences": [
+   "The bill would cut customs duties on certain information technology products to zero over time.",
+   "It would create new tariff classifications for those products and remove outdated duty rates.",
+   "Most duty reductions would be complete by 1 July 2019, with a few extending to 1 July 2021."
+  ],
+  "changes": [
+   "Creates new tariff subheadings for certain information technology products.",
+   "Reduces customs duty rates for selected subheadings incrementally to Free.",
+   "Removes obsolete customs duty rates."
+  ],
+  "affected": "Importers of information technology products covered by the Expanded Information Technology Agreement.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-336353",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-20",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Expanded Information Technology Agreement Implementation and other measures) Bill 2016 reduces customs duty on certain information technology products to free, with incremental reductions starting 1 January 2017; most products become duty-free on 1 July 2019, while certain audio speakers become free on 1 July 2021."
+  },
+  {
+   "slug": "speech-337817",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Tariff Amendment (Expanded Information Technology Agreement Implementation and Other Measures) Bill 2016, which implements WTO commitments by reducing customs duty rates on IT products to free in stages from January 2017. The bill carries an $80 million cost, affects Australia’s $18.9 billion annual imports of these products, and will see 106 tariff subheadings reach free by 2019 and eight subheadings by 2020-21."
+  },
+  {
+   "slug": "speech-337818",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Tariff Amendment (Expanded Information Technology Agreement Implementation and Other Measures) Bill 2016, noting Australia's digital economy is valued at $79 billion and comprises 5.1% of GDP. They argued the government should also act on the 2013 \"What cost? IT pricing and the Australia tax\" report and Professor Ian Harper's competition review to reduce technology cost barriers for small and medium businesses, citing a Deloitte report that advanced digital businesses are eight times more likely to create jobs."
+  },
+  {
+   "slug": "speech-337819",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-21",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Expanded Information Technology Agreement Implementation and Other Measures) Bill 2016 eliminates customs duty rates on certain information technology products, benefiting Australian industries and consumers through lower import costs, and implements Australia's obligations under the World Trade Organization's expanded Information Technology Agreement."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Expanded Information Technology Agreement Implementation and Other Measures) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00084",
+   "assent_date": "2016-11-30"
+  }
+ ]
+}

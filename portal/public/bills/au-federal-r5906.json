@@ -1,0 +1,1087 @@
+{
+ "key": "au-federal-r5906",
+ "title": "Regional Investment Corporation Bill 2017",
+ "short_title": "Regional Investment Corporation Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2018-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-12-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-02-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5906_ems_f2190e23-293a-47a4-b655-e2bec330f60f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5906_ems_ca8fc8a6-2dc2-4ca9-9cbc-196aa052c934%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5906_ems_c1e5cbf0-5fe7-487e-b60d-3607e074adce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5906_ems_fccf93c2-69b0-4aec-9194-a3f6c8c1141d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5906%22",
+   "document_date": "2017-06-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00006",
+   "document_date": "2018-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-06-14",
+  "sentences": [
+   "The bill would create a new government body to run concessional loan schemes for farmers and water infrastructure projects.",
+   "The new entity would be a corporate Commonwealth agency governed by a skills-based board, with two ministers setting its operating rules and strategic direction.",
+   "A review of the law's effects must be completed before 1 July 2024."
+  ],
+  "changes": [
+   "Establishes the Regional Investment Corporation as a corporate Commonwealth entity.",
+   "Gives the Corporation authority to deliver up to $4 billion in concessional loans under farm business and water infrastructure programs.",
+   "Allows two responsible ministers to issue an Operating Mandate and direct the Corporation on strategy, eligibility and funding.",
+   "Prevents ministers from directing the Corporation on individual farm business loans.",
+   "Requires the Board to appoint a Chief Executive Officer for day-to-day operations.",
+   "Requires a statutory review of the Act before 1 July 2024."
+  ],
+  "affected": "Farmers, rural and regional communities, states and territories seeking water infrastructure loans.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:35:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4795",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "question": "The majority voted against a motion that opposes the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5906) because, according to the motion, *\"it places the Government's political interests ahead of the interests of Australia’s farmers\"*. The motion was introduced by Labor MP [Joel Fitzgibbon](https://theyvoteforyou.org.au/people/representatives/hunter/joel_fitzgibbon). ### Motion text > *That all words after 'That' be omitted with a view to substituting the following words:* > *'the House declines to give this bill a second reading as it places the Government's political interests ahead of the interests of Australia’s farmers'*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-08-17/1"
+  },
+  {
+   "key": "federal-representatives-4796",
+   "date": "2017-08-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of the [bill's](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5906) main idea. In parliamentary jargon, they voted to read the bill [for a second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What was the bill's main idea? The bill will deliver on a [2016 election commitment](http://www.abc.net.au/news/rural/2016-06-23/barnaby-joyce-agriculture-election/7535450) by creating the Regional Investment Corporation. The Corporation will, among other things, *\"administer farm business loans and financial assistance granted to states and territories in relation to water infrastructure projects\"*. Read more in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd013).",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-08-17/2"
+  },
+  {
+   "key": "federal-senate-4935",
+   "date": "2017-10-17",
+   "house": "senate",
+   "question": "The majority voted in favour of the [bill's](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5906) main idea. In parliamentary jargon, they voted to read the bill [for a second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What was the bill's main idea? The bill will deliver on a [2016 election commitment](http://www.abc.net.au/news/rural/2016-06-23/barnaby-joyce-agriculture-election/7535450) by creating the Regional Investment Corporation. The Corporation will, among other things, *\"administer farm business loans and financial assistance granted to states and territories in relation to water infrastructure projects\"*. Read more in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd013).",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-10-17/2"
+  },
+  {
+   "key": "federal-senate-4940",
+   "date": "2017-10-18",
+   "house": "senate",
+   "question": "The same number of senators voted for and against the [amendments](http://www.openaustralia.org.au/senate/?gid=2017-10-18.117.1) moved by Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown), which means the amendments failed. Read more about the amendments in [Senator Brown's explanation](http://www.openaustralia.org.au/senate/?gid=2017-10-18.117.1). ### What does this bill do? The [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5906) was introduced to create a Regional Investment Corporation to administer farm business loans and financial assistance granted to states and territories. Read more about it in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd013).",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 36,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-10-18/1"
+  },
+  {
+   "key": "federal-senate-4941",
+   "date": "2017-10-18",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping [paragraph 11(2)(c)](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr5906_first-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr5906_first-reps%2F0000%22;rec=0) unchanged. In parliamentary jargon, they voted for that paragraph to *stand as printed*. This question was put to the Senate because Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown) had proposed for that paragraph to be opposed. Senator Brown [explained that](http://www.openaustralia.org.au/senate/?gid=2017-10-18.122.1), opposing this paragraph: > *will remove the ministers' influence on directing the corporation about the eligibility criteria for loans and financial assistance. The independence of the corporation is critical when establishing the eligibility criteria for loans or financial assistance. The lack of detail about what loans and financial assistance will be provided by the corporation is concerning when we know that the current concessional loans take into consideration the viability of the farm enterprise. To ensure that the corporation is able to manage its lending criteria, the responsible ministers should not be able to give directions about eligibility criteria for loans or financial assistance.* ### What does this bill do? The [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5906) was introduced to create a Regional Investment Corporation to administer farm business loans and financial assistance granted to states and territories. Read more about it in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd013).",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 37,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-10-18/2"
+  },
+  {
+   "key": "federal-senate-4942",
+   "date": "2017-10-18",
+   "house": "senate",
+   "question": "The majority voted against the following [motion](http://www.openaustralia.org.au/senate/?gid=2017-10-18.126.1): > *(5) Clause 12, page 11 (lines 20 and 21), omit “responsible Ministers may give a written direction to the Corporation about”, substitute “rules must provide for”.* Labor Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown) explained that: > *This amendment removes the minister's being able to direct where the corporation must be located. Instead, the rules must provide for where the corporation is to be located.* ### What does this bill do? The [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5906) was introduced to create a Regional Investment Corporation to administer farm business loans and financial assistance granted to states and territories. Read more about it in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd013).",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 35,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-10-18/3"
+  },
+  {
+   "key": "federal-senate-4943",
+   "date": "2017-10-18",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](http://www.openaustralia.org.au/senate/?id=2017-10-18.4.2) introduced by Labor Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown) that dealt with disclosure of interests. Senator Brown explained that: > *Disclosing any conflicts of interest by the CEO is about transparency to ensure that decisions made by the CEO are made without personal influence or indeed external influence. Ensuring that the CEO discloses any conflicts of interest will reduce the risk of any potential for corruption and/or misconduct. For the minister's information, that is a part of the Clean Energy Finance Corporation.* However, Liberal Senator [Anne Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston) said that the Government would not support the amendment, explaining that: > *As you would be aware, the [PGPA Act](https://www.finance.gov.au/resource-management/pgpa-act/) [Public Governance, Performance and Accountability Act 2013] requires officials of Commonwealth entities to disclose any material personal interests that relate to the affairs of the entity, and it also requires and provides for rules to prescribe how and when those interests are to be disclosed. The [PGPA Rule](https://www.finance.gov.au/resource-management/pgpa-rule/) provides for the board, as the accountable authority of the entity, to instruct how officials of the corporation, including the CEO, are to disclose the interests.* ### Amendment text > *(7) Page 23 (after line 10), after clause 41, insert:* > *41A Disclosure of interests* > *(1) The CEO must give written notice to the Board of any disclosure made by the CEO under section 29 of the Public Governance, Performance and Accountability Act 2013 (which deals with the duty to disclose interests).* > *(2) Subsection (1) applies in addition to any rules made for the purposes of section 29 of the Public Governance, Performance and Accountability Act 2013.* > *(3) For the purpo",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 34,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-10-18/4"
+  },
+  {
+   "key": "federal-senate-5071",
+   "date": "2017-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2017-12-06.268.1) introduced by Tasmanian Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown) (Labor), which means it will now be included in the bill. ### What do the amendments do? Senator Brown [explained that](https://www.openaustralia.org.au/senate/?gid=2017-12-06.268.1): > *Labor's amendments are seeking to strengthen the review of the corporation. The current bill provides no detail about the scope of the review. It is important that the review reflects the objectives currently put forward by the minister as to why this corporation is necessary. It is also important to include detail about who can undertake the review. Again, this requirement is similar to what is detailed in the Clean Energy Finance Corporation Act. To ensure that the corporation's review is independent of political interference, Labor believes that the requirements of the review should be proscribed in the current legislation. Labor further believes that the review date needs to be brought forward so that the work of the corporation can be assessed earlier as to whether it indeed is achieving the objectives stated by the government. Further, the review should be brought forward so that any recommendation of the review can be implemented in a timely manner.* ### Amendment text > *(8) Clause 53, page 28 (after line 5), after subclause (1), insert:* > >> *(1A) The persons who undertake the review must undertake any consultation that is:* >> >>> *(a) considered by the persons to be appropriate; and* >>> >>> *(b) reasonably practicable to undertake.* >> >> *(1B) In determining whether any consultation that was undertaken is appropriate, the persons undertaking the review may have regard to any relevant matter, including the extent to which the consultation:* >> >>> *(a) drew on the knowledge of persons having expertise in fields relevant to the matters relevant to the rev",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 37,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-12-06/7"
+  },
+  {
+   "key": "federal-senate-5072",
+   "date": "2017-12-06",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-12-06.272.1) introduced by Tasmanian Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown) (Labor), which means it will now be included in the bill. ### What does the amendment do? Senator Brown [explained that](https://www.openaustralia.org.au/senate/?gid=2017-12-06.272.1): > *The amendment prescribes that the review report should be tabled in the parliament and made public. It says that the minister must cause a copy of the report be tabled in each house of parliament within 15 sitting days of that house after its receipt by the minister and that the minister must cause a copy of the report to be published on the internet within 30 days after its receipt by the minister.* ### Amendment text > *(12) Clause 53, page 28 (after line 13), at the end of the clause, add:* > >> *(4) The Minister must cause a copy of the report to be tabled in each House of Parliament within 15 sitting days of that House after its receipt by the Minister.* >> >> *(5) The Minister must cause a copy of the report to be published on the internet within 30 days after its receipt by the Minister.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 35,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-12-06/8"
+  },
+  {
+   "key": "federal-senate-5088",
+   "date": "2018-02-06",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-02-06.12.3) that the bill as amended by agreed to. This vote ends the in Committee stage of considering the bill, which is the stage when senators propose and vote on possible amendments. Now the senators will decide whether to read the bill for a third time, which is parliamentary jargon for agreeing to pass the bill. ### What does this bill do? The bill will deliver on a [2016 election commitment](http://www.abc.net.au/news/rural/2016-06-23/barnaby-joyce-agriculture-election/7535450) by creating the Regional Investment Corporation. The Corporation will, among other things, *\"administer farm business loans and financial assistance granted to states and territories in relation to water infrastructure projects\"*. Read more in the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd013).",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-06/1"
+  },
+  {
+   "key": "federal-senate-5089",
+   "date": "2018-02-06",
+   "house": "senate",
+   "question": "The majority voted in favour of passing [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5906), with amendments. In parliamentary jargon, they voted to read the bill [for a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). The bill will now be sent back to the House of Representatives where our Members of Parliament (MPs) will decide whether they agree with the Senate's amendments. ### What does this bill do? This bill delivers on a 2016 election commitment and creates the Regional Investment Corporation *\"to administer farm business loans and financial assistance granted to states and territories in relation to water infrastructure projects\"*. More information about the bill is available in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd013).",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-02-06/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-351694",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Regional Investment Corporation Bill 2017 represents bad policy, a \"boondoggle\" and \"pork barrel\" designed to recover Nationals party votes in Orange, and moved a second reading amendment seconded by the member for Whitlam on grounds of ministerial accountability."
+  },
+  {
+   "slug": "speech-351941",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Regional Investment Corporation Bill 2017, rejecting an amendment by the member for Hunter, Mr Fitzgibbon, and praised Agriculture Minister Barnaby Joyce's record. The speech cited over 1,200 farming businesses accessing $670 million in low-interest concessional loans, $250 million a year in farm business loans, $200 million for biosecurity, free trade agreements with Japan, South Korea and China, and progress on food labelling laws and the wine equalisation tax."
+  },
+  {
+   "slug": "speech-351944",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the member for Murray (Barnaby Joyce) should address questions about his legitimacy to serve as a minister and MP, rather than listing his achievements."
+  },
+  {
+   "slug": "speech-351960",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Regional Investment Corporation Bill 2017, arguing it was a pork-barrelling exercise that favoured National Party interests. They criticised the choice of Orange over Bendigo, citing Bendigo's existing rural finance expertise from Bendigo Bank and Rural Finance, and claimed the government failed to consult stakeholders or conduct proper research."
+  },
+  {
+   "slug": "speech-351961",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Regional Investment Corporation Bill 2017 would streamline delivery of up to $2 billion in concessional farm loans and a $2 billion National Water Infrastructure Loan Facility, citing $725 million in farm business loans already approved. They also announced government investments in Geelong including the NDIA headquarters, the Australian Bureau of Statistics National Data Acquisition Centre, $50 million for the Great Ocean Road, and $224 million for regional rail upgrades."
+  },
+  {
+   "slug": "speech-351963",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Regional Investment Corporation Bill 2017, announcing the $4 billion RIC will open by July 2018 in Orange, NSW, to deliver farm business and water infrastructure loans more efficiently, with $2 billion in concessional loans and $725 million already approved to 1,340 farm businesses, while criticising Labor for opposing the RIC and for turning its back on regional communities."
+  },
+  {
+   "slug": "speech-351965",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the Regional Investment Corporation Bill 2017 would deliver up to $4 billion in concessional loans for farm businesses and water infrastructure, noting $680 million already approved to 1,275 farms. They also highlighted record farm production value of $62.8 billion in 2016–17 and detailed specific water infrastructure commitments including $130 million for Rookwood Weir and feasibility studies for Bundaberg Channel and Gayndah irrigation projects."
+  },
+  {
+   "slug": "speech-351975",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Regional Investment Corporation Bill 2017, citing three objections: the bill was introduced by Deputy Prime Minister Barnaby Joyce, who may be ineligible due to dual citizenship with New Zealand; the bill lacked cost-benefit analysis and raised stakeholder concerns about its flawed structure; and it failed to address growing inequality between capital cities and regional areas. The speaker supported an amendment by the member for Hunter."
+  },
+  {
+   "slug": "speech-351981",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "The speech supported the amendment to the Regional Investment Corporation Bill, arguing the proposed $4 billion corporation would duplicate existing state and territory loan schemes and serve political rather than regional interests. It also criticised Deputy Prime Minister Barnaby Joyce’s invalid citizenship status and the National Party’s record, including dam proposals in Tyalgum and Byrill Creek and the APVMA relocation."
+  },
+  {
+   "slug": "speech-351984",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-16",
+   "stage_hint": null,
+   "brief": "Climate change is the greatest challenge facing Australian farmers, with the Garnaut review predicting unchecked climate change would destroy 98% of Murray-Darling Basin farmland, and the government's emissions reduction fund is underfunded and ineffective."
+  },
+  {
+   "slug": "speech-352070",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-17",
+   "stage_hint": null,
+   "brief": "The speech opposed the Regional Investment Corporation Bill 2017, arguing it lacks a coherent policy rationale and accountability, with a $4 billion fund to be overseen by a three-person board and the corporation located in Orange without a proper process. It also criticised the Deputy Prime Minister for neglecting Tasmanian farmers and visiting the state only once."
+  },
+  {
+   "slug": "speech-352071",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-08-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Regional Investment Corporation Bill 2017 should be passed to replace state-administered farm concessional loans with a nationally consistent system, citing a National Audit Office report that found South Australia’s processing costs reached $416,000 per successful application and that only $8 million of $15 million in dairy recovery loans was allocated, with six of 14 applications rejected. He called on the Nick Xenophon Team to unconditionally support the bill."
+  },
+  {
+   "slug": "speech-352072",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-17",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Regional Investment Corporation Bill 2017, arguing that similar Turnbull government loan schemes like the Northern Australia Infrastructure Fund have failed to deliver any projects, and that the new $81 million scheme lacks cost-benefit analysis, will not benefit North Queensland, and should be located in the Burdekin rather than Orange."
+  },
+  {
+   "slug": "speech-352074",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-08-17",
+   "stage_hint": null,
+   "brief": "Supported the Regional Investment Corporation Bill 2017, arguing for nationally consistent farm loan schemes after noting South Australia received only $17.2 million (2%) of $724 million in concessional loans. Also called for the Deputy Prime Minister to step aside from the water portfolio over alleged Murray-Darling Basin water theft and backed decentralisation with broader policy."
+  },
+  {
+   "slug": "speech-352075",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-17",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Regional Investment Corporation Bill 2017, opposing the member for Hunter's amendment, and highlighted government policies such as the instant write-off for water and fencing, the $20,000 instant asset write-off, farm management deposits up to $8,000, and the Inland Rail project as beneficial to farmers and regional communities. The speaker also urged caution regarding accusations from the Four Corners program, stressing that investigations should conclude before action is taken."
+  },
+  {
+   "slug": "speech-352076",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-08-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Regional Investment Corporation Bill grants the Minister for Agriculture and Water Resources excessive, non-disallowable control over $4 billion in loans and the corporation's mandate, risking pork-barrelling and political bias, while noting the $81.4 million cost and criticising the minister’s handling of the Murray-Darling Basin and the unexplained choice of Orange for the headquarters."
+  },
+  {
+   "slug": "speech-352080",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Regional Investment Corporation Bill 2017, arguing it would establish a corporation to provide direct farm business loans and administer a National Water Infrastructure Loan Facility, aiming to boost agricultural productivity and support regional communities."
+  },
+  {
+   "slug": "speech-352084",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-08-17",
+   "stage_hint": null,
+   "brief": "Government amendments to the Regional Investment Corporation Bill 2017 were moved to expand the board from three to between three and five members, with corresponding changes to quorum and vacancy provisions. The change responds to submissions such as the National Farmers' Federation's call for a five-member board, while keeping operating costs offset by loan interest."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Regional Investment Corporation Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00006",
+   "assent_date": "2018-02-20"
+  }
+ ]
+}

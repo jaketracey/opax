@@ -1,0 +1,868 @@
+{
+ "key": "au-federal-r6165",
+ "title": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018",
+ "short_title": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-08-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Law Enforcement and Cyber Security",
+ "status": "passed",
+ "status_as_of": "2018-10-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-10-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6165_ems_f2956642-d909-45c8-8dc7-5c0248827098%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6165%22",
+   "document_date": "2018-08-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00127",
+   "document_date": "2018-10-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-08-23",
+  "sentences": [
+   "The bill would create new rules for determining which imported goods qualify for lower customs duties under the TPP-11 trade agreement.",
+   "It would amend the Customs Act 1901 to let eligible goods receive preferential duty rates, and would place obligations on exporters and manufacturers who claim those rates.",
+   "The 2018-19 Budget estimated no extra cost for implementing the TPP-11, while the 2016-17 Budget had forecast a $195 million reduction in customs duty collections over the forward estimates."
+  ],
+  "changes": [
+   "Introduces new rules of origin for goods imported from TPP-11 parties.",
+   "Allows eligible goods to enter Australia at preferential customs duty rates.",
+   "Imposes obligations on exporters and manufacturers claiming preferential duty rates."
+  ],
+  "affected": "Importers, exporters, and manufacturers of goods traded with TPP-11 parties, as well as the Australian Customs and Border Protection Service.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5416",
+   "date": "2018-09-17",
+   "house": "representatives",
+   "question": "The same number of MPs voted for and against a motion to change the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is \"that the bills be read a second time\" (or, in other words, \"that the MPs agree with the main idea of the bill\"). This means that the usual second reading motion will remain unchanged, since in cases like this when a majority isn't formed, the Speaker votes to keep things unchanged - which in this case, means voting \"no\". ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House notes that:* > *(1) the Coalition Government has waived labour market testing for contractual service suppliers for six new countries in the Comprehensive and Progressive Agreement for Trans-Pacific Partnership as well as including investor state dispute settlement mechanisms which Labor does not support; and* > *(2) Labor believes the way Australia negotiates trade agreements needs to change, and a Labor Government will:* >> *(a) seek to remove ISDS provisions from existing free trade agreements and legislate so that a future Australian government cannot sign an agreement with such provisions;* >> *(b) seek to reinstate labour market testing for contractual service suppliers in existing free trade agreements and legislate so that a future Australian government cannot waive labour market testing in new agreements;* >> *(c) legislate that all new free trade agreements would be subject to an independent national interest assessment before it is signed to examine the economic, strategic and social impact of any new trade agreement;* >> *(d) legislate to create an Accredited Trade Advisors program where industry, union and civil society groups would provide real time feedback on draft trade agreements during negotiations; and* >> *(e) strengthen the role of the Parliament in trade negotiations by increasing th",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-09-17/1"
+  },
+  {
+   "key": "federal-senate-5453",
+   "date": "2018-10-15",
+   "house": "senate",
+   "question": "The majority voted against a motion moved by Labor Senator [Kim Carr](https://theyvoteforyou.org.au/people/senate/victoria/kim_carr), which means it failed. It would have amended the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), which is that the majority agree with the main idea of the bill (or, in parliamentary jargon, that they agree to read the bills a second time). ### Motion text > *At the end of the motion, add:* > *\", but the Senate:* > *(a) acknowledges that this preferential trade agreement cannot be amended by these bills, only accepted or rejected;* > *(b) is of the opinion that:* >> *(i) the way Australia negotiates trade agreements of this type needs to change,* >> *(ii) the role of Parliament in trade negotiations should be strengthened by increased oversight of trade negotiations by the Joint Standing Committee on Treaties, including providing the committee with:* >>> *(A) the government's statement of objectives for negotiation for consideration and feedback, and* >>> *(B) regular briefings at the conclusions of each round of negotiations; and* > *(3) calls on the Australian government to:* >> *(i) seek to remove Investor State Dispute Settlement (ISDS) mechanisms and reinstate labour-market testing for contractual service suppliers in existing trade agreements,* >> *(ii) ensure that future governments are prevented, by legislation, from including ISDS mechanisms or waiving labour-market testing in future trade agreements,* >> *(iii) establish an accredited trade advisers program to allow industry, unions and civil society groups to provide real-time feedback on draft trade agreements during negotiations,* >> *(iv) subject all new trade agreements to an independent national interest assessment to examine economic, strategic and social impacts before they are signed,* >> *(v) enforce mandatory skills testing in the Comprehensive and Progressive Agreement for Trans-Pacific Partnership (CPTPP) and all fut",
+   "stage": "Second reading",
+   "ayes": 18,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 29,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-15/5"
+  },
+  {
+   "key": "federal-senate-5454",
+   "date": "2018-10-15",
+   "house": "senate",
+   "question": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018 and another - Second Reading - Postpone consideration",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 48,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 18,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-15/6"
+  },
+  {
+   "key": "federal-senate-5455",
+   "date": "2018-10-15",
+   "house": "senate",
+   "question": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018 - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 25,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-15/7"
+  },
+  {
+   "key": "federal-senate-5465",
+   "date": "2018-10-16",
+   "house": "senate",
+   "question": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018 - in Committee - Commencement",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-16/9"
+  },
+  {
+   "key": "federal-senate-5469",
+   "date": "2018-10-17",
+   "house": "senate",
+   "question": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018 - in Committee - Commencement",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 21,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-17/1"
+  },
+  {
+   "key": "federal-senate-5470",
+   "date": "2018-10-17",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6165_amend_cfb330f7-2aba-4c8c-8add-68a02859706d%22;rec=0) introduced by Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young), which means it failed. Senator Hanson-Young [explained her amendment](https://www.openaustralia.org.au/senate/?gid=2018-10-17.81.1): > *this amendment ensures that any need for funds to fight an [ISDS clause](https://en.wikipedia.org/wiki/Investor-state_dispute_settlement) would have to come before the parliament. It also ensures that there is proper transparency around how taxpayer funds are being spent in defending our sovereignty and our laws and regulations against multinationals. Given we now have a TPP agreement with locked-in ISDS provisions, it is absolutely essential that the Australian people know what this is costing us and what the impact is, and that transparency prevails. This is about ensuring that the government can't paper over what they've just agreed to; that the Labor Party, either in opposition or in government, can't pretend that this isn't having a chilling effect; and that taxpayer money being spent on it is accounted for, and sunlight is shone in places where, we know, both sides of this place would prefer it not to be.* ### What do these bills do? The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6165) was introduced along with [another](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6166) to implement the [Comprehensive and Progressive Agreement for Trans-Pacific Partnership](https://en.wikipedia.org/wiki/Comprehensive_and_Progressive_Agreement_for_Trans-Pacific_Partnership) (TPP-11). Their basic purpose is to implement the customs dimensions of the TPP-11 Agreement by making relevant amend",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 17,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-17/2"
+  },
+  {
+   "key": "federal-senate-5471",
+   "date": "2018-10-17",
+   "house": "senate",
+   "question": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018 and another - in Committee - Sunset clause",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 17,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-17/3"
+  },
+  {
+   "key": "federal-senate-5472",
+   "date": "2018-10-17",
+   "house": "senate",
+   "question": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018 and another - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 21,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-17/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-368250",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-08-23",
+   "stage_hint": null,
+   "brief": "The bill implements Australia's obligations under the TPP-11, which eliminates over 98% of tariffs in a $13.7 trillion trade zone covering nearly 500 million consumers, and the speaker urged Parliament to pass it quickly, criticising the Opposition Leader for previously declaring the deal dead after the US withdrawal."
+  },
+  {
+   "slug": "speech-369088",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "Labor will support the CPTPP implementation bills but opposes the government's waiver of labour market testing for six countries and the inclusion of investor-state dispute settlement (ISDS) clauses; if elected, Labor will seek to remove ISDS, reinstate labour market testing, require independent economic assessments of all trade deals, and strengthen parliamentary scrutiny."
+  },
+  {
+   "slug": "speech-369092",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendments to the CPTPP implementation bills proposed by the member for Blaxland, arguing for free trade that includes strong labour standards, environmental protections, and transparency, while opposing investor-state dispute settlement provisions and committing to restore labour market testing if Labor is elected."
+  },
+  {
+   "slug": "speech-369093",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The TPP-11 will eliminate over 98% of tariffs on Australian exports to 11 Asia-Pacific countries with a combined GDP of $13.8 trillion and 500 million consumers, delivering specific benefits such as the elimination of Canadian beef tariffs (currently 26.5%) within five years and Mexican beef tariffs (up to 25%) within ten years. The speaker argued the agreement strengthens Australia’s free trade network, provides new opportunities for agricultural and service exporters, and does not weaken Australian labour, skills or regulatory standards."
+  },
+  {
+   "slug": "speech-369095",
+   "speaker": "Trent Zimmerman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Customs Amendment Bill to implement the TPP-11, criticising the Greens for hypocrisy on trade and stating the agreement would remove 98% of tariffs among 11 countries representing 500 million people and $13.8 trillion in combined GDP. He also highlighted the government's broader economic agenda, including personal income tax cuts, infrastructure investment, and small business support."
+  },
+  {
+   "slug": "speech-369100",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the TPP-11 will eliminate tariffs with 11 countries worth $13.8 trillion combined GDP, boost exports for farmers, manufacturers, and service providers, and increase Australia's net national income by $15.5 billion by 2030."
+  },
+  {
+   "slug": "speech-369101",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill but argued for mandatory independent economic modelling, citing industry-commissioned research showing negligible GDP gains and zero agricultural benefits under TPP-11; they also called for an accredited trade advisers program, stronger parliamentary treaty scrutiny, and raised concerns about labour market testing waivers for six countries and skills testing risks in the electrical sector."
+  },
+  {
+   "slug": "speech-369103",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the TPP-11 agreement delivers a good outcome for the sugar industry and creates jobs, naming six individuals in his electorate—Enio Troiani, David Pickering, Giuseppe Barazza, Rob Zahn, Leone Aslett and Scott Collins—who advanced from apprenticeships to management roles in Bundaberg's sugar sector."
+  },
+  {
+   "slug": "speech-369108",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "Labor supported the CPTPP bill but criticised its investor-state dispute settlement provisions, labour market testing waivers, and lack of independent economic modelling; a future Shorten Labor government would remove ISDS, reinstate labour market testing, require independent modelling, enforce mandatory skills testing, and create an accredited trade advisers program."
+  },
+  {
+   "slug": "speech-369115",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018, arguing that investor-state dispute settlement (ISDS) clauses allow foreign corporations to sue the Australian government and undermine parliamentary sovereignty, and that labour mobility provisions diminish control over immigration policy. They supported Labor's commitment to remove ISDS and fix these issues when in government."
+  },
+  {
+   "slug": "speech-369133",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Trans-Pacific Partnership bill, arguing it is a flawed preferential trade agreement that undermines Australian sovereignty through investor-state dispute settlement and lacks independent country-specific economic analysis, and stated Centre Alliance would not support it unless significant flaws are addressed."
+  },
+  {
+   "slug": "speech-369134",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The TPP-11 provides minimal economic benefit—0.5% GDP over 10 years—and gives away labour market testing for six countries while including problematic investor-state dispute settlement mechanisms and lacking independent economic analysis. Future US re-entry could also impose costly monopoly protections for biologic medicines."
+  },
+  {
+   "slug": "speech-369272",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker called for the government to provide an independent economic analysis and transparency regarding the Comprehensive and Progressive Agreement for Trans-Pacific Partnership, arguing that trade deals create winners and losers and that the current legislation lacks clear assumptions and review processes."
+  },
+  {
+   "slug": "speech-369273",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Bill 2018 fails to include adequate labour market testing, supporting an amendment by the member for Blaxland, and cited the case of John Holland in Hobart failing to pay Chinese migrant workers for nine weeks."
+  },
+  {
+   "slug": "speech-369371",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment and Customs Tariff Amendment bills implementing the Comprehensive and Progressive Agreement for Trans-Pacific Partnership, along with the shadow trade minister's amendment, citing the agreement's side agreements on human rights, labour rights and the environment. The party raised concerns about investor-state dispute provisions—noting only Canada would newly be subject to them—and argued for transitional arrangements and investment in education and TAFE to keep Australian workers competitive."
+  },
+  {
+   "slug": "speech-369376",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-17",
+   "stage_hint": null,
+   "brief": "The speaker argued for the swift passage of the TPP-11 implementing bills, stating the agreement would eliminate 98% of tariffs, deliver a $15.6 billion net annual benefit to national income by 2030, and give Australian beef exporters a 13 percentage point tariff advantage over US competitors in Japan within two years."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Comprehensive and Progressive Agreement for Trans-Pacific Partnership Implementation) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00127",
+   "assent_date": "2018-10-19"
+  }
+ ]
+}

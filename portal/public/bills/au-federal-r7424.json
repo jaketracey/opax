@@ -1,0 +1,330 @@
+{
+ "key": "au-federal-r7424",
+ "title": "Social Security and Other Legislation Amendment (Technical Changes No. 1) Bill 2026",
+ "short_title": "Social Security and Other Legislation Amendment (Technical Changes No. 1) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-02-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2026-04-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7424_ems_ae72d5ce-c1e2-4ff0-9157-ef3be89dd755%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7424%22",
+   "document_date": "2026-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00030",
+   "document_date": "2026-04-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-02-05",
+  "sentences": [
+   "The bill would update child support formulas to fix problems from earlier changes.",
+   "It would give the Secretary clear legal power to make urgent payments to social security recipients outside the normal fortnightly schedule.",
+   "The bill clarifies how employment income attribution rules should work under the Social Security Act."
+  ],
+  "changes": [
+   "Amends the Child Support (Assessment) Act 1989 to improve how child support periods are administered.",
+   "Provides legislative authority for urgent payments to eligible social security recipients.",
+   "Clarifies the legal basis for employment income attribution rules in the Social Security Act."
+  ],
+  "affected": "Child support payers and recipients, social security recipients, and the Secretary of the Department of Social Services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:37:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10125",
+   "date": "2026-03-26",
+   "house": "senate",
+   "question": "Anne Ruston I wish to continue with my remarks on the Social Security and Other Legislation Amendment (Technical Changes No. 1) Bill 2026. As I was saying, the coalition accepts that there must be a lawful and transparent framework to ensure that payments are being received appropriately, however we have questions on how the removal of an annual cap will operate in practice and what safeguards will exist to prevent people from a cycle of repeated urgent payment requests and ongoing financial hardship. The coalition welcomes measures such as access to financial counselling, social work services and alternative payment services including Centrepay. We are concerned however that removing the annual cap on urgent payment requests risks encouraging greater reliance on what was previously a limited and tightly controlled program. Without effective safeguards, this change may deepen financial distress rather than relieve it. We cannot consider these changes to urgent payments in isolation from the broader economic environment in which Australians are currently living. Under this Albanese government, Australians are paying more for everything. Insurance costs have increased by 39 per cent. Energy costs are up by 38 per cent. Rent is up by 22 per cent. Health costs are up by 18 per cent if you can get in. Education costs are up 17 per cent, and food costs are up 16 per cent. These are not discretionary or optional expenses. These are not luxuries. These are fundamental costs of everyday life that all Australians use daily. Against this backdrop, it is hardly surprising that many welfare recipients are experiencing persistent financial stress and may be increasingly relying on urgent payments and other emergency measures simply to get by. We know, troublingly, that in 2024-25 alone 440,000 social security payment recipients were granted approximately one million urgent payments. That figure alone should prompt serious reflection by the Albanese government about the impact on",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-03-26/14"
+  },
+  {
+   "key": "federal-senate-10179",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against an [Australian Greens amendment](https://www.openaustralia.org.au/senate/?gid=2026-04-01.13.4) that would have removed the upper limit for urgent payment requests, meaning it did not succeed. ### Amendment text > *(1) Schedule 2, item 9, page 12 (lines 15 and 16), omit \"an amount between $20 and $200\", substitute \"an amount that is equal to or greater than $20\".*",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/2"
+  },
+  {
+   "key": "federal-senate-10180",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against [Australian Greens amendments](https://www.openaustralia.org.au/senate/?gid=2026-04-01.15.1) in respect to introducing a 6‑year time limit on debt recovery and indexing upper limit for urgent payment requests. This means the amendments were unsuccessful. ### Amendment text See [openaustralia.org.au](https://www.openaustralia.org.au/senate/?gid=2026-04-01.15.1) for a copy of the amendment text.",
+   "stage": "Limitation of debate",
+   "ayes": 13,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/3"
+  },
+  {
+   "key": "federal-senate-10181",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against [a request for amendment](https://www.openaustralia.org.au/senate/?gid=2026-04-01.17.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it was unsuccessful. This request would have added a schedule to increase, index and review the remote area allowance. ### What is the purpose of this request? Dr Francis Markham of the ANU has written a [policy brief](https://policybrief.anu.edu.au/the-poor-pay-more-why-the-remote-area-allowance-needs-urgent-reform/) that presents an argument why the remote area allowance needs to be increased, as suggested by this request for amendment.",
+   "stage": "Limitation of debate",
+   "ayes": 17,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1200019",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-02-10",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security and Other Legislation Amendment (Technical Changes No. 1) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00030",
+   "assent_date": "2026-04-01"
+  }
+ ]
+}

@@ -1,0 +1,270 @@
+{
+ "key": "au-federal-r6988",
+ "title": "Financial Accountability Regime Bill 2023",
+ "short_title": "Financial Accountability Regime Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2023-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6988_ems_e6471c2b-7cb4-4aef-81c5-f4bfcddc5077%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6988%22",
+   "document_date": "2023-03-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00067",
+   "document_date": "2023-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8008",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debates/?id=2023-03-21.141.1) introduced by Griffith MP [Max Chandler-Mather](https://theyvoteforyou.org.au/people/representatives/griffith/max_chandler-mather) (Greens), which means they failed. ### What do the amendments do? Mr Chandler-Mather [explained that](https://www.openaustralia.org.au/debates/?id=2023-03-21.141.1): \"*It's a really simple amendment. It will make sure that bankers know they face serious consequences for their actions.*\"",
+   "stage": "Report from Federation Chamber",
+   "ayes": 58,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 5
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 67
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-22/2"
+  },
+  {
+   "key": "federal-senate-8320",
+   "date": "2023-09-05",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?id=2023-09-04.229.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means they failed. The amendments related to civil penalties and indemnities for accountable persons. There was one rebel voted, with Queensland Senator [Gerard Rennick](https://theyvoteforyou.org.au/people/senate/queensland/gerard_rennick) (Queensland) voting Yes against the rest of his party. ### Amendment text > *(1) Clause 4, page 4 (line 7), omit \"or by the Regulator through disqualification\", substitute \"by the Regulator through disqualification, or through civil penalties for non-compliance\".* > > *(2) Clause 14, page 18 (line 12), omit \"or disqualification by the Regulator\", substitute \", disqualification by the Regulator, or civil penalties for non-compliance\".* > > *(3) Clause 18, page 22 (after line 6), at the end of subclause (1), add:* > >> *Note: Failure to comply with an obligation under this Chapter is a contravention of a civil penalty provision (see section 80).* > > *(4) Clause 35, page 42 (line 7), after \"disqualified\", insert \"or liable to a civil penalty\".* > > *(5) Clause 40, page 49 (after line 17), after paragraph (4)(e), insert:* > >> *(ea) details of any civil penalty order made against the person for a contravention of a civil penalty provision of this Act; and* > > *(6) Clause 80, page 85 (after line 12), at the end of the clause, add:* > >> *(3) A person contravenes this subsection if:* >> >>> *(a) the person is an accountable person of:* >>> >>>> *(i) an accountable entity that is a medium or large banking entity; or* >>>> >>>> *(ii) an accountable entity that is not an ADI or an authorised NOHC of an ADI; and* >>> >>> *(b) the person is subject to an obligation under Chapter 2 in relation to the entity; and* >>> >>> *(c) the person fails to comply with the obligation.* >>> >>> *Note: It is generally not necessa",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-09-05/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828653",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "Bills on financial accountability, financial services compensation, health, national security, education and vocational training were referred to the Federation Chamber for further consideration. The speaker also remarked that they hoped their next speech would be more interesting."
+  },
+  {
+   "slug": "speech-828656",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The government’s mismanagement of the Financial Accountability Regime bills, including a deal with the Greens that was later reversed, delayed their passage, and it broke promises on tax and superannuation, such as doubling super taxes and taxing unrealised capital gains, while the Levy review on financial advice remains unanswered."
+  },
+  {
+   "slug": "speech-828726",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-21",
+   "stage_hint": null,
+   "brief": "The Financial Accountability Regime Bill 2023 and related bills establish a strengthened accountability framework for banks, insurers and superannuation entities, with regulators empowered to disqualify executives and impose financial penalties, and create a compensation scheme of last resort for consumers, funded by industry levies with a $250 million overall cap and a $20 million subsector cap."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Accountability Regime Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00067",
+   "assent_date": "2023-09-14"
+  }
+ ]
+}

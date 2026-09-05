@@ -1,0 +1,270 @@
+{
+ "key": "au-federal-r5911",
+ "title": "Liquid Fuel Emergency Amendment Bill 2017",
+ "short_title": "Liquid Fuel Emergency Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment and Energy",
+ "status": "passed",
+ "status_as_of": "2017-09-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5911_ems_9e245ca4-dbb3-4f4a-86ff-f7e7d5e01fcf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5911%22",
+   "document_date": "2017-06-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00103",
+   "document_date": "2017-09-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-15",
+  "sentences": [
+   "The bill would let the Australian government pay for commercial oil stockholding contracts to help meet its international fuel reserve obligations.",
+   "It would authorise the spending of public money on these contracts, following a High Court decision that required explicit legislative authority for such payments.",
+   "The government plans to buy 400 kilotonnes of offshore oil tickets in the 2018-19 and 2019-20 financial years."
+  ],
+  "changes": [
+   "The bill gives the Australian government the power to enter into ticketing contracts with foreign or Australian entities.",
+   "It allows the government to spend money on oil stockholding contracts.",
+   "The bill empowers a departmental head to sign such contracts and exercise the government's rights under them."
+  ],
+  "affected": "The Australian government, the Department of the Environment and Energy, and entities that could hold oil stocks for Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:29:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4897",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-09-11.47.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). Because this note was successful, the words below will be added to the original motion. ### Motion text > *At the end of the motion, add:* > > *\"but the Senate calls upon the Government to work to minimise liquid fuel use in Australia, improve fuel security and lower the cost of compliance with Australia's 90 day stockholding obligation, by:* > > *(a) introducing a mandatory vehicle emission or fuel economy standard;* > > *(b) introducing measures to encourage the uptake of electric vehicles;* > > *(c) introducing measures to encourage mode switching from private vehicle transport to mass transit or active transport options; and* > > *(d) the development and publication of a comprehensive transport energy plan directed to achieving a secure, affordable and sustainable transport energy supply.\"*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 34,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-352297",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The opposition supported the Liquid Fuel Emergency Amendment Bill 2017 to comply with IEA 90-day fuel reserve requirements, but moved a second reading amendment criticising the government's lack of a national energy policy and failure on gas supply. The government plans to spend $28.3 million on 400 kilotons of offshore fuel tickets over the forward estimates."
+  },
+  {
+   "slug": "speech-352300",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "Australia's fuel reserves and refining capacity are inadequate, and the bill's ticketing mechanism is unsuitable for an island nation, especially since most oil imports come from a region of potential conflict. The member voted in support but called for commitments to increase refining capacity in geographically dispersed locations and move toward a 90-day fuel obligation."
+  },
+  {
+   "slug": "speech-352302",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Liquid Fuel Emergency Amendment Bill 2017, which enables the government to enter commercial oil stockholding contracts to comply with the IEA's 90-day obligation, with an initial purchase of 400 kilotonnes of offshore tickets planned for 2018–20. The speaker argued the bill is a bandaid solution that does not address emergencies like a regional conflict closing the Strait of Malacca, and criticised the government's energy policy mismanagement and Santos' statements on domestic gas prices."
+  },
+  {
+   "slug": "speech-352303",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The Liquid Fuel Emergency Amendment Bill 2017 addresses Australia’s noncompliance with the International Energy Agency’s 90-day fuel reserve requirement, but the speaker criticises the government’s plan to achieve compliance only by 2027 and its reliance on commercial “ticketing” contracts rather than holding physical fuel stocks."
+  },
+  {
+   "slug": "speech-352307",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia is the only International Energy Agency member in breach of its 90-day oil stockpile obligation, holding only 51 days of imports, and criticised Labor and the Greens for blocking oil and gas exploration while pursuing high renewable energy targets. He claimed that Labor’s policies are causing higher energy costs, an investment strike in dispatchable power, and a $60 billion federal renewable subsidy by 2030, and called for increased domestic drilling and projects like Snowy 2.0."
+  },
+  {
+   "slug": "speech-352416",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-09-04",
+   "stage_hint": null,
+   "brief": "The Liquid Fuel Emergency Amendment Bill 2017 authorises the Australian government to enter oil stockholding contracts to meet the International Energy Agency's requirement of 90 days of oil stockholdings, with an initial purchase of oil tickets equivalent to around three million barrels in 2018‑19 and 2019‑20. The bill aims to enhance global and regional oil security and ensure Australia's compliance with its IEA treaty obligations."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Liquid Fuel Emergency Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00103",
+   "assent_date": "2017-09-14"
+  }
+ ]
+}

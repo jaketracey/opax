@@ -1,0 +1,698 @@
+{
+ "key": "au-federal-r5360",
+ "title": "Omnibus Repeal Day (Spring 2014) Bill 2014",
+ "short_title": "Omnibus Repeal Day (Spring 2014) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-08-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5360_ems_6f8dbc67-586f-4464-b910-138429a654f7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5360%22",
+   "document_date": "2014-10-22",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-10-22",
+  "sentences": [
+   "The bill would remove or change laws across nine government portfolios to cut red tape.",
+   "It would amend the Aged Care Act 1997 to let aged care providers skip notifying the department about non-material staff changes, and repeal a requirement for fuel suppliers to file an annual statement that duplicates monthly reports.",
+   "The bill also repeals obsolete Acts, such as one that validated faulty tariff decisions made before June 1999 and the Home and Community Care Act 1985, which was made redundant by a 2008 intergovernmental agreement."
+  ],
+  "changes": [
+   "Reduces notification obligations for aged care providers.",
+   "Removes an annual reporting requirement for fuel suppliers.",
+   "Repeals spent and redundant Commonwealth Acts."
+  ],
+  "affected": "Businesses, individuals and community organisations are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3629",
+   "date": "2014-12-01",
+   "house": "senate",
+   "question": "Alex Gallacher I rise to make a contribution in this debate. I would like to start as I finished off in taking note. This minister ought to talk the plank. He ought to go off the plank—deep six himself—because of these reasons. At the moment, shipbuilding and submarines are approximately 3,000 direct jobs in South Australia. There are no complete figures on indirect jobs, but there are many thousands of them. These are jobs which create things. These are jobs in the economy which create— Mitch Fifield Mr Acting Deputy President, I rise on a point of order. The point of order is relevance. The bill that is before the Senate is the Omnibus Repeal Day (Spring 2014) Bill 2014, and Senator Gallacher is not talking to any of the repeal provisions of the bill. Doug Cameron On the point of order: what the ALP is seeking to do here is to amend the omnibus repeal bill to ensure that there is part of that bill dealing with the submarines. This is exactly on point, and nothing could be more on point in relation to the issue that we are dealing with. Mitch Fifield There have been no amendments to that effect moved. I also point out that this is actually a repeal bill. This is not a bill that is seeking to insert new things into the statute books; this is seeking to take things off the statue books. But, putting that aside, no amendment has been moved. Alex Gallacher This is foreshadowing the amendment to be moved by Senator Conroy in relation to the Omnibus Repeal Day (Spring 2014) Bill 2014: 1 At the end of Division 2 of Part 4 -1A Add: 105BA Future submarine project tender process (1) This section applies if the Commonwealth (including a Minister on behalf of the Commonwealth) proposes to enter into a contract (a _submarine design and building contract_) for the design and building of a submarine, or a substantial part of a submarine, as part of the future submarine project. Note 1: The future submarine project is designated SEA 1000— Zed Seselja Order! I have just taken some",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "earliest": 5,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-12-01/4"
+  },
+  {
+   "key": "federal-senate-3630",
+   "date": "2014-12-02",
+   "house": "senate",
+   "question": "Gavin Marshall The question is that the amendment on sheet 7635 moved by Senator Dastyari on behalf of the opposition be agreed to. Eric Abetz As the chamber continues its consideration of this bill, I invite all honourable senators to reflect on the solemn task and great privilege given to us by the Australian people. I know all senators take their role seriously. I also know the Australian people want us to be positive and, therefore, they will not smile upon us if they get a whiff of stunts or deliberate attempts by senators to cause chaos and disrupt proceedings or lay down unrealistic ultimatums to each other. This is the last week of parliamentary sittings, and there is a list of urgent legislation that still needs to be considered. While leaders and whips were meeting—a meeting where we seek to allow the proceedings of this place to be undertaken in an orderly fashion through the rest of the week—Labor, regrettably, pulled a stunt to bring on another bill not on the urgent list. The Australian people expect us to get on with the real business of restoring our nation's economic future fortunes; restoring the sustainability of various sectors, such as the tertiary education sector; and allowing the ACT government to proceed with remediating the issues of Mr Fluffy victims. I also suggest to honourable senators that there should be some respect for the conventions and precedents of this chamber. A cause that people might feel passionately about does not necessarily justify the means by which it is pursued. The Senate has a range of procedures available to prosecute an issue without resorting to what some might consider a breach of trust for the benefit of a by-election in a state. Alex Gallacher Like South Australia! Eric Abetz Senator Gallacher interjects. He was the one who was first on his feet last night, bringing on a stunt so early that he got his procedure incorrect—which is, I might say, one of the other pitfalls of doing such things in these circumstanc",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 53,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-12-02/1"
+  },
+  {
+   "key": "federal-representatives-3737",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "question": "Christian Porter I move: That the amendments be disagreed to. Mr Deputy Speaker, I understand that you have received written reasons to the effect of establishing— _Mr Albanese interjecting—_ We can negotiate reasonable things. I will just speak briefly to those reasons. Obviously, these amendments are proposed in the context of the Omnibus Repeal Day (Spring 2014) Bill. That bill delivers, or will deliver, savings to business in the vicinity of $1.43 million, as well as administrative savings. The amendments are in two broad parts. I will first consider the amendments which, at least on their face, are attempting to be constructive but which we reject for a variety of reasons which are specific to those amendments. The second amendments relate to submarine contracts and I will deal with those last. The first amendments are Senate amendments (1), (2), (3) and (4). They are moved by Senator Waters. Essentially, those amendments propose retaining the Product Stewardship Advisory Group, the Oil Stewardship Advisory Council and the Fuel Standards Consultative Committee. They would also seek to disallow alternative public consultation processes that would apply with respect to the grant and variation of approvals. By way of short explanation, a statutory process is simply not required to facilitate the necessary engagement. I would also note that in MYEFO, it was noted that the Department of the Environment would save itself internally $76,000 over six years by disbanding these groups, councils and committees, which are no longer required. That is a saving that can be pushed back into further and better work to protect the environment by the department, and that is the central reason for rejecting those Senate amendments Nos (1), (2), (3) and (4). Senate amendment Nos (5) and (6) would seek to maintain a requirement to publish certain notices under the Fuel Quality Standards Act 2000 and the Hazardous Waste (Regulation of Exports and Imports) Act 1989 in the _Commonwealt",
+   "stage": "Consideration of Senate message",
+   "ayes": 78,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-03-25/1"
+  },
+  {
+   "key": "federal-senate-3880",
+   "date": "2015-08-19",
+   "house": "senate",
+   "question": "Eric Abetz I move: That the committee does not insist on its amendments to which the House has disagreed. Stephen Conroy I ask that the question be divided in respect of the amendments. Could I suggest that the Senate considers amendments (1) to (6) together, with amendment (7) taken separately. I foreshadow that I will have an amendment to move in relation to amendment (7). The TEMPORARY CHAIRMAN: The House has not agreed to the seven amendments that we have in front of us. Senator Conroy has asked that the question be divided on amendments (1) to (6), so the question is: That the committee not insist on amendments (1) to (6). Larissa Waters I seek some clarification, and, obviously, I would like to insist on (1) to (6) being maintained. I want to ask if this about the substance of those amendments or about Senator Conroy's motion to split (1) to (6) off from (7), in which case we do not object. The TEMPORARY CHAIRMAN: It is the substance of the amendments. I am not speaking on the issue of whether or not to separate the amendments from the opposition's amendment, which I presume we will come back to at some point. The Greens are moving these amendments because we believe that science has a very crucial role in the process of decision making, and our amendments go to the retention of two advisory bodies that the government really should avail itself of. They are the Product Stewardship Advisory Group and the Oil Stewardship Advisory Council. We are seeing, time and time again, that this government has absolutely no respect for science. It has been cutting workers from the environment department and slashing funding from community groups. It now wants to silence community groups from even enforcing the government's own environmental laws, so this is just another attack in a long line of attacks against science and good sense. The two advisory groups to which I referred are crucial bodies that provide the government with, effectively, free advice on how not to stuff",
+   "stage": "Consideration of House message",
+   "ayes": 34,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 50,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-19/1"
+  },
+  {
+   "key": "federal-senate-3881",
+   "date": "2015-08-19",
+   "house": "senate",
+   "question": "Stephen Conroy I move the following amendment in place of amendment (7): (1) Page 25 (after line 29), after Schedule 3, insert: Schedule 3A—Finance _Public Governance, Performance and Accountability Act 2013_ 1 At the end of Division 2 of Part 4 -1A Add: 105BA Future submarine project tender process (1) This section applies if the Commonwealth (including a Minister on behalf of the Commonwealth) proposes to enter into a contract (a _submarine design and building contract_) for the design and building of a submarine, or a substantial part of a submarine, as part of the future submarine project. Note 1: The future submarine project is designated SEA 1000 in the Defence Capability Plan as in force on 1 December 2014. Note 2: This section does not apply to contracts for research, concept or preliminary design, planning or other preparatory work that does not involve the building of a submarine or a substantial part of a submarine. (2) The submarine design and building contract must not be entered into other than as the result of a limited tender process conducted in accordance with the Defence Procurement Policy Manual as in force on 1 December 2014, subject to this section. _Tender process_ (3) The future submarine project is taken not to be an exempt procurement for the purposes of the Defence Procurement Policy Manual. (4) A person or body is not eligible to bid for the tender unless the person or body gives the Commonwealth an undertaking that the submarine building, maintenance and sustainment will take place in Australia. (5) The Commonwealth must not enter into a submarine design and building contract in relation to the future submarine project unless the Commonwealth is satisfied that the contract includes guarantees that: (a) the majority of work on the submarine build will be undertaken by Australian labour; and (b) the majority of the materials used in the submarine build will be sourced from Australian suppliers. (6) This section ceases to have effect at the",
+   "stage": "Consideration of House message",
+   "ayes": 34,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 50,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-19/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-300910",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300924",
+   "speaker": "Government members",
+   "party": null,
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300929",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300931",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300938",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300939",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300943",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300945",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300948",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300950",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300963",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301158",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301159",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301160",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301163",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301164",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301167",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301168",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301172",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301175",
+   "speaker": "Ross Vasta",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301176",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301177",
+   "speaker": "Ross Vasta",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-308940",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker opposed Senate amendments to the Omnibus Repeal Day (Spring 2014) Bill, rejecting retention of advisory groups and committees to save $76,000 over six years and opposing Gazette publication in favour of websites. The bill delivers $1.43 million in savings to business, and the speaker dismissed submarine-related amendments as unreasonable and unrelated."
+  },
+  {
+   "slug": "speech-308943",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Prime Minister planned to buy submarines from Japan without due process, transparency, or a national interest test, and criticised the government for undermining the Australian Submarine Corporation and Sweden’s Saab Systems. They supported a bipartisan proposal for a competitive tender process and a funded definition study, with the condition that submarines be built and maintained in Australia to protect jobs and defence capability."
+  }
+ ],
+ "acts": []
+}

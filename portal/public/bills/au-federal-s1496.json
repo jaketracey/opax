@@ -1,0 +1,286 @@
+{
+ "key": "au-federal-s1496",
+ "title": "Aged Care Amendment (Restoring Human Override for Aged Care Needs Assessments) Bill 2026",
+ "short_title": "Aged Care Amendment (Restoring Human Override for Aged Care Needs Assessments) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-06-23",
+ "originating_house": "senate",
+ "sponsor": "RUSTON, Sen Anne",
+ "sponsor_party": "xx",
+ "sponsor_person_id": "10781",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1496%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1496%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1496%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1496%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1496_ems_3325f7cc-4f80-4ada-8dc5-f814f445eab9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1496%22",
+   "document_date": "2026-06-23",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-06-23",
+  "sentences": [
+   "This bill would change the Aged Care Act 2024 to make sure that automated tools do not overrule the professional judgment of approved assessors when they evaluate older Australians' care needs.",
+   "It would add new subsections to the Act so that an assessor's decision cannot be restricted or replaced by the output of the Integrated Assessment Tool or other automated classification tools set out in the Aged Care Rules 2025, and it would give people who were assessed after the Act began a chance to ask for a fresh assessment.",
+   "The bill would start the day after it receives Royal Assent."
+  ],
+  "changes": [
+   "The bill would confirm that assessor discretion cannot be limited by the Integrated Assessment Tool.",
+   "It would clarify that the Integrated Assessment Tool only supports, and does not replace, the assessor's professional judgment.",
+   "It would allow older Australians who had a needs or classification assessment since the Act commenced to seek a reassessment."
+  ],
+  "affected": "Older Australians undergoing aged care needs or classification assessments and the approved needs assessors who conduct them.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:28:47Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10577",
+   "date": "2026-07-02",
+   "house": "senate",
+   "question": "Anne Ruston The Aged Care Amendment (Restoring Human Override for Aged Care Needs Assessments) Bill 2026 restores a simple principle: decisions about care should be made by a qualified person, a qualified professional, not a computer algorithm with no human capacity. The current system allows an algorithm to determine outcomes without any capacity for a trained assessor to override it. This bill ensures the tool supports, not replaces, professional judgement, and it enshrines it in primary legislation. The Integrated Assessment Tool should be a tool that assists assessors, not replaces professional judgement. The bill achieves this in three very practical ways. First, it restores the discretion of qualified assessors to override or adjust an algorithm's recommendation where their clinical judgement tells them that that outcome is wrong. Second, it improves transparency by requiring decision notices to explain how the algorithm was used and how the assessor's professional judgement influenced the final outcome, giving older Australians greater confidence in the process. And, third, it creates the right for people assessed since 1 November 2025 to seek a fresh assessment if they believe the algorithm produced an incorrect classification, ensuring people are not locked into decisions that have been wrong. This bill responds to the significant concern raised by assessors, advocacy organisations and older Australians that the current system is failing to accurately assess people's care needs. It recognises that no algorithm can replace the experienced judgement and clinical expertise of a trained assessor when making complex decisions about an older person's care needs. The bill strengthens accountability by making the assessment process more transparent. Importantly, this is not about changing eligibility or increasing funding levels; it is about ensuring the existing assessment system produces fair, clinically-sound decisions about an older person's care needs. The dep",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-02/1"
+  },
+  {
+   "key": "federal-senate-10578",
+   "date": "2026-07-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2026-07-02.9.1) to read the bill for a second time. In other words, they voted to agree with the main idea of the bill. They can now discuss it in more detail. ### What is the main idea of the bill? According to the explanatory memorandum, which is a document prepared by the party that introduced the bill (in this case, the Independent Senators [Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston), [Allman-Payne](https://theyvoteforyou.org.au/people/senate/queensland/penny_allman-payne) and [Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock)): > *This Bill amends the Aged Care Act 2024 (the Act) to protect and clarify the discretion of approved needs assessors in conducting aged care needs assessments. The Bill makes clear that the Integrated Assessment Tool (IAT) and any other classification tools and requirements prescribed by the Aged Care Rules 2025 (the Rules) must operate to support, not replace, professional judgement of approved needs assessors. This Bill also provides transitional protections, including a right to reassessment, for older Australians assessed since the Act’s commencement on 1 November 2025 when assessor discretion became unprotected.* > > *The Act's failure to protect assessor discretion has allowed the Government to establish a framework in which an algorithmic tool, rather than a qualified professional, determines classification outcomes. Under the current framework, an approved needs assessor cannot, at the point of assessment, adjust or annotate the classification outcome generated by the Integrated Assessment Tool (IAT) even where the assessor's professional judgment indicates the tool has not captured the individual's needs.* > > *The Australian and New Zealand Society for Geriatric Medicine (ANZSGM) has characterised this as a clinical safety issue, concluding that the tool fails to adequately capture the complexit",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-02/2"
+  },
+  {
+   "key": "federal-senate-10579",
+   "date": "2026-07-02",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2026-07-02.11.1) to read the bill for a third time. In other words, they voted to pass the bill in the Senate. The bill will now be sent to the House of Representatives for their consideration. ### What does this bill do? According to the explanatory memorandum, which is a document prepared by the party that introduced the bill (in this case, the Independent Senators [Ruston](https://theyvoteforyou.org.au/people/senate/sa/anne_ruston), [Allman-Payne](https://theyvoteforyou.org.au/people/senate/queensland/penny_allman-payne) and [Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock)): > *This Bill amends the Aged Care Act 2024 (the Act) to protect and clarify the discretion of approved needs assessors in conducting aged care needs assessments. The Bill makes clear that the Integrated Assessment Tool (IAT) and any other classification tools and requirements prescribed by the Aged Care Rules 2025 (the Rules) must operate to support, not replace, professional judgement of approved needs assessors. This Bill also provides transitional protections, including a right to reassessment, for older Australians assessed since the Act’s commencement on 1 November 2025 when assessor discretion became unprotected.* > > *The Act's failure to protect assessor discretion has allowed the Government to establish a framework in which an algorithmic tool, rather than a qualified professional, determines classification outcomes. Under the current framework, an approved needs assessor cannot, at the point of assessment, adjust or annotate the classification outcome generated by the Integrated Assessment Tool (IAT) even where the assessor's professional judgment indicates the tool has not captured the individual's needs.* > > *The Australian and New Zealand Society for Geriatric Medicine (ANZSGM) has characterised this as a clinical safety issue, concluding that the tool fails to adequately",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-07-02/3"
+  },
+  {
+   "key": "federal-representatives-10597",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "question": "Rebecca White I move: That the second reading be made an order of the day for the next sitting. Dan Tehan I move: That all words after \"That\" be omitted with a view to substituting the following words: \"the second reading be considered immediately\". On the last sitting day prior to the winter recess, the Senate sent a clear message about putting older Australians first, and it's now time the House of Representatives do the same. The bill that is the subject of the motion is about one fundamental matter: ensuring that humans, not computers, make decisions when it comes to our elderly. This is critically important because elderly Australians are deeply concerned at the moment with the way that the aged-care system is treating them. They do not want a faceless algorithm determining their outcomes when it comes to aged care. They want this matter addressed immediately because, if it isn't, what we're going to see is more and more perverse outcomes for elderly Australians. We're also going to see backlog after backlog after backlog, because people will seek review after review after review of the decisions that these algorithms are making. I have to make the point that those opposite, who are now in government, made a huge fuss about anything being automated when they were in opposition, yet here they are, using algorithms to determine outcomes for our elderly. We say enough is enough, and we would like to bring the debate and the discussion on so that we can make sure that this is fixed. If this bill can pass the parliament today, if this bill is considered immediately, then we will be able to address this issue, and we will go a small way to add in some sort of comfort to elderly Australians. There are still a lot of issues under which elderly Australians are buckling because of this government, but this is one thing that we could address. That is why we want to see this brought on and why we think it is critical that it is brought on. I'll look forward to hearing from",
+   "stage": "Bill",
+   "ayes": 42,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 87
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-08-11/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1204749",
+   "speaker": "Anne Ruston",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204797",
+   "speaker": "Kerrynne Liddle",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,265 @@
+{
+ "key": "au-federal-r5517",
+ "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 4) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (2015 Measures No. 4) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-10-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-09-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5517_ems_13ae93fb-4fa1-4eaa-a1a9-963628889ccd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5517%22",
+   "document_date": "2015-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00135",
+   "document_date": "2015-10-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3929",
+   "date": "2015-09-16",
+   "house": "senate",
+   "question": "Lee Rhiannon Mr Chair, I draw your attention to the Greens' second amendment on sheet 7763, on schedule 2. It is the significant amendment here, and so I suggest that it be dealt with first. I move: (2) Schedule 2, page 8 (lines 1 to 11), to be opposed. This is an issue that I did cover in the second reading debate. It addresses the issue of overseas employment. Effectively, it would remove the exemption for some, but not all, overseas employees. This is where I do request clarification from the minister, because from my reading of the bill the tax exemptions would be retained for workers in private NGOs, the Australian Federal Police and the military. While the Greens can see merit in having consistency in our tax laws, why is there this inconsistency in this piece of legislation? When you look at it it looks as though this is just one small aspect, but it appears that it could be quite significant. It certainly looks as though it is buried in there, that we have this measure that really does create a two-tier system. It penalises workers who choose to work for the government in delivering overseas development assistance. And this is my direct question that I put to the minister: is it the case that workers in private NGOs, the Australian Federal Police and the military will retain their tax exemption status? And why should not all government employees, or all employees who are working under overseas development systems, be treated in the same way? Michaelia Cash Thank you Senator Rhiannon for the question. I am instructed that in relation to your question, Australian Defence Force and Australian Federal Police personnel access an income tax exemption under a different provision in the income tax law, and that provision will not be affected by this amendment. I am also advised that DFAT has recently made administrative amendments to exclude their employees from accessing an income tax exemption on income earned in delivering ODA overseas. DFAT has clarified this po",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 11,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-09-16/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-318443",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "Labor supported the bill, which implements previous Labor integrity measures on capital gains tax, rollovers, lost member superannuation accounts, and unifies tax treatment for overseas workers. The speaker also criticised the government for not tackling multinational tax avoidance and outlined Labor's proposed superannuation reforms, including taxing earnings over $75,000 in retirement at 15% and lowering the high-income superannuation charge threshold from $300,000 to $250,000."
+  },
+  {
+   "slug": "speech-318450",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The bill redefines idle superannuation accounts as those not accessed for five years, allows their rollover to the tax office with no fees, and amends scrip-for-scrip rollover provisions to prevent tax avoidance while closing a double taxation loophole for government workers overseas, except for ADF members and registered charities. The speaker also opposed Labor's proposal to tax superannuation earnings above $75,000 at 15%, arguing it would undermine the system's purpose of encouraging self-funded retirement."
+  },
+  {
+   "slug": "speech-318451",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that tax law amendment bills are interesting and reflect government policy, citing the Tax and Superannuation Laws Amendment (2015 Measures No. 4) Bill 2015 (TSLAB4). They noted that Schedule 1 improves integrity for the script-for-script rollover, a Labor government measure from the 2012-13 budget to prevent capital gains tax avoidance in takeovers or mergers."
+  },
+  {
+   "slug": "speech-318453",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The government argued for the Tax and Superannuation Laws Amendment (2015 Measures No. 4) Bill 2015, which includes improving scrip-for-scrip rollover integrity, tightening income tax exemptions for overseas government employees (saving $6.7 million from 1 July 2016), and raising the lost superannuation account threshold for transfer to the ATO from $2,000 to $4,000 then $6,000."
+  },
+  {
+   "slug": "speech-318454",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speech supported integrity measures for scrip-for-scrip arrangements, a tax change on overseas earnings of Australian government employees (securing $6.7 million), and increasing the lost superannuation account threshold to $6,000, with a combined fiscal impact of $483 million."
+  },
+  {
+   "slug": "speech-318455",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax and Superannuation Laws Amendment Bill, arguing for simplified superannuation to reduce the proliferation of small accounts. He also advocated for lower, simpler, fairer taxes and responsible deficit spending only when it leads to long-term returns."
+  },
+  {
+   "slug": "speech-318456",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The speaker endorsed the Tax and Superannuation Laws Amendment (2015 Measures No. 4) Bill 2015, arguing that schedule 1 tightens scrip-for-scrip rollover rules to prevent inappropriate tax deferral in mergers and acquisitions, schedule 2 removes an income tax exemption for Australian government employees delivering overseas development aid (saving $6.7 million over forward estimates), and schedule 3 raises the threshold for transferring small lost superannuation accounts to the Australian Taxation Office."
+  },
+  {
+   "slug": "speech-318461",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-14",
+   "stage_hint": null,
+   "brief": "The Tax and Superannuation Laws Amendment (2015 Measures No. 4) Bill 2015 makes three changes: strengthens scrip‑for‑scrip rollover integrity rules, removes an income tax exemption for government employees delivering official development assistance overseas (effective 1 July 2016, gaining $6.7 million over forward estimates), and increases the threshold for transferring lost member superannuation accounts to the ATO from $2,000 to $4,000 (31 December 2015) then to $6,000 (31 December 2016) to protect low balances from fees."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (2015 Measures No. 4) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00135",
+   "assent_date": "2015-10-13"
+  }
+ ]
+}

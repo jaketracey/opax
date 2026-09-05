@@ -1,0 +1,868 @@
+{
+ "key": "au-federal-r6609",
+ "title": "Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill 2020",
+ "short_title": "Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-11-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6609_ems_3fa8a35d-f7a2-41a1-a775-cd34ff110cd8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6609%22",
+   "document_date": "2020-10-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00096",
+   "document_date": "2020-11-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-6691",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?id=2020-11-10.7.1) introduced by South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent), which means they failed. ### What does the amendment do? Senator Patrick [explained that](https://www.openaustralia.org.au/senate/?id=2020-11-10.7.1): > *These amendments seek to undo what is becoming an awful trend in respect of legislation that is being brought into this chamber. As I said in my speech on the second reading yesterday, the government has put forward a bill to the parliament that basically has two substantive paragraphs. And those substantive paragraphs seek to grant a power for a minister to set up a scheme that involves the expenditure of somewhere up to $4 billion of taxpayers' money. All of the details of how that money will be spent, who will be in receipt of it and so forth will actually be contained in the rules generated by some faceless official somewhere in the government. The way this is supposed to work is we're supposed to put legislation on the table and have it be debated, contested, talked about openly and voted upon openly so that the people who we represent can hold us to account. But that is not what will happen in relation to this particular bill, because all of the details are in the rules.* > > *The strange thing is: the rules are available. In fact, that's exactly what I've done with this amendment—I've taken the rules and put them into the bill, as should be the case.*",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 20,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/1"
+  },
+  {
+   "key": "federal-senate-6692",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1) and (2)](https://www.openaustralia.org.au/senate/?gid=2020-11-10.16.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. ### What do the amendments do? Senator Faruqi [explained that](https://www.openaustralia.org.au/senate/?gid=2020-11-10.16.1): > *Over the years there have been plenty of examples of businesses that have denied workers their full pay and their full rights. Many big businesses eligible for the JobMaker hiring credit actually have a history of underpaying their staff and their workers, but this scheme, as it stands at the moment, allows public funds to subsidise those same businesses that have been underpaying their staff. Surely no-one in this place can agree that that should be allowed to happen. Our amendments remove eligibility for businesses that are found to be underpaying their workers while receiving the JobMaker hiring credit. Businesses will be required to repay the total sum of the credit they have received. Our amendments also include protections to prevent employers seeking payments from their workers to cover that repayment.* ### Amendment text > *(1) Schedule 1, page 3 (after line 11) , after item 2, insert:* > >> *2A Section 6* >> >> *Insert:* >> >>> *underpaying in relation to an employee: see subsection 7A(4).* >>> >>> *underpayment event: see subsection 7A(3).* > > *(2) Schedule 1, page 3 (after line 26), after item 4, insert:* > >> *4A After section 7* >> >> *Insert:* >> >>> *7A Requirements for rules that provide for jobmaker hiring credit scheme — ineligibility for underpaying employees* >>> >>> *(1) This section applies if rules are made for the purposes of subsection 7(1A) that provide for a kind of payment known as the jobmaker hiring credit.* >>> >>> *Ineligibility for underpaying employees* >>> >>> *(2) The rules must provide that an entity is not eligible for the payment if, during the releva",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/2"
+  },
+  {
+   "key": "federal-senate-6693",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "The majority voted against a [request for an amendment](https://www.openaustralia.org.au/senate/?gid=2020-11-10.20.1) introduced by South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent), which means it failed. ### What does the amendment do? Senator Patrick [explained that](https://www.openaustralia.org.au/senate/?gid=2020-11-10.20.1): > *For the benefit of the chamber, what this amendment seeks to do is to deal with a discriminatory aspect of the bill as it currently stands in conjunction with the rules. The JobMaker scheme will permit a payment of $200 for new employees that are within the age bracket 16 to 29, scaling down to $100 per week for employees that are in the age bracket of 30 to 35.* > > *Last week at the committee that was examining this bill, I tabled some Seek advertisements. Those advertisements were for jobs, and those advertisements had the words in them, 'In order to apply for this job you must be eligible for JobMaker.' In effect, what that was saying was if you are 36 or 37 or 38 or anywhere above 35 you need not apply for this job. That is discriminatory. We have a lot of mature workers in our community who add value and who are also struggling to get jobs as a result of what's happened with COVID-19. This bill offers no help to employers to employ them, so, by its very nature, it operates as an incentive to exclude them, to discriminate against them.* ### Amendment request text > *That the House of Representatives be requested to make the following amendment:* > > *(1) Schedule 1, page 3 (after line 24), after item 3, insert:* > > *3A After section 7* > >> *Insert:* >> >> *7A Requirements for rules that provide for jobmaker hiring credit scheme* >> >> *(1) This section applies if rules are made for the purpose of subsection 7(1A) that provide for a kind of payment known as the jobmaker hiring credit.* >> >> *(2) The rules must not:* >> >>> *(a) include eligibility requirements that p",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "dated": 20,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/3"
+  },
+  {
+   "key": "federal-senate-6694",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-11-10.36.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means it failed. ### What does this amendment do? Senator Faruqi [explained that](https://www.openaustralia.org.au/senate/?gid=2020-11-10.36.14): > *We are moving this amendment because there is nothing in this bill that stops companies paying increased dividends during the pandemic while receiving JobKeeper. These companies will be allowed to use and abuse public money in the same way under the JobMaker hiring credit scheme. That is just obscene. This amendment will make sure that businesses who have paid increased dividends from 1 March 2020 through to the end of the scheme, which is currently 6 October 2022, will be ineligible for the JobMaker hiring credit, because they should be. It is public money in this scheme that is being used to provide employment—insecure, I might add, and precarious employment—to people, but public money should in no way be abused in this obscene way, where shareholders get dividends for it. I commend this amendment to the Senate.* ### Amendment text > *(1) Schedule 1 , page 3 (before line 27) , before item 5 , insert:* > >> *4B After section 7* >> >> *Insert:* >> >> *7B Requirements for rules that provide for jobmaker hiring credit scheme—ineligibility for paying increased dividends* >> >> *(1) This section applies if rules are made for the purposes of subsection 7(1A) that provide for a kind of payment known as the jobmaker hiring credit.* >> >> *(2) The rules must provide that an entity is not eligible for the payment at any time during the relevant period if:* >> >>> *(a) during the period beginning on 1 March 2020 and ending at the end of the relevant period the entity pays dividends to shareholders of the entity; and* >>> >>> *(b) the Commissioner is satisfied that the amount of the dividend exceeds the amou",
+   "stage": "In committee",
+   "ayes": 9,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 4,
+    "dated": 21,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/4"
+  },
+  {
+   "key": "federal-senate-6695",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "Economic Recovery Package (Jobmaker Hiring Credit) Amendment Bill 2020 - in Committee - Safeguards",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 26,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/5"
+  },
+  {
+   "key": "federal-senate-6696",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "Economic Recovery Package (Jobmaker Hiring Credit) Amendment Bill 2020 - in Committee - Dispute resolution",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 28,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/6"
+  },
+  {
+   "key": "federal-senate-6701",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-11-10.183.3) introduced by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means it was successful. Senator Pratt [explained](https://www.openaustralia.org.au/senate/?gid=2020-11-10.183.3) that her amendment: > *requires reporting on the scheme to happen quarterly. Here we really want to be able to see the number of entities that have received payments, the number of employees, the total payroll and a comparison of the amounts that have been paid, and we want to be able to see those things across different regions.* ### Amendment text > *(1) Schedule 1, page 3 (after line 26), after item 4, insert:* > > *4A After section 7* > > *Insert:* > > *7A Requirements for rules that provide for jobmaker hiring credit scheme—reporting of aggregated scheme information* > > *(1) This section applies if rules are made for the purposes of subsection 7(1A) that provide for a kind of payment known as the jobmaker hiring credit.* > > *(2) The rules must require the Commissioner to make publicly available as soon as practicable after the end of each quarter the following aggregated information in relation to entities receiving payments under the scheme for the jobmaker hiring credit:* > >> *(a) the number of entities that received payments under the scheme during the quarter;* >> >> *(b) the number of employees employed by the entities at the end of the quarter;* >> >> *(c) the total payroll of all the entities for the quarter;* >> >> *(d) a comparison of the amounts in paragraphs (a), (b) and (c) with the amounts for the previous quarter.* > > *(3) Rules made for the purposes of subsection (2) must also provide for reporting of that information aggregated across different sizes of businesses and across different regions of Australia.* > > *(4) In this section:* > >> *quarter means a period of 3 months ending on 31 March, 3",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 25,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/11"
+  },
+  {
+   "key": "federal-senate-6702",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "Economic Recovery Package (Jobmaker Hiring Credit) Amendment Bill 2020 - in Committee - Transparency",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 25,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/12"
+  },
+  {
+   "key": "federal-senate-6703",
+   "date": "2020-11-10",
+   "house": "senate",
+   "question": "The same number of senators voted for and against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-11-10.192.1) introduced by West Australian Senator [Louise Pratt](https://theyvoteforyou.org.au/people/senate/wa/louise_pratt) (Labor), which means it was unsuccessful. ### Amendment text > *(1) Schedule 1, page 3 (before line 27), before item 5, insert:* > > *4E After section 7* > > *Insert:* > > *7E Requirements for rules that provide for jobmaker hiring credit scheme—ineligibility for paying increased executive bonuses* > > *(1) This section applies if rules are made for the purposes of subsection 7(1A) that provide for a kind of payment known as the jobmaker hiring credit.* > > *(2) The rules must provide that an entity is not eligible for the payment at any time during the relevant period if:* > >> *(a) during the period beginning on 1 March 2020 and ending at the end of the relevant period the entity pays a bonus to an executive or other officer of the entity; and* >> >> *(b) the Commissioner is satisfied that the amount of the bonus exceeds the amount of the last such payment made by the entity to the officer.* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd023): > *The purpose of the Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill 2020 (the Bill) is to amend the Coronavirus Economic Response Package (Payments and Benefits) Act 2020 (the Payments and Benefits Act) to enable payments to be made to help improve people’s prospects of gaining paid employment or to increase workforce participation, between 7 October 2020 and 6 October 2022.* > > *The Bill also allows for the establishment of a scheme related to one or more of the payments intended to help improve people’s prospects of gaining paid employment or increasing workforce participation.*",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "member": 12,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-10/13"
+  },
+  {
+   "key": "federal-representatives-6704",
+   "date": "2020-11-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with the [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6609_sched_b8e008da-90eb-4e45-9e08-b6ae8922d9dc%22;rec=0) requested by the Senate. The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6609) will now return to the Senate, where they can decide on whether or not to insist on their amendments. If the don't insist on them, the bill will become law. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd023): > *The purpose of the Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill 2020 (the Bill) is to amend the Coronavirus Economic Response Package (Payments and Benefits) Act 2020 (the Payments and Benefits Act) to enable payments to be made to help improve people’s prospects of gaining paid employment or to increase workforce participation, between 7 October 2020 and 6 October 2022.* > > *The Bill also allows for the establishment of a scheme related to one or more of the payments intended to help improve people’s prospects of gaining paid employment or increasing workforce participation.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 54,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 104
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-11-11/1"
+  },
+  {
+   "key": "federal-senate-6715",
+   "date": "2020-11-11",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2020-11-11.181.1) \"*that the committee does not insist on its amendments to which the House of Representatives has disagreed*.\" Because the bill - minus these certain amendments - has already passed in the House, the bill can now become law. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd023): > *The purpose of the Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill 2020 (the Bill) is to amend the Coronavirus Economic Response Package (Payments and Benefits) Act 2020 (the Payments and Benefits Act) to enable payments to be made to help improve people’s prospects of gaining paid employment or to increase workforce participation, between 7 October 2020 and 6 October 2022.* > > *The Bill also allows for the establishment of a scheme related to one or more of the payments intended to help improve people’s prospects of gaining paid employment or increasing workforce participation.*",
+   "stage": "Consideration of House message",
+   "ayes": 30,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 29,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-11/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-395433",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill 2020 extends payment time limits to establish the JobMaker Hiring Credit scheme, operating from 7 October 2020 to 6 October 2022, providing incentives for employers to hire young jobseekers aged 16 to 35 to address increased youth unemployment due to COVID-19."
+  },
+  {
+   "slug": "speech-396055",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing orders to force immediate debate and passage of the Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill 2020, accusing the government of failing to bring the bill forward despite claiming urgency and spreading misinformation."
+  },
+  {
+   "slug": "speech-396072",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill 2020 will support up to 450,000 jobs across Australia, with a $4.5 billion program offering employers $200 a week for hiring workers aged 16–29 and $100 a week for those aged 30–35, and the speaker specifically highlighted its benefits for the construction and tourism sectors in his electorate of Fisher."
+  },
+  {
+   "slug": "speech-396074",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The JobMaker Hiring Credit was criticised for deliberately excluding 928,000 unemployed Australians over 35 and for design flaws that encourage insecure part-time work, with failed precursors cited including Youth Jobs PaTH and the Restart subsidy. The speech also highlighted the government's forecast of 160,000 more jobless before Christmas and raised concerns over a blank-cheque provision for undefined programs."
+  },
+  {
+   "slug": "speech-396076",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The opposition criticised the government for treating the JobMaker Hiring Credit bill as a headline issue rather than a priority, noting the government had no plan to bring it on for debate. Labor brought the bill forward itself, arguing it acted cooperatively to ensure vital support for Australians could proceed."
+  },
+  {
+   "slug": "speech-396082",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued the JobMaker hiring credit excludes 928,000 Australians over 35, creating perverse incentives to sack older workers, and criticised the government for prematurely cutting JobKeeper and JobSeeker payments while highlighting 2.5 million underemployed Australians, 1.5 million on JobSeeker, and 20,000 JobSeeker recipients in Shortland."
+  },
+  {
+   "slug": "speech-396090",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The Labor MP argued for targeted support for the travel agency sector, which has lost 90–100% of turnover and faces losing over 50% of businesses and 15,000 women’s jobs, citing AFTA’s request for $250 million in grants plus concessional loans. He criticised the government’s lack of specific assistance, noting that $10 billion in travel was cancelled, $6 billion refunded, and $4 billion still needs to be clawed back."
+  },
+  {
+   "slug": "speech-396091",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the JobMaker Hiring Credit for young people aged 16–35, estimated to support 450,000 positions at a cost of $4 billion, but criticised the bill for lacking detail, risking discrimination against older women and other age groups, and failing to address female unemployment or provide industry-specific support for sectors like retail, hospitality, and tourism."
+  },
+  {
+   "slug": "speech-396092",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The member for Mayo supported the JobMaker Hiring Credit bill, citing national youth unemployment of 14.3% and Treasury estimates of 450,000 people assisted, and urged the government to consider extending the $100 wage subsidy to age 50 and improving training access for older workers, while also promoting the Restart and NEIS programs."
+  },
+  {
+   "slug": "speech-396095",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The Economic Recovery Package (JobMaker Hiring Credit) Amendment Bill extends the coronavirus payment framework's prescribed period from 28 March 2021 to 6 October 2022, enabling the JobMaker hiring credit to create job opportunities for young jobseekers impacted by the pandemic."
+  },
+  {
+   "slug": "speech-398492",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-11",
+   "stage_hint": null,
+   "brief": "Labor supported the JobMaker Hiring Credit bill but warns the design incentivises sacking workers over 35, citing 937,000 unemployed and 1.5 million underemployed. The party urges the government to adopt Senate-backed amendments to prevent older workers being replaced by younger ones for a $200 or $100 subsidy."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Economic Recovery Package (JobMaker Hiring Credit) Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00096",
+   "assent_date": "2020-11-13"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-s1359",
+ "title": "Human Rights (Children Born Alive Protection) Bill 2022",
+ "short_title": "Human Rights (Children Born Alive Protection) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-30",
+ "originating_house": "senate",
+ "sponsor": "CANAVAN, Sen Matthew",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10827",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1359%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1359%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1359%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1359_ems_dca7baf6-5e9e-4ade-8376-f0a2c4d9d202%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1359%22",
+   "document_date": "2022-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-11-30",
+  "sentences": [
+   "The bill would create a criminal offence for medical staff who fail to give a baby that is born alive after an abortion the same care any other newborn would get.",
+   "It would make it a legal duty for doctors and nurses to treat such babies no differently from other children, and would require professional registration boards to handle any breach as they would other misconduct.",
+   "The bill would not apply to the mother, and it would require medical staff to record these births so official statistics can be compiled."
+  ],
+  "changes": [
+   "Creates a new offence for health practitioners who neglect a baby born alive after a termination.",
+   "Codifies the duty of medical professionals to provide care to such babies as if the birth were not the result of a termination.",
+   "Requires health practitioner registration boards to address breaches of this duty like any other alleged breach.",
+   "Exempts mothers from prosecution under the bill.",
+   "Imposes a duty on health practitioners to report births of babies born alive after terminations for statistical purposes."
+  ],
+  "affected": "Health practitioners and babies born alive as a result of a termination, with mothers exempt from prosecution.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:22Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

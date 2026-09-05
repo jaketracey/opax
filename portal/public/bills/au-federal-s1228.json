@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1228",
+ "title": "International Human Rights and Corruption (Magnitsky Sanctions) Bill 2021",
+ "short_title": "International Human Rights and Corruption (Magnitsky Sanctions) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-03",
+ "originating_house": "senate",
+ "sponsor": "KITCHING, Sen Kimberley",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10897",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1228%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1228%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1228%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1228_ems_7a91dcad-0b42-4e19-9a4f-4cddd9cc4eac%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1228%22",
+   "document_date": "2021-08-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-03",
+  "sentences": [
+   "The bill would let the minister impose sanctions to meet United Nations obligations or to respond to gross human rights abuses or significant corruption.",
+   "It follows US and UK laws and gives the minister power to restrict commercial dealings, trades, and asset use in Australia by foreign people or entities that have violated international human rights or engaged in significant corruption.",
+   "The minister could also restrict immigration of people or classes of people who have violated international human rights law."
+  ],
+  "changes": [
+   "Allows the minister to impose sanctions for gross human rights abuses or significant corruption.",
+   "Restricts commercial dealings, trades, and asset use by sanctioned foreign persons or entities within Australia.",
+   "Allows the minister to restrict immigration of people who have violated international human rights law."
+  ],
+  "affected": "Foreign persons and entities that have violated international human rights or engaged in significant corruption.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:31Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

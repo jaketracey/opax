@@ -1,0 +1,126 @@
+{
+ "key": "au-federal-r6172",
+ "title": "Higher Education Support Amendment (Cost Recovery) Bill 2018",
+ "short_title": "Higher Education Support Amendment (Cost Recovery) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education and Training",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6172%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6172%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6172%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6172%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6172_ems_68640e90-ed0d-44fe-9c11-6191b1c4ea89%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6172%22",
+   "document_date": "2018-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-19",
+  "sentences": [
+   "This bill would make higher education providers pay fees and charges to the government.",
+   "It would introduce an application fee for new providers seeking FEE-HELP approval and an annual charge for existing providers, with amounts set by regulations.",
+   "The annual charge would vary by provider size based on yearly enrolments, and a fee schedule consistent with government cost recovery guidelines would be prepared before the regulations are made."
+  ],
+  "changes": [
+   "Introduces an application fee for prospective FEE-HELP providers to fund the application process.",
+   "Requires higher education providers to pay an annual charge as a condition of their approval.",
+   "Allows the annual charge amount to be prescribed by regulations, with different amounts for different provider sizes.",
+   "Provides for the Department of Education and Training to collect and recover the annual charge."
+  ],
+  "affected": "Higher education providers, especially those seeking or holding FEE-HELP approval, and the Department of Education and Training.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-369863",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The Higher Education Support Amendment (Cost Recovery) Bill 2018 and associated charges bill introduce an application fee and annual charge on higher education providers from 1 January 2019, recovering HELP program administration costs and saving $14.1 million over 2018–19 to 2021–22."
+  },
+  {
+   "slug": "speech-373885",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "Labor did not oppose the Higher Education Support (Charges) Bill 2018 and related bill, which introduce small cost‑recovery charges on higher education providers, but moved an amendment criticising the government for cutting billions from universities and vocational education over five years. Labor argued the charges should be absorbed by institutions, not passed to students, and announced its own plan to restore demand‑driven funding, invest $174 million in equity programs, and deliver over $10 billion in additional university funding over a decade."
+  },
+  {
+   "slug": "speech-373892",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "Labor supports the two higher education bills but will refer them to a Senate committee for inquiry, expressing concern that the proposed charges could be passed on to students and citing the government's record of $2.2 billion in university cuts. The speaker also highlighted the importance of the HELP scheme for access, particularly for low-socioeconomic and refugee communities, and criticised the government's broader education funding record."
+  },
+  {
+   "slug": "speech-373894",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Higher Education Support (Charges) Bill 2018 and the Higher Education Support Amendment (Cost Recovery) Bill 2018 would shift the cost of administering HELP loans to universities, reducing funds for teaching, research, and students. They stated the government had already cut $2.2 billion from higher education by freezing Commonwealth funding, and criticised the lack of Senate hearings and unspecified charges determined by regulation."
+  },
+  {
+   "slug": "speech-373895",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-12-04",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

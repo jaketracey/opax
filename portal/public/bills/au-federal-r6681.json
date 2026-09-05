@@ -1,0 +1,182 @@
+{
+ "key": "au-federal-r6681",
+ "title": "Online Safety (Transitional Provisions and Consequential Amendments) Bill 2021",
+ "short_title": "Online Safety (Transitional Provisions and Consequential Amendments) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Urban Infrastructure, Cities and the Arts",
+ "status": "passed",
+ "status_as_of": "2021-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6681_ems_38d7db42-d5ab-413e-bf78-5943778e170c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6681%22",
+   "document_date": "2021-02-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00077",
+   "document_date": "2021-07-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-02-24",
+  "sentences": [
+   "This bill supports the government's plan to strengthen online safety rules for Australians.",
+   "It would increase the maximum prison term for using a carriage service to threaten, harass or offend from three years to five years.",
+   "The bill also adjusts related aggravated offences so they align proportionally with the higher penalty."
+  ],
+  "changes": [
+   "Raises the maximum penalty for a criminal code offence involving carriage services.",
+   "Amends aggravated and special aggravated offences to match the new penalty.",
+   "Handles transitional and consequential matters from the main online safety act."
+  ],
+  "affected": "Users of carriage services who commit threatening, harassing or offensive acts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-403996",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The Labor speaker supported the Online Safety Bill's objectives but criticised the government’s two-and-a-half-year delay and mismanaged consultation, noting that only 7 technical amendments resulted from 376 submissions and citing unresolved concerns over the adult cyberabuse scheme's clarity, freedom of speech, and the omission of hate speech targeting groups. They moved an amendment recording these failures."
+  },
+  {
+   "slug": "speech-403999",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The member for Higgins supported the Online Safety (Transitional Provisions and Consequential Amendments) Bill 2021, arguing it strengthens the eSafety Commissioner's powers, increases penalties for using a carriage service to menace from three to five years, and requires removal of image-based abuse content within 24 hours. She noted that over 90% of Australians connect daily and referenced the Christchurch attack and the case of Erin Molan."
+  },
+  {
+   "slug": "speech-404002",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the Online Safety Bill 2021 is a necessary but \"half cooked\" piece of legislation, criticising the government for rushing it after two years of inaction since the 2018 Briggs review, and raised concerns about the eSafety Commissioner's unchecked powers, potential mission creep, and risks to free speech and journalism."
+  },
+  {
+   "slug": "speech-404127",
+   "speaker": "Llew O'Brien",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Online Safety (Transitional Provisions and Consequential Amendments) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00077",
+   "assent_date": "2021-07-23"
+  }
+ ]
+}

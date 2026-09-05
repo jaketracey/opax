@@ -1,0 +1,548 @@
+{
+ "key": "au-federal-r5871",
+ "title": "Government Procurement (Judicial Review) Bill 2017",
+ "short_title": "Government Procurement (Judicial Review) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-05-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2018-10-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5871_ems_d7afe84f-618f-4e54-9c29-1b81c59dc375%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5871_ems_fad27402-6d98-45b7-851b-55747be4c7a6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5871%22",
+   "document_date": "2017-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00129",
+   "document_date": "2018-10-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-05-25",
+  "sentences": [
+   "The bill would give the Federal Circuit Court of Australia the power to issue injunctions or order compensation when a supplier breaks the Commonwealth Procurement Rules for a covered procurement.",
+   "A supplier would have to lodge a complaint with the relevant Commonwealth entity's accountable authority and have it investigated, and the procurement would be paused unless a public interest certificate is in force, before going to court.",
+   "The bill aims to help Australia meet its international trade obligations, such as those under the World Trade Organization Agreement on Government Procurement and the Trans-Pacific Partnership Agreement, and to give regional and small businesses easier access to justice."
+  ],
+  "changes": [
+   "Vests the Federal Circuit Court with jurisdiction to grant injunctions and order compensation for procurement rule breaches.",
+   "Requires suppliers to complain to the accountable authority first and have the procurement suspended during investigation, unless a public interest certificate applies.",
+   "Enables Australia to meet international obligations on government procurement complaints and remedies."
+  ],
+  "affected": "Suppliers, including regional and small and medium enterprises, and Commonwealth entities involved in covered procurements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:29Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5434",
+   "date": "2018-09-19",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2018-09-19.33.1) to the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) that the House agree with the main idea of the bill, which was introduced by Labor MP [Jim Chalmers](https://theyvoteforyou.org.au/people/representatives/rankin/jim_chalmers). In parliamentary jargon, he wanted to amend the motion \"that the bills be read a second time\" with the following: > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House disapproves of the Government's failure to properly maximise the opportunities for Australian businesses in the Commonwealth Government's $50 billion procurement program\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-09-19/3"
+  },
+  {
+   "key": "federal-senate-5484",
+   "date": "2018-10-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-10-17.279.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). ### Bill's main idea According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd026): > *The Government Procurement (Judicial Review) Bill 2017 (the Bill) proposes to fill a gap in the current arrangements in administrative law relating to Commonwealth procurement, and to address obligations under relevant free trade agreements, by creating new rules for making and investigating complaints in relation to the contravention of relevant Commonwealth Procurement Rules (CPRs).* > > *Specifically, the Bill:* > > * *provides domestic and foreign tenders/suppliers with a statutory basis to challenge an actual or apprehended Commonwealth procurement decision for a contravention of relevant parts of the CPRs by providing the Federal Court, and the Federal Circuit Court (the Courts) the power to deal with particular procurement disputes (relating to ‘covered procurements’), and grant injunctions or order compensation to aggrieved suppliers for a breach of the relevant CPRs* > > * *makes it mandatory for the aggrieved supplier at first instance, to refer the complaint for investigation by the accountable authority for the relevant Commonwealth entity, before the supplier can bring a complaint before the Courts and* > > * *requires the accountable authority to suspend the procurement while the complaint is being investigated, unless the secretary of that authority has issued a ‘public interest certificate’ for that procurement.*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 22,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-17/16"
+  },
+  {
+   "key": "federal-senate-5487",
+   "date": "2018-10-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-10-18.4.2) introduced by Victorian Senator [Mitch Fifield](https://theyvoteforyou.org.au/people/senate/victoria/mitch_fifield) (Liberal), which means it succeeded. ### Motion text > *That on Thursday, 18 October 2018—* > > *(a) the [Government Procurement (Judicial Review) Bill 2017](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5871) and the [Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6206) be called on immediately and have precedence over all government business until determined;* > > *(b) if by 11.45 am the bills have not been finally considered, the questions on all remaining stages shall be put without debate; and* > > *(c) paragraph (b) of this order shall operate as a limitation of debate under standing order 142*",
+   "stage": "Business motion",
+   "ayes": 35,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 18,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-18/3"
+  },
+  {
+   "key": "federal-senate-5488",
+   "date": "2018-10-18",
+   "house": "senate",
+   "question": "The majority voted against amendments (1) to (4) on [sheet 8524](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr5871_amend_ecbeadcd-43d8-47a6-9100-0c8698883cc4%22;rec=0), which were introduced by Centre Alliance. ### Amendment text > *(1) Clause 4, page 3 (after line 14), after the definition of accountable authority, insert:* > >> **Agreement** *means the Comprehensive and Progressive Agreement for Trans-Pacific Partnership, done at Santiago, Chile on 8 March 2018, as amended and in force for Australia from time to time.* >> >> *Note 1: The Agreement could in 2018 be viewed in the Australian Treaties Library on the AustLII website (http://www.austlii.edu.au).* >> >> *Note 2: Under Article 1 of the Comprehensive and Progressive Agreement for Trans-Pacific Partnership (the Santiago Agreement), most of the provisions of the Trans-Pacific Partnership Agreement (the Auckland Agreement), done at Auckland on 4 February 2016, are incorporated, by reference, into and made part of the Santiago Agreement. This means, for example, that Chapters 1 and 3 of the Auckland Agreement are, because of that Article, Chapters 1 and 3 of the Santiago Agreement.* > > *(2) Clause 4, page 4 (after line 2), after the definition of official, insert:* > >> **Party** *has the meaning given by Article 1of Chapter 1 of the Agreement.* > > *(3) Clause 21, page 16 (after line 16), at the end of the clause, add:* > >> *This Act ceases to have effect on 1 January 2020 unless certain bilateral side letters to the Agreement are exchanged and come into force for Australia before that day.* > > *(4) Page 17 (after line 17), at the end of Part 5, add:* > >> *26 Cessation of effect of Act* >> >> *7 This Act ceases to have effect on 1 January 2020 unless all of the following come into force for Australia before that day:* >> >>> *(a) bilateral side letters exchanged between Australia and each other Party agreeing",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 30,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-18/4"
+  },
+  {
+   "key": "federal-senate-5489",
+   "date": "2018-10-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-10-18.83.1) to pass the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5871). In parliamentary jargon, they voted to read the bill [for a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1819a/19bd026): > *The Government Procurement (Judicial Review) Bill 2017 (the Bill) proposes to fill a gap in the current arrangements in administrative law relating to Commonwealth procurement, and to address obligations under relevant free trade agreements, by creating new rules for making and investigating complaints in relation to the contravention of relevant Commonwealth Procurement Rules (CPRs).*",
+   "stage": "Third reading",
+   "ayes": 46,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 30,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-18/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-347050",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-05-25",
+   "stage_hint": null,
+   "brief": "The Government Procurement (Judicial Review) Bill establishes an independent complaints mechanism for Commonwealth procurement, designating the Federal Circuit Court to review breaches of the Commonwealth Procurement Rules, with compensation limited to reasonable tender preparation costs, and requiring suppliers to first complain to the procuring entity."
+  },
+  {
+   "slug": "speech-369916",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "Labor supported the Government Procurement (Judicial Review) Bill 2017 to give small and medium businesses cheaper, faster court access for procurement disputes, but moved an amendment criticising the government for not maximising opportunities in the $50 billion annual procurement program."
+  },
+  {
+   "slug": "speech-369917",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Government Procurement (Judicial Review) Bill 2017 and an amendment, but criticised procurement policies for overlooking local economic benefits, citing the defence dress uniforms contract from Bendigo's Australian Defence Apparel being sent to Vietnam, costing 50–70 local jobs, and argued for greater local content and WTO standards to counter illegal dumping."
+  },
+  {
+   "slug": "speech-370055",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The Government Procurement (Judicial Review) Bill 2017 expands the Federal Circuit Court's jurisdiction to hear disputes under the Commonwealth Procurement Rules, allowing it to grant injunctions and order compensation for breaches. The speaker also argued that Commonwealth procurement should prioritise local Australian suppliers, particularly small and medium enterprises, and consider broader economic benefits like tax receipts and multiplier effects, not just immediate value for money."
+  },
+  {
+   "slug": "speech-370056",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Government Procurement (Judicial Review) Bill 2017 with an amendment but criticised its timing, arguing it should wait until WTO Government Procurement Agreement accession is resolved, and noted that past trade agreements like the Australia-US Free Trade Agreement underdelivered on Australian access to foreign contracts. The speech also highlighted $47–60 billion in annual Commonwealth procurement, risks to small and medium enterprises, and called for using procurement to achieve broader goals such as human rights compliance, environmental sustainability, and stronger Australian industry participation, citing weak requirements in the Future Submarine program."
+  },
+  {
+   "slug": "speech-370057",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The Government Procurement (Judicial Review) Bill 2017 adds an appeals mechanism to the Commonwealth Procurement Rules to comply with free trade agreements, but the speaker emphasised that Australian small and medium businesses face major barriers to winning government contracts, with Defence accounting for $112 billion of the $217 billion in procurement from 2012–13 to 2016–17, and the 10% SME target undermined by competition from international firms and costly panel arrangements."
+  },
+  {
+   "slug": "speech-370058",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Government Procurement (Judicial Review) Bill 2017, implementing Trans-Pacific Partnership and WTO Government Procurement Agreement commitments, weakens Australia's ability to favour local businesses by making it easier for foreign entities to challenge government contracts. The speaker noted that in 2015–16, Commonwealth agencies entered 70,338 contracts worth $56.9 billion, with total government procurement estimated at $120 billion annually, and criticised the government for not broadening 'value for money' to include whole-of-life benefits."
+  },
+  {
+   "slug": "speech-370059",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The member moved an amendment to defer the Government Procurement (Judicial Review) Bill 2017 until the Trans-Pacific Partnership and WTO Agreement on Government Procurement include better protections for labour, the environment and local business and remove investor-state dispute settlement provisions. The bill was opposed on the grounds that it would let multinational corporations sue the Australian government, disadvantage local businesses, and was being rushed through without the final trade agreement text being seen."
+  },
+  {
+   "slug": "speech-370062",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that free trade policies have destroyed Australian manufacturing and agriculture, citing closures of the motor vehicle, whitegoods, textile, steel, cement, sugar, dairy and wool industries, with specific declines of 23% in beef, 31% in dairy and 72% in sheep numbers. He called for restoring sovereignty by requiring all government-procured motor vehicles to be Australian-made."
+  },
+  {
+   "slug": "speech-370063",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-09-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Government Procurement (Judicial Review) Bill 2017 creates an independent complaints mechanism for procurement, giving regional and small suppliers timely access to justice, and noted that 95% of contracts (worth $40.8 billion) were awarded to Australian suppliers in 2016–17."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Government Procurement (Judicial Review) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00129",
+   "assent_date": "2018-10-19"
+  }
+ ]
+}

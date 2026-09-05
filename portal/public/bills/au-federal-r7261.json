@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7261",
+ "title": "Corporations Amendment (Streamlining Advice Process) Bill 2024",
+ "short_title": "Corporations Amendment (Streamlining Advice Process) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-04",
+ "originating_house": "representatives",
+ "sponsor": "VAN MANEN, Bert, MP",
+ "sponsor_party": "Liberal National Party of Queensland",
+ "sponsor_person_id": "10729",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7261%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7261%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7261%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7261_ems_8b6fa03b-2b76-4215-847f-525c0ec9f900%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7261%22",
+   "document_date": "2024-11-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-04",
+  "sentences": [
+   "The bill would change how financial advisers and clients agree on advice before it is given.",
+   "Advisers would provide a short Letter of Engagement and a simplified Record of Advice to the client.",
+   "The bill follows the Quality of Advice Review's recommendations on the Statement of Advice and the Good Advice Duty, and fee disclosure rules would not change."
+  ],
+  "changes": [
+   "Creates a Letter of Engagement to be given before any financial advice is provided.",
+   "Streamlines the Record of Advice supplied to the client.",
+   "Reduces administrative work for advisers through a simpler engagement process."
+  ],
+  "affected": "Financial advisers (providing entities) and their clients.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

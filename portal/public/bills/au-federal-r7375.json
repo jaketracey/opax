@@ -1,0 +1,589 @@
+{
+ "key": "au-federal-r7375",
+ "title": "Excise Tariff Amendment (Draught Beer) Bill 2025",
+ "short_title": "Excise Tariff Amendment (Draught Beer) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-10-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-02-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7375_ems_b0708d7c-f6cd-47ff-ac79-b5de5eb78ecb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7375%22",
+   "document_date": "2025-10-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00036",
+   "document_date": "2026-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9847",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "question": "Anthony Albanese I'm very proud to speak on this legislation, the Excise Tariff Amendment (Draught Beer) Bill 2025 and the associated bill, because this is one of the most popular commitments that we took to the election on 3 May—a two-year freeze on the draft beer excise, the first time this has happened in 40 years. I note the amendments moved by some on the other side. I'm not quite sure what side the member for New England is on these days; he was deputy prime minister not once but, believe it or not, in the sequel that no-one asked for, twice. Did anything happen on his watch? No. It took a Labor government to freeze the beer excise, making sure this was part of our cost-of-living measures we implemented—not just talking about cost-of-living pressures but doing something about them. Forty years is a long time between drinks, but it is just one of the rounds of cost-of-living measures that our government has taken. As local MPs we're all a bit biased, but I happen to think that the best small breweries in Australia are in my electorate in Grayndler, in the Inner West—and there is a fair bit of evidence. We have the Inner West Ale Trail. We not only have breweries—16 at last count, in a small area where you can walk from brewery to brewery, in the Inner West; another industry has grown up, of the food trucks and food small businesses establishing themselves outside those breweries. But there's another one as well—the tourism trail. People can book, and they go in a bus from brewery to brewery, sampling the wonderful produce that is produced there in my electorate in the Inner West. Importantly, I am not aware of a single social issue that has arisen at any of those breweries. People engage collectively. They engage in a really positive way. Can I also say that the many pubs, sporting clubs and RSLs around all our electorates are the heart of our communities. They're the organisations that will sponsor the local rugby league or netball or cricket clubs. They are i",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 64,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    }
+   },
+   "party_coverage": {
+    "dated": 73
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-04/1"
+  },
+  {
+   "key": "federal-representatives-9848",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "question": "Nicolette Boele I move the amendment as circulated in my name: (1) Schedule 1, item 1, page 3 (after line 23), after section 6L, insert: 6M Temporary freeze in indexation for craft beer (1) Despite any other provision of this Act, subsection 6A(1) applies, in relation to craft beer and each CPI indexed non-draught beer rate, as if the indexation factor were 1 for each of the following indexation days: (a) 1 August 2025; (b) 1 February 2026; (c) 1 August 2026; (d) 1 February 2027. Note 1: This means the rates as they are on 31 July 2025 will be unchanged for the next 2 years. Note 2: When indexation resumes in August 2027, the indexation factor for 1 August 2027 will be applied against these unchanged rates (see subsection 6A(1)). (2) In this section: _CPI indexed non-draught beer rate_ means a rate of duty set out in subitem 1.1, 1.5 or 1.10 of the Schedule. _craft beer_ means beer brewed by a member of the Independent Brewers Association or a similar not-for-profit organisation representing independent, local brewers with appropriate governance of member eligibility and conduct. _indexation day_ has the same meaning as in section 6A. Everyone knows that households and small businesses around the country have been doing it tough. The cost of living has been hurting Australians for some time now. To address that, one of the Labor Party's election promises was to pause indexation on draught beer excise and excise-equivalent customs duty rates for two years from August 2025. The idea, of course, is to ensure that the price of a cold one down at the pub stays the same for a little while longer. The legislation, the Excise Tariff Amendment (Draught Beer) Bill 2025, implements that promise. The Labor Party has a clear mandate for it, so I will be supporting the legislation. However, in my view, the underlying election promise was flawed. By pausing the excise on draught beer only, the policy mostly benefits large, multinational companies and does nothing to assist the sma",
+   "stage": "Consideration in detail",
+   "ayes": 12,
+   "noes": 65,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-04/2"
+  },
+  {
+   "key": "federal-representatives-9849",
+   "date": "2026-02-04",
+   "house": "representatives",
+   "question": "Monique Ryan by leave—I move: (1) Schedule 1, heading, page 3 (line 1), omit \"Temporary\", substitute \"Indefinite\". (2) Schedule 1, item 1, page 3 (line 7), omit \"Temporary\", substitute \"Indefinite\". (3) Schedule 1, item 1, page 3 (lines 8 to 19), omit subsection 6L(1), substitute: (1) Despite any other provision of this Act, subsection 6A(1) applies in relation to each CPI indexed draught beer rate as if the indexation factor were 1 for 1 August 2025 or a later indexation day. Note: This means the rates as they are on 31 July 2025 will be unchanged indefinitely. I propose amendments to the Excise Tariff Amendment (Draught Beer) Bill 2025 and Customs Tariff Amendment (Draught Beer) Bill 2025. The rising cost of living has challenged millions of Australian families for several years now, with inflation rising sharply since our economy bounced back after COVID. The government has a hand in setting the price of relatively few grocery items, but one of them is the cost of beer. The average price of draught beer has gone up by over 30 per cent in the last three years, an increase which is considerably higher than the rate of inflation. This has, at least in part, been driven by the automatic indexation of the beer excise every six months which has forced price increases above their annual CPI. This indexation is yet another typical anomaly in our unnecessarily complex tax system. It's pleasing to see the government's commitment to freezing indexation on draught beer for two years, but indexation of the excise over recent years has left those draught beer prices already too high. Indexation of the beer excise needs to stop, and that's why I'm moving that this freeze should be permanent. A permanent cap on the draught beer excise would help millions of Australians with cost-of-living pressures. It would also help support Australia's emerging craft beer industry. Despite rapid growth of small independent brewers, 85 per cent of Australia's beer market is controlled by two fo",
+   "stage": "Consideration in detail",
+   "ayes": 23,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 77
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 104
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-02-04/3"
+  },
+  {
+   "key": "federal-senate-10190",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2026-04-01.42.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it will now be added to the end of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). These words do not make any legal changes but are politically influential because they represent the will of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) Australia's National Research Organisation for Women's Safety research shows a clear connection between alcohol use and violence against women and children, including that:* >> >>> *(A) alcohol is involved in up to 65% of all police-reported family violence incidents,* >>> >>> *(B) over half of intimate partner homicides involve men who have consumed high-risk levels of alcohol, and* >>> >>> *(C) harms to children are significantly greater in households where a person drinks alcohol at high-risk levels; and* >> >> *(ii) the Commonwealth Government's Rapid Review of Prevention Approaches and the South Australian Royal Commission into Domestic, Family and Sexual Violence both acknowledge that alcohol use is an exacerbating factor that increases the probability, frequency and severity of violence; and* > > *(b) calls on Commonwealth, State and Territory Governments to urgently act on their commitments in response to the Rapid Review to strengthen alcohol regulations, including:* > >> *(i) adopting clear objectives for harm reduction and preventing gender-based violence,* >> >> *(ii) time restrictions for alcohol sales and home delivery, and* >> >> *(iii) restricting advertising and targeted marketing\".*",
+   "stage": "Limitation of debate",
+   "ayes": 34,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/13"
+  },
+  {
+   "key": "federal-senate-10191",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted in favour an [Australian Greens amendment](https://www.openaustralia.org.au/senate/?gid=2026-04-01.44.1), which means that the text below will be added to the usual second reading motion. The usual second reading motion is \"*that the bill be read a second time*\", parliamentary jargon for agreeing with the main idea of the bill. While this text doesn't make any legal changes, it is politically significant because it represents the Senate's position. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) Australia's National Research Organisation for Women's Safety research shows a clear connection between alcohol use and violence against women and children, including that:* >> >>> *(A) alcohol is involved in up to 65% of all police-reported family violence incidents,* >>> >>>*(B) over half of intimate partner homicides involve men who have consumed high-risk levels of alcohol, and* >>> >>> *(C) harms to children are significantly greater in households where a person drinks alcohol at high-risk levels; and* >> >> *(ii) the Commonwealth Government's Rapid Review of Prevention Approaches and the South Australian Royal Commission into Domestic, Family and Sexual Violence both acknowledge that alcohol use is an exacerbating factor that increases the probability, frequency and severity of violence; and* > > *(b) calls on Commonwealth, State and Territory Governments to urgently act on their commitments in response to the Rapid Review to strengthen alcohol regulations.*",
+   "stage": "Limitation of debate",
+   "ayes": 34,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/14"
+  },
+  {
+   "key": "federal-senate-10192",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against a [One Nation amendment](https://www.openaustralia.org.au/senate/?gid=2026-04-01.46.1) to the usual second reading motion, which is \"*that the bill be read a second time*\". Had it been successful, this amendment would have added the text below. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Government to support hospitality venues struggling under the growing burden of government regulation and growth in overheads by eliminating alcohol excise duty on any alcoholic product sold for consumption on-premises in a hospitality venue\".*",
+   "stage": "Limitation of debate",
+   "ayes": 5,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/15"
+  },
+  {
+   "key": "federal-senate-10193",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against an amendment introduced by ACT Senator David Pocock (Independent), which means it did not pass. This amendment would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > >> *(a) notes that the last Mid-Year Economic and Fiscal Outlook estimates that the beer excise will generate $2.7 billion in revenue over the 2025-26 financial year, while the Petroleum Resource Rent Tax (PRRT) is estimated to generate just $1.5 billion in revenue over the same period; and* >> >> *(b) calls on the Government to get a fair deal on the sale and export of Australian gas by instituting a 25 per cent tax on LNG export revenue, which is estimated to generate $17 billion a year\".*",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/16"
+  },
+  {
+   "key": "federal-senate-10194",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2026-04-01.50.1) introduced by Queensland Senator [Matthew Canavan](https://theyvoteforyou.org.au/people/senate/queensland/matthew_canavan) (LNP), which means they failed. These amendments were on the subject of creating a temporary freeze in indexation for tap spirits and a review of the alcohol excise and customs tariff system. ### Amendment text The [amendment text](https://www.openaustralia.org.au/senate/?gid=2026-04-01.50.1) is available on openaustralia.org.au.",
+   "stage": "Committee of the Whole",
+   "ayes": 25,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/17"
+  },
+  {
+   "key": "federal-senate-10195",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2026-04-01.52.3) introduced by Tasmanian Senator [Tammy Tyrrell](https://theyvoteforyou.org.au/people/senate/tasmania/tammy_tyrrell) (Independent), which means it was not successful. ### Amendment text > *(1) Schedule 1, item 1, page 3 (after line 23), after section 6L, insert:* > >> *6M Temporary freeze in indexation for craft beer* >> >> *(1) Despite any other provision of this Act, subsection 6A(1) applies, in relation to craft beer and each CPI indexed non-draught beer rate, as if the indexation factor were 1 for each of the following indexation days:* >> >>> *(a) 1 August 2025;* >>> >>> *(b) 1 February 2026;* >>> >>> *(c) 1 August 2026;* >>> >>> *(d) 1 February 2027.* >>> >>> *Note 1: This means the rates as they are on 31 July 2025 will be unchanged for the next 2 years.* >>> >>> *Note 2: When indexation resumes in August 2027, the indexation factor for 1 August 2027 will be applied against these unchanged rates (see subsection 6A(1)).* > > *(2) In this section:* > >> *CPI indexed non-draught beer rate means a rate of duty set out in subitem 1.1, 1.5 or 1.10 of the Schedule.* >> >> *craft beer means beer brewed by a member of the Independent Brewers Association or a similar not-for-profit organisation representing independent, local brewers with appropriate governance of member eligibility and conduct.* >> >> *indexation day has the same meaning as in section 6A.*",
+   "stage": "Limitation of debate",
+   "ayes": 6,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 39,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1197434",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-10-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1197982",
+   "speaker": "Pat Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2025-11-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199172",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199549",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199550",
+   "speaker": "Nicolette Boele",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-02-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199882",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-02-05",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excise Tariff Amendment (Draught Beer) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00036",
+   "assent_date": "2026-04-08"
+  }
+ ]
+}

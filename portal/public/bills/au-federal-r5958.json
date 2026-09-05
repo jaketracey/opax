@@ -1,0 +1,186 @@
+{
+ "key": "au-federal-r5958",
+ "title": "Customs Tariff Amendment (Singapore-Australia Free Trade Agreement Amendment Implementation) Bill 2017",
+ "short_title": "Customs Tariff Amendment (Singapore-Australia Free Trade Agreement Amendment Implementation) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2017-10-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5958_ems_e034650a-b079-43bb-bbff-773615f6719e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5958%22",
+   "document_date": "2017-09-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00121",
+   "document_date": "2017-10-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-06",
+  "sentences": [
+   "This bill would change the Customs Tariff Act 1995 to bring it into line with an updated trade deal with Singapore.",
+   "It would let most eligible goods enter Australia without customs duty once the amended agreement starts, and set new excise-equivalent rates for alcohol, tobacco, fuel and petroleum products.",
+   "Provisions for excise-equivalent rates on those products would be removed after a three-year transition period."
+  ],
+  "changes": [
+   "Provides duty-free access for most eligible goods under the amended agreement.",
+   "Amends concessional items in Schedule 4 to keep customs duty rates aligned with the relevant concessional item.",
+   "Inserts a new Schedule 4A for excise-equivalent rates on certain alcohol, tobacco, fuel and petroleum products.",
+   "Repeals provisions in Schedule 3 for excise-equivalent rates after three years."
+  ],
+  "affected": "Importers of goods covered by the Singapore-Australia Free Trade Agreement, and businesses dealing in alcohol, tobacco, fuel and petroleum products.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:39Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-352874",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-06",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the Customs Tariff Amendment (Singapore-Australia Free Trade Agreement Amendment Implementation) Bill 2017, which amends the Customs Tariff Act to implement the amended agreement by providing duty-free access for most eligible goods, adjusting concessional items, and inserting a new schedule for excise-equivalent rates on alcohol, tobacco, and fuel, with a three-year transition period before repealing the old provisions."
+  },
+  {
+   "slug": "speech-355097",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment and Customs Tariff Amendment bills to implement the second update to the Singapore-Australia Free Trade Agreement, which provides duty-free access for most goods, updates rules of origin, restricts ISDS mechanisms with public welfare exemptions, and recognises Australian qualifications. However, Labor opposed the removal of labour market testing for contractual service suppliers, arguing it contradicts the government's earlier commitment to mandatory testing."
+  },
+  {
+   "slug": "speech-355098",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment bills to implement the updated Singapore-Australia Free Trade Agreement (SAFTA), citing $4.8 billion in services exports to Singapore in 2016 and criticizing the member for Herbert for not contributing to the debate on the deal's benefits for Townsville."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Singapore-Australia Free Trade Agreement Amendment Implementation) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00121",
+   "assent_date": "2017-10-30"
+  }
+ ]
+}

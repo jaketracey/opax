@@ -1,0 +1,181 @@
+{
+ "key": "au-federal-r5159",
+ "title": "Veterans’ Affairs Legislation Amendment (Miscellaneous Measures) Bill 2013",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Miscellaneous Measures) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-12-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2014-02-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5159_ems_e407ac63-4bd1-4554-adb5-186b484ed1d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5159%22",
+   "document_date": "2013-12-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00005",
+   "document_date": "2014-02-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-282217",
+   "speaker": "David Feeney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282218",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282220",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282225",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282226",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-282267",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans' Affairs Legislation Amendment (Miscellaneous Measures) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00005",
+   "assent_date": "2014-02-28"
+  }
+ ]
+}

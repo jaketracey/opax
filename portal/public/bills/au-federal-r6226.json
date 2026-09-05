@@ -1,0 +1,64 @@
+{
+ "key": "au-federal-r6226",
+ "title": "Live Sheep Long Haul Export Prohibition Bill 2018 (No. 2)",
+ "short_title": "Live Sheep Long Haul Export Prohibition Bill 2018 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-03",
+ "originating_house": "representatives",
+ "sponsor": "SHARKIE, Rebekha, MP",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10874",
+ "portfolio": "(s) SHARKIE, Rebekha, MP",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6226%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6226%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6226%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6226_ems_0a1ca98e-2ffa-4025-ae00-5e9fdd518dbc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6226%22",
+   "document_date": "2018-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-373380",
+   "speaker": "Kerryn Phelps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-12-03",
+   "stage_hint": null,
+   "brief": "The speaker seconded the Live Sheep Long Haul Export Prohibition Bill 2018 (No. 2), proposing a five-year phase-out of long-haul live sheep exports and a ban on Middle Eastern exports during July–September from 2019, citing community opposition (72.2% support in Wentworth) and the Moss review’s finding that regulation fails community expectations."
+  }
+ ],
+ "acts": []
+}

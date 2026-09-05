@@ -1,0 +1,243 @@
+{
+ "key": "au-federal-r6444",
+ "title": "Student Identifiers Amendment (Enhanced Student Permissions) Bill 2019",
+ "short_title": "Student Identifiers Amendment (Enhanced Student Permissions) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-11-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment, Skills, Small and Family Business",
+ "status": "passed",
+ "status_as_of": "2020-05-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-05-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6444_ems_8a19c72a-d9ba-4960-96c1-15ee03f32dce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6444_ems_68dc05c5-1897-467f-b698-33cf6ad87491%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/7152957%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6444%22",
+   "document_date": "2019-11-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00046",
+   "document_date": "2020-05-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "digest",
+  "attribution": "Written by a model from the Bills Digest; not the record",
+  "describes_version": "digest",
+  "as_of": "2019-11-28",
+  "sentences": [
+   "The bill would expand who can access a student's authenticated VET transcript and create new civil penalties for misuse of the Unique Student Identifier (USI).",
+   "It would allow the Registrar to disclose transcript information to 'other entities' such as employers, employment agencies and licensing bodies, while keeping the existing access control system.",
+   "A new civil penalty of 60 penalty units ($12,600) would apply to someone who already has a USI and applies for another one or authorises another application."
+  ],
+  "changes": [
+   "The bill adds 'other entity' to the list of bodies that can be given access to a VET transcript.",
+   "It inserts a new civil penalty regime for conduct related to applying for student identifiers or altering a transcript.",
+   "It creates a penalty of 60 penalty units for a person who already has a USI and applies for a second one."
+  ],
+  "affected": "Individuals with a USI, registered training organisations, VET-related bodies, and other entities such as employers and licensing bodies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6189",
+   "date": "2020-02-10",
+   "house": "representatives",
+   "question": "Student Identifiers Amendment (Enhanced Student Permissions) Bill 2019 - Second Reading - Support vocational education",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-10/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-385308",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-28",
+   "stage_hint": null,
+   "brief": "The Student Identifiers Amendment (Enhanced Student Permissions) Bill 2019 expands the range of entities—including businesses, recruitment agencies, and licensing bodies—that can request access to an individual's authenticated VET transcript, while introducing a civil penalty regime for fraudulent behaviours and clarifying the Registrar's exemption and spending powers."
+  },
+  {
+   "slug": "speech-387557",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "Labor moved an amendment noting the Coalition government's skills crisis, citing 150,000 lost apprentices and trainees, over $3 billion cut from TAFE and training, and nearly $1 billion underspent, while not opposing the Student Identifiers Amendment Bill 2019, which allows employers and licensing bodies to access VET transcripts with individual consent."
+  },
+  {
+   "slug": "speech-387558",
+   "speaker": "Andrew Laming",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Student Identifiers Amendment (Enhanced Student Permissions) Bill 2019, which gives students control over who can access their vocational education transcripts and records, including duration and scope of access. The bill is universally supported and aims to streamline stakeholder access while maintaining protections."
+  },
+  {
+   "slug": "speech-387559",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Student Identifiers Amendment (Enhanced Student Permissions) Bill 2019, which allows VET student transcripts to be released to employers, while stressing the need for strict privacy controls and warning against creating a 'permanent record' that undermines second chances. They also criticised government cuts to TAFE funding and called for restoring public TAFE as a trusted sector."
+  },
+  {
+   "slug": "speech-387567",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-10",
+   "stage_hint": null,
+   "brief": "The Student Identifiers Amendment (Enhanced Student Permissions) Bill 2019 expands student-controlled access to authenticated VET transcripts, introduces a civil penalty regime, and clarifies powers of the Student Identifiers Registrar and spending from the Student Identifiers Special Account. An addendum to the explanatory memorandum was tabled to address concerns from the Senate Standing Committee for the Scrutiny of Bills."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Student Identifiers Amendment (Enhanced Student Permissions) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00046",
+   "assent_date": "2020-05-25"
+  }
+ ]
+}

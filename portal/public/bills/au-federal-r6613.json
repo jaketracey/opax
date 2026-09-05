@@ -1,0 +1,177 @@
+{
+ "key": "au-federal-r6613",
+ "title": "Aged Care Amendment (Aged Care Recipient Classification) Bill 2020",
+ "short_title": "Aged Care Amendment (Aged Care Recipient Classification) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6613_ems_56af188b-22fd-4efe-bd66-4d4b2d858d36%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6613_ems_e4ba73d8-1a04-4cfe-8a32-b58902782e70%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6613_ems_0b14c168-f68c-43b3-affb-4e91f626a92b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6613%22",
+   "document_date": "2020-10-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00147",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-10-21",
+  "sentences": [
+   "The bill would let the Department of Health Secretary assess the care needs of aged care residents using a new optional method.",
+   "It adds a new part to the Aged Care Act 1997 giving the Secretary the power to classify residents on their own initiative, based on a new assessment tool.",
+   "The new classification system would apply to all residential aged care residents from 1 March 2021, but would not change how subsidies are calculated."
+  ],
+  "changes": [
+   "Introduces a discretionary procedure for classifying residents of residential aged care and some flexible care.",
+   "Allows the Secretary of the Department of Health to assess care needs using a new assessment tool.",
+   "Enables classification of residents into new levels based on the assessment results.",
+   "Makes consequential amendments to other parts of the Aged Care Act 1997."
+  ],
+  "affected": "Older Australians receiving residential aged care or some types of flexible care, and approved aged care providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400506",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Amendment (Aged Care Recipient Classification) Bill 2020 but argued the aged care system is broken, citing the royal commission's findings of substandard care, and called for minimum staffing levels, transparency, and accountability of funding."
+  },
+  {
+   "slug": "speech-400508",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The Aged Care Amendment (Aged Care Recipient Classification) Bill 2020 introduces a new assessment tool, the Australian National Aged Care Classification, to replace the outdated Aged Care Funding Instrument for classifying residential aged care recipients from 1 March 2021, without changing subsidy calculations, as a step toward responding to the Royal Commission into Aged Care Quality and Safety."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Amendment (Aged Care Recipient Classification) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00147",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

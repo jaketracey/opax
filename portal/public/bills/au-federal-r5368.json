@@ -1,0 +1,346 @@
+{
+ "key": "au-federal-r5368",
+ "title": "Broadcasting and Other Legislation Amendment (Deregulation) Bill 2015",
+ "short_title": "Broadcasting and Other Legislation Amendment (Deregulation) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications",
+ "status": "passed",
+ "status_as_of": "2015-03-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5368_ems_b090c81d-9bd5-4cba-9233-42172cf228b0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5368_ems_380cd178-115a-4d45-9f38-958537375c7b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5368%22",
+   "document_date": "2014-10-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00022",
+   "document_date": "2015-03-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-10-22",
+  "sentences": [
+   "The bill would cut red tape for broadcasters by removing outdated rules and simplifying processes.",
+   "It would change the Broadcasting Services Act 1992, the Radiocommunications Act 1992 and the Australian Communications and Media Authority Act 2005.",
+   "The explanatory memorandum says the bill would repeal rules for the digital switchover, streamline spectrum planning, and relax captioning and audit requirements."
+  ],
+  "changes": [
+   "Repeal redundant licensing and planning provisions for the digital switchover and restack.",
+   "Amend ACMA's planning powers to make spectrum planning more efficient.",
+   "Give free-to-air and subscription TV broadcasters more flexibility in meeting captioning obligations.",
+   "Remove the requirement for independent audits of reports under the New Eligible Drama Expenditure Scheme.",
+   "Make minor amendments to control and ownership provisions.",
+   "Remove the requirement for ACMA to periodically review certain industry code matters."
+  ],
+  "affected": "The broadcasting industry, including free-to-air and subscription television broadcasters, and the Australian Communications and Media Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3701",
+   "date": "2015-03-02",
+   "house": "senate",
+   "question": "Stephen Conroy I rise to speak on the Broadcasting and Other Legislation Amendment (Deregulation) Bill 2015. Labor supports this bill. This bill is part of the government's so-called regulation repeal day. This is another government stunt designed to do little more than simply generate a news headline. The former Labor government repealed 16,974 acts and regulations during its time in office. Let me repeat that: the former Labor government repealed 16,974 acts and regulations during its time in office. We called this 'governing'. This bill saves industry about $350,000 according to estimates from the Department of Communications. Important—yes. But hardly worth a special day. The last time I spoke in this place on red tape repeal it was to amend the Omnibus Repeal Day (Spring 2014) Bill 2014. The Senate agreed to this amendment which would ensure a proper process for Australia's Future Submarine project. Given what has happened in the recent past on this issue, since this amendment was passed, it shows how vital this amendment was; it languishes in the other place, sitting at the bottom of the _Notice Paper_. It is another indication that the Prime Minister is still committed to his captain's pick on Japanese submarines. On the bill before the Senate now, Labor does not propose any amendments. But I do have to note, particularly as there are some South Australians in the chamber today, that this morning in _The Australian_ the government finally admitted that, yes, they did draw up press releases to announce the Japanese had won the submarine contract and they were going to announce it at G20. So despite all of the fabrications that have taken place over the last six months, there is a little paragraph at the end that said: look we might have done a deal with the Japanese before but trust us we have got a proper process in place now. We have misled the entire population of South Australia about our promise to build 12 submarines in Adelaide but trust us, now we have",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "earliest": 4,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-02/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-306021",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306022",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306023",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306024",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306025",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306112",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306162",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306164",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306165",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306166",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306168",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306170",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306171",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting and Other Legislation Amendment (Deregulation) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00022",
+   "assent_date": "2015-03-19"
+  }
+ ]
+}

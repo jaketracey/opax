@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-s1511",
+ "title": "Migration Amendment (Overseas Organ Transplant Disclosure) Bill 2026",
+ "short_title": "Migration Amendment (Overseas Organ Transplant Disclosure) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-08-20",
+ "originating_house": "senate",
+ "sponsor": "SMITH, Sen Dean",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10768",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1511%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1511%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1511_ems_373a89f1-c3fa-404d-b8ab-167de64ecafc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1511%22",
+   "document_date": "2026-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-08-20",
+  "sentences": [
+   "The bill would require people entering Australia to answer questions on their incoming passenger card about whether they have had an organ transplant overseas in the past five years.",
+   "The Minister would have to prepare an annual report on the number of such transplants disclosed and the locations of the medical facilities, excluding the facilities' names, and table it in Parliament.",
+   "The changes would take effect six months after the bill receives Royal Assent, and an independent review of the amendments must be conducted after three years."
+  ],
+  "changes": [
+   "Adds a new obligation for arrivals to disclose overseas organ transplants on the incoming passenger card.",
+   "Requires the Minister to produce and table an annual report on the disclosed transplant information.",
+   "Provides for a statutory independent review of the amendments after three years of operation."
+  ],
+  "affected": "People entering Australia who have received an organ transplant outside the country within the last five years, and the Minister responsible for migration.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:59:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1205912",
+   "speaker": "Dean Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205913",
+   "speaker": "Dean Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

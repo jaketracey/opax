@@ -1,0 +1,124 @@
+{
+ "key": "au-federal-s1344",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Climate Trigger) Bill 2022",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Climate Trigger) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2022-09-05",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1344_ems_45bb9f0f-29dd-4e16-9ef4-b10cfce4ab81%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1344%22",
+   "document_date": "2022-09-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-09-05",
+  "sentences": [
+   "This bill is part of a package that would amend the EPBC Act to add a climate trigger, requiring assessment of projects that emit large amounts of greenhouse gases.",
+   "The bill would create a new class of controlled action for greenhouse gas emissions, with two thresholds: projects emitting 25,000 to 100,000 tonnes of carbon dioxide equivalent scope 1 emissions per year would need ministerial consideration under Part 9, while those emitting above 100,000 tonnes would be rejected like nuclear projects.",
+   "The Climate Change Authority would have to develop a national carbon budget to 2050 and update it annually, and the minister must use that budget when deciding approvals, strategic assessments, conservation agreements, and bioregional plans."
+  ],
+  "changes": [
+   "Establishes a new controlled action class for greenhouse gas emissions under the EPBC Act.",
+   "Creates two thresholds for emissions: 25,000 to 100,000 tonnes per year triggers ministerial consideration, and above 100,000 tonnes forces rejection.",
+   "Requires the Climate Change Authority to set a national carbon budget to 2050 and assess it yearly.",
+   "Forces the minister to consider the carbon budget and emissions targets when approving projects, entering conservation agreements, and developing bioregional plans.",
+   "Prohibits the minister from using alternative approval processes for actions with a significant impact on emissions, except under Part 10."
+  ],
+  "affected": "Proponents of emissions-intensive projects, the Minister for the Environment, and the Climate Change Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:10:34Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195192",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195193",
+   "speaker": "Sarah Hanson-Young",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r7273",
+ "title": "Housing Legislation Amendment (Fair Share for Regional Housing) Bill 2024",
+ "short_title": "Housing Legislation Amendment (Fair Share for Regional Housing) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-18",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-03-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7273%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7273%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7273%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7273_ems_b4d0b510-dbd1-46fb-8fdd-06e2bd91bf85%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7273%22",
+   "document_date": "2024-11-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-18",
+  "sentences": [
+   "This bill would redirect housing funding toward regional, rural and remote Australia.",
+   "It would require Housing Australia and the Housing Australia Future Fund to support local governments and state-owned utilities for building essential infrastructure like sewers and roads.",
+   "The minister would have to ensure that at least 30% of Housing Australia's annual funds go to projects outside major cities, and report on compliance yearly."
+  ],
+  "changes": [
+   "Adds local councils and government-owned utilities as groups that Housing Australia must assist.",
+   "Requires the minister to review how Housing Australia can allocate a minimum 30% of its yearly funding to non-metropolitan projects.",
+   "Demands an annual ministerial report to Parliament explaining whether the 30% target was met, and if not, why not.",
+   "Forces Housing Australia to detail in its annual report how each type of financial help was spread across states, local areas, utilities, and regional zones.",
+   "Adds regional, rural and remote residents as a group whose housing needs the HAFF must address.",
+   "Clarifies the HAFF can fund critical enabling infrastructure for social and affordable housing, including affordable rental housing."
+  ],
+  "affected": "Local governments, state-owned utility providers, and people in regional, rural and remote Australia would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:54Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

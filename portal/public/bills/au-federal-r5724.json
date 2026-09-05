@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5724",
+ "title": "Narcotic Drugs (Licence Charges) Bill 2016",
+ "short_title": "Narcotic Drugs (Licence Charges) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2016-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5724_ems_a0a949f6-272b-487a-88b8-0b648c01fe1e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5724%22",
+   "document_date": "2016-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00075",
+   "document_date": "2016-11-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-14",
+  "sentences": [
+   "This bill lets the Commonwealth charge fees for licences issued under the Narcotic Drugs Act 1967.",
+   "The charge would apply to licences for medicinal cannabis, cannabis research, and manufacture, with the Commonwealth recovering costs for monitoring and compliance.",
+   "The exact charge amounts would be set in regulations, and no cost-recovery is proposed for manufacture licences at this stage."
+  ],
+  "changes": [
+   "Introduces a licence charge for medicinal cannabis and cannabis research licences.",
+   "Allows the Commonwealth to recover costs of administration and compliance monitoring.",
+   "Excludes manufacture licences from the charge for now."
+  ],
+  "affected": "Holders of medicinal cannabis, cannabis research, and manufacture licences under the Narcotic Drugs Act 1967.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:45:54Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-333868",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-14",
+   "stage_hint": null,
+   "brief": "The speaker moved the Narcotic Drugs (Licence Charges) Bill to recover regulatory costs from the new medicinal cannabis industry through direct fees and annual levies, with the scheme commencing on 30 October 2016."
+  },
+  {
+   "slug": "speech-336797",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the bills but criticises the government for needing to fix errors in the February medicinal cannabis legislation, including protecting law enforcement information, preventing licence transfers, and recovering regulatory costs, and notes that the government's shambolic processes have delayed the scheme."
+  },
+  {
+   "slug": "speech-336798",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-11-07",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Legislation Amendment Bill enhances the Medicinal Cannabis Scheme’s security by enabling sharing of law enforcement information to prevent criminal infiltration, while the Narcotic Drugs (Licence Charges) Bill introduces annual charges to fund risk-based inspections and ensure a level playing field."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Narcotic Drugs (Licence Charges) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00075",
+   "assent_date": "2016-11-23"
+  }
+ ]
+}

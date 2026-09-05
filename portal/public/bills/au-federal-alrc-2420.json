@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-alrc-2420",
+ "title": "Australian Citizenship Amendment (Special Residence Requirements) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Citizenship",
+ "status": "passed",
+ "status_as_of": "2013-06-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-30",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-04",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-05",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-21",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00057",
+   "document_date": "2013-06-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-273735",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823787",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275306",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275307",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275308",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824717",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": "The coalition supported the Australian Citizenship Amendment (Special Residence Requirements) Bill 2013, which gives the immigration minister discretion to grant citizenship with reduced residency in exceptional national interest cases, requiring parliamentary disclosure of reasons, and covering sporting, cultural, scientific and business fields."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Citizenship Amendment (Special Residence Requirements) Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00057",
+   "assent_date": "2013-06-21"
+  }
+ ]
+}

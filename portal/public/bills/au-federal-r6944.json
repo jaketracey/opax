@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r6944",
+ "title": "Higher Education Support Amendment (2022 Measures No. 1) Bill 2022",
+ "short_title": "Higher Education Support Amendment (2022 Measures No. 1) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-11-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2023-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6944_ems_04f4dfd2-78d4-4e23-815c-fceccdbee00b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6944_ems_30421b6e-7d0e-47f1-ba15-a10deea1cd3f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6944%22",
+   "document_date": "2022-11-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00003",
+   "document_date": "2023-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7887",
+   "date": "2022-11-29",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2022-11-29.100.2) introduced by Aston MP [Alan Tudge](https://theyvoteforyou.org.au/people/representatives/aston/alan_tudge) (Liberal), which means it failed. ### What did this amendment do? Mr Tudge [explained that](https://www.openaustralia.org.au/debate/?id=2022-11-29.100.2): > *What this amendment does is actually call on a couple of things. Most importantly, it calls for a review to occur after two years. A period of two years is important because it gives enough time to see what the behavioural change will be from the operation of this bill in relation to the doctors and nurse practitioners. Secondly, it asks for the review team to specifically examine whether or not the measures which are proposed for doctors and nurse practitioners should apply to other professions where there are shortages in regional and remote areas. In particular, the amendment calls for an examination of other health measures—mental health in particular—and the education sector. But there may be other professions where there are shortages. In a couple of years time those shortages could be different ones, and we may want to consider providing the same HECS discounts for those professions.* ### Amendment text *(1) Page 2 (after line 11), after clause 3, insert:* > *4 Review of Schedule 2 to this Act* > >> *(1) The Minister must cause an independent review to be conducted of the operation of the amendments made by Schedule 2 to this Act, with the purpose of assessing the expansion of the policy of waiving HELP debt to additional professions of high skills need in rural and remote Australia.* >> >> *(2) Without limiting subsection (1), the review must consider, and make recommendations to the Commonwealth Government about, the expansion of the policy implemented by the amendments to other sectors in rural and remote Australia, including the health, mental health and education secto",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-11-29/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827078",
+   "speaker": "Jonathon Duniam",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The bill provides HELP debt reduction for doctors and nurse practitioners working in rural or remote areas (MM3 to MM7) and fixes grandfathering for honours students. The coalition and Labor supported the bill; the Greens argued it was insufficient, calling for a freeze on indexation and full debt cancellation."
+  },
+  {
+   "slug": "speech-827142",
+   "speaker": "Perin Davey",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Higher Education Support Amendment (2022 Measures No. 1) Bill 2022, which provides partial or full HELP debt reduction for rural doctors and nurse practitioners who reside and practise in regional, rural or remote Australia, a policy expected to encourage up to 850 eligible practitioners per year. They also criticised the government's expansion of the Distribution Priority Area classification system, arguing it shifted overseas trained doctors to peri-urban areas and worsened rural health workforce shortages."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Higher Education Support Amendment (2022 Measures No. 1) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00003",
+   "assent_date": "2023-02-20"
+  }
+ ]
+}

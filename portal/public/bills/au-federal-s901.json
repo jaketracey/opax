@@ -1,0 +1,94 @@
+{
+ "key": "au-federal-s901",
+ "title": "Fair Trade (Workers’ Rights) Bill 2013",
+ "short_title": "Fair Trade (Workers’ Rights) Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-06-20",
+ "originating_house": "senate",
+ "sponsor": "MADIGAN, Sen John",
+ "sponsor_party": "Democratic Labour Party (DLP",
+ "sponsor_person_id": "10759",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s901%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s901%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s901%22"
+  },
+  {
+   "stage": "other",
+   "date": "2013-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s901%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s901%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s901_ems_6f4fec56-5f70-4577-86da-4633b239a517%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s901%22",
+   "document_date": "2013-06-20",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-824692",
+   "speaker": "John Madigan",
+   "party": "DLP",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": "The Fair Trade (Workers' Rights) Bill 2013 was introduced to require that minimum standards on workers' rights be included in certain international agreements."
+  },
+  {
+   "slug": "speech-824693",
+   "speaker": "John Madigan",
+   "party": "DLP",
+   "state": "federal",
+   "date": "2013-06-20",
+   "stage_hint": null,
+   "brief": "The speaker introduced the Fair Trade (Workers' Rights) Bill 2013, arguing that Australian industries cannot compete with imported goods produced under poor labour conditions, and that the bill aims to protect workers' rights and improve competitiveness."
+  },
+  {
+   "slug": "speech-825472",
+   "speaker": "John Madigan",
+   "party": "DLP",
+   "state": "federal",
+   "date": "2013-11-13",
+   "stage_hint": null,
+   "brief": "A motion was agreed to suspend standing orders and restore the Health Insurance Amendment (Medicare Funding for Certain Types of Abortion) Bill 2013 and the Fair Trade (Workers' Rights) Bill 2013 to the Notice Paper for resumed consideration at the stage reached in the last session."
+  }
+ ],
+ "acts": []
+}

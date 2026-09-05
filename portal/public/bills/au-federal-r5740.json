@@ -1,0 +1,546 @@
+{
+ "key": "au-federal-r5740",
+ "title": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016",
+ "short_title": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5740_ems_1eb41aa1-5958-4105-9063-345034c4f82a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5740%22",
+   "document_date": "2016-10-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4348",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "question": "Graham Perrett I rise to speak on the Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016. This bill places a new tax on the wages of foreign backpackers when they are in Australia on a working holiday. This was a measure announced by the government in the 2015 budget. In that announcement, the Abbott government proposed a 32.5 per cent tax on backpackers. Not surprisingly, in what is becoming a familiar chaotic style, the Liberal-National party government is back-pedalling from the original 32½ per cent tax and is now proposing a 19 per cent tax on backpackers. Sadly, the number of backpackers coming to Australia to work was decreasing before the government announced this measure in 2015, but, in so announcing that tax on the wages of backpackers, it has made the situation worse. The impact of fewer backpackers working in Australia has dire consequences for our horticulture growers. I know this because the Brisbane markets is in my electorate and I have had feedback from several growers about some of the concerns they have. Growers face the prospect of seeing their fruit rot on their trees because they do not have anyone to pick it. Even at 19 per cent, Treasury modelling shows that the backpacker tax will have a detrimental effect on the number of backpackers willing to travel to Australia on a working holiday. Obviously, that in turn will have a flow-on consequence for our farmers. The uncertainty that the Turnbull government has created around this proposed tax has caused unnecessary stress for farmers, whose very livelihoods are at stake—in Tasmania, the north-west of Western Australia, Queensland and everywhere in between. This is obviously a tax grab by the government. The original proposal was going to rake in $540 million from foreign backpackers. Sadly, the Turnbull government, particularly the Deputy Prime Minister, have handled this issue very badly. They did not consult with stakeholders or do any modelling when they put forward this pro",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-17/1"
+  },
+  {
+   "key": "federal-representatives-4349",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debate/?id=2016-10-17.28.3) introduced by Labor MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen), which means it was rejected. The motion criticised the government's handling of these bills. ### What are these bills all about? These bills change the income tax arrangements for working holiday visa holders. If passed, they will mean that visa holders [will be taxed from the first dollar earned, rather than having the usual tax free threshold](http://www.abc.net.au/news/2015-05-12/budget-working-holiday-visa/6464972). ### Motion text > *That all the words after “That” be omitted with a view to substituting the following words:* > *“while not declining to give the bill a [second reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html), the House notes:* > *(1) the Government’s handling of the backpacker tax has been a shambles;* > *(2) the uncertainty that has been caused to the agriculture and tourism sectors;* > *(3) the Passenger Movement Charge increase comes despite the Government only weeks before criticising an increase to the Passenger Movement Charge; and* > *(4) concerns have been expressed about the changes to the arrangements for Working Holiday Makers given the rorting, abuse and exploitation that has occurred.”*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-17/2"
+  },
+  {
+   "key": "federal-representatives-4350",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "question": "Joel Fitzgibbon This government is treating our farmers and our tourism operators in this country— Tony Smith The member for Hunter will resume his seat. The Treasurer. Scott Morrison I move: That the question be now put.",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-17/3"
+  },
+  {
+   "key": "federal-representatives-4351",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "question": "Scott Morrison I ask leave of the House to move the third reading immediately. Leave not granted. I move: That so much of standing orders be suspended as would prevent the motion for the third reading being moved without delay. Tony Burke Speaking to the motion, Mr Speaker, we are gagging debate when the Senate is not going to meet for three weeks. The bill has to make it 300 metres— Tony Smith The Manager of Opposition Business will resume his seat. The Treasurer has the call. Scott Morrison I move: That the question be now put. Tony Smith The question now is that the motion moved by the Treasurer be agreed to. Question agreed to.",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-17/4"
+  },
+  {
+   "key": "federal-representatives-4426",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 - Consideration of Senate Message - Accept amendment",
+   "stage": "Consideration of Senate message",
+   "ayes": 70,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-24/1"
+  },
+  {
+   "key": "federal-representatives-4427",
+   "date": "2016-11-24",
+   "house": "representatives",
+   "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 - Consideration of Senate Message - Reject Senate amendments",
+   "stage": "Consideration of Senate message",
+   "ayes": 77,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-11-24/2"
+  },
+  {
+   "key": "federal-senate-4429",
+   "date": "2016-11-24",
+   "house": "senate",
+   "question": "Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 and related bills - in Committee - Reduce tax rate from 19% to 10.5%",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-24/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-335332",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's 18-month mishandling of the backpacker tax was a shambles, criticising the original 32.5% tax proposal and the subsequent $300 million budget hit offset by a $5 increase in the passenger movement charge and changes to superannuation tax for working holiday makers. Labor will not oppose the bill in the House but will push for a Senate inquiry to allow consultation with affected sectors and address concerns about exploitation."
+  },
+  {
+   "slug": "speech-335335",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of the Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016, citing a 19% flat tax rate, employer registration, increased age eligibility to 35, a $50 visa fee reduction, and a 95% departing superannuation tax, while criticising Labor for delaying the bill and noting the need for certainty in agriculture and tourism."
+  },
+  {
+   "slug": "speech-335336",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the shadow Treasurer’s amendment to the Working Holiday Maker Reform Bill 2016, arguing the government’s backpacker tax and proposed $5 passenger movement charge increase were introduced without consultation or modelling and would harm tourism and agriculture. They cited declining backpacker visitor numbers and noted the package also raises revenue through a 95% tax on departing superannuation payments."
+  },
+  {
+   "slug": "speech-335343",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "He argued that free trade agreements with China, Korea and Japan have boosted agricultural exports, citing table grape prices rising from $18 to $46 per box, and announced his upcoming trip to Beijing for a fruit and vegetable festival to launch nectarines."
+  },
+  {
+   "slug": "speech-335345",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The government's handling of the working holiday maker tax bills was condemned as a farce, and a Senate inquiry was called for to combat exploitation of 417 visa holders; 59% of surveyed visa holders were unlikely to complain about working conditions and 66% felt employers take advantage."
+  },
+  {
+   "slug": "speech-335456",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Turnbull government's handling of the backpacker tax, noting a drop from a proposed 32.5% to 19% and arguing it worsens labour shortages for horticulture; they supported referral to a Senate committee for further scrutiny, citing Treasury modelling that the tax will deter backpackers and highlighting widespread exploitation of working holiday visa holders found by the Fair Work Ombudsman."
+  },
+  {
+   "slug": "speech-335457",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 is essential for industries in the Forrest electorate and across Australia, and criticised Labor for proposing a delay. The bill sets a 19% tax rate on earnings up to $37,000 for working holiday-makers, reduces visa application charges by $50, and includes measures like a $10 million Tourism Australia campaign and a 95% tax on superannuation payments upon departure."
+  },
+  {
+   "slug": "speech-335458",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s backpacker tax, initially set at 32.5% and now proposed at 19%, is causing labour shortages for fruit and wine growers and criticised the lack of consultation and modelling. He cited a farmer’s email detailing the tax’s harm and called for a quick review and Senate inquiry, while also condemning broader Coalition policies affecting rural and regional New South Wales, including Gonski cuts, NBN mismanagement, forced council mergers, and hospital and electricity privatisation."
+  },
+  {
+   "slug": "speech-335459",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of the Working Holiday Maker Reform bills, which reduce the backpacker tax from 32.5% to 15%, and increase the tax on departing backpackers' superannuation to 95%. He cited concerns from Bowen farmer Carl Walker and Tourism Whitsundays chair Allen Grundy about damage to agriculture and tourism, and criticised Labor's attempt to delay the reforms."
+  },
+  {
+   "slug": "speech-335461",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The coalition’s resolved 19c tax rate for working holiday makers is a fair and time-critical solution, but Labor, the Greens and crossbenchers are delaying the bill in the Senate, risking harm to horticulture, tourism and related industries like SPC in the Goulburn Valley."
+  },
+  {
+   "slug": "speech-335465",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's 2015 decision to tax backpackers at 32.5% was a \"debacle\" and that the proposed reduction to 19% is an arbitrary figure, not a solution. They cited a Fair Work Ombudsman report finding a third of backpackers are underpaid, and criticised the government for ignoring exploitation, unsafe conditions, and the displacement of Australian workers, while calling for a Senate inquiry into the bill."
+  },
+  {
+   "slug": "speech-335466",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Income Tax Rates Amendment (Working Holiday Maker Reform) Bill 2016 would provide certainty for horticulture, agriculture and tourism by reducing the tax rate for working holiday-makers to 19 per cent, creating a register of employers, and cutting visa application charges. The speaker also criticised the Labor Party for delaying the bill and called for its immediate passage."
+  },
+  {
+   "slug": "speech-335468",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's handling of the Working Holiday Maker Reform Bill 2016, calling the backpacker tax a \"shambles\" and supporting the opposition's second reading amendment. They highlighted uncertainty for agricultural and tourism sectors, citing Senator Barry O'Sullivan's criticism, and noted the electoral defeats of members for Braddon and Lyons."
+  }
+ ],
+ "acts": []
+}

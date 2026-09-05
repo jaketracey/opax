@@ -1,0 +1,87 @@
+{
+ "key": "au-federal-alrc-4143",
+ "title": "Tax Laws Amendment (Disclosure of MRRT Information) Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "(s) HOCKEY, Joe, MP",
+ "status": "lapsed",
+ "status_as_of": "2013-05-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-27",
+   "house": "representatives",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-272827",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272832",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272836",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272837",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272838",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

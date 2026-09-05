@@ -1,0 +1,228 @@
+{
+ "key": "au-federal-r6998",
+ "title": "Inspector-General of Aged Care (Consequential and Transitional Provisions) Bill 2023",
+ "short_title": "Inspector-General of Aged Care (Consequential and Transitional Provisions) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-08-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7004_ems_3aef6360-fe17-4adc-b349-f4fe6fadcf3f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6998_ems_a17a1ead-0a95-4e0f-a965-db57481a2f7c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6998%22",
+   "document_date": "2023-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00056",
+   "document_date": "2023-08-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-22",
+  "sentences": [
+   "This bill forms part of a package that creates a new Inspector-General of Aged Care to independently oversee the aged care system.",
+   "It makes changes to other laws so the new office and its powers can operate, including coercive information-gathering, secrecy provisions, and penalties.",
+   "The Inspector-General would be appointed by the Governor-General for up to five years per term, with a maximum of two terms totalling ten years."
+  ],
+  "changes": [
+   "Amends other legislation to support the new Inspector-General’s establishment and functions.",
+   "Provides for the Inspector-General to compel people to produce documents or answer questions.",
+   "Sets up secrecy offences for unauthorised use or disclosure of protected information.",
+   "Creates criminal and civil penalties for conduct that hinders the Inspector-General."
+  ],
+  "affected": "Commonwealth entities with a role in aged care, older Australians, and anyone subject to the Inspector-General’s information-gathering powers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8225",
+   "date": "2023-08-08",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-08.7.1) to the usual second reading motion, which is \"*that the bill be read a second time*\". To read a bill for a second time is to agree with its main idea. Note that amendments like these don't make any legal changes on their own, but can be politically influential as they represent the will of the Senate. ### Amendment text > *At the end of the motion, add \", but the Senate calls on the Inspector-General of Aged Care to consider the current workforce constraints facing the aged care sector as a priority\".*",
+   "stage": "Second reading",
+   "ayes": 40,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 9,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-08/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828798",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The Inspector-General of Aged Care (Consequential and Transitional Provisions) Bill 2023 was moved to enable information sharing with the inspector-general under the Aged Care Act 1997 and the Aged Care Quality and Safety Commission Act 2018, and to require that the National Anti-Corruption Commission only investigate matters already examined by the inspector-general if it is in the public interest."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Inspector-General of Aged Care (Consequential and Transitional Provisions) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00056",
+   "assent_date": "2023-08-17"
+  }
+ ]
+}

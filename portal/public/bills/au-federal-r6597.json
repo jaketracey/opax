@@ -1,0 +1,151 @@
+{
+ "key": "au-federal-r6597",
+ "title": "Australian Federal Integrity Commission Bill 2020",
+ "short_title": "Australian Federal Integrity Commission Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-26",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": "(s) HAINES, Helen, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-05-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6597%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6597%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6597%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6597_ems_3893ae4e-9f75-430f-8f3d-d7cd3054f661%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6597%22",
+   "document_date": "2020-10-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-26",
+  "sentences": [
+   "The bill would set up a new independent body to fight corruption across the federal government and public sector.",
+   "The Australian Federal Integrity Commission would have powers to assess, investigate and refer serious or systemic corruption issues, with public hearings allowed only when in the public interest and after considering factors such as confidentiality and reputational harm.",
+   "The bill also creates a Whistleblower Protection Commissioner within the commission and subjects the commission to oversight by a Parliamentary Joint Committee and a Parliamentary Inspector."
+  ],
+  "changes": [
+   "Establishes the Australian Federal Integrity Commission as an independent body.",
+   "Gives the commission powers to investigate serious or systemic corruption and hold public hearings under a public interest test.",
+   "Creates a Whistleblower Protection Commissioner to handle whistleblower advice and referrals.",
+   "Requires the commission to publish a standalone report for anyone exonerated after an investigation.",
+   "Subjects the commission to oversight by a Parliamentary Joint Committee and a Parliamentary Inspector.",
+   "Allows anyone to refer a corruption issue to the commission, with some mandatory reporting requirements."
+  ],
+  "affected": "Members of the Commonwealth Parliament, the federal public sector, and the Commonwealth-regulated private and not-for-profit sectors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:23:44Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7588",
+   "date": "2022-02-09",
+   "house": "senate",
+   "question": "Business - Consideration of Legislation - Australian Federal Integrity Commission Bill 2020",
+   "stage": "Business motion",
+   "ayes": 29,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "earliest": 21,
+    "dated": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-02-09/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-396869",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The Australian Federal Integrity Commission Bill 2020 was moved, establishing the Australian Federal Integrity Commission as an independent pro-integrity body with powers to investigate serious or systemic corruption, hold public hearings with safeguards, and operate retrospectively. The bill was developed with cross-party collaboration and aims to restore public trust."
+  },
+  {
+   "slug": "speech-396872",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-26",
+   "stage_hint": null,
+   "brief": "The Commonwealth Parliamentary Standards Bill 2020 introduces a statutory ten-part code of conduct for MPs and their staff, a parliamentary integrity adviser, and a parliamentary standards commissioner with Auditor-General-level investigative powers. It complements the Australian Federal Integrity Commission Bill 2020 and enables the commissioner to refer serious breaches to that proposed commission, with the code based on Commonwealth Parliamentary Association recommendations."
+  }
+ ],
+ "acts": []
+}

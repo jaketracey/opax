@@ -1,0 +1,395 @@
+{
+ "key": "au-federal-r6820",
+ "title": "Human Rights Legislation Amendment Bill 2022",
+ "short_title": "Human Rights Legislation Amendment Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-11-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6820_ems_cdd2b522-0da6-4249-bc4f-4a8c2e2542e1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6820_ems_6c7cbeca-6ef2-4e1c-8dfc-1f5dbe56de5f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6820%22",
+   "document_date": "2021-11-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2021-11-25",
+  "sentences": [
+   "The bill would change how anti-discrimination laws refer to human rights.",
+   "It would amend objects clauses in several Acts to reflect the equal status of all human rights, including freedom of religion.",
+   "The bill would also clarify that religious schools may refuse to provide marriage-related goods, services or facilities."
+  ],
+  "changes": [
+   "Amends objects clauses in the Age Discrimination Act, Disability Discrimination Act, Sex Discrimination Act and introduces one into the Racial Discrimination Act.",
+   "Amends the Charities Act to clarify that advocating marriage as between a man and a woman is not a disqualifying purpose.",
+   "Amends the Marriage Act to extend the exemption for religious bodies to refuse goods, services or facilities for marriage to religious educational institutions."
+  ],
+  "affected": "Commonwealth, state and territory governments, religious educational institutions, and bodies established for religious purposes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:38:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7622",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Human Rights Legislation Amendment Bill 2021 - Consideration in Detail - Teachers",
+   "stage": "Consideration in detail",
+   "ayes": 70,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/8"
+  },
+  {
+   "key": "federal-representatives-7623",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Human Rights Legislation Amendment Bill 2021 - Consideration in Detail - Students",
+   "stage": "Consideration in detail",
+   "ayes": 59,
+   "noes": 65,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/9"
+  },
+  {
+   "key": "federal-representatives-7624",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Human Rights Legislation Amendment Bill 2021 - Consideration in Detail - Students",
+   "stage": "Consideration in detail",
+   "ayes": 65,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/10"
+  },
+  {
+   "key": "federal-representatives-7625",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "question": "Human Rights Legislation Amendment Bill 2021 - Consideration in Detail - Agree with amended bill",
+   "stage": "Consideration in detail",
+   "ayes": 65,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-02-09/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-415920",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-25",
+   "stage_hint": null,
+   "brief": "The Human Rights Legislation Amendment Bill 2021 amends Commonwealth antidiscrimination, charities and marriage laws to implement three recommendations (3, 4 and 12) of the Religious Freedom Review chaired by Philip Ruddock. It adds objects clauses recognising all human rights equally, protects charities advocating a traditional view of marriage, and allows religious educational institutions to refuse goods or services for marriages inconsistent with their beliefs."
+  },
+  {
+   "slug": "speech-417128",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-12-02",
+   "stage_hint": null,
+   "brief": "Labor will not adopt a final position on the Religious Discrimination Bill 2021 until a parliamentary committee completes its inquiry and public consultation, arguing the bill is complex and needs careful scrutiny to avoid unintended consequences. The speaker criticised the Prime Minister for introducing the bill shortly before a vote without prior bipartisan consultation, and reiterated Labor’s principles: support for extending federal anti-discrimination protections to religious belief, while ensuring existing protections against other forms of discrimination are not removed."
+  },
+  {
+   "slug": "speech-417359",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-02-08",
+   "stage_hint": null,
+   "brief": "The speaker argued the Religious Discrimination Bill 2021 package is needed to fill a gap in Australia's human rights framework, protecting people of faith and non-believers from discrimination. Concrete positions included allowing religious schools to preference staff of the same religion, protecting statements of belief made in good faith, and noting that New South Wales and South Australia lack any religious discrimination laws."
+  },
+  {
+   "slug": "speech-417773",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Religious Discrimination Bill 2021, arguing it would legalise discrimination against vulnerable groups including LGBTQI people, women, and people with disability, and override existing anti-discrimination protections."
+  },
+  {
+   "slug": "speech-417774",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to allow the consecutive consideration of six bills without intervening business: the Religious Discrimination Bill 2021, Religious Discrimination (Consequential Amendments) Bill 2021, Human Rights Legislation Amendment Bill 2021, Treasury Laws Amendment (Enhancing Superannuation Outcomes For Australians and Helping Australian Businesses Invest) Bill 2021, National Disability Insurance Scheme Amendment (Participant Service Guarantee and Other Measures) Bill 2021, and Corporate Collective Investment Vehicle Framework and Other Measures Bill 2021. After consideration, the House would adjourn until 9:30 am on Thursday, 10 February 2022, with any divisions deferred to that time and a quorum count scheduled."
+  },
+  {
+   "slug": "speech-417776",
+   "speaker": "The SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

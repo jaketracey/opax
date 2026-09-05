@@ -1,0 +1,199 @@
+{
+ "key": "au-federal-r5190",
+ "title": "Personal Property Securities Amendment (Deregulatory Measures) Bill 2014",
+ "short_title": "Personal Property Securities Amendment (Deregulatory Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5190_ems_d3830aef-13e8-449c-a3c1-b749f924d37c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/3827177%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5190%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00074",
+   "document_date": "2015-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-285687",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-309945",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Personal Property Securities Amendment (Deregulatory Measures) Bill 2014, which abolishes the 90-day rule for leases of serial numbered goods like motor vehicles, simplifying the PPSA scheme."
+  },
+  {
+   "slug": "speech-309947",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Personal Property Securities Amendment (Deregulatory Measures) Bill 2014, arguing it would repeal the 90-day registration rule for serial-numbered goods leased by hire companies, saving businesses like R&R Hire thousands of dollars and enabling them to hire new staff. He also highlighted the government's broader deregulation agenda, which exceeded a $1 billion annual red-tape reduction target."
+  },
+  {
+   "slug": "speech-309949",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The speaker supported the Personal Property Securities Amendment (Deregulatory Measures) Bill 2014, describing it as a small reform that builds on the 2009 consolidation of over 70 pieces of legislation into a single personal property securities system and will help small businesses."
+  },
+  {
+   "slug": "speech-309952",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Personal Property Securities Amendment (Deregulatory Measures) Bill 2014 would reduce the administrative burden on small businesses, citing 21,000 additional regulations and 519,000 job losses under the previous Labor government, and noted the bill would save the rental industry $11 million annually. The speaker also announced a statutory review of the Personal Property Securities Act."
+  },
+  {
+   "slug": "speech-309953",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Personal Property Securities Amendment (Deregulatory Measures) Bill 2014 simplifies the PPS regime by changing the lease term threshold for serial-numbered goods from 90 days to 12 months, and announced Labor’s support for the bill."
+  },
+  {
+   "slug": "speech-309954",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The bill amends the Personal Property Securities Act to remove the requirement to register leases of 90 days to less than 12 months, saving an estimated $11.2 million in costs for businesses and customers."
+  },
+  {
+   "slug": "speech-309955",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-14",
+   "stage_hint": null,
+   "brief": "The Personal Property Securities Amendment (Deregulatory Measures) Bill 2014 was argued to simplify the Personal Property Securities Act, reduce costs and confusion for business, especially small equipment-hire firms, following consultation with the hire industry. The statutory review of the act, led by Bruce Whittaker, has been completed and is under government consideration."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Personal Property Securities Amendment (Deregulatory Measures) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00074",
+   "assent_date": "2015-06-25"
+  }
+ ]
+}

@@ -1,0 +1,403 @@
+{
+ "key": "au-federal-s1408",
+ "title": "Financial Framework (Supplementary Powers) Amendment Bill 2024",
+ "short_title": "Financial Framework (Supplementary Powers) Amendment Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-02-07",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2024-05-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1408_ems_68e6ded7-b00b-488e-b49a-4f4faefc8f39%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/9621177%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1408%22",
+   "document_date": "2024-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00027",
+   "document_date": "2024-05-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-8746",
+   "date": "2024-02-29",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2024-02-29.13.2) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it was unsuccessful. ### Amendment text > *At the end of the motion, add: \"and:* > >> *(a) the provisions of the [Offshore Petroleum and Greenhouse Gas Storage Legislation Amendment (Safety and Other Measures) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7149%22) be referred immediately to the Economics Legislation Committee for inquiry and report by 8 May 2024; and* >> >> *(b) the [Financial Framework (Supplementary Powers) Amendment Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1408) be referred immediately to the Finance and Public Administration Legislation Committee for inquiry and report by 14 March 2024\".* ### Original motion > *That the report be adopted.*",
+   "stage": "Committee motion",
+   "ayes": 14,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-02-29/1"
+  },
+  {
+   "key": "federal-senate-8858",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-03-27.195.2) to read the bill for a second time. In other words, they voted in favour of agreeing with the main idea of the bill. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd053a) (which is a document prepared by the parliamentary library): > * *The purpose of the Financial Framework (Supplementary Powers) Amendment Bill 2024 is to amend the Financial Framework (Supplementary Powers) Act 1997 (FFSP Act) to remove ‘limiting words’ from sections which confer power on the Commonwealth to:* > >> * *make, vary or administer an arrangement or grant (section 32B) and* >> >> * *form a company, participate in the formation of a company, acquire shares in a company, or become a member of a company (section 39B)* > > * *The framework established by the FFSP Act and its associated regulations have been used by the Commonwealth as a source of legislative authority for Commonwealth spending. The amendments are intended to ‘put beyond doubt’ the validity of the government spending programs and any government involvement in companies reliant on the sections 32B and 39B.* > > * *Other proposed changes make consequential amendments, contingent amendments and contain validation and savings provisions to ‘regularise’ previous spending and government activity which have been reliant on sections 32B and 39B.* > > * *The Bill has not been referred to a Senate Committee for inquiry and report.*",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/22"
+  },
+  {
+   "key": "federal-senate-8859",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-27.197.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. The amendments related to grants administration reforms and improving grants reporting. ### Amendment text You can find the text of the amendments on [sheet 2426](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1408_amend_c28fd7a0-e314-4a76-ad17-b9154dc8c8f1%22;rec=0) and [sheet 2427](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1408_amend_427a4eea-e4a7-40e4-9c69-3c07497ee8c9%22;rec=0).",
+   "stage": "Committee of the Whole",
+   "ayes": 14,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/23"
+  },
+  {
+   "key": "federal-senate-8860",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-03-27.199.1) that the remaining stages of the bill be agreed to and the bill be now passed. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd053a) (which is a document prepared by the parliamentary library): > * *The purpose of the Financial Framework (Supplementary Powers) Amendment Bill 2024 is to amend the Financial Framework (Supplementary Powers) Act 1997 (FFSP Act) to remove ‘limiting words’ from sections which confer power on the Commonwealth to:* > >> * *make, vary or administer an arrangement or grant (section 32B) and* >> >> * *form a company, participate in the formation of a company, acquire shares in a company, or become a member of a company (section 39B)* > > * *The framework established by the FFSP Act and its associated regulations have been used by the Commonwealth as a source of legislative authority for Commonwealth spending. The amendments are intended to ‘put beyond doubt’ the validity of the government spending programs and any government involvement in companies reliant on the sections 32B and 39B.* > > * *Other proposed changes make consequential amendments, contingent amendments and contain validation and savings provisions to ‘regularise’ previous spending and government activity which have been reliant on sections 32B and 39B.* > > * *The Bill has not been referred to a Senate Committee for inquiry and report.*",
+   "stage": "Third reading",
+   "ayes": 25,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/24"
+  },
+  {
+   "key": "federal-representatives-8891",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (2) and (4)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1408_amend_826581ea-1d67-4828-8c57-5ea9eff73903%22;rec=0) moved by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means they failed. ### Amendment text > *(2) Clause 2, page 2 (at the end of the table), add:* > >> *7. Schedule 3* >> >>> *The day after this Act receives the Royal Assent.* > *(4) Page 12 (after line 34), at the end of the Bill, add:* > >> *Schedule 3 — Improved grants reporting* >> >> *Financial Framework (Supplementary Powers) Act 1997* >> >> *1 Before Part 3* >> >>> *Insert:* >>> >>> *Part 2B — Reportable grants approved under instruments* >>> >>> *46 Simplified outline of this Part* >>> >>>> *This Part provides for some reporting requirements for certain grants.* >>> >>> *46A Definitions* >>> >>>> *In this Part:* >>>> >>>>> *corporate Commonwealth entity has the meaning given by the Public Governance, Performance and Accountability Act 2013.* >>>>> >>>>> *grant has the meaning given by section 46B.* >>>>> >>>>> *reportable grant means a grant which is approved:* >>>>> >>>>>> *(a) based on an application which:* >>>>>> >>>>>>> *(i) an official has recommended should be rejected; or* >>>>>>> >>>>>>> *(ii) does not meet any of the relevant selection criteria; or* >>>>>> >>>>>> *(b) by a Minister, who is a member of the House of Representatives, for a grantee in their electorate.* >>> >>> *46B Meaning of grant* >>> >>>> *(1) A grant is an arrangement for the provision of financial assistance by or on behalf of the Commonwealth, or by or on behalf of a corporate Commonwealth entity:* >>>> >>>>> *(a) under which relevant money or other CRF money is to be paid to a grantee other than the Commonwealth; and* >>>>> >>>>> *(b) which is intended to help address one or more of the Australian Government",
+   "stage": "Report from Federation Chamber",
+   "ayes": 15,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 71
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 89,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/12"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Financial Framework (Supplementary Powers) Amendment Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00027",
+   "assent_date": "2024-05-30"
+  }
+ ]
+}

@@ -1,0 +1,124 @@
+{
+ "key": "au-federal-s1259",
+ "title": "Fair Work Amendment (COVID-19) Bill 2020",
+ "short_title": "Fair Work Amendment (COVID-19) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-12",
+ "originating_house": "senate",
+ "sponsor": "FARUQI, Sen Mehreen",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10912",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1259%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1259%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1259%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1259_ems_99c4fb44-a723-4fd8-b71f-150f9e3f4cfd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1259%22",
+   "document_date": "2020-05-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 11,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-05-12",
+  "sentences": [
+   "The bill would create 14 days of paid leave for anyone affected by COVID-19, covering employees and independent contractors alike.",
+   "This leave would be written into the National Employment Standards, and the Fair Work Commission could issue orders to grant similar leave to people like delivery drivers who are not formal employees.",
+   "Any decision on such an order must be made within two days of an application, unless strong reasons justify not issuing it, and the leave given must match or beat what comparable employees receive."
+  ],
+  "changes": [
+   "Adds paid COVID-19 leave to the National Employment Standards for all workers, including casual and gig workers.",
+   "Allows the Fair Work Commission to make orders extending leave rights to non-employees.",
+   "Permits workers, unions, and corporations to apply for these orders, with a decision due within two days.",
+   "Requires the Commission to consider that leave for non-employees should be at least as good as that for employees doing the same work."
+  ],
+  "affected": "All workers in Australia, including part-time, casual, and gig economy workers, and the Fair Work Commission that would administer the leave orders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:01:01Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-6563",
+   "date": "2020-09-02",
+   "house": "senate",
+   "question": "Business - Consideration of Legislation - Fair Work Amendment (COVID-19) Bill 2020",
+   "stage": "Business motion",
+   "ayes": 22,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "member": 11,
+    "earliest": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-02/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

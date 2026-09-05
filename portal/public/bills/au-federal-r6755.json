@@ -1,0 +1,187 @@
+{
+ "key": "au-federal-r6755",
+ "title": "Electoral Legislation Amendment (Party Registration Integrity) Bill 2021",
+ "short_title": "Electoral Legislation Amendment (Party Registration Integrity) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2021-09-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6755_ems_bae236bd-8112-48f3-ab83-1dd13fa48422%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/8139731%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6755%22",
+   "document_date": "2021-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00094",
+   "document_date": "2021-09-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-411335",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The bill increases the minimum membership requirement for non-parliamentary political parties from 500 to 1,500 members, with existing parties given three months to comply, and restricts party names and logos that replicate words from already registered parties to reduce voter confusion, with exceptions for common words like \"Australia\" or \"party.\""
+  },
+  {
+   "slug": "speech-411837",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "Labor supported the three electoral bills, but moved an amendment calling for more resources to address the Northern Territory's 85% enrolment rate, while also backing the shortened prepoll period to 12 days, a higher party membership threshold of 1,500, and new measures against multiple voting and electoral violence."
+  },
+  {
+   "slug": "speech-411841",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for three electoral amendments: increasing the minimum party membership for non-parliamentary parties to 1,500, expanding multiple voting offences, and limiting the pre-poll period to 12 days. They criticised Campbell Newman's opposition to the changes, noting that parties like Animal Justice and One Nation already meet the membership threshold."
+  },
+  {
+   "slug": "speech-411848",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "The speaker supported reducing prepoll time to 12 days but criticised the absence of voter ID requirements, and opposed the Electoral Legislation Amendment (Party Registration Integrity) Bill 2021 for raising party membership thresholds from 500 to 1,500, arguing it would restrict independent and alternate voices."
+  },
+  {
+   "slug": "speech-411855",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-08-25",
+   "stage_hint": null,
+   "brief": "Moved amendments to reduce the party registration threshold from 1,500 to 1,000 members, arguing the bill's increase to 1,500 would concentrate power in the Liberal and Labor parties and harm democracy."
+  },
+  {
+   "slug": "speech-412064",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-26",
+   "stage_hint": null,
+   "brief": "The Parliamentary Joint Committee on Human Rights scrutinised 18 bills and 234 legislative instruments, seeking further information on whether the Electoral Legislation Amendment (Party Registration Integrity) Bill 2021's increase to 1,500 unique members for non-parliamentary parties proportionately limits freedom of association and participation rights, and questioning migration measures including a four-year waiting period for social security, a 64% fee hike for AAT review applications, public listing of employers risky to working holiday-makers, and a removal of automatic overseas travel exemption for citizens and residents."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (Party Registration Integrity) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00094",
+   "assent_date": "2021-09-02"
+  }
+ ]
+}

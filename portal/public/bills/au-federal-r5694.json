@@ -1,0 +1,416 @@
+{
+ "key": "au-federal-r5694",
+ "title": "Appropriation Bill (No. 1) 2016-2017",
+ "short_title": "Appropriation Bill (No. 1) 2016-2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-08-31",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2016-11-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-08-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5694_ems_b07d7350-ac84-416d-9619-6e294d4832cb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5694%22",
+   "document_date": "2016-08-31",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00069",
+   "document_date": "2016-11-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-08-31",
+  "sentences": [
+   "This bill would take money from the Consolidated Revenue Fund to pay for the government's everyday running costs.",
+   "It would provide about seven-twelfths of the estimated annual funding for 2016-2017, plus full-year budget measures.",
+   "The bill is nearly identical to one that lapsed when Parliament was dissolved in May 2016, with a few changes for administrative rearrangements."
+  ],
+  "changes": [
+   "Proposes appropriations from the Consolidated Revenue Fund for ordinary annual services.",
+   "Provides funding equivalent to 7/12ths of estimated annual appropriations plus full-year budget measures.",
+   "Replaces a lapsed bill from the 44th Parliament with minor updates for administrative changes."
+  ],
+  "affected": "The government and its departments that receive ordinary annual services funding.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:46:37Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332750",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "The motion was moved to pass Appropriation Bills (No. 1, No. 2, and Parliamentary Departments) for 2016‑2017, providing just over $49 billion in funding, including nearly $18 billion for Defence, $1.3 billion for Education and Training, $781 million for Infrastructure and Regional Development, and $610 million for the ABC and $168 million for SBS."
+  },
+  {
+   "slug": "speech-332751",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-08-31",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2016-2017 was moved to provide almost $9 billion in non-ordinary annual services funding, including $4.9 billion for NBN Co., $1.4 billion for Defence, $544 million for Infrastructure and Regional Development, and over $310 million for Agriculture and Water Resources. The bill also covers debit limits for the Nation-building Funds, general purpose financial assistance, and national partnership payments."
+  },
+  {
+   "slug": "speech-333368",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The speaker congratulated new MPs including the members for Herbert, Wills, Fremantle, Lindsay and Cowan, then argued the appropriation bills are needed for government functions but highlighted the government's budget mismanagement and concerns over both sides' handling of the omnibus bills."
+  },
+  {
+   "slug": "speech-333381",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The speaker agreed with the Treasurer on the need for budget repair, citing a tripled deficit, $100 billion net debt blowout, and risk to the AAA credit rating, and argued that the coalition backbench—led by Tony Abbott—blocks reform such as changes to negative gearing, while Labor has proposed $8 billion in savings; they also criticised the Nationals for supporting mining royalty increases despite opposing the mining tax."
+  },
+  {
+   "slug": "speech-333387",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The member for Forrest was assured that the earlier"
+  },
+  {
+   "slug": "speech-333423",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-09-12",
+   "stage_hint": null,
+   "brief": "The government argued that its omnibus savings bill, containing over $6 billion in measures, is essential for budget repair and urged Labor to support it, noting that Labor’s election platform relied on $6 billion in coalition savings. The speech highlighted $195 billion in defence investment, $594 million for the inland rail corridor, and the $5.5 billion small business package, while defending the abolition of the Road Safety Remuneration Tribunal and promoting decentralisation of agencies like the APVMA to Armidale."
+  },
+  {
+   "slug": "speech-334443",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker announced that unless otherwise ordered at adjournment, three appropriation bills for 2016-2017 are referred to the Federation Chamber for further consideration."
+  },
+  {
+   "slug": "speech-334458",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has failed to invest in long-term infrastructure, citing a 20% decline in public sector infrastructure investment since the change of government and noting that Australia fell from first to lower rankings in OECD infrastructure investment. They highlighted that during the election campaign the government announced 78 small projects totalling less than $1 billion, with 76 of those in coalition-held seats, while Labor had proposed major projects such as Metronet, Cross River Rail, AdeLINK, Melbourne Metro, and Western Sydney Rail."
+  },
+  {
+   "slug": "speech-334460",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor would not block supply but criticized the Turnbull government's budget repair, citing increased taxes, a tripled deficit, and higher unemployment. They defended Labor's alternative package, including superannuation and negative gearing reforms, and opposed government measures like the $50 billion business tax cut and raising the pension age to 70."
+  },
+  {
+   "slug": "speech-334462",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Turnbull government’s economic record, noting that private investment fell 4.7% and the deficit tripled from $10.6 billion to $37 billion, while policies such as a $50 billion tax cut for the wealthy, $30 billion in school funding cuts, $100,000 university degrees, and a pension age increase to 70 would entrench inequality. He reaffirmed Labor’s commitment to fair budget repair but stated they would not block the appropriation bills."
+  },
+  {
+   "slug": "speech-334472",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker argued the 2016-2017 budget is unfair, citing $30 billion in school cuts, university cuts, a pension age of 70, a $50 billion tax cut for large companies, and cuts to 190,000 pensioners via overseas travel limits. They also announced Labor's support for a single appeal pathway for veterans' compensation and called for a royal commission into banking."
+  },
+  {
+   "slug": "speech-334474",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has mismanaged the economy, with the deficit projected to rise from $10.6 billion to $37-38 billion, net debt increasing by $100 billion since 2013 to $326 billion, and foreign debt reaching $1,045 billion. They criticised proposed $50 billion in corporate tax cuts, particularly for big banks, while cutting services for low-income Australians, and highlighted failures in managing VET FEE-HELP rorting, the census, and the federal election."
+  },
+  {
+   "slug": "speech-334475",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker condemned the government for wasting time with an eight-week election campaign and argued that nothing has changed under the new Prime Minister, who has failed to deliver economic leadership. They criticised the government for lacking policies on homelessness, housing affordability, Medicare, the NBN, and a banking royal commission, and for cutting funding to community services while prioritising tax cuts for big business."
+  },
+  {
+   "slug": "speech-334476",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's trickle-down economics has failed, neglecting families and favouring big business. They cited the GP Super Clinics program, specifically a clinic in Wallan that conservative health ministers refused to open rather than admit the program was a success."
+  },
+  {
+   "slug": "speech-334828",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull government must invest in outer suburban infrastructure to address a $50 billion backlog, calling for a dedicated fund and more police and CCTV resources, while also urging targeted funding for counter-extremism projects, youth mental health services, and the completion of the Thompsons Road upgrade."
+  },
+  {
+   "slug": "speech-334831",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's budget and jobs plan lack a coherent vision for rural and regional Australia, and called for public Regional Australia Impact Statements to be included in budget processes. She also criticised the National Stronger Regions Fund for failing to fund major infrastructure projects in her electorate, including the Baranduda Fields sporting complex, Mount Buller–Mount Stirling water storage, and Wangaratta aquatics centre."
+  },
+  {
+   "slug": "speech-334832",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker argued that the 45th Parliament has only 32% women, with Labor at 44% representation while the Coalition has just 19%, and called for quotas to address this imbalance. They also announced support for marriage equality through a parliamentary vote rather than a plebiscite, opposition to changes in Section 18C of the Racial Discrimination Act, and called for an end to the Medicare rebate freeze and action on housing affordability."
+  },
+  {
+   "slug": "speech-335078",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The member for Shortland, newly elected after a redistribution, thanked former member Jill Hall, Labor volunteers, and multiple unions, and described the electorate's boundaries from the Pacific Ocean to Lake Macquarie, including the Central Coast and Lake Macquarie suburbs."
+  },
+  {
+   "slug": "speech-335085",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The member for Paterson listed unfulfilled Liberal election promises to her electorate, including $15 million for raising Testers Hollow Road, a mobile phone tower for Fern Bay and Fullerton Cove, $100,000 for Kurri Kurri sports ground, $120,000 for security in Raymond Terrace and Nelson Bay, $50,000 for a Lakeside skate park, and multiple commitments to Williamtown on PFAS contamination. She also argued that Labor’s amendments to the budget delivered $6.3 billion in savings while protecting pensioners, children’s dental care, and renewable energy, and criticised the government for prioritising tax cuts for the wealthy and big business over the needs of low-income Australians."
+  },
+  {
+   "slug": "speech-335092",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The member for Greenway argued for increased federal investment in culturally sensitive aged care, commuter parking at Schofields Station (citing a $5 million Labor commitment and a $120 million Park and Ride Access Fund), and fibre-to-the-premises broadband, criticising the government's aged care cuts, inadequate parking, and copper-based NBN rollout."
+  },
+  {
+   "slug": "speech-335281",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The government has provided strong support for Arrium's Whyalla operations, including a $49.2 million low-interest loan for a beneficiation plant, a $20 million innovation package, and anti-dumping measures, while workers agreed to a 10% wage cut. The speaker also warned that South Australia's reliance on 41% wind power has doubled wholesale electricity prices and caused major losses for Arrium after the September 28 blackout."
+  },
+  {
+   "slug": "speech-335286",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The coalition government's $100 billion budget was endorsed by voters, with the speaker criticising Labor for not delivering a surplus since 1989 and for underfunding the NDIS, while announcing a $29.9 billion increase in defence spending over ten years."
+  },
+  {
+   "slug": "speech-335287",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the passage of three appropriation bills for 2016-17, seeking over $58 billion in total: $49 billion for ordinary annual services, $9 billion for non-ordinary services including capital works and payments to states and territories, and $147 million for parliamentary departments."
+  },
+  {
+   "slug": "speech-335615",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s budget prioritises tax cuts for big banks and multinationals over investing in students, and that the flat 3.56 per cent education indexation rate constitutes funding cuts that will fail to bring schools up to the Student Resourcing Standard."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2016-2017",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00069",
+   "assent_date": "2016-11-10"
+  }
+ ]
+}

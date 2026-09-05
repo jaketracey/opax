@@ -1,0 +1,146 @@
+{
+ "key": "au-federal-s1383",
+ "title": "International Organisations (Privileges and Immunities) Amendment Bill 2023",
+ "short_title": "International Organisations (Privileges and Immunities) Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-21",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2023-09-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1383_ems_c4fcd36e-bc3b-4c4f-8541-6bc94bfcf01b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1383%22",
+   "document_date": "2023-06-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00078",
+   "document_date": "2023-09-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-21",
+  "sentences": [
+   "The bill would let Australia grant diplomatic protections to international organisations it does not belong to.",
+   "It would allow regulations to give these protections to types of staff not currently listed in the law, when the organisation asks and Australia agrees.",
+   "The bill also makes a minor change to immigration exemption rules in the schedules to match treaty requirements."
+  ],
+  "changes": [
+   "Expands the definition of international organisations to include those Australia does not join.",
+   "Permits privileges and immunities to be granted to additional categories of officials not named in the Act.",
+   "Allows more flexible application of privileges and immunities from Schedules 2 to 5.",
+   "Amends immigration restriction provisions in the Third and Fourth Schedules."
+  ],
+  "affected": "International organisations not members of Australia, their officials and connected persons, and the Australian government.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "International Organisations (Privileges and Immunities) Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00078",
+   "assent_date": "2023-09-20"
+  }
+ ]
+}

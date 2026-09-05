@@ -1,0 +1,265 @@
+{
+ "key": "au-federal-r5797",
+ "title": "Farm Household Support Amendment Bill 2017",
+ "short_title": "Farm Household Support Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture and Water Resources",
+ "status": "passed",
+ "status_as_of": "2017-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5797_ems_973f5b48-4c2f-46b2-818a-5a6801a4ebe8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5797%22",
+   "document_date": "2017-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00023",
+   "document_date": "2017-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-340609",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment Bill 2017 removes the ordinary and liquid assets waiting periods for farmers approved for farm household allowance, and clarifies that water rights and shares in marketing cooperatives used for farm enterprise are included as farm assets rather than non-farm assets."
+  },
+  {
+   "slug": "speech-342676",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker criticised LNP and National Party members for launching a website with at least 10 members while opposing a reasonable amendment from the member for Indi that would require a regional childcare plan, calling the opposition inexplicable and a disgrace."
+  },
+  {
+   "slug": "speech-342688",
+   "speaker": "Kevin Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued the Farm Household Support Amendment Bill 2017 will improve access to farmer household allowance by streamlining applications and treating water as an on-farm asset, and defended the government’s $550 million dairy support package including 2.47% concessional loans. They criticised Labor’s proposal to take an additional 450 gigalitres of water from productive agriculture and their mocking of the assistance measures."
+  },
+  {
+   "slug": "speech-342689",
+   "speaker": "Cathy McGowan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Farm Household Support Amendment Bill 2017 only addresses two of nine recommendations from Senator McKenzie's report, and that the dairy crisis in northeast Victoria persists with $45,000 in local food vouchers nearly exhausted. They highlighted the Alpine Valleys Dairy Pathways Project as a successful grassroots model aiming to increase milk production by 80% by 2025, and called for the government to replicate this approach in other communities."
+  },
+  {
+   "slug": "speech-342692",
+   "speaker": "Andrew Broad",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment Bill 2017 was discussed, with the speaker emphasising that farmers do not want support."
+  },
+  {
+   "slug": "speech-342696",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Farm Household Support Amendment Bill 2017, arguing it removes waiting periods for payments and clarifies asset tests for water rights and shares. They also called for extending farm household allowance to wild-catch fishers and for federal action to address dairy farmers' access to concessional loans and the impact of supermarket price wars."
+  },
+  {
+   "slug": "speech-342697",
+   "speaker": "John McVeigh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Farm Household Support Amendment Bill 2017, arguing it would improve payment delivery by more precisely defining farm assets and removing the ordinary liquid assets waiting period. He noted that in Queensland, 2,014 farming operations had been granted assistance under the scheme, with 1,293 families currently receiving payments, and contrasted the coalition's $622 million in approved loans to 1,161 farmers with only eight loans granted under the previous Labor government."
+  },
+  {
+   "slug": "speech-342698",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Farm Household Support Amendment Bill 2017 but criticised the government for taking three years to address known issues with farm household assistance, citing 2014 concerns raised by rural financial counselling services and farmers. The speaker noted that farmers in the Bendigo area faced five-to-six-month wait times for Centrelink support, that a rural financial counselling service in Bendigo was lost after a government review, and called for all Centrelink recipients to be treated with equal dignity and respect."
+  },
+  {
+   "slug": "speech-342842",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment Bill 2017 removes the ordinary and liquid assets waiting periods for the farm household allowance and reclassifies water rights and shares in marketing cooperatives as farm assets; as of 3 February 2017, over 7,000 claims had been granted and the government was paying $1.16 million per week in allowance."
+  },
+  {
+   "slug": "speech-342843",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Farm Household Support Amendment Bill 2017, which waives the ordinary and liquid assets waiting periods—cutting 13 weeks off the standard wait—and changes the assets test so water rights do not preclude struggling farmers from receiving assistance. The speaker argued the amendments do not fix underlying Centrelink problems, citing 5,000 job cuts over five years, 35 million unanswered calls, robo-debt, and chronic under-resourcing."
+  },
+  {
+   "slug": "speech-342844",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker discussed policy and administrative changes to the Farm Household Support Amendment Bill 2017, including removing waiting periods for payments, raising the non-farm asset threshold from $1.1 million to $2.5 million, and introducing a nationwide trial to process applications within 28 days for simple cases and six weeks for complex cases, down from up to four months."
+  },
+  {
+   "slug": "speech-342845",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "Labor supported the Farm Household Support Amendment Bill as a welcome but insufficient fix, arguing that Minister for Agriculture and Water Resources Barnaby Joyce long knew of systemic failures—including six-month delays, a flawed Centrelink IT system, and rejected applications despite correct documentation—yet only recently acted, and was allegedly barred by the Tasmanian Liberal Party from visiting the state to hear farmers' concerns directly."
+  },
+  {
+   "slug": "speech-342847",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Farm Household Support Amendment Bill 2017, which removes ordinary and liquid assets waiting periods for the farm household allowance, and highlighted Coalition achievements including $2.5 billion in concessional loans, a $555 million dairy rescue package, free trade agreements, and mobile black spot funding, while condemning Labor’s carbon tax and past drought policy cuts and criticising Murray Goulburn and Fonterra for retrospective clawback payments."
+  },
+  {
+   "slug": "speech-342851",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment Bill 2017 was supported, recognising the Deputy Prime Minister and agriculture minister for improving farmer assistance; the electorate of Gippsland, alongside the member for Wannon, each produces 23% of Australia's dairy."
+  },
+  {
+   "slug": "speech-342853",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Farm Household Support Amendment Bill 2017, which changes the definition of 'assets' to allow more farmers access to the Farm Household Allowance, removes waiting periods, and clarifies asset test treatment for farm assets such as water. As of 24 February, 7,133 farmers and partners had received grants, with total payments of $162.3 million since March 2014."
+  },
+  {
+   "slug": "speech-342854",
+   "speaker": "Luke Hartsuyker",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-01",
+   "stage_hint": null,
+   "brief": "The Farm Household Support Amendment Bill 2017 clarifies eligibility for the farm household allowance, removes waiting periods, and reclassifies water assets and marketing cooperative shares as farm assets. The speaker also corrected the record that the Bendigo Rural Financial Counselling Service office was not shut due to complaints but was awarded to a new provider through a public tender."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Farm Household Support Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00023",
+   "assent_date": "2017-04-04"
+  }
+ ]
+}

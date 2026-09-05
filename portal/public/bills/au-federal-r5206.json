@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r5206",
+ "title": "Marriage Amendment (Celebrant Administration and Fees) Bill 2014",
+ "short_title": "Marriage Amendment (Celebrant Administration and Fees) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2014-04-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-04-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5206_ems_0a4d1c2d-b763-4265-bd5f-462141b9a394%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5206%22",
+   "document_date": "2014-03-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00025",
+   "document_date": "2014-04-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-20",
+  "sentences": [
+   "The bill would make Commonwealth-registered marriage celebrants pay an annual registration charge to recover the cost of regulating them.",
+   "Celebrants who do not pay the charge, unless exempted, would be deregistered, and regulations would set out exemption processes and grounds.",
+   "The charge would apply from 1 July 2013, and the amendments in Schedule 1, Part 4 would apply from 1 July 2014 or later."
+  ],
+  "changes": [
+   "Introduces cost recovery for regulating Commonwealth-registered marriage celebrants.",
+   "Requires celebrants to pay an annual registration charge or be deregistered.",
+   "Allows regulations to provide exemptions from the charge.",
+   "Requires aspiring celebrants to pay an application fee unless exempted.",
+   "Allows regulations to require a fee for applying for an exemption from professional development requirements.",
+   "Makes technical, transitional and administrative amendments to the Marriage Act."
+  ],
+  "affected": "Commonwealth-registered marriage celebrants, including those from independent religious organisations, and aspiring marriage celebrants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:13Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-286005",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286006",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286930",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286931",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286998",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-287384",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Marriage Amendment (Celebrant Administration and Fees) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00025",
+   "assent_date": "2014-04-09"
+  }
+ ]
+}

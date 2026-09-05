@@ -1,0 +1,68 @@
+{
+ "key": "au-federal-r7347",
+ "title": "Criminal Code Amendment (Using Technology to Generate Child Abuse Material) Bill 2025",
+ "short_title": "Criminal Code Amendment (Using Technology to Generate Child Abuse Material) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-28",
+ "originating_house": "representatives",
+ "sponsor": "CHANEY, Kate, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10974",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7347%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7347%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7347_ems_e4fdec11-507a-469a-beb3-dba3c2250cce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7347%22",
+   "document_date": "2025-07-28",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-28",
+  "sentences": [
+   "The bill would create new criminal offences for using technology, especially generative AI, to make or train tools that produce child abuse material.",
+   "It would criminalise using a carriage service to download, access, or supply technology whose sole or dominant purpose is creating child abuse material, and to collect or distribute data for training such technology.",
+   "The bill provides limited defences for conduct in the public interest, such as law enforcement, compliance monitoring, or research approved in writing by the AFP Minister."
+  ],
+  "changes": [
+   "Creates new offences targeting misuse of emerging technologies, particularly generative AI, to produce child abuse material.",
+   "Criminalises downloading, accessing, supplying, or offering access to technology with the sole or dominant purpose of creating child abuse material.",
+   "Criminalises collecting, scraping, or distributing data to train or develop technology for creating child abuse material.",
+   "Provides limited defences for public benefit conduct, including law enforcement, compliance monitoring, and AFP Minister-approved research."
+  ],
+  "affected": "Individuals who use carriage services to create or distribute technology for generating child abuse material, and those engaged in legitimate public interest activities such as law enforcement and approved research.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

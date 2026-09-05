@@ -1,0 +1,334 @@
+{
+ "key": "au-federal-r5953",
+ "title": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017",
+ "short_title": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-08-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5953_ems_34afeb08-92dd-4874-bc3d-b879d3184a68%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5953%22",
+   "document_date": "2017-08-16",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-08-16",
+  "sentences": [
+   "This bill would tighten the rules for unions and employer groups to address misconduct found by a royal commission.",
+   "It would let the Federal Court ban officials from office, cancel an organisation's registration, and require a public interest check before groups merge.",
+   "The automatic disqualification for officials would apply to criminal offences carrying a jail term of five years or more."
+  ],
+  "changes": [
+   "Adds serious criminal offences with a minimum five-year prison term to the automatic disqualification rules for officials.",
+   "Gives the Federal Court power to stop officials from holding office for breaking industrial laws or being unfit.",
+   "Makes it a crime for a disqualified person to still act as an official or influence the organisation.",
+   "Allows the Federal Court to cancel an organisation's registration for corruption, repeated law-breaking, or obstructive industrial action.",
+   "Lets the Federal Court suspend an organisation's rights or appoint an administrator to fix governance problems.",
+   "Introduces a public interest test that must be passed before registered organisations can amalgamate."
+  ],
+  "affected": "Registered employee and employer organisations and their officials.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:46Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4825",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2017-10-16.32.3) to the usual second reading motion, which is \"that the bill be read a second time\". To read a bill for a second time is to agree with its main idea. ### Amendment text > *That all the words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House calls on the Government to:* > > *(1) abandon its support of the decision of the Fair Work Commission to cut penalty rates because it will mean nearly 700,000 Australians will have their take home pay cut by up to $77 a week; and* > > *(2) legislate to prevent the decision from taking effect to stop Australians from having their penalty rates cut\".*",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-16/1"
+  },
+  {
+   "key": "federal-representatives-4826",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "question": "The majority voted to agree with the main idea of the bill, which means the House of Representatives can now discuss it in more detail. In parliamentary jargon, they voted to read the bill [for a second time](https://www.peo.gov.au/learning/fact-sheets.html). ### What is the bill's main idea? The [bill was introduced to](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5953): * *include certain serious criminal offences as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime in relation to registered organisations;* * *establish an offence for a disqualified person to continue to act as an official or in a way that influences the affairs of an organisation;* * *allow the Federal Court to prohibit officials from holding office in certain circumstances or if they are otherwise not a fit and proper person;* * *allow the Federal Court to cancel the registration of an organisation on a range of grounds; allow applications to be made to the Federal Court for a range of other orders;* * *expand the grounds on which the Federal Court may order remedial action to deal with governance issues in an organisation;* * *expressly provide that the Federal Court may appoint an administrator to an organisation or part of an organisation as part of a remedial scheme; and* * *introduce a public interest test for amalgamations of registered organisations.* Learn more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd045).",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 56,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-10-16/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-354504",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, calling it a rushed, anti-union attack that goes beyond the Heydon royal commission recommendations, and moved to substitute the bill's words with a call for the government to abandon its support for the Fair Work Commission's decision to cut penalty rates—affecting nearly 700,000 Australians by up to $77 a week—and to legislate to prevent that cut from taking effect."
+  },
+  {
+   "slug": "speech-354509",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, which includes four measures: allowing the Federal Court to disqualify officers of registered organisations for certain offences, cancel or suspend registration for noncompliance or corrupt conduct, appoint administrators for financial misconduct, and requiring a public interest test for amalgamations. The speaker noted Australia ranks 13th on the Corruption Perceptions Index, behind the UK, Canada, and New Zealand, and linked this to findings from the Royal Commission into Trade Union Governance and Corruption."
+  },
+  {
+   "slug": "speech-354510",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017 would destroy democratic civil society by targeting union rights and allowing the minister to decide who is fit to lead unions, while ignoring real workplace issues like wage theft and worker exploitation. They referenced specific cases including the Oaky North mine lockout by Glencore, the Bendigo hospital Asset Interiors liquidation, and a backpacker's death in Perth, and claimed the bill breaches ILO Convention 87."
+  },
+  {
+   "slug": "speech-354511",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, citing personal experience of union thuggery and judicial criticisms of the CFMEU’s record of lawbreaking. The bill would introduce a public interest test for union mergers and add disqualification grounds for officials similar to those for company directors, including for serious criminal offences."
+  },
+  {
+   "slug": "speech-354640",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill empowers the Federal Court, not the government, to deregister unions for repeated lawbreaking, corruption or serious crimes, and criticised the opposition for failing to condemn CFMEU members' threats to rape workers' children, noting the last union deregistration was by Labor's Bob Hawke in 1986."
+  },
+  {
+   "slug": "speech-354645",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "Labor will vote against the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, arguing it is an ideological anti-union measure that shifts the burden of proof onto union officers, allows ministerial or third-party intervention, and contravenes ILO Convention 87. The speech cited the government’s past praise of Kathy Jackson and Michael Lawler, criticized the bill for exceeding Heydon royal commission recommendations, and highlighted record low wage growth and over 1.1 million underemployed Australians."
+  },
+  {
+   "slug": "speech-354646",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017 is a politically motivated attack on unions, not a genuine integrity measure, and called for a national independent commission against corruption to investigate wrongdoing by companies, unions, public servants and politicians. They opposed the bill's provisions allowing union deregistration for industrial action and restricting union mergers, stating it would increase power imbalances and lower wages."
+  },
+  {
+   "slug": "speech-354650",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, arguing it unfairly targets unions and breaches international law (ILO Convention No. 87), while the government fails to address employer noncompliance with wage theft and insecure work. They cited personal experience of union support after their father's death and criticised the bill for imposing obligations on unions that are not applied to corporations."
+  },
+  {
+   "slug": "speech-354651",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "Labor argued the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017 is an attack on unions without merit, targeting workers' rights while ignoring corporate malfeasance, and should not pass."
+  },
+  {
+   "slug": "speech-354653",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "Labor opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, arguing it was a political attack on unions rather than sound policy, imposing harsher penalties on unions than corporations, and lacking proper consultation. The speaker cited specific concerns about reversed onus of proof for union officials, broad deregistration grounds, and the bill targeting a proposed CFMEU, MUA and TCFUA amalgamation."
+  },
+  {
+   "slug": "speech-354654",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, arguing it unfairly targets unions, breaches international law, and imposes harsher penalties than those for corporations, while citing examples of worker exploitation at Myer, 7-Eleven, and Pizza Hut."
+  },
+  {
+   "slug": "speech-354655",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017 is a political attack on unions and workers, not based on genuine reform. They cited the CUB workers' dispute, the government's contracting of Centrelink call centre jobs offshore, and claimed the bill violates International Labour Organization conventions, while accusing the LNP of prioritising big business over workers."
+  },
+  {
+   "slug": "speech-354656",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, arguing it unfairly targets trade unions beyond recommendations of the Heydon royal commission and violates ILO Convention 87. Specific objections included provisions for easier union deregistration, a public interest test on mergers targeting the CFMEU, MUA and TCFUA, and higher penalties compared to the Corporations Act."
+  },
+  {
+   "slug": "speech-354657",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017, arguing it unfairly targets unions by allowing political disqualification of officials, deregistration based on officials' conduct, and a retrospective merger test aimed at blocking the MUA and CFMEU amalgamation, while also contravening international human rights obligations."
+  },
+  {
+   "slug": "speech-354658",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017 is a politically motivated attack on the trade union movement, specifically targeting the CFMEU, TCF, and MUA, and is inconsistent with international law and workers' rights. They stated the bill would allow the Federal Court to disqualify union officials and cancel registrations, while no equivalent measures exist for corporations, and claimed it aims to break the political opposition of unions."
+  },
+  {
+   "slug": "speech-354659",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2017 addresses lawlessness in some registered organisations identified by the Heydon Royal Commission, and that it does not impose harsher standards than on corporations, discourage volunteers, or violate international obligations. The bill targets law-breaking behaviour generally, not specific organisations like the CFMEU, and includes a public interest test for mergers."
+  }
+ ],
+ "acts": []
+}

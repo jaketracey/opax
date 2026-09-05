@@ -1,0 +1,477 @@
+{
+ "key": "au-federal-r5497",
+ "title": "Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015",
+ "short_title": "Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5497_ems_b35077f3-dbb6-4c5a-81b0-7b885634fd81%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5497%22",
+   "document_date": "2015-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00147",
+   "document_date": "2015-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-3921",
+   "date": "2015-09-14",
+   "house": "senate",
+   "question": "Peter Whish-Wilson I want to begin by focusing on the issue of the definition of a small business. We have heard today that there are numerous definitions for small businesses. It is obviously something that deserves a wider discussion and a wider debate. I note that when we in this chamber debated and passed legislation for a tax cut for small business and for depreciation allowances to be raised significantly on assets we used a $2 million-turnover threshold. Originally the government had proposed a tax cut for small businesses with a threshold of less than $5 million, if my memory serves me correctly—certainly, that was what was put out into the media—and later that was changed to $2 million. The Greens have always used a $2 million-turnover threshold in our policy on small business, but I understand the ABS and ASIC use a threshold of 15 or 20 employees. Senator Xenophon raised a point in relation to the Australian Bankers' Association's submission around the potential for financial securities firms with fewer employees to be writing literally tens of millions of dollars, if not more, in revenue—for example, they could be working on derivatives. We also have the very obvious situation arising now in the new economy. Senator McKim is not here, but he is a big fan of the shared economy. We have seen virtual businesses, like Uber and others, that are low-employee businesses, generating billions of dollars of revenue. I think this is something we need to consider. My question to the minister is: will your five-year review include looking at potential uses or abuses of this system by businesses that in revenue terms are obviously significantly larger businesses than most small businesses? Will you consider, in line with some of the submissions we have seen, reducing the time frame for conducting your post-implementation review to two years rather than five years? If not, can you explain why five years is appropriate? Mathias Cormann In response to the final question,",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 13,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-09-14/3"
+  },
+  {
+   "key": "federal-senate-3922",
+   "date": "2015-09-14",
+   "house": "senate",
+   "question": "Bob Day by leave—I move Family First amendments (1) to (4) on sheet 7757 together: (1) Schedule 1, item 8, page 4 (line 7), omit \"$100,000\", substitute \"$500,000\". (2) Schedule 1, item 8, page 4 (line 10), omit \"$250,000\", substitute \"$1,500,000\". (3) Schedule 1, item 31, page 9 (line 21), omit \"$100,000\", substitute \"$500,000\". (4) Schedule 1, item 31, page 9 (line 24), omit \"$250,000\", substitute \"$1,500,000\". We have had a discussion about whether the threshold should be $100,000, whether it should be $300,000. I am moving that the threshold be $500,000 to get a more comprehensive sample of contractors who may be affected by this legislation. I ask honourable senators to support my amendments. Question negatived. David Leyonhjelm I move amendment (1) on sheet 7759: (1) Clause 2, page 2 (table item 2), omit \"6 months\", substitute \"12 months\". This is a very minor amendment and it simply reflects feedback that I have had, and I am sure others have had the same feedback, to the effect that six months is an insufficient period for a number of major organisations to adjust their contracts to take account of the legislation. Indeed, the Bankers' Association sought 12 months and Westpac sought two years and has been earbashing everyone who wants to pay attention. The fact is that adjusting standard form contracts in a period of six months is quite a challenge. I think this is a minor amendment which will allow them practical time in which to accommodate the provisions of this act. Mathias Cormann I will just indicate quickly the position of the government. We do not support this amendment. We have proposed in the legislation a six-month transition period. There will be guidance and assistance from the ACCC and from ASIC and there will be a 12-month 'light touch' implementation of the regulatory change. Furthermore, in terms of providing some more detail on how the ACCC will work with industry once the protections are in effect, the ACCC will work with business and indus",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 13,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-09-14/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-314638",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-24",
+   "stage_hint": null,
+   "brief": "The bill extends unfair contract terms protections to small businesses, applying to standard form contracts where a party has fewer than 20 employees and a value up to $100,000 (or $250,000 for multi-year contracts), with protections taking effect six months after royal assent and $1.4 million allocated to the ACCC for guidance."
+  },
+  {
+   "slug": "speech-316166",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015, which extends unfair contract term protections to small businesses with fewer than 20 employees for contracts valued up to $100,000 or $250,000 if over 12 months, but raised concerns about estimated $50 million first-year compliance costs and called for a two-year post-implementation review."
+  },
+  {
+   "slug": "speech-316167",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 would extend unfair contract term protections to small business contracts, covering those valued up to $100,000 (or $250,000 for multi-year contracts) with a party employing fewer than 20 employees, fulfilling a 2013 coalition election commitment."
+  },
+  {
+   "slug": "speech-316168",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The bill extends unfair contract term protections to small businesses with fewer than 20 employees and contract values up to $100,000 or $250,000 for contracts longer than 12 months, benefiting over 13,000 small businesses in Durack, including 3,600 agricultural, 2,200 construction, and 2,000 distribution businesses."
+  },
+  {
+   "slug": "speech-316169",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The Coalition government’s Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 extends unfair contract term protections to small businesses (fewer than 20 employees) for contracts valued at up to $100,000 (or $250,000 if longer than one year), covering over 80% of business contracts and allowing courts to void unfair terms; the speaker noted it addresses over 1,375 complaints and was an election commitment, but emphasised it is not a panacea and does not protect contractors who fail to document agreements."
+  },
+  {
+   "slug": "speech-316170",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The bill extends unfair contract term protections to small businesses with fewer than 20 employees and contracts under $100,000 (or $250,000 for multi-year contracts). The speaker criticised the previous Labor government for failing to deliver on a 2007 promise to extend these protections, noted 519,000 small businesses were lost under Labor, and warned large businesses that they will face class actions if they continue imposing unfair penalty clauses."
+  },
+  {
+   "slug": "speech-316175",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 extends consumer-style unfair contract term protections to small businesses, allowing courts to strike out unfair terms in standard-form contracts valued under $100,000 (or $250,000 for multiyear contracts) where at least one party has fewer than 20 employees. The speech also promoted the Abbott government's small-business record, citing the $5.5 billion Jobs and Small Business package, a company tax cut, a $20,000 immediate asset write-off, and a 5% tax discount for unincorporated businesses, alongside $1.4 million in ACCC transition funding."
+  },
+  {
+   "slug": "speech-316176",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 extends unfair contract term protections to small businesses with fewer than 20 employees, covering standard form contracts valued under $100,000 or $250,000 for multiyear contracts. The speaker cited the 2011 ACCC v Coles case, where Justice Gordon found Coles engaged in serious, deliberate, and repeated unconscionable conduct toward suppliers, and criticized Wesfarmers for allowing such behavior inconsistent with its stated values of integrity and honesty."
+  },
+  {
+   "slug": "speech-316177",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The bill extends unfair contract term protections to small businesses, with $1.5 million in additional funding for the ATO. The speaker cited a personal example of a small lamb export business forced out of an abattoir by Coles' market power."
+  },
+  {
+   "slug": "speech-316351",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 extends consumer unfair contract term protections to small businesses, covering standard form contracts valued under $100,000 (or $250,000 for multiyear contracts) where at least one party has fewer than 20 employees. The government also highlighted its broader $5.5 billion small business package, including a company tax rate cut to 28.5%, a 5% tax discount for unincorporated businesses, and an immediate deduction for assets up to $20,000."
+  },
+  {
+   "slug": "speech-316352",
+   "speaker": "Craig Laundy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015, which protects small businesses from unfair contracts for agreements between $100,000 and $250,000 or with fewer than 20 employees, citing 1,375 complaints to the ACCC from 2011–2014. He also highlighted government measures including tax cuts and instant asset write-offs, and noted that 4.7 million Australians are employed by small businesses."
+  },
+  {
+   "slug": "speech-316353",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 extends unfair contract term protections to small businesses, covering standard form contracts valued under $100,000 or $250,000 for multi-year contracts, with the government providing $1.4 million to the ACCC for transition support and a six-month implementation period after royal assent."
+  },
+  {
+   "slug": "speech-316355",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015, which extends unfair contract term protections to small businesses with fewer than 20 employees and contracts up to $100,000 (or $250,000 for multi-year contracts), and allocates $1.4 million to the ACCC for compliance assistance."
+  },
+  {
+   "slug": "speech-316356",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The bill extends consumer unfair contract term protections to small businesses with contracts valued under $100,000—or $250,000 for multiyear contracts—supported by $1.4 million for the ACCC and the establishment of Taskforce Cadena to combat illegal labour hire, addressing predatory take‑it‑or‑leave‑it contracts and risk‑shifting by large corporations."
+  },
+  {
+   "slug": "speech-316357",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 extends consumer unfair contract term protections to small businesses, with a threshold of $100,000 or $250,000 for multiyear contracts. Subcontractor disputes in Western Australia, such as the John Holland and Acrow Ce"
+  },
+  {
+   "slug": "speech-316358",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-17",
+   "stage_hint": null,
+   "brief": "The bill extends unfair contract term protections to small business contracts, covering businesses with fewer than 20 employees and contracts up to $100,000, or up to $250,000 if the contract lasts more than 12 months. The speech also cited the market power of Coles and Woolworths, which control 80% of Australian food retailing, and the contract practices of Goulburn-Murray Water as examples of unfair treatment of small businesses."
+  },
+  {
+   "slug": "speech-316472",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 will allow courts to strike out unfair terms in small business contracts, extending protections previously only available to consumers. They also detailed the Minister for Small Business’s achievements, including a $5.5 billion Jobs and Small Business package with a 1.5% company tax cut, $20,000 instant asset write-off, and criticised the Labor Party for its union ties and opposition to the China-Australia Free Trade Agreement."
+  },
+  {
+   "slug": "speech-316473",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-18",
+   "stage_hint": null,
+   "brief": "The Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 extends consumer unfair contract terms protections to small businesses with fewer than 20 employees for contracts valued up to $100,000 (or $250,000 for multi-year contracts), with $1.4 million allocated to the ACCC for implementation and a six-month transition period before enforcement."
+  },
+  {
+   "slug": "speech-321337",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015 and its amendments, noting the government initially voted against key provisions in the Senate, including raising the contract threshold from $100,000 to $300,000 for contracts up to 12 months and from $300,000 to $1 million for longer contracts. The speaker quoted Robert Gottliebsen’s criticism of the government’s “betrayal of small business” and acknowledged the Greens and Labor for pushing the higher thresholds, while also citing Peter Strong’s view that the government’s support for the increase was “very encouraging.”"
+  },
+  {
+   "slug": "speech-321342",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The Greens secured Senate amendments to raise the threshold for unfair contract term protections in the Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Bill 2015, expanding coverage to more small businesses. The speaker criticised the government for prioritising big business over small business and urged the House to accept the amendments."
+  },
+  {
+   "slug": "speech-321344",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for increasing the threshold for unfair contract terms, agreeing with the member for Melbourne, and announced that the coalition government had delivered on a 1997 promise to protect small businesses from unfair conduct by big business, citing the \"Finding a balance\" inquiry and business commentator Robert Gottliebsen. They also criticised Labor's past resistance to strengthening competition laws, quoting Mark Latham's diaries about the SDA's influence protecting Coles and Woolworths."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Legislation Amendment (Small Business and Unfair Contract Terms) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00147",
+   "assent_date": "2015-11-12"
+  }
+ ]
+}

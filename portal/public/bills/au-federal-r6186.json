@@ -1,0 +1,83 @@
+{
+ "key": "au-federal-r6186",
+ "title": "Migration Amendment (Streamlining Visa Processing) Bill 2018",
+ "short_title": "Migration Amendment (Streamlining Visa Processing) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-11-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6186%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6186%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6186%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6186_ems_735cd8f7-1b51-4f04-bc7f-39b11ff3210c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6186%22",
+   "document_date": "2018-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-29",
+  "sentences": [
+   "The bill would let the Minister decide which groups of visa applicants must supply biometric data, such as a facial image or fingerprints, for their application to be valid.",
+   "It would make a visa application invalid if the applicant does not provide the required biometrics, and would allow the data to be given through an identification test or another method the Minister specifies.",
+   "The explanatory memorandum says the biometric program began in 2006 with illegal foreign fishers and expanded in later years, but it does not specify a start date for the new rules."
+  ],
+  "changes": [
+   "The bill would let the Minister specify groups of visa applicants who must provide one or more personal identifiers.",
+   "The bill would make a visa application invalid if the required personal identifiers are not provided.",
+   "The bill would allow personal identifiers to be provided through an identification test or another method the Minister specifies."
+  ],
+  "affected": "Visa applicants who are in groups specified by the Minister would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-373212",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-29",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Streamlining Visa Processing) Bill 2018 requires certain visa applicants to provide personal identifiers such as fingerprints or photographic ID at the time of lodgement, enabling earlier identity, security and law enforcement checks to improve visa program integrity and reduce terrorism risks."
+  }
+ ],
+ "acts": []
+}

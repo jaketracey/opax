@@ -1,0 +1,75 @@
+{
+ "key": "au-federal-r6138",
+ "title": "Fair Work Amendment (A Living Wage) Bill 2018",
+ "short_title": "Fair Work Amendment (A Living Wage) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-06-25",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2018-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6138%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6138%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6138%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6138_ems_950cc607-6f4d-4b48-93e3-9a3ec0675be5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6138%22",
+   "document_date": "2018-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-06-25",
+  "sentences": [
+   "This bill would raise Australia's lowest legal pay rate to a level defined as a living wage.",
+   "The Fair Work Commission would set a phase-in schedule of up to six years and publish it, then conduct annual reviews with possible departures only in exceptional circumstances.",
+   "The target is 60% of the median full-time weekly earnings calculated by the Australian Bureau of Statistics."
+  ],
+  "changes": [
+   "Increase the national minimum wage to 60% of the median full-time weekly wage.",
+   "Require the Fair Work Commission to determine a phase-in period no longer than six years.",
+   "Require the Fair Work Commission to publish a timetable for the phase-in.",
+   "Oblige the Fair Work Commission to consider factors such as reducing inequality and economic conditions in setting the timetable.",
+   "Allow the Fair Work Commission to deviate from the planned phase-in only in exceptional circumstances during annual wage reviews."
+  ],
+  "affected": "Low-paid employees and their employers, the Fair Work Commission, and the Australian Bureau of Statistics.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:59Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

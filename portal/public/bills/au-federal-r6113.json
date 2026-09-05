@@ -1,0 +1,152 @@
+{
+ "key": "au-federal-r6113",
+ "title": "Superannuation Auditor Registration Imposition Amendment (ASIC Fees) Bill 2018",
+ "short_title": "Superannuation Auditor Registration Imposition Amendment (ASIC Fees) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6124_ems_4ad691aa-addc-44e6-bb0e-915a335c10d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6113%22",
+   "document_date": "2018-05-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00057",
+   "document_date": "2018-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-05-24",
+  "sentences": [
+   "This bill is part of a package that would increase the caps on fees the Australian Securities and Investments Commission (ASIC) can charge for its regulatory services.",
+   "The package would expand the definition of chargeable matter to allow ASIC to set new fees for actions under several Acts, prescribe who must pay and when, and permit different fees based on entity type or complexity.",
+   "ASIC could determine by legislative instrument whether an application is low, medium or high complexity, and charge additional fees for varying, revoking or cancelling an approved self-managed superannuation fund auditor's registration."
+  ],
+  "changes": [
+   "Increase the caps on ASIC fees.",
+   "Expand the definition of chargeable matter to include new fees under the Life Insurance Act 1995, the Insurance Act 1973 and the SIS Act.",
+   "Allow different fees based on entity type or complexity level.",
+   "Let ASIC determine complexity levels by legislative instrument.",
+   "Allow regulations for the Acts.",
+   "Allow ASIC to charge extra fees for varying, revoking or cancelling an approved SMSF auditor's registration."
+  ],
+  "affected": "Entities regulated by ASIC, including those under the Life Insurance Act 1995, the Insurance Act 1973, and the SIS Act, and approved SMSF auditors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:45:07Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-363302",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-24",
+   "stage_hint": null,
+   "brief": "This bill amends the Credit Fees Act to allow ASIC to charge different fees based on the type of entity, enabling full cost recovery for specific regulatory activities such as processing licence or registration applications. Complementary amendments are made in three related bills."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation Auditor Registration Imposition Amendment (ASIC Fees) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00057",
+   "assent_date": "2018-06-28"
+  }
+ ]
+}

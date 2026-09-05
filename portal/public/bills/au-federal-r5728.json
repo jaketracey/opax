@@ -1,0 +1,661 @@
+{
+ "key": "au-federal-r5728",
+ "title": "Plebiscite (Same-Sex Marriage) Bill 2016",
+ "short_title": "Plebiscite (Same-Sex Marriage) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "lapsed",
+ "status_as_of": "2016-11-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5728_ems_a0637e63-6e80-4230-8f53-33f5aea013a6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4868996%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5728%22",
+   "document_date": "2016-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4372",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "question": "Plebiscite (Same-Sex Marriage) Bill 2016 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-20/1"
+  },
+  {
+   "key": "federal-representatives-4373",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "question": "Plebiscite (Same-Sex Marriage) Bill 2016 - Second Reading - Free vote in Parliament",
+   "stage": "Second reading",
+   "ayes": 68,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-20/2"
+  },
+  {
+   "key": "federal-representatives-4374",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "question": "Plebiscite (Same-Sex Marriage) Bill 2016 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-20/3"
+  },
+  {
+   "key": "federal-representatives-4375",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/debates/?id=2016-10-20.29.1): > *That so much of the [standing orders](http://www.peo.gov.au/learning/fact-sheets/standing-orders.html) be suspended as would prevent the motion for the [third reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html) being moved without delay.* In other words, the majority didn't want to discuss the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5728) anymore and wanted to [vote on whether to pass it](https://theyvoteforyou.org.au/divisions/representatives/2016-10-20/5) in the House of Representatives immediately.",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-20/4"
+  },
+  {
+   "key": "federal-representatives-4376",
+   "date": "2016-10-20",
+   "house": "representatives",
+   "question": "Plebiscite (Same-Sex Marriage) Bill 2016 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 78,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2016-10-20/5"
+  },
+  {
+   "key": "federal-senate-4392",
+   "date": "2016-11-07",
+   "house": "senate",
+   "question": "Plebiscite (Same-Sex Marriage) Bill 2016 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 17,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-07/1"
+  },
+  {
+   "key": "federal-senate-4756",
+   "date": "2017-08-09",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?id=2017-08-09.5.2): > *That the second reading of the [Plebiscite (Same-Sex Marriage) Bill 2016](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5728) be restored to the Notice Paper and be made an order of the day for a later hour.* This means the motion was unsuccessful (as it didn't achieve a majority). It was introduced by West Australian Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal).",
+   "stage": "Business motion",
+   "ayes": 31,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 19,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-09/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-334802",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-11",
+   "stage_hint": null,
+   "brief": "The speaker opposed the proposed plebiscite on same-sex marriage, arguing it would cost $15 million and give a platform to extremists, while affirming that marriage equality would not require churches to solemnise same-sex unions and that families with same-sex parents already exist and deserve equal legal recognition. They cited Reverend Dr Keith Mascord as an example of a person of faith who supports marriage equality."
+  },
+  {
+   "slug": "speech-335044",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The speaker argued against the proposed same-sex marriage plebiscite, calling it a publicly funded hate campaign and a failure of leadership, and urged instead for a free vote in parliament. They cited constituent fears that the plebiscite would reopen wounds for LGBTIQ people, particularly older individuals and young people questioning their sexuality."
+  },
+  {
+   "slug": "speech-335120",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Plebiscite (Same-Sex Marriage) Bill 2016, arguing that the Australian people should decide on same-sex marriage through a compulsory plebiscite costing $170 million, and criticised Labor and the Greens for changing their previous positions on the issue."
+  },
+  {
+   "slug": "speech-335122",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Plebiscite (Same-Sex Marriage) Bill 2016, which would hold a national vote on 11 February 2017 to decide whether to change marriage laws, arguing that the public should decide on such a significant social institution rather than parliament. He raised concerns about the impact on children, the potential for future ethical and legal complexities involving surrogacy and reproductive technology, and the inadequacy of civil unions."
+  },
+  {
+   "slug": "speech-335123",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Plebiscite (Same-Sex Marriage) Bill 2016, arguing it would waste $170 million plus $32.5 million in regulatory costs, was unnecessary since Parliament can amend the Marriage Act, and would cause harm by marginalising LGBTI people. The speaker also criticised the government's exposure draft marriage equality bill for eroding existing anti-discrimination protections, and urged Parliament to legislate marriage equality through a free vote instead."
+  },
+  {
+   "slug": "speech-335124",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Plebiscite (Same-Sex Marriage) Bill fulfills the government's election mandate, with a public vote on 11 February, and criticised Labor and the Greens for opposing it, asserting that Australians deserve a direct say on changing the definition of marriage."
+  },
+  {
+   "slug": "speech-335125",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government’s proposed plebiscite on marriage equality is a wasteful and divisive delaying tactic, costing $200 million and causing harm to the LGBTI community, and called on Prime Minister Turnbull to allow a free vote in parliament on existing bills instead."
+  },
+  {
+   "slug": "speech-335127",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "Opposed the Plebiscite (Same-Sex Marriage) Bill 2016, arguing it discriminates against gay and lesbian Australians, wastes up to $180 million, and undermines representative democracy by avoiding a free parliamentary vote. Noted that the Prime Minister previously supported a free vote but abandoned that position in a backroom political deal."
+  },
+  {
+   "slug": "speech-335128",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Plebiscite (Same-Sex Marriage) Bill 2016, asserting that the coalition government has a mandate for a national vote on same-sex marriage after the 2016 election, and detailed the plebiscite: 11 February 2017, with a question on whether the law should allow same-sex couples to marry, a national majority threshold, and $7.5 million in campaign funding for each side. He also raised concerns about potential impacts on religious and secular liberties, citing international examples such as Trinity Western University in Canada and the forced resignation of Brendan Eich."
+  },
+  {
+   "slug": "speech-335258",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's proposed plebiscite on same-sex marriage is a costly and harmful delay tactic, noting that $200 million would be wasted and that a public campaign could increase self-harm and suicide among LGBTI people, citing former High Court Justice Michael Kirby and Professor McGorry. He called for parliament to legislate marriage equality directly within 10 days, pointing out that over 60% of Australians support it and that 18 bills have been introduced since 2010."
+  },
+  {
+   "slug": "speech-335259",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that holding a plebiscite on same-sex marriage in February 2017 honours the coalition's election mandate, and criticised Labor and the Greens for blocking the process and showing \"disdain for democracy\" by not accepting the election result."
+  },
+  {
+   "slug": "speech-336109",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker defended the Plebiscite (Same-Sex Marriage) Bill 2016, arguing the coalition won a clear mandate at the last election to hold a plebiscite and that Labor and the Greens should respect the public’s vote. He committed to supporting whichever way the plebiscite result goes and challenged Labor members to make the same commitment."
+  },
+  {
+   "slug": "speech-336112",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Plebiscite (Same-Sex Marriage) Bill 2016, advocating for a public vote on same-sex marriage and criticising the opposition for blocking it, while emphasising that a plebiscite would allow Australians to show mutual respect and achieve marriage equality."
+  },
+  {
+   "slug": "speech-336114",
+   "speaker": "Mike Kelly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued against the Plebiscite (Same-Sex Marriage) Bill, calling it a $200 million \"expensive opinion poll\" designed to delay marriage equality and a powerplay within the coalition, and urged a direct parliamentary vote instead, citing harm to vulnerable LGBTIQ people, particularly in regional areas, and referencing constituent Eddie Blewett."
+  },
+  {
+   "slug": "speech-336115",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Plebiscite (Same-Sex Marriage) Bill 2016, supporting a national vote on same-sex marriage, while stating his personal belief in the traditional definition of marriage as between a man and a woman and raising concerns about children’s rights to know their biological parents. He predicted the plebiscite would pass, leading to a change in the Marriage Act, and criticised the Labor Party for claiming a unanimous caucus position."
+  },
+  {
+   "slug": "speech-336116",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued against a plebiscite on same-sex marriage, calling it a costly and divisive opinion poll that would set a dangerous precedent, and instead urged a parliamentary vote to amend the Marriage Act, citing Labor's promise to legislate within 100 days and concerns from constituents like Tiffany Tullberg and Justice Michael Kirby."
+  },
+  {
+   "slug": "speech-336117",
+   "speaker": "David Littleproud",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Plebiscite (Same-Sex Marriage) Bill 2016, advocating that a national plebiscite—not politicians—should decide whether to change marriage law to allow same-sex couples to marry, and dismissed concerns about mental health impacts on the LGBTI community by citing the maturity of Australians and the example of Ireland."
+  },
+  {
+   "slug": "speech-336118",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The member opposed the Plebiscite (Same-Sex Marriage) Bill 2016, arguing the proposed $200 million plebiscite was unnecessary, hurtful and divisive, and would subject LGBTIQ Australians to harmful public scrutiny. He criticised Prime Minister Malcolm Turnbull’s leadership as a failure of representative democracy and called for marriage equality to be legislated directly through Parliament."
+  },
+  {
+   "slug": "speech-336357",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Plebiscite (Same-Sex Marriage) Bill 2016, arguing that a national plebiscite is the proper democratic process to resolve same-sex marriage, and criticised the Labor Party and Senator Deborah O'Neill for opposing it and abandoning earlier stated principles."
+  },
+  {
+   "slug": "speech-336361",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-20",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Plebiscite (Same-Sex Marriage) Bill 2016, arguing that Parliament should decide on marriage equality rather than holding a non-binding, potentially divisive and costly plebiscite. They criticised Prime Minister Malcolm Turnbull's leadership and highlighted the harm a plebiscite would cause to LGBTQI Australians, citing constituent concerns about mental health, bullying, and financial costs of around $200 million."
+  },
+  {
+   "slug": "speech-336362",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for a national plebiscite on same-sex marriage, claiming it would unite Australians and give the outcome legitimacy, while accusing opponents of avoiding the debate for political advantage and prolonging harm to the LGBTIQ community."
+  },
+  {
+   "slug": "speech-336364",
+   "speaker": "John Alexander",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Plebiscite (Same-Sex Marriage) Bill 2016, citing a local survey showing a near 50-50 split on the issue. They argued for respecting opposing views, stressed that no church should be forced to perform same-sex marriages, and condemned homophobic election material distributed in their electorate."
+  },
+  {
+   "slug": "speech-336366",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Plebiscite (Same-Sex Marriage) Bill 2016, arguing for a national plebiscite on 11 February 2017 to ask Australians whether same-sex marriage should be legalised, and committed to voting for marriage equality if the \"yes\" vote prevails. They criticised Labor for opposing the plebiscite and noted that Attorney-General draft legislation would protect religious freedom."
+  },
+  {
+   "slug": "speech-336368",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Australian Labor Party's opposition to the Plebiscite (Same-Sex Marriage) Bill 2016 was disappointing and frustrating, as a plebiscite is the only credible pathway to legalising same-sex marriage in the 45th Parliament. He noted his own changed position on same-sex marriage, citing concerns for same-sex attracted young people in regional communities, and urged the Leader of the Opposition to reconsider, stating the Australian people are capable of a calm, respectful debate."
+  }
+ ],
+ "acts": []
+}

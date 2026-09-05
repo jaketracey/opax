@@ -1,0 +1,1330 @@
+{
+ "key": "au-federal-r6653",
+ "title": "Fair Work Amendment (Supporting Australia’s Jobs and Economic Recovery) Bill 2021",
+ "short_title": "Fair Work Amendment (Supporting Australia’s Jobs and Economic Recovery) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industrial Relations",
+ "status": "passed",
+ "status_as_of": "2021-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6653_ems_25563409-64de-4650-b28f-2f5b1084c374%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6653_ems_2249024a-6c3e-4084-9081-16148d0c9b27%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6653_ems_b350c2c5-3b57-4c5f-9f38-b9e157fb0e28%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6653%22",
+   "document_date": "2020-12-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00025",
+   "document_date": "2021-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2020-12-09",
+  "sentences": [
+   "This bill would change the Fair Work Act 2009 and related laws to help Australia recover from the COVID-19 pandemic.",
+   "It would introduce a legal definition of a casual employee, add a casual conversion right to the National Employment Standards, and extend temporary JobKeeper flexibilities for two years.",
+   "The explanatory memorandum says the bill would also require the Fair Work Commission to approve enterprise agreements within 21 working days where practicable."
+  ],
+  "changes": [
+   "Introduces a statutory definition of casual employee.",
+   "Creates a right for regular casual employees to request conversion to permanent employment.",
+   "Extends temporary JobKeeper flexibilities for two years for employers in identified industries.",
+   "Streamlines the enterprise agreement approval process.",
+   "Strengthens compliance and enforcement frameworks for wage underpayments.",
+   "Sunsets pre-Fair Work Act agreements by 1 July 2022."
+  ],
+  "affected": "Employers, employees, unions, and the Fair Work Commission.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6996",
+   "date": "2021-02-23",
+   "house": "representatives",
+   "question": "The majority voted in favour of agreeing with the main idea of the bill. In other words, they voted to read it for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means it can now be considered in more detail. ### What is the bill's main idea? This bill is part of the Government's plans for Australia's economic recovery. The parliamentary library has not yet provided a bills digest, so there is no easy explanation for the bill's provisions available, but according to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6653_ems_b350c2c5-3b57-4c5f-9f38-b9e157fb0e28%22;rec=0) (which is a political document prepared by whoever introduced the bill - in this case, the Government), the purpose of the bill is: * *providing certainty to businesses and employees about casual employment;* * *giving regular casual employees a statutory pathway to ongoing employment by including a casual conversion entitlement in the National Employment Standards (NES) of the Fair Work Act;* * *extending two temporary JobKeeper flexibilities to businesses, in identified industries significantly impacted by the pandemic;* * *giving employers confidence to offer part-time employment and additional hours to employees, promoting flexibility and efficiency;* * *streamlining and improving the enterprise agreement making and approval process to encourage participation in collective bargaining;* * *ensuring industrial instruments do not transfer where an employee transfers between associated entities at the employee’s initiative;* * *providing greater certainty for investors, employers and employees by allowing the nominal life of greenfields agreements made in relation to the construction of a major project to be extended;* * *strengthening the Fair Work Act compliance and enforcement fram",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-23/1"
+  },
+  {
+   "key": "federal-senate-7052",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-03-18.34.10) to agree with the main idea of the bill. In parliamentary jargon, they voted to read it for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). The bill will now be discussed in more detail. ### What does this bill do According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053): > *The Bill’s proposed reforms primarily relate to casual employment, flexibility under modern awards for industries impacted by COVID-19, the making and approval of enterprise bargaining agreements, greenfield agreements for major projects and compliance and enforcement (including responding to wage theft). The Bill’s amendments can be grouped as follows:* > > * *Schedule 1 makes amendments to insert a definition of casual employment, provide for a casual conversion process and to address issues around ‘double dipping’ with respect to casual loading* > * *Schedule 2 makes amendments providing that employers covered by identified modern awards can offer additional hours to part-time employees and issue flexible work directions to employees* > * *Schedule 3 makes amendments to the current requirements around enterprise agreements including in relation to the operation of the Better Off Overall Test (BOOT) and agreement approval processes* > * *Schedule 4 make amendments to allow eight year greenfields agreement for major projects* > * *Schedule 5 makes amendments in relation to compliance and enforcement including by introducing new penalties and criminalising certain forms of wage theft* > * *Schedule 6 makes amendments in relation to when the FWC [Fair Work Commission] can dismiss applications and vary or revoke its own decisions.* > * *Schedule 7 provides for relevant application, saving and transitional provisions with respect to other parts",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 29,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/6"
+  },
+  {
+   "key": "federal-senate-7053",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-03-18.44.5) that: > *[division 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6653_first-reps%2F0007;query=Id%3A%22legislation%2Fbills%2Fr6653_first-reps%2F0000%22;rec=0#140cd707c70e41a587b2a65f735567ea) in item 1 of schedule 7 stand as printed.* In other words, they voted to keep that division unchanged. ### What does Division 2 do? Division 2 includes proposed clauses 45 to 48. According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053): > *Proposed clause 45 of Schedule 1 to the Act, at item 1 of Schedule 7 to the Bill provides that employers, employees or employee organisations can apply for the FWC to make a determination to vary an enterprise agreement made before commencement of the reforms to resolve any uncertainty regarding the interaction of the agreement with the proposed definition of casual employee and proposed casual conversion process* > > *Proposed clause 46 of Schedule 1 to the Act, at item 1 of Schedule 7 provides: > > * *existing employees that would have met the proposed statutory definition of casual employment when engaged (or when given an offer of employment) will be considered casual employees both at the commencement of the Bill and retrospectively (this does not apply to employees who were the subject of a binding court decision or converted their status prior to commencement)* > > * *employees that are retrospectively deemed casual employees, who could have otherwise made a claim for accrued entitlements, will not be able to do so* > > *Proposed clause 47 of Schedule 1 to the Act, at item 1 of Schedule 7 provides a six month transitional period where employers musts assess existing casual employees against conversion eligibility criteria (this includes employees designated as ‘casual’ but who may not meet the proposed statutory de",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/7"
+  },
+  {
+   "key": "federal-senate-7054",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2021-03-18.46.1) that: > *opposition amendments (1) and (4) to (7) on [sheet 1254](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6653_amend_40315df7-fc1b-40ad-b514-842f54cd191e%22;rec=0), moved by [Senator Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong), be agreed to* In other words, the same number of senators voted for and against those amendments and so, as a majority was not reached, they failed. ### Amendment text > *(1) Schedule 5, item 4, page 68 (line 4), omit \"Subject to subsection (3A), the\", substitute \"The\".* > > *(4) Schedule 5, page 75 (after line 15), after item 10, insert:* > >> *10A At the end of section 557C* >> >> *Add:* >> >> *(4) To avoid doubt, a reference to proceedings relating to a contravention by an employer of a civil remedy provision in paragraph (1) (a) includes proceedings dealt with as small claims proceedings under section 548.* > > *(5) Schedule 5, page 82 (before line 3), before item 36, insert:* > >> *36A Subsection 357(1)* >> >> *Omit \"(1)\".* >> >> *36B Subsection 357(1) (note)* >> >> *Omit \"subsection\", substitute \"section\".* >> >> *36C Subsection 357(2)* >> >> *Repeal the subsection.* > > *(6) Schedule 5, item 39, page 82 (lines 9 and 10), omit the item, substitute:* > >> *39 Subsection 539(2) (before table item 12)* >> >> *Insert:* > > *(7) Schedule 5, items 43 and 44, page 84 (lines 15 to 29), omit the items, substitute:* > >> *43 After subsection 27(1A)* >> >> *Insert:* >> >> *(1B) Section 26 does not apply to:* >> >> *(a) a law of a State or Territory providing for an employer, or an officer, employee or agent of an employer, to be liable to be prosecuted for an offence relating to underpaying an employee an amount payable to the employee in relation to the performance of work; or* >> >> *(b) a law of a State or Territory providing for an employer,",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/8"
+  },
+  {
+   "key": "federal-senate-7055",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2021-03-18.46.1) that: > *subsection 546(3A) in item 4 and subsection 548D(7) in item 10 of [schedule 5](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6653_first-reps%2F0005;query=Id%3A%22legislation%2Fbills%2Fr6653_first-reps%2F0000%22;rec=0) stand as printed* In other words, the same number of senators voted for and against those provisions remaining as they are. Because a majority was not reached, the motion failed and those provisions will be removed from the bill. According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053): > *Proposed subsection 546(3A) provides that any penalty based on the new ‘value of the benefit’ method outlined above may only be payable to the Commonwealth. The Explanatory Memorandum contains no rationale as to why this is the case.*",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 28,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/9"
+  },
+  {
+   "key": "federal-senate-7056",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2021-03-18.50.1) that: > *[schedule 5](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6653_first-reps%2F0005;query=Id%3A%22legislation%2Fbills%2Fr6653_first-reps%2F0000%22;rec=0) and [division 6 of schedule 7](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6653_first-reps%2F0007;query=Id%3A%22legislation%2Fbills%2Fr6653_first-reps%2F0000%22;rec=0#4c0a8a88be29455aaaddb1d30b912cb3) stand as printed* In other words, the same number of senators voted for and against those provisions remaining as they are. Because a majority was not reached, the motion failed and those provisions will be removed from the bill. The provisions related to compliance and enforcement - read more about them in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053#_Toc66866288).",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 29,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/10"
+  },
+  {
+   "key": "federal-senate-7057",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of [Government amendments (1) to (8)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6653_amend_98946f9f-5a6c-4b1a-b241-78f861da66bf%22;rec=0), which relate to compliance and enforcement and the small claims procedure. Learn more about what this bill does in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053).",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/11"
+  },
+  {
+   "key": "federal-senate-7058",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-03-18.55.1) to keep unchanged [subsection 66C(2)]( https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6653_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6653_first-reps%2F0000%22;rec=0) in item 3 of schedule 1 and [subclauses 46(1) to (4)]( https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6653_first-reps%2F0007;query=Id%3A%22legislation%2Fbills%2Fr6653_first-reps%2F0000%22;rec=0) in item 1 of schedule 7. In parliamentary jargon, they voted that those parts “*stand as printed*”. These parts relate to when employers are not required to offer casual conversion and the application of certain provisions.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/12"
+  },
+  {
+   "key": "federal-senate-7059",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The same number of senators voted for and against [amendments no. (1), (3) to (6) and (8) to (11)](https://www.openaustralia.org.au/senate/?gid=2021-03-18.55.1), which means they failed. They were introduced by South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor). ### Amendment text > *(1) Schedule 1, item 2, page 4 (line 9) to page 5 (line 18), omit section 15A, substitute:* > >> *15A Meaning of casual employee* >> >> *(1) A person is a casual employee of an employer if the employer makes no firm advance commitment to continuing and indefinite work according to an agreed pattern of work for the person.* >> >> *(2) For the purposes of subsection (1), in determining whether the employer makes no firm advance commitment to continuing and indefinite work according to an agreed pattern of work for the person, regard must be had to the following considerations:* >> >>> *(a) whether the employer can elect to offer work and whether the person can elect to accept or reject work;* >>> >>> *(b) whether the person will work only as required;* >>> >>> *(c) whether the employment is described as casual employment;* >>> >>> *(d) whether the person will be entitled to a casual loading or a specific rate of pay payable only to casual employees under the terms of a fair work instrument;* >>> >>> *(e) the pattern of hours that is worked, or scheduled by the employer to be worked, by the person.* >>> >>> *Note: Under Division 4A of Part 2-2, a casual employee who has worked for an employer for at least 12 months and has, during at least the last 6 months of that time, worked a regular pattern of hours on an ongoing basis may be entitled to be offered, or request, conversion to full-time employment or part-time employment.* >> >> *(3) To avoid doubt, regard may also be had to considerations other than those referred to in subsection (2).* > > *(3) Schedule 1, item 3, page 7 (before line 27), before subsection 66C(3), insert:* > >> *(2",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 27,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/13"
+  },
+  {
+   "key": "federal-senate-7060",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-03-18.59.1) “*that schedule 1 stand as printed.*” In other words, they voted in favour of keeping schedule 1 unchanged. According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053), “*Schedule 1 makes amendments to insert a definition of casual employment, provide for a casual conversion process and to address issues around ‘double dipping’ with respect to casual loading*”.",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 28,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/14"
+  },
+  {
+   "key": "federal-senate-7061",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-03-18.63.1) introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means it passed. ### Amendment text > *(1) Clause 2, page 2 (table item 1), omit \"Sections 1 to 3\", substitute \"Sections 1 to 4\".* > > *(2) Page 3 (after line 11), after clause 3, add:* > >> *4 Review of operation of amendments* >> >> *(1) The Minister must cause a review to be conducted of the operation of the amendments made by this Act.* >> >> *(2) Without limiting the matters that may be considered when conducting the review, the review must:* >> >>> *(a) consider whether the operation of the amendments made by this Act is appropriate and effective in the context of Australia's changing employment and economic conditions; and* >>> >>> *(b) identify any unintended consequences of the amendments made by this Act; and* >>> >>> *(c) consider whether amendments to the Fair Work Act 2009 and the Fair Work (Transitional Provisions and Consequential Amendments) Act 2009, or any other legislation, are necessary to:* >>> >>>> *(i) improve the operation of the amendments made by this Act under paragraph (a); or* >>>> >>>> *(ii) rectify any unintended consequences identified under paragraph (b).* >>> >>> *(3) The review must start as soon as practicable after the end of 12 months after this section commences.* >>> >>> *(4) The persons who conduct the review must give the Minister a written report of the review within 6 months of the commencement of the review.* >>> >>> *(5) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after the Minister receives the report.*",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/15"
+  },
+  {
+   "key": "federal-senate-7062",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-03-18.65.1) introduced by Queensland Senator [Malcolm Robert](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation), which means they passed. They related to small business employers. ### Amendment text > *(1) Schedule 1, item 2, page 4 (line 24), omit paragraph 15A(2)(b), substitute:* > >> *(b) whether the person will work as required according to the needs of the employer;* > > *(2) Schedule 1, item 3, page 6 (before line 2), before section 66B, insert:* > >> *66AA Subdivision does not apply to small business employers* > >> *This Subdivision does not apply in relation to an employer that is a small business employer.* > > *(3) Schedule 1, item 3, page 9 (line 27), before \"the request\", insert \"if the employer is not a small business employer—\".* > > *(4) Schedule 1, item 3, page 9 (after line 28), at the end of subsection 66F(1), add:* > >> *Note: Nothing in this Subdivision prevents an employee from requesting to convert to full-time or part-time employment outside the provisions of this Division, or prevents an employer from granting such a request.* > > *(5) Schedule 1, item 5, page 14 (after line 26), after paragraph 125A(2)(d), insert:* > >> *(da) casual conversion entitlements of casual employees employed by small business employers;* > > *(6) Schedule 1, item 6, page 16 (line 14), omit \"such a term\", substitute \"a term of the fair work instrument or contract of employment under which the loading amount is paid\".* > > *(7) Schedule 7, item 1, page 96 (line 2), after \"employer\", insert \"(other than a small business employer)\".* > > *(8) Schedule 7, item 1, page 96 (line 17), after \"employer\", insert \"(other than a small business employer)\".* > > *(9) Schedule 7, item 1, page 97 (after line 18), after clause 47, insert:* > >> *47A Casual employees of small business employers* >> >> *(1) This clause applies in relation to an employee an",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 29,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/16"
+  },
+  {
+   "key": "federal-senate-7063",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The same number of senators voted for and against the [amendment](https://www.openaustralia.org.au/senate/?gid=2021-03-18.71.1) introduced by SA Senator [Stirling Griff](https://theyvoteforyou.org.au/people/senate/sa/stirling_griff) (Centre Alliance), which means it failed. ### Amendment text > *(7) [Schedule 7](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6653_first-reps%2F0007;query=Id%3A%22legislation%2Fbills%2Fr6653_first-reps%2F0000%22;rec=0), item 1, page 95 (after line 19), after subclause 46(7), insert:* >> *(7A) However, despite subclause (7), section 545A of the amended Act does not apply in relation to entitlements that accrue, or loading amounts paid, before commencement if an application has been made before 18 March 2021 to a court for the court to determine a claim in respect of the entitlements or amounts.* ### What is section 545A? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053), section 545A was introduced in order to address concerns around ‘double dipping.’ It applies when: > * *an employee is engaged as a casual employee and is paid an identifiable loading amount to compensate for not receiving relevant entitlements during their employment period and* > * *is subsequently found not to be a casual employee during the employment period and makes a claim for their entitlements.* > > *In these circumstances a court, when making orders in relation to the claim, must reduce any amount payable by the employer to the person for the relevant entitlements by the loading amount, however the amount payable must not be below zero.*",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/17"
+  },
+  {
+   "key": "federal-senate-7064",
+   "date": "2021-03-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-03-18.75.1) \"*that the remaining stages of the bill be agreed to and the bill be now passed with an amendment to the title.*\" In other words, they voted to give it a [third reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) and so pass the bill in the Senate. The bill will now be sent back to the House of Representatives. If our MPs agree with the Senate amendments, then the bill will become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053): > *The Bill’s proposed reforms primarily relate to casual employment, flexibility under modern awards for industries impacted by COVID-19, the making and approval of enterprise bargaining agreements, greenfield agreements for major projects and compliance and enforcement (including responding to wage theft). The Bill’s amendments can be grouped as follows:* > > * *Schedule 1 makes amendments to insert a definition of casual employment, provide for a casual conversion process and to address issues around ‘double dipping’ with respect to casual loading* > * *Schedule 2 makes amendments providing that employers covered by identified modern awards can offer additional hours to part-time employees and issue flexible work directions to employees* > * *Schedule 3 makes amendments to the current requirements around enterprise agreements including in relation to the operation of the Better Off Overall Test (BOOT) and agreement approval processes* > * *Schedule 4 make amendments to allow eight year greenfields agreement for major projects* > * *Schedule 5 makes amendments in relation to compliance and enforcement including by introducing new penalties and criminalising certain forms of wage theft* > * *Schedule 6 makes amendments in relation to when the FWC [Fair Work C",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "earliest": 23,
+    "member": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-03-18/18"
+  },
+  {
+   "key": "federal-representatives-7076",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2021-03-22.28.1) introduced by Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor), which means they failed. MP Burke [explained](https://www.openaustralia.org.au/debate/?id=2021-03-22.28.1) that the purpose of these amendments is to: > *bring those wage-theft provisions back into this bill. They do two things. They bring back those provisions, and they make sure that we act on the criminalisation of wage theft.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 64,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-22/1"
+  },
+  {
+   "key": "federal-representatives-7077",
+   "date": "2021-03-22",
+   "house": "representatives",
+   "question": "The majority voted to agree with the [Senate amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6653_sched_802e6841-c720-44d5-b02e-2e20bb710a2e%22;rec=0), which means the bill has now passed in this form in both the Senate and the House of Representatives and so will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2021a/21bd053): > *The Bill’s proposed reforms primarily relate to casual employment, flexibility under modern awards for industries impacted by COVID-19, the making and approval of enterprise bargaining agreements, greenfield agreements for major projects and compliance and enforcement (including responding to wage theft). The Bill’s amendments can be grouped as follows:* > > * *Schedule 1 makes amendments to insert a definition of casual employment, provide for a casual conversion process and to address issues around ‘double dipping’ with respect to casual loading* > * *Schedule 2 makes amendments providing that employers covered by identified modern awards can offer additional hours to part-time employees and issue flexible work directions to employees* [*] > * *Schedule 3 makes amendments to the current requirements around enterprise agreements including in relation to the operation of the Better Off Overall Test (BOOT) and agreement approval processes* [*] > * *Schedule 4 make amendments to allow eight year greenfields agreement for major projects* [*] > * *Schedule 5 makes amendments in relation to compliance and enforcement including by introducing new penalties and criminalising certain forms of wage theft* [*] > * *Schedule 6 makes amendments in relation to when the FWC [Fair Work Commission] can dismiss applications and vary or revoke its own decisions.* [*] > * *Schedule 7 provides for relevant application, saving and transitional provisions with r",
+   "stage": "Consideration of Senate message",
+   "ayes": 64,
+   "noes": 61,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Liberal": {
+     "ayes": 36,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 124
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-22/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-400586",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill was introduced to support economic recovery from COVID-19, including a statutory definition of casual employment, a new casual conversion entitlement, award simplification for 12 identified awards, enterprise bargaining reforms, doubling the maximum nominal expiry date for greenfields agreements on major projects to eight years, and a new criminal offence for dishonest systematic wage underpayments with increased penalties."
+  },
+  {
+   "slug": "speech-402344",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 fails to deliver secure jobs and decent pay, and attacks job security and wages through provisions on casuals, enterprise bargaining, award changes, and wage theft penalties. A second reading amendment was moved noting the bill makes jobs less secure and results in pay cuts."
+  },
+  {
+   "slug": "speech-402346",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 introduces a statutory definition of casual employment, stronger casual conversion rights, and a fix for double-dipping estimated at $39 billion in employer liability, along with award flexibilities, enterprise bargaining reforms, eight-year greenfield agreements for projects over $500 million, and $47.3 million in new compliance funding including tougher penalties for underpayments."
+  },
+  {
+   "slug": "speech-402347",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 would increase insecure work, lower wages growth, and worsen conditions for vulnerable workers, contrary to the government's claim of seeking consensus. They stated the bill fails because it reduces bargaining power, citing the ACTU's opposition, and highlighted that casual employment grew by 400,000 between May and November 2020, while the government's own figures show the bill would cancel an estimated $18 billion in entitlements."
+  },
+  {
+   "slug": "speech-402348",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker urged support for the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020, arguing casual workers doing the same work as permanent employees for over 12 months should have the right to convert to permanent roles. He blamed the Labor Party, including Murray Watt, for previously blocking this reform in 2019."
+  },
+  {
+   "slug": "speech-402350",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 fails to reduce casualisation, forces workers to go to the Federal Court to assert permanent status, and undermines existing state wage theft laws in Victoria and Queensland while reducing penalties."
+  },
+  {
+   "slug": "speech-402351",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020, which defines casual employment, creates a pathway to permanent roles, extends workplace flexibility for hard-hit industries, and introduces criminal penalties for wage theft. The speaker cited over 32,000 casual employees on the Central Coast and 2.3 million nationally, and noted a $12.9 million employer advisory service."
+  },
+  {
+   "slug": "speech-402353",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 was argued to be overdue, commonsense industrial relations reform needed to support economic recovery, with the speaker citing specific provisions: making the COVID-19 public interest exception permanent, creating a pathway for long-term casuals to move to permanent work, reducing enterprise agreement approval times to 21 days, and allowing greenfield agreements a nominal expiry date of up to eight years. The speaker also claimed most enterprise agreements are about 46 per cent better than awards and criticised opposition objections as robotic and harmful to employers."
+  },
+  {
+   "slug": "speech-402354",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The bill will leave workers worse off by cutting bargaining rights, undermining the Fair Work Commission, and increasing casualisation, with over 2,000 casual grocery workers and 1,800 fast food workers in the Paterson electorate affected."
+  },
+  {
+   "slug": "speech-402480",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 would cut wages and conditions, and that the government only backed down on removing the better off overall test due to Labor and union pressure. The speaker also outlined Labor's eight principles for secure work, higher pay, and fairer conditions, including inserting job security into the Fair Work Act, rights for gig economy workers, and a crackdown on labour hire firms."
+  },
+  {
+   "slug": "speech-402516",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-17",
+   "stage_hint": null,
+   "brief": "The removal of the better off overall test (BOOT) from the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 was the most egregious aspect, as it would allow employers to vary employee conditions so they are no longer better off, and was likened to the Work Choices legislation."
+  },
+  {
+   "slug": "speech-402590",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 would allow pay cuts, make casualisation easier, extend greenfield agreements without pay rises for eight years, and override state wage theft laws, while noting the Prime Minister refused to guarantee no worker would be worse off. The speaker announced Labor would vote against the bill."
+  },
+  {
+   "slug": "speech-402594",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-402595",
+   "speaker": "Fiona Phillips",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The member for Gilmore opposed the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020, arguing it would cut workers’ pay, increase casualisation, reduce job security, and harm the seasonal tourism economy of the New South Wales South Coast. She specifically criticised provisions that would allow additional hours without overtime, extend temporary COVID-19 stand-down directions, and weaken enterprise bargaining protections, warning the bill would disproportionately affect essential workers, women, and young people."
+  },
+  {
+   "slug": "speech-402596",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020, arguing it would increase job insecurity and cut pay by redefining casual work, retrospectively offsetting casual loading against permanent entitlements (cancelling an estimated $18–39 billion in back pay), and weakening conversion pathways. They also criticised the secretive working-group process and highlighted the bill's potential negative mental health impacts, especially as COVID-19 support like JobKeeper is wound back."
+  },
+  {
+   "slug": "speech-402597",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Amendment Bill 2020 would make workers worse off by entrenching casualisation, noting that 60,000 workers in Werriwa would be affected through lost conditions and job security. The speech also criticised the government for failing to address stagnant real wages, which were almost one per cent lower in 2019 than in 2013, and for allowing employers to control conversion to permanent roles."
+  },
+  {
+   "slug": "speech-402598",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Amendment Bill 2020 will harm workers who were essential during COVID-19, making jobs more insecure and allowing pay cuts, while criticising the government for refusing to guarantee no worker would be worse off and for misrepresenting casual conversion provisions."
+  },
+  {
+   "slug": "speech-402729",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 fails to address insecure work and instead makes it easier to employ casuals, while criticising the government for a history of attacking workers' rights, including Work Choices, penalty rate cuts, and the ensuring integrity bill. They stated the bill would not be supported, citing specific flaws such as enabling casualisation, complicating bargaining, allowing wage cuts, and weakening wage theft punishments in Victoria."
+  },
+  {
+   "slug": "speech-402730",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment Bill's title is misleading and criticised the government for pulling the Clean Energy Finance Corporation Amendment Bill after the member for New England introduced an undisclosed amendment."
+  },
+  {
+   "slug": "speech-402811",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-22",
+   "stage_hint": null,
+   "brief": "The speaker expressed grave concerns about the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020, and argued that the Clean Energy Finance Corporation bill was pulled from debate because the National Party's amendment forced the government to instead reschedule the fair work bill."
+  },
+  {
+   "slug": "speech-402814",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-22",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 will weaken workers' rights, reduce job security, cut wages, and make wage theft harder to prosecute, representing a fundamental attack similar to John Howard's Work Choices."
+  },
+  {
+   "slug": "speech-402815",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Amendment (Supporting Australia's Jobs and Economic Recovery) Bill 2020 would cut pay for award workers by up to $11,000 per year, undermine the better off overall test, and nullify a Federal Court ruling on permanent casuals. Labor called for the bill to be rejected entirely, noting the government had already been forced to drop the test suspension due to crossbench opposition."
+  },
+  {
+   "slug": "speech-402816",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Amendment Bill 2020, arguing it cuts wages, conditions and job security, and criticised the Morrison government and National Party for harming workers, especially in regional areas like the New South Wales North Coast."
+  },
+  {
+   "slug": "speech-402817",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-22",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Amendment Bill, arguing it would reduce job security, enable pay cuts, and weaken worker protections, similar to the Work Choices era. She criticised the JobMaker program for incentivising part-time over full-time work and noted the government only removed the BOOT test change due to lack of parliamentary support, not because it was unfair."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Supporting Australia’s Jobs and Economic Recovery) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00025",
+   "assent_date": "2021-03-26"
+  }
+ ]
+}

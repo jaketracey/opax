@@ -1,0 +1,435 @@
+{
+ "key": "au-federal-r6391",
+ "title": "Customs Amendment (Product Specific Rule Modernisation) Bill 2019",
+ "short_title": "Customs Amendment (Product Specific Rule Modernisation) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-02-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6391_ems_b8e0b396-373f-4395-8a9f-d3bc3373a1b4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6391%22",
+   "document_date": "2019-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00004",
+   "document_date": "2021-02-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5954",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2019-10-24.28.1) to the usual second reading motion, which is that the bill be read for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Brand MP [Madeleine King](https://theyvoteforyou.org.au/people/representatives/brand/madeleine_king) (Labor). ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) that the focus of the Government's trade priorities in the short, medium, and long term should be to diversify Australia's trading relationships in order to balance against further external economic shocks; and* >> >> *(b) the government's failure to allow the Productivity Commission to conduct independent modelling of bilateral trade agreements prior to ratification; and* > > *(2) calls on the Government to:* > >> *(a) proactively engage with the Opposition on trade matters, maintaining bipartisanship in the trade portfolio in the face of increasing global economic uncertainty; and* >> >> *(b) reaffirm Australia's support for a multilateral trade system, including continuing engagement with international trade institutions such as the World Trade Organisation\".*",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-24/4"
+  },
+  {
+   "key": "federal-senate-6904",
+   "date": "2021-02-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-02-03.190.6) to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which means the majority agree with the bill's main idea. This means that they can now discuss it in more detail. ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6391), this bill was introduced in order to: > *streamline the way in which product specific rules of origin of the Australia-Chile Free Trade Agreement, Australia-New Zealand Closer Economic Relations Agreement, Australia-United States Free Trade Agreement, Korea-Australia Free Trade Agreement, Malaysia-Australia Free Trade Agreement and Thailand-Australia Free Trade Agreement are given effect domestically.*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 11,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-03/7"
+  },
+  {
+   "key": "federal-senate-6918",
+   "date": "2021-02-04",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping the following items in [Schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6391_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6391_first-reps%2F0000%22;rec=0) unchanged: items 5, 9 to 13, 19 to 21, 27, 28, 34, 35, 41, 42, 47 and 48. This vote was put after NSW Senator [Kristina Keneally](https://theyvoteforyou.org.au/people/senate/nsw/kristina_keneally) (Labor) proposed to [oppose them](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6391_amend_1a80f994-3b2e-4034-a49a-630dd68ea076%22;rec=0). ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6391), this bill was introduced in order to: > *streamline the way in which product specific rules of origin of the Australia-Chile Free Trade Agreement, Australia-New Zealand Closer Economic Relations Agreement, Australia-United States Free Trade Agreement, Korea-Australia Free Trade Agreement, Malaysia-Australia Free Trade Agreement and Thailand-Australia Free Trade Agreement are given effect domestically.*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-04/1"
+  },
+  {
+   "key": "federal-senate-6919",
+   "date": "2021-02-04",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-02-04.56.1) \"*that the bill stand as printed.*\" In other words, they voted to keep the bill unchanged. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6391), this bill was introduced in order to: > *streamline the way in which product specific rules of origin of the Australia-Chile Free Trade Agreement, Australia-New Zealand Closer Economic Relations Agreement, Australia-United States Free Trade Agreement, Korea-Australia Free Trade Agreement, Malaysia-Australia Free Trade Agreement and Thailand-Australia Free Trade Agreement are given effect domestically.*",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-04/2"
+  },
+  {
+   "key": "federal-senate-6920",
+   "date": "2021-02-04",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-02-04.58.1) to read the bill for a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is parliamentary jargon for voting to pass the bill. Because the bill has already passed in the House of Representatives, it will now become law. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6391), this bill was introduced in order to: > *streamline the way in which product specific rules of origin of the Australia-Chile Free Trade Agreement, Australia-New Zealand Closer Economic Relations Agreement, Australia-United States Free Trade Agreement, Korea-Australia Free Trade Agreement, Malaysia-Australia Free Trade Agreement and Thailand-Australia Free Trade Agreement are given effect domestically.*",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-04/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-380812",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-12",
+   "stage_hint": null,
+   "brief": "The bill moves to amend the Customs Act so that importers under six free trade agreements need only refer to product specific rules in the FTAs, not the domestic regulations, reducing over 3,000 pages of regulations to about 90 pages, with no changes to FTA benefits."
+  },
+  {
+   "slug": "speech-384125",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment (Product Specific Rule Modernisation) Bill 2019 while moving an amendment calling for diversified trade relationships, independent Productivity Commission modelling of trade agreements, bipartisanship on trade, and renewed commitment to multilateral institutions like the WTO. The speech detailed benefits of six free trade agreements and warned against trade wars and the \"noodle bowl\" effect of bilateral pacts undermining multilateralism."
+  },
+  {
+   "slug": "speech-384126",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment (Product Specific Rule Modernisation) Bill 2019, arguing free trade agreements like the Indonesia deal benefit Australian workers and exports, but called for independent modelling by the Productivity Commission to assess their impacts, citing risks of trade diversion and the need for strong social safety nets."
+  },
+  {
+   "slug": "speech-384127",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The bill amends the Customs Act to directly reference product-specific rules of origin annexes in six free trade agreements, reducing regulatory pages from over 3,000 to about 90, and the speaker argued that opposition amendments are unrelated to the bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Product Specific Rule Modernisation) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00004",
+   "assent_date": "2021-02-16"
+  }
+ ]
+}

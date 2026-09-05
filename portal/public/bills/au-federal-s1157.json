@@ -1,0 +1,163 @@
+{
+ "key": "au-federal-s1157",
+ "title": "Aboriginal Land Rights (Northern Territory) Amendment (Land Scheduling) Bill 2018",
+ "short_title": "Aboriginal Land Rights (Northern Territory) Amendment (Land Scheduling) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-12-05",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Indigenous Affairs",
+ "status": "passed",
+ "status_as_of": "2019-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1157_ems_c2e4ddf5-7eb4-4e56-97f7-be9d13f76fe8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1157%22",
+   "document_date": "2018-12-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00027",
+   "document_date": "2019-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376112",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-376435",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-21",
+   "stage_hint": null,
+   "brief": "The Aboriginal Land Rights (Northern Territory) Amendment (Land Scheduling) Bill 2018 adds approximately 3,105 hectares of land from a successful native title application in Central Australia to schedule 1 of the Act, granting it as Aboriginal land, and delivers on an agreement involving Ammaroo Station, the pastoralist, and native title holders, supported by an additional $1 million for the Aboriginal Land Commissioner."
+  },
+  {
+   "slug": "speech-376436",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-21",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor's support for the Aboriginal Land Rights (Northern Territory) Amendment (Land Scheduling) Bill 2018, which adds approximately 193 square kilometres near Ammaroo Station to be granted as Aboriginal land, and acknowledged the member for Lingiari's advocacy for the bill."
+  },
+  {
+   "slug": "speech-376438",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-21",
+   "stage_hint": null,
+   "brief": "The bill adds land from a successful native title application in Central Australia to schedule 1 of the Aboriginal Land Rights (Northern Territory) Act, consistent with the Amaroo Indigenous Land Use Agreement, to enable a native title settlement agreed between traditional owners and local stakeholders. The coalition government is investing in the Aboriginal Land Commissioner, land councils and Territory stakeholders to resolve outstanding land claims and support land tenure reforms."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aboriginal Land Rights (Northern Territory) Amendment (Land Scheduling) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00027",
+   "assent_date": "2019-04-04"
+  }
+ ]
+}

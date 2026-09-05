@@ -1,0 +1,424 @@
+{
+ "key": "au-federal-r6374",
+ "title": "Appropriation Bill (No. 1) 2019-2020",
+ "short_title": "Appropriation Bill (No. 1) 2019-2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2019-11-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6374_ems_ccac597f-eaac-4083-b70f-ea9519953e4d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6374%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00100",
+   "document_date": "2019-11-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "This bill would authorise spending from the Consolidated Revenue Fund for the government's ordinary annual services.",
+   "It would provide about seven-twelfths of the estimated annual funding for those services, plus amounts for new commitments and machinery of government changes.",
+   "The bill replaces one that lapsed when Parliament was dissolved in April 2019 and includes updated administrative arrangements and a reclassification of $30.2 million for a school fund."
+  ],
+  "changes": [
+   "Appropriates money from the Consolidated Revenue Fund for ordinary annual services.",
+   "Provides funding equivalent to 7/12ths of estimated 2019-20 annual appropriations.",
+   "Includes amounts for election commitments and machinery of government changes.",
+   "Replaces a lapsed bill from the 45th Parliament.",
+   "Reclassifies $30.2 million for the Local School Community Fund to a different appropriation bill."
+  ],
+  "affected": "The government and its departments and agencies that receive ordinary annual services funding.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-378460",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "The Appropriation Bill (No. 1) 2019–2020 and related bills were reintroduced to fund the government’s full-year budget, seeking $58.4 billion. Key appropriations include over $19.7 billion for Defence (including operations OKRA, ACCORDION, HIGHROAD, RESOLUTE and MANITOU), $6.3 billion for Health, $5.6 billion for Social Services, $3.2 billion for Foreign Affairs and Trade, $2.7 billion for Services Australia, $2.5 billion for Home Affairs, and $2.1 billion for the Australian Taxation Office."
+  },
+  {
+   "slug": "speech-378463",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-25",
+   "stage_hint": null,
+   "brief": "Appropriation Bill (No. 2) 2019-2020 seeks just over $7.4 billion for non-ordinary annual services, including $2.3 billion for Defence military equipment, $1.7 billion for the NBN Co loan, $1.3 billion for Western Sydney Airport, Inland Rail and roads, and $295 million in concessional loans for drought- and flood-affected farm businesses."
+  },
+  {
+   "slug": "speech-379176",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-30",
+   "stage_hint": null,
+   "brief": "Labor supported the appropriation bills but criticised the Liberal-National government’s economic record, citing HILDA survey data that showed real median household income fell by almost $500 per person in 2017, poverty rose to 10.4%, and economic growth, wages, and productivity had weakened over six years."
+  },
+  {
+   "slug": "speech-379452",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Appropriation Bill (No. 1) 2019-2020, arguing that a strong economy and sensible management are essential to fund services like health and education, and criticised the Labor Party for misrepresenting their election policies."
+  },
+  {
+   "slug": "speech-379457",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison Liberal-National government is investing heavily in environmental measures like the Great Barrier Reef, working collaboratively with farmers, while criticising the Queensland Labor government for imposing onerous regulations on cane farmers without conclusive data, including mandatory soil testing, record-keeping, and a new bill requiring environmental licences and data sharing. The speaker cited figures such as 70% of growers adopting new practices, 150 billion litres of water quality improved by Project Catalyst, and opposition from groups like CANEGROWERS and the National Farmers' Federation."
+  },
+  {
+   "slug": "speech-379460",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal government is not a good economic manager, citing HILDA Survey data showing Australians earn less in real terms than in 2013, and that the economy has fallen from 8th to 20th fastest-growing in the OECD, with net debt doubled and gross debt over half a trillion dollars. Specific failures highlighted include Tasmania’s 6.7% unemployment rate, 12% national youth unemployment, a 34.4-minute average ambulance response time for category 1 patients, and over 3,500 people on Tasmania’s public housing list with only $5 million allocated for crisis accommodation."
+  },
+  {
+   "slug": "speech-379463",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued the Morrison government's plan for a strong economy would create 1.25 million jobs over five years, deliver budget surpluses (e.g., $7.1 billion in 2019-20), and provide tax cuts of up to $1,080 for low- and middle-income earners. Specific local investments include $30 million for a severe brain and spinal injury unit and $5 million for a Veterans' Wellbeing Centre at the Repat hospital site, and $3.5 billion for the Climate Solutions Package."
+  },
+  {
+   "slug": "speech-379464",
+   "speaker": "Anne Stanley",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The Labor member for Werriwa argued the government's economy is floundering, with the slowest growth since the GFC, a per capita recession since 1982, record low wages, 711,500 unemployed and over a million underemployed, and that the bills fail to address constituents' needs in areas such as NBN (Australia ranked 57th), aged care, Centrelink delays, NDIS understaffing, Western Sydney infrastructure, and energy policy."
+  },
+  {
+   "slug": "speech-379465",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Appropriation Bill, highlighting $100 billion in infrastructure funding over 10 years, ongoing investment in Norfolk Island and the Indian Ocean Territories, and health initiatives including PBS listings, a national endometriosis plan, and dementia research. They also noted local projects such as $1.45 million for Tuia Lodge aged care, a new headspace centre in Margaret River, $682 million for the Bunbury Outer Ring Road, and tax relief for 64,900 taxpayers and 18,652 small businesses in their electorate."
+  },
+  {
+   "slug": "speech-379467",
+   "speaker": "Anthony Byrne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The member for Holt argued that the federal electorate's rapid population growth has created major shortfalls in roads, mobile phone coverage, hospital services and youth mental health care, and called on the Morrison government to match Labor's $850 million road upgrade plan and fund an MRI machine for Casey Hospital. He noted that over 100,000 extra vehicles were registered in Victoria in the past year, that Cranbourne East is Australia's fastest-growing suburb, and that the Casey City Council population of 327,000 is projected to exceed Canberra's within 20 years."
+  },
+  {
+   "slug": "speech-379468",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the appropriation bills, highlighting the coalition government’s budget surplus, tax relief for nearly 40,000 Braddon taxpayers, a 49 per cent funding increase for public schools, record health investment, and infrastructure projects including a $56 million commitment to Project Marinus and $40 million for Bass Highway upgrades."
+  },
+  {
+   "slug": "speech-379472",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The member for Grey detailed over $160 million in federal infrastructure commitments for his electorate, including the Joy Baluch AM Bridge duplication at Port Augusta, dual lanes and a flyover at Port Wakefield, and road upgrades on the Horrocks, Barrier and Augusta Highways. He also noted $100 million for road works west of Port Augusta, 39 new mobile phone towers under the Mobile Black Spot Program, and 19 district councils receiving $1 million each through the Drought Communities Program."
+  },
+  {
+   "slug": "speech-379474",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker supported the Appropriation Bill, highlighting the Morrison government’s commitments to the NDIS—serving over 277,000 participants with a target of half a million in five years—and announced three priorities: reducing wait times for children, individualised plans, and $10,000 interim plans for new participants. They also detailed local investments in Higgins electorate, including health facilities, sporting upgrades, level crossing removal, and funding for aged care and family violence programs."
+  },
+  {
+   "slug": "speech-379703",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-08-01",
+   "stage_hint": null,
+   "brief": "The speaker thanked Senator Kristina Keneally for promoting the Conservative Political Action Conference (CPAC) and announced that the conference, previously held annually in the US, will come to Sydney for the first time, featuring speakers including John Anderson, Mark Latham, Campbell Newman, Amanda Stoker, Nigel Farage, Janet Albrechtsen, and Indigenous leaders."
+  },
+  {
+   "slug": "speech-379709",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-08-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition government has neglected vulnerable Australians through $2 billion in aged-care cuts leaving over 100,000 people waiting for home care, an inadequate Newstart payment of under $40 per day, a malfunctioning robo-debt scheme that wrongfully pursued 160,000 Australians, and plans to privatise visa processing, while using small grants to distract from larger funding cuts to education and the environment."
+  },
+  {
+   "slug": "speech-380371",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The budget is a missed opportunity lacking investment in infrastructure, community services, education, wage growth, the gender pay gap, and small business support, notably omitting the promised Perth City Deal. Proposed initiatives for Perth include a light rail, a Common Ground homeless facility (citing a $13,100 per-tenant annual saving), and a new inner-city TAFE campus."
+  },
+  {
+   "slug": "speech-380643",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The 2019-20 appropriation bills provide $58.4 billion for ordinary annual services and $7.4 billion for non-ordinary services, including $158 million for the Joondalup hospital extension. The WA Labor government was criticised for not contributing its promised half of the funding for the hospital."
+  },
+  {
+   "slug": "speech-380648",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The MP argued that the Morrison government's budget lacks plans for Newstart, the $1.6 billion NDIS underspend, and economic stagnation, while condemning the announcement of $1.5 billion in additional cuts to the Australian Public Service through efficiency dividends."
+  },
+  {
+   "slug": "speech-380649",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The speaker argued the economy faces structural challenges, citing the slowest growth since the global financial crisis, the longest per capita recession since 1982, a drop from second to 20th in OECD growth, declining real household median income since 2013, and wage growth at one-eighth the pace of profits."
+  },
+  {
+   "slug": "speech-381603",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The Appropriation Bills (No. 1 and 2) 2019-2020 provide over $3.6 billion to the Australian Taxation Office, $606.7 million over five years for the government's response to the Banking Royal Commission (including $404.8 million for ASIC), $38.3 million for the 2021 census, $22.7 million for the ACCC, and $82.4 million to expand single touch payroll, supporting four key objectives: fiscal sustainability, productivity, global economic integration, and efficient Treasury portfolio administration."
+  },
+  {
+   "slug": "speech-381860",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker announced $9.1 billion in funding for the Social Services portfolio through Appropriation Bill (No. 1) 2019-2020, including $128.8 million to extend cashless debit card trials to June 2021 and transition 23,000 people from income management, $14.1 million for social impact investing trials, $328 million for the Fourth Action Plan on violence against women, $527.9 million for the disability royal commission, and $84.3 million for carer support services."
+  },
+  {
+   "slug": "speech-381864",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Appropriation Bill and highlighted that 15% of Australians (3.8 million) are aged 65+, with 16.5% in Curtin, and argued for addressing social isolation among seniors. They noted the government's $10 million Seniors Connected Program, which will expand phone support services from 1,400 to 65,000 seniors per year, and expand Village Hub services."
+  },
+  {
+   "slug": "speech-381902",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The government increased its infrastructure commitment by $23 billion to a record $100 billion over 10 years, with $9.8 billion spent this financial year, and highlighted projects including $2 billion for Melbourne–Geelong fast rail, $1.6 billion for the M1 Pacific Motorway, $1 billion for the Princes Highway, and $140 million for the Albany Ring Road."
+  },
+  {
+   "slug": "speech-381934",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The Morrison government's regionally-targeted migration program will provide 23,000 places for regional areas, including Adelaide, to address South Australia's low population growth of 0.8% compared to the national average of 1.6%. The speaker also asked what budget measures are reducing population pressure on major capitals and encouraging migrants to live, work and study in regional Australia."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Appropriation Act (No. 1) 2019-2020",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00100",
+   "assent_date": "2019-11-12"
+  }
+ ]
+}

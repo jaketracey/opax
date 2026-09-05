@@ -1,0 +1,332 @@
+{
+ "key": "au-federal-r5177",
+ "title": "Export Market Development Grants Amendment Bill 2014",
+ "short_title": "Export Market Development Grants Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Trade and Investment",
+ "status": "passed",
+ "status_as_of": "2014-04-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-04-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5177_ems_ae78b643-4983-48aa-9bc3-98d8b9bd94cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5177_ems_4ba99a5a-bdf9-48f9-8492-d4fd844b08c9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5177_ems_379e1d09-ec5e-4177-9f37-886d973346ec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5177%22",
+   "document_date": "2014-03-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00023",
+   "document_date": "2014-04-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-03-06",
+  "sentences": [
+   "This bill updates the Export Market Development Grants scheme to match its new funding level and includes technical and simplification changes.",
+   "It would amend the Export Market Development Grants Act 1997 to adjust grant limits, expense thresholds, and payment procedures.",
+   "The bill would allow extra administration costs for the 2013-14 year, funded from Austrade's departmental budget."
+  ],
+  "changes": [
+   "It raises the maximum number of grants an applicant can receive from seven to eight.",
+   "It lowers the minimum expenses an applicant must incur from $20,000 to $15,000.",
+   "It reduces the deduction from the provisional grant amount from $5,000 to $2,500.",
+   "It stops payments to applicants who use an EMDG consultant deemed not fit and proper.",
+   "It speeds up grant payments when a grant is decided before the specified date.",
+   "It permits extra administration cost payments for 2013-14 only."
+  ],
+  "affected": "Applicants for export market development grants and their consultants.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:04:44Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-284782",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285644",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285645",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285695",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285696",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285697",
+   "speaker": "Peter Hendy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285698",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285700",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285708",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285710",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285711",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285935",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285936",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285938",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285943",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-285945",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-286007",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Market Development Grants Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00023",
+   "assent_date": "2014-04-09"
+  }
+ ]
+}

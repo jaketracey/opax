@@ -1,0 +1,390 @@
+{
+ "key": "au-federal-r5128",
+ "title": "Environment Legislation Amendment Bill 2013",
+ "short_title": "Environment Legislation Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2015-03-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-02-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5128_ems_93e4caf7-90ea-40a7-bbf0-79ae2be2e028%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5128_ems_4053bb24-01ad-4c39-8e19-cb5baa06a3f0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5128_ems_1d2cbdda-8fac-4d4a-8a92-dd342ddffc55%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5128%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00011",
+   "document_date": "2015-03-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "The bill would respond to a Federal Court decision and increase penalties for harming turtles and dugong.",
+   "It would amend the Environment Protection and Biodiversity Conservation Act 1999 to raise financial penalties for offences against listed turtles and dugong.",
+   "The bill would also amend the Great Barrier Reef Marine Park Act 1975 to give extra protection to dugong, marine turtles and leatherback turtles."
+  ],
+  "changes": [
+   "Addresses implications from the Tarkine case.",
+   "Increases financial penalties for offences against listed turtles and dugong under the EPBC Act.",
+   "Provides additional protection for dugong, marine turtles and leatherback turtles under the GBRMP Act."
+  ],
+  "affected": "People and organisations subject to the EPBC Act and GBRMP Act, particularly those involved in activities affecting turtles and dugong.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3042",
+   "date": "2013-12-09",
+   "house": "representatives",
+   "question": "Environment Legislation Amendment Bill 2013 - Consideration in Detail - Keep power to make major environmental approvals with federal minister",
+   "stage": "Consideration in detail",
+   "ayes": 51,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 49,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 15
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-09/4"
+  },
+  {
+   "key": "federal-senate-3687",
+   "date": "2015-02-12",
+   "house": "senate",
+   "question": "Bills – Environment Legislation Amendment Bill 2013 – in Committee – Amendment: extend protections to all threatened species",
+   "stage": null,
+   "ayes": 15,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "earliest": 5,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-02-12/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-280528",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826247",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280764",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280765",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280766",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280767",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280770",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280773",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280982",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280984",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826712",
+   "speaker": "Arthur Sinodinos",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": "The speaker presented the Environment Legislation Amendment Bill 2013 to provide legal certainty for past conservation decisions under the EPBC Act and triple criminal and civil penalties for poaching and illegal trade of turtles and dugong. The Infrastructure Australia Amendment Bill 2013 was introduced to restructure the agency as an independent authority, conduct five-yearly audits, develop a 15-year infrastructure plan, and review all Commonwealth-funded projects over $100 million. The Migration Amendment (Regaining Control Over Australia’s Protection Obligations) Bill 2013 removes the complementary protection criterion from the Migration Act, reverting to an administrative process for assessing non-refoulement obligations under the CAT and ICCPR, while maintaining those obligations."
+  },
+  {
+   "slug": "speech-305476",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Environment Legislation Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00011",
+   "assent_date": "2015-03-05"
+  }
+ ]
+}

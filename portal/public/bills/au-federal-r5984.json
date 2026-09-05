@@ -1,0 +1,230 @@
+{
+ "key": "au-federal-r5984",
+ "title": "Corporations Amendment (Crowd-sourced Funding for Proprietary Companies) Bill 2017",
+ "short_title": "Corporations Amendment (Crowd-sourced Funding for Proprietary Companies) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-09-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-09-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5984_ems_6aafd0a8-df1d-4c01-9215-a16b7e6ba9cc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5984%22",
+   "document_date": "2017-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00106",
+   "document_date": "2018-09-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-09-14",
+  "sentences": [
+   "The bill would let proprietary companies raise money from many investors through crowd-sourced funding.",
+   "It would extend the existing crowd-sourced funding framework, which starts for public companies on 29 September 2017, to proprietary companies with extra investor protections.",
+   "The main changes for proprietary companies would start six months after Royal Assent, while changes for public companies would start the day after Royal Assent."
+  ],
+  "changes": [
+   "Extends the crowd-sourced funding framework to proprietary companies.",
+   "Imposes additional obligations on proprietary companies to protect investors.",
+   "Sets different commencement dates for proprietary and public company changes."
+  ],
+  "affected": "Proprietary companies and their investors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:33:38Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5042",
+   "date": "2018-02-26",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debates/?id=2018-02-26.108.1) that would have amended the normal [second reading](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) motion, which is *that the bill be read for a second time*. Agreeing to read a bill for a second time is parliamentary jargon for agreeing with the main idea of the bill. After this vote, the House can discuss the bill in more detail. The amendment to the normal second reading motion was introduced by Labor MP [Ed Husic](https://theyvoteforyou.org.au/people/representatives/chifley/ed_husic). ### What was the amendment? > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House:* > *(1) notes with concern the extraordinary amount of time taken by the Government to introduce a functioning equity crowdfunding regime within Australia; and* > *(2) calls on the Government to bring forward the start date for this legislation by ensuring that the proposed changes take effect from the day after the end of the period of three (3) months beginning on the day this Act receives Royal Assent\".* ### What was this bill all about? Read more about the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5984) in its [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd082).",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-02-26/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-360035",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The Turnbull government's equity crowdfunding regime was criticised for delays and flaws, with only three successful campaigns in 12 months and costs up to $15,000 excluding proprietary companies. The speaker argued the government knowingly passed a flawed bill despite warnings, wasting time while other countries advanced."
+  },
+  {
+   "slug": "speech-360039",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Turnbull government for taking five years to produce usable crowdfunding legislation, noting that the initial 2017 bill was ineffective—resulting in only seven platforms and three completed projects in a year—and that the new bill still faces further delays. The speaker also highlighted broader trends in crowdfunding and community-based business models, arguing the government is not moving fast enough to support innovation."
+  },
+  {
+   "slug": "speech-360042",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Crowd-sourced Funding for Proprietary Companies) Bill 2017 extends crowdsourced equity funding to proprietary companies, allowing those with annual turnover or assets up to $25 million to raise up to $5 million annually and individual investors to invest up to $10,000 per year per company, with ASIC oversight, an increased audit threshold from $1 million to $3 million, and exemptions from takeover rules and the 50 non-employee shareholder cap."
+  },
+  {
+   "slug": "speech-360043",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-02-26",
+   "stage_hint": null,
+   "brief": "The Turnbull government argued that the Corporations Amendment (Crowd-sourced Funding for Proprietary Companies) Bill 2017 extends equity crowdfunding to proprietary companies, removing regulatory barriers such as the need to convert to a public company and the 50-shareholder cap, with an audit threshold of $3 million and exemptions from takeover provisions, to support innovation and small business growth."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Crowd-sourced Funding for Proprietary Companies) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00106",
+   "assent_date": "2018-09-21"
+  }
+ ]
+}

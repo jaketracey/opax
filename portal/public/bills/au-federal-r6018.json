@@ -1,0 +1,284 @@
+{
+ "key": "au-federal-r6018",
+ "title": "Foreign Influence Transparency Scheme Bill 2018",
+ "short_title": "Foreign Influence Transparency Scheme Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-12-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2018-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-12-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6018_ems_2c964908-abee-447b-a96d-16401cf291fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6018_ems_6c84e4ec-422d-4061-9b4f-473945b703df%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6018_ems_79cc5e31-24bf-4434-bb4c-50967ce35f8b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6018_ems_deec7318-8967-469e-8a97-3786453cbd90%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6018%22",
+   "document_date": "2017-12-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00063",
+   "document_date": "2018-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2017-12-07",
+  "sentences": [
+   "The bill would create a registration system for people and organisations working for foreign clients in Australian politics and government.",
+   "Participants would have to tell the government about their foreign ties and the work they do, with extra reporting during elections.",
+   "The scheme would not ban foreign involvement but would make it visible to officials and the public, with criminal penalties for breaking the rules."
+  ],
+  "changes": [
+   "The bill requires registration for those doing certain tasks for a foreign principal.",
+   "The bill lets the Secretary issue a transparency notice linking an entity to a foreign government or political organisation.",
+   "The bill sets up tiered criminal offences for non-compliance.",
+   "The bill allows some registered information to be made public.",
+   "The bill adds disclosure duties during elections and voting periods.",
+   "The bill gives the Secretary powers to demand information or documents."
+  ],
+  "affected": "People and organisations with arrangements with, or who act for, foreign principals in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5315",
+   "date": "2018-06-28",
+   "house": "senate",
+   "question": "Foreign Influence Transparency Scheme Bill 2018 and another - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 41,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Democrats": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "earliest": 8,
+    "member": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-28/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-357698",
+   "speaker": "Malcolm Turnbull",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-12-07",
+   "stage_hint": null,
+   "brief": "The speaker moved the second reading of the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and introduced the Foreign Influence Transparency Scheme Bill, which establishes registration obligations for persons or entities with arrangements or activities on behalf of foreign principals to provide transparency about foreign influence in Australia."
+  },
+  {
+   "slug": "speech-365744",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the two national security bills were initially flawed with overreach, threatening journalists, charities, academics, and civil liberties, but after extensive bipartisan committee work and 60 recommendations, the amendments now properly target foreign interference while safeguarding freedoms. The speaker also criticised the government's rushed process and lack of consultation, noting the bills were significantly improved through the Parliamentary Joint Committee on Intelligence and Security."
+  },
+  {
+   "slug": "speech-365747",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and the Foreign Influence Transparency Scheme Bill 2017, arguing their definitions of 'national security' and 'foreign influence' are too broad and could criminalise protest, whistleblowing, and reporting to international bodies. He also criticised the government's hypocrisy, noting that 12 MPs had been flown to China by Huawei while claiming to be concerned about foreign influence, and warned that Australia is becoming a \"pre police state\" with over 60 security reforms since 9/11."
+  },
+  {
+   "slug": "speech-365749",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": "The speaker thanked parliamentary committees and presented government amendments to the National Security Legislation Amendment (Espionage and Foreign Interference) Bill 2017 and the Foreign Influence Transparency Scheme Bill 2017, arguing the reforms are the most significant counterintelligence changes since the 1970s and will introduce new offences for foreign interference, economic espionage, and strengthened espionage and secrecy laws."
+  },
+  {
+   "slug": "speech-365897",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-06-26",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Foreign Influence Transparency Scheme Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00063",
+   "assent_date": "2018-06-29"
+  }
+ ]
+}

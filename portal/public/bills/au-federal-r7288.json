@@ -1,0 +1,249 @@
+{
+ "key": "au-federal-r7288",
+ "title": "Aged Care (Consequential and Transitional Provisions) Bill 2024",
+ "short_title": "Aged Care (Consequential and Transitional Provisions) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7288_ems_d3a4867e-ccc2-4dc2-bd0b-c4e51d232855%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7288%22",
+   "document_date": "2024-11-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00109",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-21",
+  "sentences": [
+   "This bill handles the transition from the existing aged care laws to the new Aged Care Bill 2024.",
+   "It would repeal the old Aged Care Act, the Aged Care Quality and Safety Commission Act and the old Transitional Provisions Act, and update references in other Commonwealth laws.",
+   "The bill would also move approved providers, the Commissioner and the Aged Care Quality and Safety Commission into the new framework, and bring programs like the NATSIFAC Program and the CHSP under consistent regulation."
+  ],
+  "changes": [
+   "Repeals the old Aged Care Act, the Aged Care Quality and Safety Commission Act and the old Transitional Provisions Act.",
+   "Updates references in other Commonwealth laws to point to the new Act.",
+   "Transfers approved providers to the new registration and regulatory system for registered providers.",
+   "Brings the NATSIFAC Program and the CHSP into the new aged care regulatory framework.",
+   "Moves the existing Commissioner and the Aged Care Quality and Safety Commission to their new equivalents under the new Act."
+  ],
+  "affected": "Older people accessing aged care services, approved providers of aged care, and the Aged Care Quality and Safety Commission and its Commissioner.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:05Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9251",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2024-11-26.90.1) introduced by Cowper MP [Pat Conaghan](https://theyvoteforyou.org.au/people/representatives/cowper/pat_conaghan) (Nationals), which means it failed. In explaining why the Government did not support this amendment, Lilley MP [Anika Wells](https://theyvoteforyou.org.au/people/representatives/lilley/anika_wells) (Labor) [explained that](https://www.openaustralia.org.au/debates/?id=2024-11-26.90.1): > *The government does not support this very technical amendment. I can confirm for the member for Farrer that the government is drafting rules related to this bill which will be released for consultation next year.* ### Amendment text > *(1) Schedule 2, item 65, page 60 (line 3), omit \"may\", substitute \"must\".* ### Original wording > *65 Transitional rules* > > *(1) The Minister* **may**, *by legislative instrument, make rules prescribing matters:* > >> *(a) required or permitted by this Act to be prescribed by the rules; or* >> >> *(b) necessary or convenient to be prescribed for carrying out or giving effect to this Act.*",
+   "stage": "Consideration in detail",
+   "ayes": 55,
+   "noes": 84,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-26/1"
+  },
+  {
+   "key": "federal-senate-10464",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Aged Care (Consequential and Transitional Provisions) Bill 2024. The question is that the bill be now read a second time. Question agreed to. Bill read a second time. I will now deal with the Committee of the Whole amendment circulated by the opposition. The question is that the opposition amendment on sheet 3214 be agreed to. _Opposition's circulated amendment—_ (1) Schedule 2, item 65, page 60 (line 3), omit \"may\", substitute \"must\".",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 7,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/26"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Aged Care (Consequential and Transitional Provisions) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00109",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

@@ -1,0 +1,670 @@
+{
+ "key": "au-federal-r7245",
+ "title": "Future Made in Australia (Guarantee of Origin) Bill 2024",
+ "short_title": "Future Made in Australia (Guarantee of Origin) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-09-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7245_ems_f6ba1951-c855-47e4-af3d-9bbae044ea6b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7245_ems_ada85683-2e07-4f68-bbe6-3107d8cc3acc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7245_ems_e49328e1-a613-44ca-86db-ef77a691659c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7245_ems_a17a1534-ea52-4586-aaae-b1523b13b75c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7245_ems_c47ce2be-07d9-4734-b403-d6f25517d14c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7245%22",
+   "document_date": "2024-09-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00121",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-09-12",
+  "sentences": [
+   "This bill creates a voluntary system for tracking and verifying the environmental attributes of low-emissions products and renewable electricity, starting with hydrogen.",
+   "The Clean Energy Regulator would run the scheme, register participants and facilities, issue certificates, and keep a public register.",
+   "From 1 January 2031, certificates for renewable electricity can no longer be created under the existing Renewable Energy Target."
+  ],
+  "changes": [
+   "Establishes a voluntary Guarantee of Origin scheme for low-emissions products and renewable electricity.",
+   "Allows participants to create certificates tracking emissions or renewable attributes.",
+   "Provides for two certificate types: tradeable Renewable Electricity Guarantee of Origin certificates and non-tradeable Product Guarantee of Origin certificates.",
+   "Gives the Clean Energy Regulator compliance and enforcement powers, including requiring third-party audits.",
+   "Requires periodic formal review of the scheme's effectiveness and international context.",
+   "Lets the Minister make legislative rules, including methodology determinations and measurement standards."
+  ],
+  "affected": "Producers of low-emissions products and renewable electricity who opt into the scheme, and their domestic and international customers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9162",
+   "date": "2024-10-08",
+   "house": "representatives",
+   "question": "The majority voted against the [motion](https://www.openaustralia.org.au/debates/?id=2024-10-08.104.1): > *That the [Future Made in Australia (Guarantee of Origin) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7245), the [Future Made in Australia (Guarantee of Origin Charges) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7248%22) and the [Future Made in Australia (Guarantee of Origin Consequential Amendments and Transitional Provisions) Bill 2024](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7246%22) be referred to the Standing Committee on Economics for consideration and an advisory report by 2 December 2024.* This motion was introduced by Fairfax MP [Ted O'Brien](https://theyvoteforyou.org.au/people/representatives/wide_bay/llew_o'brien) (Liberal).",
+   "stage": "Reference to Committee",
+   "ayes": 63,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-08/4"
+  },
+  {
+   "key": "federal-representatives-9435",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Future Made in Australia (Guarantee of Origin) Bill 2024 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/9"
+  },
+  {
+   "key": "federal-representatives-9436",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Future Made in Australia (Guarantee of Origin) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 86,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/10"
+  },
+  {
+   "key": "federal-representatives-9437",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of the [government amendments](https://www.openaustralia.org.au/debates/?id=2024-11-27.39.1) moved by Fremantle MP [Josh Wilson](https://theyvoteforyou.org.au/people/representatives/fremantle/josh_wilson) (Labor), which means they will now become part of the bill. ### What do these amendments do? Mr Wilson introduced a [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7245_ems_a17a1534-ea52-4586-aaae-b1523b13b75c%22;rec=0), which explains the purpose of the amendments. ### Amendment text > *(1) Clause 28, page 25 (lines 15 and 16), omit paragraph (2)(c), substitute:* > >> *(c) a location where the product enters a pipeline, or other infrastructure, that is part of a shared network and conveys the product;* > > *(2) Clause 28, page 25 (after line 26), at the end of the clause, add:* > >> *(6) In making a determination under subsection (3) or (4), the Regulator:* >> >>> *(a) must have regard to:* >>> >>>> *(i) guidelines (if any) prescribed by the rules for determining a location to be a production gate or delivery gate; and* >>>> >>>> *(ii) the matters (if any) prescribed by the rules; and* >>> >>> *(b) may have regard to any other matter the Regulator considers relevant.* > > *(3) Clause 29, page 27 (lines 15 and 16), omit subclause (9), substitute:* > >> *(9) In making a determination under this section, the Minister must have regard to:* >> >>> *(a) the objects of this Act; and* >>> >>> *(b) the extent to which the determination was developed in accordance with the following objectives:* >>> >>>> *(i) to be transparent and complete, by representing an accurate accounting of all material greenhouse gas emissions for a product's supply chain without carbon offsetting using carbon credits;* >>>> >>>> *(ii) to be consistent with other determinations made under this section and comparable with internationally agr",
+   "stage": "Consideration in detail",
+   "ayes": 88,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/11"
+  },
+  {
+   "key": "federal-representatives-9438",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "question": "Future Made in Australia (Guarantee of Origin) Bill 2024 - Consideration in Detail - Agree with amended bill",
+   "stage": "Consideration in detail",
+   "ayes": 88,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-27/12"
+  },
+  {
+   "key": "federal-senate-10475",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Katy Gallagher I move: That these bills be now read a first time. I table revised explanatory memoranda relating to the Future Made in Australia (Guarantee of Origin) Bill 2024 and the Future Made in Australia (Guarantee of Origin Consequential Amendments and Transitional Provisions) Bill 2024. Sue Lines The question is that the bills be now read a first time.",
+   "stage": "Bill",
+   "ayes": 33,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/37"
+  },
+  {
+   "key": "federal-senate-10476",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines Prior to today, Senator David Pocock moved a second reading amendment relating to the Future Made in Australia Bill 2024 and the Future Made in Australia (Omnibus Amendments No. 1) Bill 2024: At the end of the motion, add \", but the Senate: (a) notes that: (i) the electrification of households and small businesses would result in thousands of dollars of savings a year and significantly reduce Australia's domestic emissions, (ii) the United States' Inflation Reduction Act of 2022, to which this bill is partially a response, included significant measures to encourage household electrification and those measures are considered a success, and (iii) the failure to include electrification in the Future Made in Australia framework is a significant missed opportunity; and (b) calls on the Government to urgently provide an ambitious package to encourage the electrification of Australian households and small businesses with a focus on low-income households, rental properties and apartments\". The question is that the second reading amendment moved by Senator David Pocock on sheet 2870 be agreed to. Question negatived. The next question is that the second reading amendment circulated by Senator Van on sheet 2868 be agreed to. _Senator Van's circulated amendment__in respect of the_ _Future Made in Australia Bill 2024 and the Future Made in Australia (Omnibus Amendments No. 1) Bill 2024_ At the end of the motion, add \", but the Senate calls on the Government to: (a) provide for the Australian Defence Force (ADF) to enter into offtake agreements for low-carbon fuel sources to ensure that at least 30% of the ADF's fuel consumption by 2028 is sourced from biodiesel, sustainable aviation fuel, or other low-carbon alternatives, with priority given to domestic producers; (b) establish Renewable Energy Industrial Precincts in areas with high renewable energy generation capacity which: (i) give priority access to government grants and infrastructure subsidies to industries that",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/38"
+  },
+  {
+   "key": "federal-senate-10477",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the Committee of the Whole amendments to the Future Made in Australia Bill 2024, starting with the amendments circulated by the government. I understand the minister has documents to table. Katy Gallagher I table supplementary explanatory memoranda relating to the government amendments to the Future Made in Australia Bill 2024 and the Future Made in Australia (Omnibus Amendments No. 1) Bill 2024. Sue Lines The question is that the government amendments on sheet SK126 be agreed to. _Government's circulated amendments__to the_ _Future Made in Australia Bill 2024_ (1) Clause 4, page 5 (after line 21), after the paragraph beginning \"A person or body deciding\", insert: Future Made in Australia support must not be provided for any of the following activities: (a) the extraction of coal, crude oil or natural gas; (b) the construction of infrastructure for the primary purpose of extracting coal, crude oil or natural gas; (c) directly financing investments for the sole purpose of the use of coal, crude oil or natural gas. (2) Clause 8, page 9 (after line 30), after subclause (1), insert: (1A) Each sector assessment must also consider the following matters: (a) the sector's impacts on demand for fossil fuels (such as coal, crude oil or natural gas), and how those impacts can be managed in a way that is consistent with an orderly path to net zero transformation; (b) the decarbonisation potential in relevant global supply chains for the sector, including how those supply chains can contribute to the reduction of global greenhouse gas emissions. (3) Page 13 (after line 24), after clause 10, insert: 10A Future Made in Australia support not to be provided for coal, crude oil or natural gas etc. Future Made in Australia support must not be provided by the Commonwealth, a Commonwealth entity or a Commonwealth company for any of the following activities: (a) the extraction of coal, crude oil or natural gas; (b) the construction of infrastructure for the",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/39"
+  },
+  {
+   "key": "federal-senate-10478",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/40"
+  },
+  {
+   "key": "federal-senate-10479",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bills be agreed to and the bills be now passed.",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 45,
+    "member": 6,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/41"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Future Made in Australia (Guarantee of Origin) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00121",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

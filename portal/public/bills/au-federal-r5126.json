@@ -1,0 +1,410 @@
+{
+ "key": "au-federal-r5126",
+ "title": "Fair Work (Registered Organisations) Amendment Bill 2013",
+ "short_title": "Fair Work (Registered Organisations) Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment",
+ "status": "lapsed",
+ "status_as_of": "2014-05-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-05-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5126_ems_e7765f9f-6355-4b4d-8f79-b9934cd38f61%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5126_ems_38b063fa-c6e0-4357-bbfb-fb535a69f5a8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5126%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "This bill aims to improve how registered organisations like unions and employer groups are run and overseen.",
+   "It would set up a new independent body called the Registered Organisations Commission with stronger investigation powers.",
+   "Penalties would rise and new criminal offences would apply for serious misconduct by officers, mirroring rules for company directors."
+  ],
+  "changes": [
+   "Establishes the Registered Organisations Commission as an independent regulator.",
+   "Strengthens financial reporting and transparency rules by making some obligations enforceable as civil remedy provisions.",
+   "Increases civil penalties and creates criminal offences for serious breaches of officers' duties.",
+   "Expands disclosure requirements for officers' material personal interests and changes grounds for disqualification from office.",
+   "Gives the Commissioner investigation and information-gathering powers modelled on those in the Australian Securities and Investments Commission Act 2001."
+  ],
+  "affected": "Registered organisations, their branches, and their officers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:03Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3064",
+   "date": "2013-12-12",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment Bill 2013 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 72,
+   "noes": 50,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 122
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-12-12/1"
+  },
+  {
+   "key": "federal-senate-3198",
+   "date": "2014-05-14",
+   "house": "senate",
+   "question": "Fair Work (Registered Organisations) Amendment Bill 2013 - Second Reading - Agree to the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "PRES": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-05-14/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-278428",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-825501",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-11-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279987",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279990",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279991",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279992",
+   "speaker": "Scott Buchholz",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279993",
+   "speaker": "Mal Brough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-279999",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-280002",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826080",
+   "speaker": "Claire Moore",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": "A motion to refer the Fair Work (Registered Organisations) Amendment Bill 2013 to the Education and Employment References Committee was proposed on behalf of Senator Wong but was blocked by an objection."
+  },
+  {
+   "slug": "speech-826089",
+   "speaker": "Claire Moore",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-03",
+   "stage_hint": null,
+   "brief": "The motion to refer the Fair Work (Registered Organisations) Amendment Bill 2013 to the Education and Employment References Committee was moved, arguing that the bill was rushed with only one day of public hearings and that further scrutiny was needed, while opponents cited the government's election mandate and the need for higher penalties for union officials, referencing Justice North's criticism of existing penalties and the support of figures like Paul Howes."
+  },
+  {
+   "slug": "speech-281684",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281685",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281688",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281689",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281716",
+   "speaker": "The SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826701",
+   "speaker": "Bridget McKenzie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": "The speaker tabled additional information from inquiries into amendments to the Fair Work (Registered Organisations) Amendment Bill 2013 and the effectiveness of NAPLAN."
+  },
+  {
+   "slug": "speech-826710",
+   "speaker": "Arthur Sinodinos",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-11",
+   "stage_hint": null,
+   "brief": "The speaker moved a motion to change committee memberships, discharging Senator Urquhart and appointing Senator Gallacher to the National Disability Insurance Scheme Joint Standing Committee, and appointing substitute members for several other committees including Wright, Milne, and Ludlam."
+  },
+  {
+   "slug": "speech-281756",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281813",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-826721",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

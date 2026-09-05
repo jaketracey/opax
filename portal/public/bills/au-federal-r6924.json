@@ -1,0 +1,316 @@
+{
+ "key": "au-federal-r6924",
+ "title": "Social Services and Other Legislation Amendment (Workforce Incentive) Bill 2022",
+ "short_title": "Social Services and Other Legislation Amendment (Workforce Incentive) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-09-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2022-11-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6924_ems_2d1f99ee-696a-4a7a-8185-dcb6501abbce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6924_ems_884a82f7-b678-4b52-bcba-cab07848ecf0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6924_ems_3571ea20-e06b-4fba-b7a3-7e40dc56caa4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6924%22",
+   "document_date": "2022-09-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00055",
+   "document_date": "2022-11-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-09-28",
+  "sentences": [
+   "This bill changes social security and veterans' laws to get older pensioners into paid work.",
+   "It would let some pensioners pause their payments for two years rather than lose them, extend concession card eligibility, and raise the work bonus limit.",
+   "The work bonus increase adds $4,000 to the unused balance until the end of 2023."
+  ],
+  "changes": [
+   "Pensioners whose income is too high can have payments paused for up to two years instead of being cut off.",
+   "Partners of certain pensioners can also pause their own payments under the same rule.",
+   "Working pensioners can keep their concession card for up to two years.",
+   "Eligible pensioners can earn an extra $4,000 before the income test reduces their payment."
+  ],
+  "affected": "Age pensioners, disability support pensioners, carer payment recipients, veterans' entitlement recipients, and their partners.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7848",
+   "date": "2022-11-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-22.158.2) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means it failed. ### What did this amendment do? Senator Rice [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-22.158.2): > *The amendment will extend the work bonus to other income support recipients. This bill, as we know, creates a work bonus so that age pensioners are able to earn significantly more before their pension gets reduced, which is a good thing; we're supporting this bill. But it really points attention to the fact that you have got people on other income support benefits who aren't getting the same benefit. In fact, they're even more deserving of being able to earn more because their income support is considerably less. Age pensioners get $73 a day, but people on JobSeeker only get $48. This bill will allow age pensioners to earn up to an extra $11,800 in work bonus over a year, but JobSeeker can only earn a work credit of $1,000 before their benefits get slashed. In fact, they face an effective marginal tax rate of somewhere between $60 and $80 for every extra dollar that they earn when they take a few extra available shifts, when they take the opportunity to do the work that's there so they can pay a few bills, so they can get the lawnmower fixed or so they can pay off a loan that somebody has very generously given them.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 13,
+    "earliest": 20,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-22/10"
+  },
+  {
+   "key": "federal-senate-7849",
+   "date": "2022-11-22",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-22.162.1) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means it failed. ### What did this amendment do? Senator Rice [explained that](https://www.openaustralia.org.au/senate/?gid=2022-11-22.162.1): > *This amendment would raise the rate of income support to all income support recipients to $88 a day—to above the poverty line. I know the government is going to say, 'You're just making a political point.' This is not a political point. This is an attempt to improve the lives of millions of Australians who are living in poverty, who are starving, who are suffering from malnutrition, who are suffering from scurvy, who cannot afford to live in a home at the same time as putting food on the table or at the same time as paying their medical bills. We can afford this, and this parliament—this government—should be doing this. While they are not doing this, they are saying, 'We're going to go ahead with the stage 3 tax cuts and give the richest people in our country—the billionaires, the wealthy—$250 billion over the next 10 years.' That's the choice that's being made.*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 11,
+    "earliest": 21,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-22/11"
+  },
+  {
+   "key": "federal-senate-7850",
+   "date": "2022-11-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-11-22.167.1) introduced by Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal), which means they failed. ### What were the amendments? Senator Duniam [explained the amendments](https://www.openaustralia.org.au/senate/?gid=2022-11-22.167.1): > *There has been a lot said about our desire to improve the capacity for pensioners and other recipients of income support to contribute to the economy and receive income without it penalising them. Currently, under subsection 1073AA of the Social Security Act 1991, pensioners are limited to earning income concessions of up to 300 bucks over an instalment period of 14 days. The amendment request we're making here is in relation to doubling that amount to $600 and enabling those recipients of the pension payment to continue to receive that without the penalty that they would otherwise be exposed to.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "earliest": 35,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-22/12"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Workforce Incentive) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00055",
+   "assent_date": "2022-11-23"
+  }
+ ]
+}

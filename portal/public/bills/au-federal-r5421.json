@@ -1,0 +1,299 @@
+{
+ "key": "au-federal-r5421",
+ "title": "Migration Amendment (Strengthening Biometrics Integrity) Bill 2015",
+ "short_title": "Migration Amendment (Strengthening Biometrics Integrity) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5421_ems_2e28605d-fbe5-401d-9039-ccead805c177%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5421_ems_425e951a-d7ef-4278-af82-4e94a0ea5e31%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5421%22",
+   "document_date": "2015-03-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00115",
+   "document_date": "2015-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-05",
+  "sentences": [
+   "This bill would update Australia's migration laws to strengthen the use of biometrics for identity checks.",
+   "It would consolidate eight existing personal identifier collection powers into a single broad power to collect biometrics from non-citizens and citizens at the border.",
+   "The bill would also let officers collect personal identifiers from minors and incapable people without requiring consent or presence of a guardian, and would start within six months of royal assent if not proclaimed earlier."
+  ],
+  "changes": [
+   "Consolidates and simplifies the legislative framework for collecting personal identifiers.",
+   "Expands collection powers to include minors and incapable persons without guardian consent.",
+   "Adds flexibility in how and where personal identifiers can be collected.",
+   "Removes unused and unnecessary provisions from the Migration Act."
+  ],
+  "affected": "Non-citizens and citizens at the border, and minors and incapable persons in immigration contexts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:58:22Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3875",
+   "date": "2015-08-12",
+   "house": "senate",
+   "question": "Kim Carr by leave—I move opposition amendments (1), (2), (3) and (4): (1) Schedule 1, item 34, page 7 (after line 27), after subsection 257A(7), insert: _Personal identifiers for minors or incapable persons_ (7A) If a minor or an incapable person (the _person_) is required to provide one or more personal identifiers under subsection (1), the personal identifiers must be provided: (a) in circumstances affording reasonable privacy to the person; and (b) in such a manner that ensures particular care is taken to treat the person with humanity and respect for human dignity. (2) Schedule 1, item 50, page 9 (lines 24 and 25), omit the item, substitute: 50 Subsections 261AL(5) and (6) Repeal the subsections, substitute: _Persons present while identification test is carried out_ (5) If a person who is a minor provides a personal identifier, in accordance with a requirement under Division 13AA of this Part, by way of an identification test carried out by an authorised officer, the test must be carried out in the presence of: (a) a parent or guardian of the minor; or (b) either: (i) if the minor is female—2 female independent persons; or (ii) if the minor is male—2 male independent persons. (6) However, if the Minister is the minor's guardian, the test must be carried out in the presence of: (a) if the minor is female—2 female independent persons (other than the Minister); or (b) if the minor is male—2 male independent persons (other than the Minister). (3) Schedule 1, item 53, page 10 (lines 3 and 4), omit the item, substitute: 53 Subsection 261AM(4) Repeal the subsection, substitute: _Persons present while identification test is carried out_ (4) If a person who is an incapable person provides a personal identifier, in accordance with a requirement under Division 13AA of this Part, by way of an identification test carried out by an authorised officer, the test must be carried out in the presence of: (a) a parent or guardian of the incapable person; or (b) either: (i) if the i",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 14,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-08-12/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-307187",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-05",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-309668",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker announced Labor will not oppose the Migration Amendment (Strengthening Biometrics Integrity) Bill 2015 in the House but will reserve its position in the Senate pending the outcome of a Senate Legal and Constitutional Affairs Legislation Committee inquiry due on 5 June, citing concerns about privacy safeguards, particularly for minors and vulnerable people, and ambiguities around biometric data retention for Australian citizens."
+  },
+  {
+   "slug": "speech-309669",
+   "speaker": "Don Randall",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Strengthening Biometrics Integrity) Bill 2015, arguing it streamlines biometric data collection to improve border security, counter terrorism and human trafficking, and cited over 9,000 fingerprint matches since the program began, as well as cases of Junaid Thorne and Khaled Sharrouf evading identification."
+  },
+  {
+   "slug": "speech-309671",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Migration Amendment (Strengthening Biometrics Integrity) Bill 2015, which expands biometric data collection and checks at borders to combat terrorism, identity fraud, and human trafficking, citing the case of Khaled Sharrouf using his brother's passport. The bill enables manual fingerprint checks using mobile devices and includes collection of biometrics from minors, which the speaker endorsed as necessary for national security."
+  },
+  {
+   "slug": "speech-309672",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Strengthening Biometrics Integrity) Bill 2015 is essential to consolidate and simplify biometric collection powers, including fingerprints, facial images and iris scans, to strengthen border security and counter terrorism. The bill streamlines seven existing powers into one broad discretionary power, allows collection from minors and incapable individuals without consent, and enables manual fingerprint checks at airports and seaports, citing the case of terrorist Khaled Sharrouf who used his brother's passport."
+  },
+  {
+   "slug": "speech-309673",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-13",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Strengthening Biometrics Integrity) Bill 2015 replaces seven existing biometric collection powers with a single broad discretionary power to strengthen border controls amid terrorism threats, with 33 million people expected to pass through Australia's eight international airports in 2015, rising to 50 million by 2020."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Strengthening Biometrics Integrity) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00115",
+   "assent_date": "2015-08-26"
+  }
+ ]
+}

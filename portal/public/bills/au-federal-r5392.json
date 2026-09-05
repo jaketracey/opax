@@ -1,0 +1,188 @@
+{
+ "key": "au-federal-r5392",
+ "title": "Excess Exploration Credit Tax Bill 2014",
+ "short_title": "Excess Exploration Credit Tax Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-12-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-03-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-03-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5392_ems_2d8d1f21-ec09-4388-bae4-473af7bf64b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5392%22",
+   "document_date": "2014-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00017",
+   "document_date": "2015-03-19",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-12-04",
+  "sentences": [
+   "This bill is part of a package that changes the tax treatment of excess non-concessional contributions to superannuation.",
+   "The package would remove the excess non-concessional contributions tax when individuals withdraw the excess from superannuation, with associated earnings taxed at the individual's marginal rate and a 15% non-refundable tax offset available.",
+   "The tax would still apply to excess contributions that remain in the superannuation plan."
+  ],
+  "changes": [
+   "Removes the excess non-concessional contributions tax for individuals who withdraw the excess and associated earnings from superannuation.",
+   "Includes associated earnings in assessable income taxed at the individual's marginal rate with a 15% non-refundable tax offset.",
+   "Imposes the excess non-concessional contributions tax on excess contributions left in the superannuation plan."
+  ],
+  "affected": "Individuals who make excess non-concessional contributions to superannuation.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-303946",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-12-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306013",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306016",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-306017",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-02-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Excess Exploration Credit Tax Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00017",
+   "assent_date": "2015-03-19"
+  }
+ ]
+}

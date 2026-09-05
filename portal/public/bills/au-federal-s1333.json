@@ -1,0 +1,208 @@
+{
+ "key": "au-federal-s1333",
+ "title": "Electoral Legislation Amendment (Foreign Influences and Offences) Bill 2022",
+ "short_title": "Electoral Legislation Amendment (Foreign Influences and Offences) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-09",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2022-02-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-02-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1333_ems_a1508208-9a73-4ad8-9040-c8a3e4eaaa9d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1333%22",
+   "document_date": "2022-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00006",
+   "document_date": "2022-02-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-418687",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "The speaker announced the introduction of the Electoral Legislation Amendment (Foreign Influences and Offences) Bill, citing ASIO's finding that a person linked to a foreign government attempted to fund political candidates in an unspecified Australian election, and argued the bill is needed to stop foreign governments, businesses, organisations and foundations from influencing or running election campaigns."
+  },
+  {
+   "slug": "speech-418731",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-15",
+   "stage_hint": null,
+   "brief": "Labor supported three electoral bills: closing a loophole banning foreign entities from incurring electoral expenditure over $1,000, increasing the penalty for misleading voting from six months to three years, aligning authorisation requirements, and allowing telephone voting for COVID-affected electors. The speaker also moved an amendment calling for lowering the donation disclosure threshold from $14,500 to a fixed $1,000, real-time disclosure, more AEC resources, anti-disinformation measures, a national anti-corruption commission, anti-pork-barrelling laws, and mandatory disclosure of secret donations."
+  },
+  {
+   "slug": "speech-418798",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "Three electoral bills were presented: one requiring electoral material authorisation using common names; one enabling phone voting for Australians isolating due to COVID-19 at the 2022 federal election (sunsetting end of 2022); and one strengthening laws against foreign interference. The speaker supported these bills, citing ASIO’s 9 February threat assessment of a foreign-linked attempt to fund candidates, and urged Australians to ignore foreign governments’ preferences and decide elections themselves."
+  },
+  {
+   "slug": "speech-418801",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker supported three electoral bills: simplifying authorisation requirements for political materials, expanding telephone voting for voters affected by COVID-19, and closing a loophole to prohibit foreign entities from influencing Australian elections through issue-based campaigns."
+  },
+  {
+   "slug": "speech-418802",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The legislation bans foreign entities from incurring electoral expenditure over $1,000, increases penalties for publishing misleading voting material to three years, simplifies authorisation rules, and extends telephone voting to COVID-affected voters. The speaker also called for lowering the political donation disclosure threshold to $1,000 and introducing real-time disclosure."
+  },
+  {
+   "slug": "speech-418815",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker supported three electoral amendment bills, including closing a loophole to ban foreign entities from incurring electoral expenditure over $1,000 or authorising electoral material, and increasing the penalty for misleading vote-casting material from six months to three years to allow AFP investigations. They also noted Labor’s prior leadership on banning foreign donations in 2018."
+  },
+  {
+   "slug": "speech-418817",
+   "speaker": "Melissa McIntosh",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Electoral Legislation Amendment (Foreign Influences and Offences) Bill 2022 and the Electoral Legislation Amendment (Authorisations) Bill 2022 strengthen electoral integrity by prohibiting foreign campaigners from authorising communications and fundraising, and by ensuring clearer authorisation disclosures to prevent voter confusion. The bills aim to combat foreign interference, close loopholes, and hold those who mislead voters accountable."
+  },
+  {
+   "slug": "speech-418818",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia's electoral system is rigged against minor parties, criticised the AEC's COVID-19 vaccine mandates for election workers as \"superstition, ignorance and stupidity\", and announced a third reading amendment to protect parliamentary speech from censorship by foreign tech giants like Facebook, Google and YouTube."
+  },
+  {
+   "slug": "speech-418819",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-16",
+   "stage_hint": null,
+   "brief": "The government announced three electoral bills: the Foreign Influences and Offences Bill bans foreign campaigners from authorising electoral material and prohibits foreign entities from fundraising or spending $1,000 or more on electoral expenditure per year, while increasing the maximum penalty for misleading voters; the Authorisations Bill clarifies voter information and adds flexibility for party names; and the COVID Enfranchisement Bill extends secure telephone voting to those in COVID-19 isolation during the final 72 hours before the 2022 federal election."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (Foreign Influences and Offences) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00006",
+   "assent_date": "2022-02-17"
+  }
+ ]
+}

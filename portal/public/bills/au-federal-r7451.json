@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-r7451",
+ "title": "Telecommunications Legislation Amendment (Strengthening Communications in Natural Disasters) Bill 2026",
+ "short_title": "Telecommunications Legislation Amendment (Strengthening Communications in Natural Disasters) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-25",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-05-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7451%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7451%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7451_ems_633a4c59-c90b-45c6-a202-3b83a0a546f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7451%22",
+   "document_date": "2026-05-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-25",
+  "sentences": [
+   "This bill would require telecommunications networks to stay operational during natural disasters and extreme weather events.",
+   "The Australian Communications and Media Authority would set minimum backup power rules for network equipment in high-risk areas, and the minister could order temporary roaming during emergencies.",
+   "The bill also makes disaster-related telecommunications a purpose for which public interest grants can be awarded."
+  ],
+  "changes": [
+   "The bill requires ACMA to make a service provider determination on minimum power requirements for critical network units in high-risk disaster areas.",
+   "The bill gives the minister power to make rules for temporary disaster roaming during an emergency period.",
+   "The bill adds the provision of telecommunications during natural disasters as a purpose for public interest telecommunications grants."
+  ],
+  "affected": "Telecommunications providers, communities in areas at high risk of natural disasters or extreme weather events, and regional, rural and remote communities are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,215 @@
+{
+ "key": "au-federal-r6514",
+ "title": "Product Stewardship (Oil) Amendment Bill 2020",
+ "short_title": "Product Stewardship (Oil) Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "passed",
+ "status_as_of": "2020-09-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-08-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6514_ems_050e2be3-ea00-4779-ae2f-ab40aab46461%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6514%22",
+   "document_date": "2020-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00082",
+   "document_date": "2020-09-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6475",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2020-08-25.96.2) to keep the original second reading motion unchanged. A [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is a motion \"*That this bill be now read a second time*\" - parliamentary jargon for agreeing with the main idea of the bill. This vote was put after Fremantle MP [Josh Wilson](https://theyvoteforyou.org.au/people/representatives/fremantle/josh_wilson) (Labor) introduced an amendment. ### Proposed Amendment > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes the Government’s slow and inadequate delivery of meaningful regulatory reform for domestic waste management and product stewardship\".*",
+   "stage": "Second reading",
+   "ayes": 45,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 6,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 75,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-08-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391256",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The Product Stewardship (Oil) Amendment Bill 2020 clarifies that only lubricant oils, fluid oils and other oils manufactured from base oils are eligible for scheme benefits, explicitly excluding fuels such as diesel, and amends the Excise Tariff Act to exclude diesel from the relevant excise tariff item."
+  },
+  {
+   "slug": "speech-391257",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-05-14",
+   "stage_hint": null,
+   "brief": "The bill amends the Excise Tariff Act 1921 to exclude diesel and other fuels from the oil and grease excise item, with provision for further exclusions by regulation, aligning with the Product Stewardship (Oil) Amendment Bill 2020."
+  },
+  {
+   "slug": "speech-393441",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-24",
+   "stage_hint": null,
+   "brief": "Labor supported the Product Stewardship (Oil) Amendment Bill 2020 to close a legislative loophole that allowed Caltex to claim $8 million in improper benefit payments, while criticising the government's slow progress on broader waste management reforms."
+  },
+  {
+   "slug": "speech-393577",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for closing a loophole in the Product Stewardship for Oil Scheme that allowed Caltex (now Ampol) to claim $8 million in benefit payments for diesel used in pipe cleaning, which was outside the scheme's intent, and criticised the company's conduct as contrary to corporate responsibility and the public interest."
+  },
+  {
+   "slug": "speech-393595",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-08-25",
+   "stage_hint": null,
+   "brief": "The government argued that the Product Stewardship (Oil) Amendment Bill 2020 and Excise Tariff Amendment Bill 2020 are needed to close a loophole created by a Federal Court decision in Caltex Petroleum v Commissioner of Taxation, ensuring the oil recycling scheme applies to lubricants and greases but excludes diesel and other fuels. The scheme collects and recycles about 300 million litres of waste oil annually from nearly 50,000 businesses, supports 11 recycling facilities, employs 600 Australians directly, and received $7 million in COVID-19 relief funding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Product Stewardship (Oil) Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00082",
+   "assent_date": "2020-09-07"
+  }
+ ]
+}

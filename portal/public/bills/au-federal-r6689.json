@@ -1,0 +1,600 @@
+{
+ "key": "au-federal-r6689",
+ "title": "Mutual Recognition Amendment Bill 2021",
+ "short_title": "Mutual Recognition Amendment Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-03-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Prime Minister",
+ "status": "passed",
+ "status_as_of": "2021-06-24",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6689_ems_929e8657-5881-4cb2-91d0-2067086a3bbc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6689_ems_99d6ff31-17f0-4083-a131-b42feb50b4b7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6689%22",
+   "document_date": "2021-03-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00050",
+   "document_date": "2021-06-24",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-03-18",
+  "sentences": [
+   "The bill would create a national system where a worker registered in one state is automatically considered registered to do the same job in another state.",
+   "Workers must follow the second state's laws and may face disciplinary action there, while those with disciplinary sanctions are excluded from the scheme.",
+   "A state minister can exempt a registration for up to five years if it poses a serious threat to public safety, the environment, animal welfare, or consumers."
+  ],
+  "changes": [
+   "Introduces automatic mutual recognition for registered occupations across states.",
+   "Requires workers to comply with laws of the second state, including character checks for working with vulnerable people.",
+   "Bars workers under disciplinary action or with conditions from disciplinary, civil or criminal action from automatic recognition.",
+   "Allows state ministers to exempt a registration for up to five years due to significant risk.",
+   "Permits a temporary six-month exemption after commencement, extendable to 30 June 2022."
+  ],
+  "affected": "Individuals registered for an occupation in their home state who want to work in another state.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:09Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7084",
+   "date": "2021-03-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with the [amendments](https://www.openaustralia.org.au/debates/?id=2021-03-25.21.1) introduced by Corio MP [Richard Marles](https://theyvoteforyou.org.au/people/representatives/corio/richard_marles) (Labor), which means they failed. MP Marles [explained](https://www.openaustralia.org.au/debates/?id=2021-03-25.21.1) that: > *Labor is moving amendments to seek the exclusion of those licensed occupations which operate in the building industry from the application of this bill, given the varying forms of regulation that exist in relation to those licenses. It's important that as we move forward with this bill that, as laudable as the principle is, there aren't unintended consequences in relation to the health and safety of those working in these industries, along with the outcome of their work and the benefit to consumers.* ### Amendment text > *(1) Schedule 1, item 87, page 17 (line 30), omit \"This Part\", substitute \"Subject to subsection (4), this Part\".* > > *(2) Schedule 1, item 87, page 18 (after line 5), at the end of section 42C, add:* > >> *Exclusions* >> >> *(4) This Part does not apply to:* >> >> *(a) a building, maintenance or construction industry activity; or* >> >> *(b) an electrical occupation activity.* >> >> *Note: A consequence of this Part not applying is that there is no automatic deemed registration under section 42D.* >> >> *(5) In this section:* >> >> *building, maintenance or construction industry activity means building, maintenance or construction work authorised to be carried on under an occupation that requires registration under State building, maintenance or construction licencing legislation.* >> >> *electrical occupation activity means electrical work authorised to be carried on under an occupation that requires registration or licensing under State legislation.*",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 126
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-03-25/1"
+  },
+  {
+   "key": "federal-senate-7100",
+   "date": "2021-05-12",
+   "house": "senate",
+   "question": "The same number of senators voted for and against the [amendment](https://www.openaustralia.org.au/senate/?gid=2021-05-12.17.3), which means it failed. The amendment would have changed the wording of the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is “*that the bill be read a second time*” (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *Omit all words after 'That\", substitute \"the Bill be referred to the Education and Employment Legislation Committee for inquiry and report by 9 June 2021, with particular reference to concerns raised by the Scrutiny of Bills Committee, and whether the legislation will:* > > *a) act as a disincentive to states and territories harmonising rules and regulations relating to occupational registration and/or licensing of occupations where significant jurisdictional variation exists,* > > *b) restrict existing licensing and registration authorities from adequately performing their functions, and* > > *c) reduce consumer protections, public safety and the work health and safety of workers by replacing existing mutual recognition arrangements of occupations that require licensing and/or registration with the proposed automatic mutual recognition arrangements\".*",
+   "stage": "Second reading",
+   "ayes": 29,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 25,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-12/1"
+  },
+  {
+   "key": "federal-senate-7101",
+   "date": "2021-05-12",
+   "house": "senate",
+   "question": "The majority voted in favour of reading the [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6689) for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). In parliamentary jargon, they voted to agree with the main idea of the bill. They can now discuss it in more detail. ### What is the main idea of the bill? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6689), the bill was introduced to: * *introduce a uniform scheme of automatic mutual recognition (AMR) by enabling an individual who is registered for an occupation in their home state to carry on those activities in other states and territories;* * *enable a state minister to exempt a registration in their state from being subject to AMR for a renewable period of up to five years because of a significant risk to consumer protection, the environment, animal welfare or the health or safety of workers or the public; and* * *enable a state minister to exempt a registration in their state for a temporary period of six months after commencement of the Act, with an option to extend for a further period to 30 June 2022 if needed.*",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 26,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-12/2"
+  },
+  {
+   "key": "federal-senate-7102",
+   "date": "2021-05-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-05-12.44.1) introduced by NSW Senator [Mehreen Faruqi](https://theyvoteforyou.org.au/people/senate/nsw/mehreen_faruqi) (Greens), which means they failed. ### Amendment text > *(1) Schedule 1, item 87, page 17 (line 30), omit \"This Part\", substitute \"Subject to subsection (4), this Part\".* > > *(2) Schedule 1, item 87, page 18 (after line 5), at the end of section 42C, add:* > >> *Exclusions* >> >> *(4) This Part does not apply to:* >> >>> *(a) a teaching activity; or * >>> >>> *(b) a building, maintenance or construction industry activity; or* >>> >>> *(c) an electrical occupation activity.* >>> >>> *Note: A consequence of this Part not applying is that there is no automatic deemed registration under section 42D.* >> >> *(5) In this section:* >> >>> *building, maintenance or construction industry activity means building, maintenance or construction work authorised to be carried on under an occupation that requires registration under State building, maintenance or construction licencing legislation.* >>> >>> *electrical occupation activity means electrical work authorised to be carried on under an occupation that requires registration or licensing under State legislation.* >>> >>> *teaching activity means teaching work authorised to be carried on under an occupation that requires registration under State legislation.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 26,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-12/3"
+  },
+  {
+   "key": "federal-senate-7103",
+   "date": "2021-05-12",
+   "house": "senate",
+   "question": "The majority voted in favour of agreeing with the [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6689) as amended. This means they can now decide whether to give it a [third reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) and so pass the bill in the Senate. ### What does the bill do? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6689), the bill was introduced to: * *introduce a uniform scheme of automatic mutual recognition (AMR) by enabling an individual who is registered for an occupation in their home state to carry on those activities in other states and territories;* * *enable a state minister to exempt a registration in their state from being subject to AMR for a renewable period of up to five years because of a significant risk to consumer protection, the environment, animal welfare or the health or safety of workers or the public; and* * *enable a state minister to exempt a registration in their state for a temporary period of six months after commencement of the Act, with an option to extend for a further period to 30 June 2022 if needed.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 26,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-12/4"
+  },
+  {
+   "key": "federal-senate-7104",
+   "date": "2021-05-12",
+   "house": "senate",
+   "question": "The majority voted in favour of reading the [bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6689) for a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). In parliamentary jargon, they voted to pass the bill in the Senate. This means that the bill will now be sent back to the House of Representatives for them to decide whether they agree with the Senate amendments. If they do agree, the bill will become law. ### What is the main idea of the bill? According to the [bill homepage](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6689), the bill was introduced to: * *introduce a uniform scheme of automatic mutual recognition (AMR) by enabling an individual who is registered for an occupation in their home state to carry on those activities in other states and territories;* * *enable a state minister to exempt a registration in their state from being subject to AMR for a renewable period of up to five years because of a significant risk to consumer protection, the environment, animal welfare or the health or safety of workers or the public; and* * *enable a state minister to exempt a registration in their state for a temporary period of six months after commencement of the Act, with an option to extend for a further period to 30 June 2022 if needed.*",
+   "stage": "Third reading",
+   "ayes": 33,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 25,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-05-12/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-404420",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The Mutual Recognition Amendment Bill 2021 introduces automatic mutual recognition (AMR) for occupational registrations across states and territories, removing the need for additional application fees and paperwork for workers like builders, plumbers and architects. The government estimates this will benefit over 168,000 workers and generate $2.4 billion in additional economic activity over 10 years, with safeguards to address risks."
+  },
+  {
+   "slug": "speech-405403",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Mutual Recognition Amendment Bill 2021 introduces automatic mutual recognition (AMR) of occupational registrations, allowing licensed workers like carpenters and electricians to work across state borders without additional fees or applications. The reform is projected to increase GDP by $2.4 billion over 10 years, with over 124,000 registered workers benefiting from reduced administrative costs."
+  },
+  {
+   "slug": "speech-405404",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the principle of automatic mutual recognition for licensed occupations but moved amendments to exclude building industry licences, citing safety risks from inconsistent state regulations, and called for an inquiry before the scheme's 1 July start."
+  },
+  {
+   "slug": "speech-405405",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker supported amendments to the Mutual Recognition Amendment Bill 2021 to exclude electrical and construction workers, arguing the bill would undermine safety and quality standards without them."
+  },
+  {
+   "slug": "speech-405406",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The member for Mount Gambier argued that the Mutual Recognition Amendment Bill 2021 will eliminate unnecessary regulatory barriers for workers in cross-border communities, benefiting over 124,000 workers and enabling an additional 44,000 to work across state borders. He cited examples of tradespeople, teachers, and real estate agents in his electorate who face red tape due to the South Australia-Victoria border, and praised the reform as a positive outcome of COVID-19 collaboration."
+  },
+  {
+   "slug": "speech-405407",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Mutual Recognition Amendment Bill 2021, while well-intentioned, is poorly designed and threatens public safety by creating a race to the bottom on standards; they oppose the bill in its current form and call for redrafting with proper consultation, supporting amendments to exempt safety-critical industries like electrical and construction."
+  },
+  {
+   "slug": "speech-405408",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Mutual Recognition Amendment Bill 2021 was supported for including safeguards (section 42S and 42A) that prevent a race to the bottom and encourage higher occupational licensing standards across states, using Queensland’s building licensing as a benchmark."
+  },
+  {
+   "slug": "speech-405409",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "Labor will refer the Mutual Recognition Amendment Bill 2021 to a Senate inquiry and move a substantive amendment to exclude electrical and construction workers, arguing that automatic mutual recognition for those occupations poses safety risks due to unresolved differences in state standards and regulations."
+  },
+  {
+   "slug": "speech-405410",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Mutual Recognition Amendment Bill 2021 introduces automatic mutual recognition for registered occupations, making it cheaper and faster for workers like tradies to operate across state borders, directly benefiting cross-border communities such as Albury-Wodonga where 15.6% of the population are technicians and trade workers and over 20% of Albury workers live in Wodonga."
+  },
+  {
+   "slug": "speech-405411",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-25",
+   "stage_hint": null,
+   "brief": "The Mutual Recognition Amendment Bill 2021 introduces automated mutual recognition for occupational registrations, allowing licensed professionals like builders and plumbers to work across states without extra licences or fees, with safeguards for consumer protection, worker safety, and local regulatory oversight."
+  },
+  {
+   "slug": "speech-409785",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-23",
+   "stage_hint": null,
+   "brief": "The Mutual Recognition Amendment Bill 2021 was passed, allowing licensed workers to work across state borders without applying for a new licence, reducing costs and paperwork. The reform is estimated to add $2.4 billion to the economy over 10 years, but the Australian Labor Party voted against it."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Mutual Recognition Amendment Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00050",
+   "assent_date": "2021-06-24"
+  }
+ ]
+}

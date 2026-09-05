@@ -1,0 +1,240 @@
+{
+ "key": "au-federal-alrc-4142",
+ "title": "Export Market Development Grants Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Trade",
+ "status": "lapsed",
+ "status_as_of": "2013-03-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-02-13",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-12",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-03-18",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-18",
+   "house": "senate",
+   "url": null
+  }
+ ],
+ "sources": [],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-2",
+   "date": "2013-03-14",
+   "house": "representatives",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 71,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-03-14/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-269433",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-821694",
+   "speaker": "Craig Emerson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-02-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270143",
+   "speaker": "Julie Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270144",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270145",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270146",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270147",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270148",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270561",
+   "speaker": "Warren Truss",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270562",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270563",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270568",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-270569",
+   "speaker": "Kelvin Thomson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-822697",
+   "speaker": "Kate Lundy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-03-18",
+   "stage_hint": null,
+   "brief": "The Export Market Development Grants Amendment Bill 2013 was introduced to concentrate the EMDG scheme on small businesses exporting to East Asian and frontier/emerging markets, saving $25 million annually by increasing grants to those markets from seven to eight while reducing grants to the US, Canada, the UK and the EU from seven to five, effective 1 July 2013."
+  }
+ ],
+ "acts": []
+}

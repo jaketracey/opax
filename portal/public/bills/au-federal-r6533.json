@@ -1,0 +1,901 @@
+{
+ "key": "au-federal-r6533",
+ "title": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020",
+ "short_title": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-04-08",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2020-04-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-04-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6533_ems_1daae531-9b3a-493f-8596-23432c143fb3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6533%22",
+   "document_date": "2020-04-08",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00037",
+   "document_date": "2020-04-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6315",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Major charity access to JobKeeper program",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/1"
+  },
+  {
+   "key": "federal-representatives-6316",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Local Government",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/2"
+  },
+  {
+   "key": "federal-representatives-6317",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Disability sector",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/3"
+  },
+  {
+   "key": "federal-representatives-6318",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Educational sector staff",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/4"
+  },
+  {
+   "key": "federal-representatives-6319",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "The majority voted in favour of disagreeing with the [amendment](https://www.openaustralia.org.au/debate/?id=2020-04-08.18.1) to the usual second reading motion \"*that the bill be read [for a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\", which is parliamentary jargon for agreeing with the main idea of the bill. This mean that the amendment failed. This amendment was introduced by Gorton MP [Brendan O'Connor](https://theyvoteforyou.org.au/people/representatives/gorton/brendan_o'connor) (Labor) and, if it had been successful, its text would have been added to the usual second reading motion as a note. In other words, it didn't seek to change the actual text of the bills. MP O'Connor explained [the rationale behind his amendment](https://www.openaustralia.org.au/debate/?id=2020-04-08.18.1) in his contribution to the debate. ### Amendment text > *That the following words be added after paragraph (6):* > > *\"(7) calls on the Government to ensure that the JobKeeper wage subsidy is only used by employers to pay their employees’ wages and not to subsidise their company’s balance sheet, noting that there should be no provision for business to force employees to use their annual leave entitlements and pay for that leave with the JobKeeper wage subsidy\".*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/5"
+  },
+  {
+   "key": "federal-representatives-6320",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Working visa holders",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/6"
+  },
+  {
+   "key": "federal-representatives-6321",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Arts and entertainment sector",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/7"
+  },
+  {
+   "key": "federal-representatives-6322",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Casual workers",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/8"
+  },
+  {
+   "key": "federal-representatives-6323",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Eligibility of JobKeeper payment",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/9"
+  },
+  {
+   "key": "federal-representatives-6324",
+   "date": "2020-04-08",
+   "house": "representatives",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 - Consideration in Detail - Power of eligibility for JobKeeper scheme",
+   "stage": "Consideration in detail",
+   "ayes": 30,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-04-08/10"
+  },
+  {
+   "key": "federal-senate-6325",
+   "date": "2020-04-08",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Extend accessibility of JobKeeper Payment",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 21,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 9,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-04-08/1"
+  },
+  {
+   "key": "federal-senate-6326",
+   "date": "2020-04-08",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Visa holders",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 21,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 9,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-04-08/2"
+  },
+  {
+   "key": "federal-senate-6327",
+   "date": "2020-04-08",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Casual workers",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 21,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 8,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-04-08/3"
+  },
+  {
+   "key": "federal-senate-6328",
+   "date": "2020-04-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2020-04-08.122.1) to the usual [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*that the bill be read for a second time*\" (which is parliamentary jargon for agreeing with the main idea of the bill). This mean that the amendment failed. This amendment was introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens) and, if it had been successful, its text would have been added to the usual second reading motion as a note. In other words, it didn't seek to change the actual text of the bills. Senator Siewert explained the rationale behind her amendment in [her contribution](https://www.openaustralia.org.au/senate/?gid=2020-04-08.106.1) to the debate. ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) is of the opinion that the Government's response to COVID-19 continues to see large sections of our population left behind and disproportionately affected by this health and economic crisis;* > > *(b) calls on the Government to:* > >> *(i) provide proper support to at least the following groups:* >> >>> *(A) Disability Support Pension recipients, carers, and age pensioners who receive Commonwealth Rent Assistance, none of whom will be eligible for the $550 a fortnight COVID-19 supplement and will be trapped beneath the poverty line,* >>> >>> *(B) First Nations peoples who are at severe risk of harm from COVID-19 and urgently need adequate personal protective equipment and access to safe housing,* >>> >>> *(C) disabled people, who must have guaranteed continuity of essential disability supports, and have equal access to healthcare to ensure their human rights under the United Nations Convention on the Rights of People with Disabilities are upheld,* >>> >>> *(D) those for whom isolation presents a heightene",
+   "stage": "Second reading",
+   "ayes": 4,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 8,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-04-08/4"
+  },
+  {
+   "key": "federal-senate-6329",
+   "date": "2020-04-08",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - Accessibility of support",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 21,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 9,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-04-08/5"
+  },
+  {
+   "key": "federal-senate-6330",
+   "date": "2020-04-08",
+   "house": "senate",
+   "question": "Coronavirus Economic Response Package (Payments and Benefits) Bill 2020 and related bills - Second Reading - JobKeeper accessibility and the Arts",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 21,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 17,
+    "earliest": 9,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-04-08/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-390630",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to rearrange the day's sitting, prioritising debate on the Coronavirus Economic Response Package (Payments and Benefits) Bill 2020, the Coronavirus Economic Response Package Omnibus (Measures No. 2) Bill 2020, and Appropriation Bills Nos 5 and 6 of 2019-2020. The motion, agreed with the Manager of Opposition Business, sets debate until 2 pm, cancels the Federation Chamber, and prescribes grouped voting on amendments."
+  },
+  {
+   "slug": "speech-390647",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The Coronavirus Economic Response Package (Payments and Benefits) Bill would support six million workers and provide a $130 billion economic bridge, with public health measures including 30 million PPE sets, ICU capacity doubled from 2,200 to 7,500, and 2.5 million telehealth visits."
+  },
+  {
+   "slug": "speech-390648",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Coronavirus Economic Response Package bills and moved an amendment to extend JobKeeper payments to working visa holders unable to return to their country of origin. They also called for including casuals employed less than 12 months and for parliamentary scrutiny through a Senate select committee chaired by Senator Katy Gallagher."
+  },
+  {
+   "slug": "speech-390650",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the $130 billion JobKeeper package, announced that eligible businesses would receive $1,500 per fortnight per employee, and thanked workers, businesses, and the public for their sacrifices during the pandemic."
+  },
+  {
+   "slug": "speech-390666",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The speech argued that the government's COVID-19 economic response packages, while welcome, have gaps that exclude casual employees, pay-as-you-go contractors, temporary visa holders, and self-funded retirees, and urged extensions of support to these groups, as well as greater oversight for commercial tenancies and childcare."
+  },
+  {
+   "slug": "speech-390667",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The independent MP supported the JobKeeper payment as a major improvement but noted it fails to cover casuals employed for less than 12 months, affecting 20% of workers in her electorate. She welcomed free childcare but warned the rushed package threatens rural providers' viability, and called for guarantees that all providers be eligible for JobKeeper and no provider be worse off, while arguing for joint parliamentary committees to scrutinise the government's pandemic response."
+  },
+  {
+   "slug": "speech-390739",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-390740",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The opposition moved an amendment to the Coronavirus Economic Response Package Bill 2020, requiring the Treasurer to consider support for casuals, prevent employers from using wage subsidies to cover leave entitlements, and address gaps for charities, universities, NDIS providers, temporary visa holders, and local government employees. The amendment also sought to prevent employers from coercing workers into taking leave in exchange for JobKeeper eligibility."
+  },
+  {
+   "slug": "speech-390741",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The government rejected amendments to the Coronavirus Economic Response Package, arguing the JobKeeper scheme already provides a wage guarantee for six million Australians, supports businesses to survive the crisis, and extends to part-time and long-term casuals using established industrial relations definitions, while charities and not-for-profits are also covered with donations factored into the turnover test."
+  },
+  {
+   "slug": "speech-390743",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": "The Greens MP supported opposition amendments to include casual workers and others left out of the government’s package, and asked the minister whether JobKeeper eligibility could be extended to workers with a proven income history but not employed on 1 March (e.g., arts workers on short-term contracts). The MP also asked the minister to confirm that the bill’s rules cannot be used to take away existing entitlements under other acts or schemes."
+  },
+  {
+   "slug": "speech-390746",
+   "speaker": "Tony Smith",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-04-08",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Coronavirus Economic Response Package (Payments and Benefits) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00037",
+   "assent_date": "2020-04-09"
+  }
+ ]
+}

@@ -1,0 +1,322 @@
+{
+ "key": "au-federal-r6347",
+ "title": "Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019",
+ "short_title": "Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industrial Relations",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6347_ems_79e58577-9021-42ec-a63d-4a05edd1fd1c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6347%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5857",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "question": "The majority voted against an amendment to the usual [second reading](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion \"*that the bills be read a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. Since this vote was unsuccessful, the second reading motion will remain unchanged. ### Amendment text > *The House:* > > *(1) declines to give the bill a second reading; and* > > *(2) notes that:* > >> *(a) this Government has not proposed legislation to deal with important workplace relations matters, such as wage theft, flat lining wages growth, or deaths in the workplace;* >> >> *(b) this bill and the Act it seeks to amend represent an inconsistent approach by the Government to responding to Royal Commissions; and* >> >> *(c) instead of protecting workers from wage theft, the Government has determined to attack the worker entitlement funds that guarantee workers’ entitlements are paid.*",
+   "stage": "Second reading",
+   "ayes": 69,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-10/7"
+  },
+  {
+   "key": "federal-representatives-5858",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to read the bill for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This is parliamentary jargon for agreeing with the main idea of the bill and means that the House can now discuss it in more detail. ### What is the bill's main idea? According to the [bill's homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6347), the bill was introduced to: * *prohibit terms of a modern award or an enterprise agreement requiring or permitting contributions for the benefit of an employee to be made to any fund other than a superannuation fund, a registered worker entitlement fund or a registered charity;* * *require any term of a modern award or enterprise agreement that names a worker entitlement fund or insurance product to provide for an employee to choose another fund or insurance product;* * *prohibit any term of a modern award, enterprise agreement or contract of employment permitting or requiring employee contributions to an election fund for an industrial association;* * *prohibit any action with the intent to coerce an employer to pay amounts to a particular worker entitlement fund, superannuation fund, training fund, welfare fund or employee insurance scheme;* * *require registered organisations to have written financial management policies that have been approved by the committee of management;* * *require registered organisations to report certain loans, grants and donations;* * *require specific disclosure by registered organisations of the financial benefits obtained by them and persons linked to them in connection with employee insurance products, welfare fund arrangements and training fund arrangements; and* * *introduce a range of new penalties relating to compliance by registered organisations with financial management, disclosure and reporting requirements.*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-10/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377400",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The bill mandates governance and transparency standards for worker entitlement funds holding over $2 billion, including independent directors and disclosure requirements, and implements 10 recommendations from the Heydon royal commission to prevent corruption, coercion, and financial mismanagement in unions and employer groups."
+  },
+  {
+   "slug": "speech-379514",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-08-01",
+   "stage_hint": null,
+   "brief": "The speech opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019, arguing it hypocritically targets jointly managed union-employer entitlement funds while exempting employer-only funds, and that the government's real motive is attacking unions. It cited insolvency cases such as Queensland Nickel's $70 million in unpaid entitlements and moved an amendment to reject the bill."
+  },
+  {
+   "slug": "speech-379515",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-08-01",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019, arguing it wrongly targets worker-run entitlement funds while real wage theft—such as underpayments of $10.50 per hour and $16,635, and 30% of surveyed migrants paid $12 per hour below minimum wage—remains unaddressed."
+  },
+  {
+   "slug": "speech-379892",
+   "speaker": "Keith Pitt",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019 is needed to protect $2 billion in workers' entitlements, citing two royal commissions' recommendations. The bill would prohibit forced contributions to election funds, allow employees to choose their own funds and insurance, and require registered organisations to have financial policies and disclose loans, grants and donations."
+  },
+  {
+   "slug": "speech-379893",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill, arguing it misrepresents worker benefit funds like Protect, which provide redundancy and income protection for construction and electrical workers, and accused the government of attacking unions while ignoring broader issues like aged care and banking misconduct."
+  },
+  {
+   "slug": "speech-379894",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019 is needed to impose governance rules on union-controlled worker entitlement funds, citing $25 million skimmed annually and examples like the CFMMEU's Uplus scheme ($810,000 in undisclosed payments) and the ETU Victoria's Protect fund ($4.5 million diverted). The bill would require funds to have independent directors, transparent reporting, and oversight by the Registered Organisations Commission, and would ban forced contributions to union-approved funds."
+  },
+  {
+   "slug": "speech-379895",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019 is an anti-union attack that treats workers' rights as a cost to business, imposing red tape on unions while exempting corporations. They cited wage theft cases at 7-Eleven, Domino's, Chatime, and Caltex, and noted the bill goes beyond the Heydon royal commission's recommendations, opposing the Registered Organisations Commission in favor of ASIC oversight."
+  },
+  {
+   "slug": "speech-379896",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019 was opposed as an attack on unions that would impose new restrictions on worker entitlement funds and financial management, while failing to improve worker safety or pay; the speaker also highlighted the government's poor economic record, including construction wage growth of just 0.8% annually from 2013 to 2018 and examples of corporate misconduct at 7-Eleven, Domino's, and Michael Hill Jewellers."
+  },
+  {
+   "slug": "speech-379897",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor opposes the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019, calling it an attack on trade unions and worker representation. The bill imposes onerous restrictions on worker entitlement funds and union financial management, while the government has not addressed stagnant wage growth, wage theft, or unsafe conditions."
+  },
+  {
+   "slug": "speech-379898",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019, arguing it attacks workers' rights and targets unions representing nurses, teachers, and police officers. The bill would impose restrictions on worker entitlement funds not applied to corporations, while the government lacks a plan for a faltering economy with low growth, rising unemployment, and sluggish wages."
+  },
+  {
+   "slug": "speech-379899",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The coalition government is playing political games instead of addressing stagnant wages, insecure work, and underemployment; wage growth averaged 2.2% from 2013–2018 compared to 3.3% in the five years prior, with 700,000 unemployed, over a million underemployed, and the number of people working four jobs doubling in the last 12 months."
+  },
+  {
+   "slug": "speech-379901",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019 unfairly attacks unions and workers by imposing burdensome regulations, while the government fails to address widespread employer underpayment and wage theft, citing examples such as the Heydon royal commission and cases of workers losing entitlements."
+  },
+  {
+   "slug": "speech-380127",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019, arguing it unfairly attacks unions and workers' rights while protecting big business interests. They cited low wage growth, union benefits like safety protection and support for grieving families, and criticised the politicised Registered Organisations Commission."
+  },
+  {
+   "slug": "speech-380128",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work Laws Amendment (Proper Use of Worker Benefits) Bill 2019 is needed to regulate worker benefit funds, citing Protect’s $60 million surplus distribution to the ETU Victoria and NECA without transparency, and noting that such funds currently have no requirement to disclose fees or expenditures and can inequitably favour union members."
+  }
+ ],
+ "acts": []
+}

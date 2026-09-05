@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6743",
+ "title": "Social Services Legislation Amendment (Consistent Waiting Periods for New Migrants) Bill 2021",
+ "short_title": "Social Services Legislation Amendment (Consistent Waiting Periods for New Migrants) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6743%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6743%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6743%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6743_ems_4e67d5f8-c48c-48b0-8098-7d699b76e7f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6743%22",
+   "document_date": "2021-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-24",
+  "sentences": [
+   "This bill would make new migrants wait four years before accessing several social security payments and family assistance benefits.",
+   "It would extend the existing waiting period for carer payment, parental leave pay, and dad and partner pay from two years to four years, and for carer allowance and family tax benefit Part A from one year to four years.",
+   "The changes would take effect from 1 January 2022 and also introduce a four-year waiting period for family tax benefit Part B and the low income health care card."
+  ],
+  "changes": [
+   "Extends the Newly Arrived Resident's Waiting Period for carer payment, parental leave pay, and dad and partner pay from 104 weeks to 208 weeks.",
+   "Extends the waiting period for carer allowance and family tax benefit Part A from 52 weeks to 208 weeks.",
+   "Introduces a 208-week waiting period for family tax benefit Part B.",
+   "Applies a 208-week waiting period to the low income health care card for relevant temporary visa holders.",
+   "Removes the 104-week qualifying residence period for Parenting Payment from 1 January 2022.",
+   "Makes minor technical and consequential amendments to clarify administration of social security and family assistance laws."
+  ],
+  "affected": "New permanent residents and relevant temporary visa holders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

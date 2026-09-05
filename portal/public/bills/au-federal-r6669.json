@@ -1,0 +1,247 @@
+{
+ "key": "au-federal-r6669",
+ "title": "Private Health Insurance Legislation Amendment (Age of Dependants) Bill 2021",
+ "short_title": "Private Health Insurance Legislation Amendment (Age of Dependants) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-02-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2021-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6669_ems_9bbf76e2-0208-4959-8fb5-dd0b93288d58%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6669_ems_42e62756-acf2-40ac-b2ca-c780fb548198%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6669%22",
+   "document_date": "2021-02-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00060",
+   "document_date": "2021-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7285",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.259.3) introduced by the Australian Greens Party, which means they failed. ### Amendment text > *SHEET 1263* > > *(1) Page 2 (after line 11), after clause 3, insert:* > >> *4 Review of the operation of amendments* >> >> *(1) The Minister must cause an independent review to be conducted of the operation of the amendments made by this Act.* >> >> *(2) The review must start as soon as practicable, and in any event within 1 month, after the end of 18 months after this Act commences.* >> >> *(3) The persons who conduct the review must give the Minister a written report of the review within 6 months of the commencement of the review.* >> >> *(4) The persons who conduct the review must consult with disability advocacy organisations, people with a disability, and other relevant stakeholders on matters considered in the review.* >> >> *(5) Without limiting subsections (1) and (3), the review and report must consider:* >> >>> *(a) the implementation and effect of reforms made by the amendments in this Act; and* >>> >>> *(b) the results of consultation under subsection (4); and* >>> >>> *(c) the operation of the definition of dependent person with a disability inserted into the Private Health Insurance Act 2007 by this Act.* >> >> *(6) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Minister.* > > _____ > > *SHEET 1240* > > *(1) Schedule 1, item 20, page 5 (lines 26 to 28), omit subparagraph (b)(i) of the definition of dependent person with a disability in clause 1 of Schedule 1, substitute:* > >> *(i) a person with any limitation, restriction or impairment which restricts everyday activities and has lasted, or is likely to last, for at least six months; or*",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 19,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/17"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-404458",
+   "speaker": "Mark Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The opposition supported the Private Health Insurance Legislation Amendment (Age of Dependants) Bill 2021, which raises the maximum age for dependent young adults on family policies from 24 to 31 and removes the age limit for dependent adults with a disability linked to the NDIS, arguing it eases cost pressures on households after average family insurance premiums rose over 30% (more than $1,100) from 2013 to 2019."
+  },
+  {
+   "slug": "speech-404459",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The Morrison government's bill increases the maximum age for dependants on private health insurance from 24 to 31 and removes age limits for dependants with disabilities, aiming to improve affordability and sector sustainability. The speaker cited her son Monty Allen's experience and noted that 425,000 young people have received discounts of up to 10% since April 2019, with the lowest annual premium rise in two decades at 2.74%."
+  },
+  {
+   "slug": "speech-404460",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Private Health Insurance Legislation Amendment (Age of Dependants) Bill 2021, which raises the age for dependants on family private health insurance to 31 and provides lifetime cover for people with NDIS‑eligible disabilities, while criticising the government for taking eight years to introduce the measure and linking it to worsening housing affordability, rising HECS debts, and declining private health insurance uptake."
+  },
+  {
+   "slug": "speech-404461",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The speech supported the Private Health Insurance Legislation Amendment (Age of Dependants) Bill 2021, arguing it would allow young Australians to remain on parents’ private health insurance until age 30, assist those with pre-existing conditions, and support the system’s sustainability. It also criticised Labor’s superannuation policies, citing the 10 per cent compulsory levy as reducing young people’s take-home pay and homeownership prospects, and accused the member for Macnamara of proposing that young Australians’ super savings be used for housing"
+  },
+  {
+   "slug": "speech-404464",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance Legislation Amendment (Age of Dependants) Bill 2021 was supported, raising the maximum dependent age for family private health insurance from 24 to 31 and allowing people with disabilities of any age to be covered as dependants."
+  },
+  {
+   "slug": "speech-404465",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance Legislation Amendment (Age of Dependants) Bill was supported, raising the maximum age of dependants from 24 to 31 and allowing insurers to offer no age limit for dependants with a disability, defined as NDIS participants. To address declining youth coverage, data showed 56 per cent of men and 54 per cent of women aged 18-29 live with parents, and the medihotel at Royal Perth Hospital was cited as an innovation."
+  },
+  {
+   "slug": "speech-404466",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Private Health Insurance Legislation Amendment (Age of Dependants) Bill 2021, which raises the age dependants can stay on family private health insurance from 24 to 31, and allows disabled dependants to remain on the policy for life. The speaker argued this will keep more young people in private health insurance, lower costs and premiums, and provide peace of mind for families with disabled children."
+  },
+  {
+   "slug": "speech-404467",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-03-18",
+   "stage_hint": null,
+   "brief": "The Private Health Insurance Legislation Amendment (Age of Dependants) Bill 2021 increases the maximum age of dependants from 24 to 31, with no age limit for dependants with a disability, aiming to support families, retain young adults in private health insurance, and improve affordability and sustainability."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Private Health Insurance Legislation Amendment (Age of Dependants) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00060",
+   "assent_date": "2021-06-29"
+  }
+ ]
+}

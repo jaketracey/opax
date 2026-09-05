@@ -1,0 +1,335 @@
+{
+ "key": "au-federal-r5557",
+ "title": "Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2015",
+ "short_title": "Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-10-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5557_ems_fafd5f04-8c07-445a-859d-073edb7842fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5557_ems_b29de59b-8b48-4ca0-b860-3249d0470eb4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5557_ems_5e357575-feaa-4e17-9405-35192d0b0be5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5557%22",
+   "document_date": "2015-10-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00173",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3997",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "question": "Long debate text truncated.",
+   "stage": "Business motion",
+   "ayes": 79,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-11-26/1"
+  },
+  {
+   "key": "federal-senate-4006",
+   "date": "2015-11-30",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](http://www.openaustralia.org.au/senate/?id=2015-11-30.142.2) that the [*Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2015*](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5557) be read a first time. Passing this motion means that the bills can be introduced into the Senate. [According to The Parliament](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5557#sched), this bill: > Amends the [A New Tax System (Family Assistance) Act 1999](http://www.austlii.edu.au/au/legis/cth/consol_act/antsaa1999357/) to restructure family tax benefit Part B by removing the benefit for couple families (other than grandparents or great-grandparents) with a youngest child 13 years of age or over. According to [Odgers’ Australian Senate Practice](http://www.aph.gov.au/About_Parliament/Senate/Powers_practice_n_procedures/odgers13?file=chapter12§ion=05), “the first reading is normally passed without opposition and is regarded as a purely formal stage”. That the Senate [divided to vote on this motion, rather than passing it “on the voices”](https://theyvoteforyou.org.au/help/faq#division-occur), suggests that the [amendments](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr5557_amend_1024de59-f06b-4722-9ffe-f189a44de518%22;rec=0) to the [*A New Tax System (Family Assistance) Act 1999*](http://www.austlii.edu.au/au/legis/cth/consol_act/antsaa1999357/) included in this bill were controversial.",
+   "stage": "Bill",
+   "ayes": 35,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 31,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-30/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-324297",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor has defeated proposed cuts to family payments worth $8.5 billion and then $4.8 billion, protecting 1.6 million families and three million children from losing up to $4,700 per year for a single-parent household. They demanded the Turnbull government abandon further cuts and release departmental modelling on the impacts."
+  },
+  {
+   "slug": "speech-324303",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the bill, arguing it cuts $4.06 billion from family tax benefit supplements affecting 1.5 million families, including 600,000 single-parent families. He criticised the government’s childcare package as an unsubstantiated false trade-off and said the $380 million newborn payment was a political arrangement with the National Party."
+  },
+  {
+   "slug": "speech-324304",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2015 is necessary to simplify a complex welfare system that cost $145 billion annually, with spending growing 43% in a decade and $5 billion potentially lost to rorts, and criticised the opposition for blocking reforms."
+  },
+  {
+   "slug": "speech-324305",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "Labor successfully opposed cuts to family tax benefits, protecting 1.6 million families and 3 million children from losing up to $4,700 per year, but the schoolkids bonus cuts remain and the government should clarify its future plans."
+  },
+  {
+   "slug": "speech-324306",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill is necessary for fiscal sustainability and to fund programs like the Nanny Pilot Program, and criticised Labor for not addressing how to pay for welfare spending, noting that nearly half the population are net noncontributors and that the schoolkids bonus is funded by borrowed money."
+  },
+  {
+   "slug": "speech-324307",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull-Abbott government repeatedly targets vulnerable Australians for budget savings instead of addressing high-end superannuation, and supported amendments to the Family Payments bill on family tax benefit part B changes, which save $1.4 billion over four years, while warning that the government may reintroduce more draconian measures. They criticised the member for Parkes for implying that welfare recipients squander payments, and noted that 140,000 single parents and 76,000 couples would lose family tax benefit part A under the original bill."
+  },
+  {
+   "slug": "speech-324308",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill would cut family tax benefits for 1.5 million families, including 650,000 single parents and 500,000 on incomes under $51,000, while increasing payments for 140,000 families with children under one. They welcomed government amendments but criticised the lack of detail on a linked childcare package and accused the government of unfairness toward low-income families."
+  },
+  {
+   "slug": "speech-324309",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2015, arguing it unfairly cut family payments to low- and middle-income families, particularly in disadvantaged electorates like Throsby, where over 10,500 families receive Family Tax Benefit Part A and 9,400 receive Part B, with households in suburbs like Berkeley and Warrawong facing losses of $500–$550 annually. He cited NATSEM and Jesuit Social Services reports showing the coalition's budgets hit the poorest hardest while benefiting high-income families."
+  },
+  {
+   "slug": "speech-324310",
+   "speaker": "Bruce Billson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Bill 2015, arguing it provides targeted assistance for families and childcare while repairing budget damage, and criticised Labor for opposing the reforms and for past misuse of childcare funds involving United Voice."
+  },
+  {
+   "slug": "speech-324316",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The government argued for the Social Services Legislation Amendment bill to fund childcare reform, claiming Labor reduced a $4.7 billion childcare package to $525 million. The speaker announced changes to Family Tax Benefit B eligibility and a $3.5 billion Jobs for Families package, including a nanny pilot program for 10,000 children."
+  },
+  {
+   "slug": "speech-324317",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-26",
+   "stage_hint": null,
+   "brief": "The government will amend the bill to only include ending Family Tax Benefit Part B for couple families when the youngest child turns 13, a measure the opposition agreed to, while other savings—including phasing out end-of-year supplements worth $4.1 billion—will be reintroduced separately to fund $3.5 billion in childcare reforms and budget repair."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services Legislation Amendment (Family Payments Structural Reform and Participation Measures) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00173",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

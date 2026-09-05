@@ -1,0 +1,233 @@
+{
+ "key": "au-federal-r6997",
+ "title": "Health Insurance Amendment (Prescribed Dental Patients and Other Measures) Bill 2023",
+ "short_title": "Health Insurance Amendment (Prescribed Dental Patients and Other Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2023-08-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-08-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6997_ems_aff494c1-0429-4d66-80e9-dc7bf2f1275c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6997%22",
+   "document_date": "2023-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00059",
+   "document_date": "2023-08-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-22",
+  "sentences": [
+   "The bill would remove age limits for Medicare-funded dental treatment for people with cleft and craniofacial conditions.",
+   "It would let Services Australia use a computer system to automatically add or remove doctors from the Register of Approved Placements.",
+   "The bill would also fix mismatches between the Health Insurance Act and the Bonded Medical Program rules about how long participants must work in return for their training."
+  ],
+  "changes": [
+   "Removes age restrictions for prescribed dental patients under section 3BA of the Health Insurance Act.",
+   "Enables a computerised system for Services Australia to action decisions about the Register of Approved Placements.",
+   "Aligns the length of return of service obligations under Part VD of the Act with the Health Insurance (Bonded Medical Program) Rule 2020."
+  ],
+  "affected": "People with cleft and craniofacial conditions, doctors in the Bonded Medical Program, and Services Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8291",
+   "date": "2023-08-10",
+   "house": "senate",
+   "question": "The majority voted against a [request for amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6997_amend_fa634dcc-df68-485d-ae85-94b90ac0feb9%22;rec=0) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens), which means they failed. [According to Senator Rice](https://www.openaustralia.org.au/senate/?id=2023-08-09.211.2), the requests \"*would [have allowed] for 26 sessions of speech pathology within any period of 12 months*\".",
+   "stage": "In committee",
+   "ayes": 10,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-10/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829307",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The Health Insurance Amendment (Prescribed Dental Patients and Other Measures) Bill 2023, Customs Tariff Amendment (Incorporation of Proposals) Bill 2023, Special Recreational Vessels Amendment Bill 2023, Veterans' Affairs Legislation Amendment (Miscellaneous Measures) Bill 2023, and Treasury Laws Amendment (Refining and Improving Our Tax System) Bill 2023 were referred to the Federation Chamber for further consideration at the adjournment of the second reading debate."
+  },
+  {
+   "slug": "speech-829310",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-28",
+   "stage_hint": null,
+   "brief": "The bill removes the age restriction for cleft and craniofacial treatment on the Medicare Benefits Schedule, which the coalition supports, while arguing the government has failed to address workforce shortages, weakened Medicare by cutting hospital funding, halving mental health subsidies, and removing 70 telehealth items, and has not provided timelines or funding from the Strengthening Medicare Taskforce report."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Prescribed Dental Patients and Other Measures) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00059",
+   "assent_date": "2023-08-21"
+  }
+ ]
+}

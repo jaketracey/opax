@@ -1,0 +1,175 @@
+{
+ "key": "au-federal-r5701",
+ "title": "Industry Research and Development Amendment (Innovation and Science Australia) Bill 2016",
+ "short_title": "Industry Research and Development Amendment (Innovation and Science Australia) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2016-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-10-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5701_ems_ea21a092-2fa6-4864-8895-7bbc521e3151%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5701%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00063",
+   "document_date": "2016-10-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-335015",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Industry Research and Development Amendment (Innovation and Science Australia) Bill 2016 as it mirrors Labor’s commitment to establish an independent Innovate Australia, but criticised the government for a piecemeal approach and for cutting over $3 billion from science and research programs since 2013, restoring less than one third of that funding."
+  },
+  {
+   "slug": "speech-335018",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Industry Research and Development Amendment (Innovation and Science Australia) Bill establishes Innovation and Science Australia (ISA) as an independent body to provide strategic advice on science and innovation, and highlighted $7,000 Global Connections Fund grants for researchers including Mark Blaskovich, Scott Chapman, Ashleigh Cousins, and Dietmar Hutmacher, as well as the work of the University of Queensland, QCAT, and Life Sciences Queensland."
+  },
+  {
+   "slug": "speech-335019",
+   "speaker": "Ed Husic",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The speech argued that the government's innovation minister is retreating from supporting start-ups, despite their proven job creation (2 million net new jobs from young enterprises between 2003 and 2014) and the digital economy's projected growth from $80 billion to $140 billion. It also criticised the lack of a plan to manage automation, which is expected to impact 10 to 40 per cent of jobs."
+  },
+  {
+   "slug": "speech-335034",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Industry Research and Development Amendment (Innovation and Science Australia) Bill 2016, noting that Innovate Australia was their policy mirrored by the coalition, and highlighted that more money is wagered on the Melbourne Cup than invested in early-stage start-ups. They also referenced AVCAL's proposed changes to crowdsourced equity funding and the bipartisan Parliamentary Friends of Innovation and Enterprise group formed with the Speaker."
+  },
+  {
+   "slug": "speech-335038",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The speaker supported the Industry Research and Development Amendment (Innovation and Science Australia) Bill 2016, calling for furious bipartisanship on innovation, and noted Labor's past achievements including $4 billion allocated to 211 cooperative research centres since 1990 and $10 billion in innovation funds by the end of the Labor government. The speaker also highlighted the $40 million Australian Institute of Nanoscale Science and Technology at the University of Sydney, funded under Labor, as a world-leading facility working with Microsoft."
+  },
+  {
+   "slug": "speech-335039",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The Minister announced the $500 million Biomedical Translation Fund had received triple the private capital sought, and outlined progress on the National Innovation and Science Agenda including early-stage investor tax incentives, venture capital reforms, a women in STEM program, and a proposed national innovation fund for the first quarter of 2018. The Minister credited his predecessor for creating the agenda."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Industry Research and Development Amendment (Innovation and Science Australia) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00063",
+   "assent_date": "2016-10-20"
+  }
+ ]
+}

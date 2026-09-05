@@ -1,0 +1,568 @@
+{
+ "key": "au-federal-r5788",
+ "title": "Competition and Consumer Amendment (Misuse of Market Power) Bill 2017",
+ "short_title": "Competition and Consumer Amendment (Misuse of Market Power) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-08-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5788_ems_808db6b5-b611-47b1-8142-d11b93d78e4c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5788_ems_3b8ba987-5955-4a26-a77c-31d6a8244237%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5788_ems_cf2bf9f2-41e8-462c-8292-1c80778e561a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5788%22",
+   "document_date": "2016-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00087",
+   "document_date": "2017-08-23",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2016-12-01",
+  "sentences": [
+   "The bill would make it harder for big companies to use their market power in a way that harms competition.",
+   "It rewrites the existing ban to judge conduct by whether it would probably reduce competition in related markets, rather than by whether it hurts a specific rival.",
+   "The new test would rely on court rulings already used for other parts of the Act, and only companies with significant market power would be covered."
+  ],
+  "changes": [
+   "Strengthens the prohibition on misuse of market power by corporations.",
+   "Replaces the three existing prohibited purposes with a test based on substantially lessening competition.",
+   "Limits the ban to markets connected to the corporation that raise competition concerns.",
+   "Applies the new test only to corporations that hold substantial market power."
+  ],
+  "affected": "Corporations with a substantial degree of market power.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:42:25Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4604",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](http://www.openaustralia.org.au/debates/?id=2017-03-27.113.1) introduced by Labor MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen), which means it was unsuccessful. The bill asked the House of Representatives to refuse to agree to the bill's main idea. In parliamentary jargon, it refused the House to read the bill for a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What was the bill's main idea? According to the [bill's homepage](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5788), the bill was introduced to: * *strengthen the prohibition on corporations with substantial market powers from engaging in conduct that has the purpose, effect or likely effect of substantially lessening competition in markets in which they directly or indirectly participate* * *remove provisions in relation to telecommunications-specific anti-competitive conduct and the competition notices and exemption order regime* The [bill's digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd087) has more information. ### Motion text > *That all the words after \"That\" be omitted with a view to substituting the following words:* > *\"The House declines to give this bill a second reading and calls on the Government to explain why it is introducing a dangerous piece of economic policy that is legally unworkable, will chill competition, and will create uncertainty for business\".*",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 79,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-27/4"
+  },
+  {
+   "key": "federal-representatives-4605",
+   "date": "2017-03-27",
+   "house": "representatives",
+   "question": "The majority voted to agree with the bill's main idea, which means the House of Representatives can now discuss it in more detail. In parliamentary jargon, they agreed to read the bill for a [second time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What was the bill's main idea? According to the [bill's homepage](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5788), the bill was introduced to: * *strengthen the prohibition on corporations with substantial market powers from engaging in conduct that has the purpose, effect or likely effect of substantially lessening competition in markets in which they directly or indirectly participate* * *remove provisions in relation to telecommunications-specific anti-competitive conduct and the competition notices and exemption order regime* The [bill's digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd087) has more information.",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-03-27/5"
+  },
+  {
+   "key": "federal-senate-4861",
+   "date": "2017-08-14",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2017-08-14.186.4) introduced by South Australian Senator [Nick Xenophon](https://theyvoteforyou.org.au/people/senate/sa/nick_xenophon), which means it failed. ### What do these amendments do? Senator Xenophon [explained that](https://www.openaustralia.org.au/senate/?gid=2017-08-14.186.4: > *This relates to adverse costs orders. As I indicated in my second reading contribution, no matter how good a piece of legislation is—and I think it is fair to say that this has good elements, but I believe it should have gone further. Notwithstanding that, we need an ability to have real access to justice for competition law in this country. As I indicated previously, there are many businesses who get advice from their lawyer saying there has been an abuse of market power—predatory pricing or whatever the breach may be—but the lawyer then advises their client, 'By the way, if you want to take this to court, you'll be spending a couple of million dollars and you might be up for an adverse cost order in the millions of dollars.' An adverse cost order could be $5 million, $10 million or $15 million, depending on the complexity of the case, because these can be complex matters.*",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 16,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-14/4"
+  },
+  {
+   "key": "federal-senate-4862",
+   "date": "2017-08-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2017-08-14.196.6) to agree with the bill, as amended. This means they can now vote on whether to pass the bill in the Senate. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd087) (a document put together by the parliamentary library): > *The purpose of the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016 (the Bill) is to amend the Competition and Consumer Act 2010 (CCA) to reflect the Government’s acceptance of certain recommendations of the Competition Policy Review (the Harper Review). Specifically, the Bill introduces changes to section 46 of the CCA which relates to the misuse of market power, namely:* > > * *removing the ‘take advantage’ and ‘proscribed purposes’ aspects of the current law* > > * *removing explicit references to predatory pricing* > > * *introducing a ‘conduct’ test and a ‘purpose, effect, or likely effect’ test* > > * *introducing a ‘substantially lessening competition’ test* > > * *amending the scope of the markets that misuse of market power is to be subject to* > > * *introducing a set of pro-competitive and anti-competitive mandatory factors for courts to apply.* > > *The Bill also repeals Divisions 2 and 3 of Part XIB of the CCA which deal with telecommunications-specific anti‑competitive conduct, as a consequence of amending section 46.*",
+   "stage": "In committee",
+   "ayes": 41,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 16,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-14/5"
+  },
+  {
+   "key": "federal-senate-4863",
+   "date": "2017-08-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a motion to pass the bill in the Senate. In parliamentary jargon, they voted to read it for a third time. This means that the bill will now be sent back to the House of Representatives, where our MPs will decide on whether they agree with the amendment made by the Senate. If so, the bill will become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd087) (a document put together by the parliamentary library): > *The purpose of the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016 (the Bill) is to amend the Competition and Consumer Act 2010 (CCA) to reflect the Government’s acceptance of certain recommendations of the Competition Policy Review (the Harper Review). Specifically, the Bill introduces changes to section 46 of the CCA which relates to the misuse of market power, namely:* > > * *removing the ‘take advantage’ and ‘proscribed purposes’ aspects of the current law* > > * *removing explicit references to predatory pricing* > > * *introducing a ‘conduct’ test and a ‘purpose, effect, or likely effect’ test* > > * *introducing a ‘substantially lessening competition’ test* > > * *amending the scope of the markets that misuse of market power is to be subject to* > > * *introducing a set of pro-competitive and anti-competitive mandatory factors for courts to apply.* > > *The Bill also repeals Divisions 2 and 3 of Part XIB of the CCA which deal with telecommunications-specific anti‑competitive conduct, as a consequence of amending section 46.*",
+   "stage": "Third reading",
+   "ayes": 41,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 16,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-14/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-344067",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the effects test in the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016 is a persistently bad economic policy, revived only by a political deal between the National Party and Malcolm Turnbull, despite opposition from 10 of 12 competition reviews and figures like George Brandis and former Treasurer Peter Costello. He outlined Labor’s alternative proposals, including higher penalties for consumer law breaches, a market studies function for the ACCC, and access to justice for small business."
+  },
+  {
+   "slug": "speech-344068",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016, arguing it curbs monopolistic power, and criticised the Labor Party and the member for Fenner for opposing it due to their ties to union monopolies."
+  },
+  {
+   "slug": "speech-344198",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the proposed effects test in the Competition and Consumer Amendment Bill would create legal uncertainty, stifle innovation, and increase costs for businesses and consumers, while benefiting lawyers; he noted Labor opposes the bill and proposes an access to justice policy instead."
+  },
+  {
+   "slug": "speech-344410",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016 would chill competition, reduce innovation, and raise prices, noting that 10 of 12 reviews since the 1970s recommended against an effects test. He stated that the Prime Minister, Treasurer, finance minister, Attorney-General, and revenue minister all opposed the bill but were rolled by the Deputy Prime Minister, and proposed Labor’s alternative of a no adverse cost order for small businesses."
+  },
+  {
+   "slug": "speech-344415",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016 introduces a new effects test to replace the ineffective section 46, better targeting anti-competitive conduct by large corporations while supporting competition. The speaker named the Harper review, the ACCC, and organisations like the National Farmers' Federation as supporters, and cited local orchardists in Calare, including Guy Gaeta, as examples of small businesses that would benefit."
+  },
+  {
+   "slug": "speech-344417",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued the Liberal Party encourages individual thought, unlike Labor, and criticised the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016 for raising the bar to prove anti-competitive conduct, but said he would still support it because it was a coalition election commitment. He expressed concern the bill could weaken existing protections against predatory pricing and require showing a substantial lessening of competition, referencing issues with the current section 46 and the ACCC's inability to identify banks with substantial market power."
+  },
+  {
+   "slug": "speech-344418",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016 would reduce competition by making businesses afraid to lower prices, harming consumers, and criticized the government for prioritizing internal party politics over sound policy. He opposed the bill and promoted Labor's alternative \"access to justice\" package to help small businesses challenge anticompetitive conduct."
+  },
+  {
+   "slug": "speech-344419",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016, which introduces an effects test to strengthen section 46 of the Competition and Consumer Act and prevent anticompetitive conduct by firms with market power, citing examples of misconduct by Coles and Woolworths. He criticised the Labor Party for opposing the reform, accusing them of being aligned with large corporations, and listed numerous industry bodies that backed the change."
+  },
+  {
+   "slug": "speech-344420",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016, arguing its effects test would deter job-creating investment and increase red tape, citing criticism from former Treasurer Peter Costello, Wesfarmers managing director Richard Goyder, and the Council of Small Business Australia, and noting Deputy Prime Minister Barnaby Joyce's comments on milk pricing."
+  },
+  {
+   "slug": "speech-344422",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The Labor MP opposed the Competition and Consumer Amendment (Misuse of Market Power) Bill 2016, arguing its effects test would stifle innovation, productivity and growth, potentially raise consumer prices, and do nothing for Australia's 1.1 million underemployed or 750,000 unemployed workers. The MP also criticised the Deputy Prime Minister and the National Party for driving the legislation, citing Peter Strong of the Council of Small Businesses as a sympathetic advocate for small business concerns."
+  },
+  {
+   "slug": "speech-344423",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-27",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill's repeal of telecommunications-specific competition provisions (Part XIB) is reckless, as the regime has effectively deterred anti-competitive conduct and remains necessary given Telstra's persistent market dominance and the ACCC's ongoing market study of the sector."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Competition and Consumer Amendment (Misuse of Market Power) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00087",
+   "assent_date": "2017-08-23"
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+{
+ "key": "au-federal-r7355",
+ "title": "Social Security and Other Legislation Amendment (Responding to Robodebt) Bill 2025",
+ "short_title": "Social Security and Other Legislation Amendment (Responding to Robodebt) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-08-25",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-08-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7355%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7355%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7355_ems_b31fb5f9-9a8a-4636-9e50-6268c98a9fa0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7355%22",
+   "document_date": "2025-08-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-08-25",
+  "sentences": [
+   "This bill would change several social security laws to implement recommendations from the Royal Commission into the Robodebt Scheme.",
+   "It would require Services Australia to follow new principles for treating people respectfully, overseeing automated decisions, and recovering debts more compassionately.",
+   "The bill names recommendations 10.1, 11.2, 11.4, 17.1, 18.1, and 18.2 as the ones requiring legislative change."
+  ],
+  "changes": [
+   "The bill would amend the A New Tax System (Family Assistance) (Administration) Act 1999, Social Security Act 1991, Social Security (Administration) Act 1999, and Student Assistance Act 1973.",
+   "It would incorporate principles and duties aligned with the Royal Commission's recommendations on compliance, vulnerability, automated decision-making, and debt recovery.",
+   "It would require better notification and oversight of automated decisions made by Services Australia."
+  ],
+  "affected": "Services Australia and the individuals it serves are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:40Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

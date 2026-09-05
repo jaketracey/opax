@@ -1,0 +1,1570 @@
+{
+ "key": "au-federal-r7487",
+ "title": "National Disability Insurance Scheme Amendment (Securing the NDIS for Future Generations) Bill 2026",
+ "short_title": "National Disability Insurance Scheme Amendment (Securing the NDIS for Future Generations) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health, Disability and Ageing",
+ "status": "passed",
+ "status_as_of": "2026-08-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-08-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7487_ems_35e6531f-c440-4faf-98d6-7c7ddd8bd539%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7487_ems_fd44b0d4-a66d-4977-87fa-7ceaa806960a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7487_ems_d7765685-49f7-4e9f-a95c-ad2d3e19adf1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7487_ems_0a1acecd-87fc-4ea2-8389-7cc199d11026%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7487_ems_8f4aed36-8988-4c30-9327-102601564a6f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7487_ems_87508a1e-360e-470a-b452-f694055c8ad1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7487_ems_a6cd95b5-48ba-4642-b5b9-22f4cf1f6811%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7487%22",
+   "document_date": "2026-05-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00066",
+   "document_date": "2026-08-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2026-05-14",
+  "sentences": [
+   "The bill aims to secure the National Disability Insurance Scheme for current and future participants with permanent and significant disability.",
+   "It would give the National Disability Insurance Agency new powers to monitor payments and fight fraud, and introduce measures to control scheme growth and improve support quality.",
+   "The explanatory memorandum says the scheme's annual cost is over $50 billion and that the bill draws on the 2023 NDIS Review and other reports."
+  ],
+  "changes": [
+   "Clarify the meaning of functional capacity and introduce thresholds for assessing it.",
+   "Require that providers, nominees and participants keep records of supports for set periods, with a civil penalty for non-compliance.",
+   "Allow the Agency to suspend a participant's plan if contact is not made within 90 days.",
+   "Require that claims for NDIS amounts be made within 90 days of a support being provided.",
+   "Introduce a legislative pricing mechanism for maximum prices of NDIS supports.",
+   "Allow automated decision-making in the NDIS with protections and standard operating procedure instruments."
+  ],
+  "affected": "People with permanent and significant disability who use the NDIS, and their families, providers, nominees, and the National Disability Insurance Agency.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10234",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7487_amend_17d2ad65-c142-4db3-a94a-5fd2bda39b70%22;rec=0) introduced by Kooyong MP [Monique Ryan](https://theyvoteforyou.org.au/people/representatives/kooyong/monique_ryan) (Independent), which means it failed. This amendment would have changed the words of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after “the bill” be omitted with a view to substituting the following words:* > >> *“is being examined by the Senate Standing Committee on Community Affairs, with a submission closing date of 29 May 2026, giving just two weeks for contributions;* >> >> *(b) action 25.2 of the NDIS Independent Review called on the Department to undertake ‘deep public consultation on proposed legislative reforms’ including with people with disability, families, carers, Disability Representative Organisations, providers and workers;* >> >> *(c) the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability found that ‘people with disability are not sufficiently involved in government decision-making processes and developing laws and policies that may impact their human rights’;* >> >> *(d) Article 4(3) of the UN Convention on the Rights of Persons with Disabilities require the Government to ‘closely consult with and actively involve persons with disabilities, through their representative organisations’ when developing legislation that affects them;* >> >> *(e) guidance from the Department of the Prime Minister and Cabinet states that consultation on legislation ‘should not generally be less than a month’, and that where substantial feedback is expected, consultation should be even longer; and* >> >> *(f) short timeframes are inherently i",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 85,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 85
+    }
+   },
+   "party_coverage": {
+    "dated": 96
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-28/1"
+  },
+  {
+   "key": "federal-representatives-10235",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7487_amend_ce63a515-217b-450a-800f-231f6c648bac%22;rec=0) introduced by Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent), which means it failed. This amendment would have changed the words of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after “notes that” be omitted with a view to substituting the following words:* > >> *“(a) the bill enables the use of automated decision-making in determining a wide range of matters affecting NDIS participants;* >> >> *(b) it is reported that neither human decision-makers nor the Administrative Review Tribunal will be authorised to modify or override the automated decisions made about the support needs of NDIS participants;* >> >> *(c) when used well, automated decision-making can deliver faster, more consistent and more efficient government services, and that agencies like the NDIA need digital tools to operate at the scale required;* >> >> *(d) the Government has failed to implement the recommendations of the Royal Commission into the Robodebt Scheme, handed down in July 2023, which called for the introduction of a consistent legal framework and oversight for automated decision-making in government services;* >> >> *(e) the consequences of poorly implemented automation for high-risk decisions are already being seen in widespread concern around automated aged care assessments and the unlawful cancellation of income supports for Australians under the Targeted Compliance Framework; and* > > *(2) calls on the Government to bring forward a legislative and mandatory framework for automated decision-making in government services, incorporating transparenc",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 85
+    }
+   },
+   "party_coverage": {
+    "dated": 97
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-28/2"
+  },
+  {
+   "key": "federal-representatives-10236",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7487_amend_aace8b9d-9f43-485b-af63-fdaf282e2568%22;rec=0) introduced by Fowler MP [Dai Le](https://theyvoteforyou.org.au/people/representatives/fowler/dai_le) (Independent), which means it failed. This amendment would have changed the words of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after “House” be omitted with a view to substituting the following words:* > > *“(1) notes that:* > >> *(a) culturally and linguistically diverse communities experience additional barriers in accessing and engaging with the NDIS; and* >> >> *(b) a lack of consultation with culturally and linguistically diverse participants and service providers may result in further barriers and inequity; and* > > *(2) calls on the Government to ensure the implementation of the reforms does not inadvertently impose additional burdens on, or further disadvantage culturally and linguistically diverse NDIS participants”.*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    }
+   },
+   "party_coverage": {
+    "dated": 98
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-28/3"
+  },
+  {
+   "key": "federal-representatives-10237",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7487_amend_a9f876d4-6361-4e55-bd81-daa248c8a467%22;rec=0) introduced by Lindsay MP [Melissa McIntosh](https://theyvoteforyou.org.au/people/representatives/lindsay/melissa_mcintosh) (Liberal), which means it failed. This amendment would have changed the words of the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst not declining to give the bill a second reading, the House notes that:* > >> *(1) in 2023, the Government announced a target growth rate for the National Disability Insurance Scheme (NDIS) of 8 percent and was unable to achieve it;* >> >> *(2) in January 2026, the Prime Minister announced a new target growth rate for the NDIS of 5-6 per cent, which the Government again failed to meet;* >> >> *(3) in April 2026, the Health Minister announced yet another new annual target growth rate for the NDIS of 2 per cent over the next four years, despite the Government’s ongoing inability to meet any of their previously announced target growth rates;* >> >> *(4) the Government and the National Disability Insurance Agency (NDIA) have also been unable to clearly quantify or comprehensively address the scale of fraud within the NDIS; * >> >> *(5) the NDIA Fraud Fusion Taskforce estimates that up to 10 per cent of NDIS claims are inappropriate, mischievous or outright criminal; * >> >> *(6) the Government must do more to prevent the fraud and rorting that is rife within the NDIS;* >> >> *(7) the changes in the bill will do little to remove bad actors from defrauding participants and taxpayers; and* >> >> *(8) robust integrity systems are critical to not only protect taxpayer",
+   "stage": "Second reading",
+   "ayes": 52,
+   "noes": 90,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 90
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-28/4"
+  },
+  {
+   "key": "federal-senate-10269",
+   "date": "2026-06-22",
+   "house": "senate",
+   "question": "Jordon Steele-John I seek leave to move a motion relating to the government's NDIS bill as circulated. Leave not granted. Pursuant to contingent notice of motion standing in the name of Senator Waters, I move: That so much of Senate standing orders be suspended as would prevent me from moving a motion, namely a motion relating to the government's NDIS bill. Labor's NDIS bill is just cruel. It should be scrapped. It should be withdrawn. It should be removed. It should be sent back. It should be torn up, quite frankly, loaded into a cannon and, if I had my way, fired into the sun. It is a horrific, inhuman piece of legislation that would see 241,000 disabled people kicked off the NDIS—fellow Australians doing it tough, struggling, stressed, trying to make things work and trying to navigate a bureaucracy that is always apparently against them and always apparently on the side of a government that is trying to find ways to get out of providing the basic supports. For these people, for these community members, this government plans to cut their lifelines to remove the programs, the therapies and the supports that are the source of hope for so many. Just when things were starting to potentially get better, just when the therapy was helping the child succeed at school, just when a disabled person had finally been able to keep a job, just when a new skill was within somebody's grasp, or just when a new friend had been made—a new connection built, a new safeguard against loneliness and isolation—this government would tear it away. Shame on you all. This bill is a disgrace. The fact that the disability community have had to work and expend their time, effort and energy trying to explain to this Labor government why cutting nearly $40 billion out of the NDIS is a bad idea—that's a joke. It's a joke. One hundred and eighty-five billion dollars over the decade is the largest cut to a Commonwealth program in the history of this nation. To my crossbench colleagues and to the membe",
+   "stage": "Motion",
+   "ayes": 29,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-22/1"
+  },
+  {
+   "key": "federal-senate-10270",
+   "date": "2026-06-22",
+   "house": "senate",
+   "question": "Jordon Steele-John I move a motion in relation to the government's NDIS bill, that it may be removed immediately and that this motion may have precedence over all other business and be determined without amendment. Sue Lines The question is the procedural motion moved by Senator Steele-John be agreed to.",
+   "stage": "Motion",
+   "ayes": 29,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-22/2"
+  },
+  {
+   "key": "federal-senate-10271",
+   "date": "2026-06-22",
+   "house": "senate",
+   "question": "Jordon Steele-John I move: That the Senate— (a) notes that: (i) Labor's NDIS Bill is completely friendless, with almost every witness to the inquiry saying that the bill shouldn't pass in its current form, (ii) the bill will have a devastating impact on disabled people, their families and carers, and it imposes inhumane and cruel requirements on disabled people, including requiring people to repeatedly prove permanent disabilities and navigate new layers of bureaucracy to access essential services, and (iii) the government's own modelling shows that they want to remove 241,000 people from the NDIS by 2031; and (b) calls on the Government to withdraw the bill. This bill represents one of the cruellest acts perpetrated on a community by the Australian government. It is unfair. It is unjust. It is inhumane. From the moment it was introduced into the parliament, the Greens have opposed it. We will continue to oppose it. We will continue to work day in, day out to see this bill withdrawn—to see it scrapped. That is our goal. That is our purpose. That is the work we are engaged in, and proudly we've engaged in that work alongside the disability community across this country, who are unanimous—who are united in their view that this bill must not proceed. This Labor government believed that, by forcing disabled people to attempt to pull together evidence, by only giving us eight to 11 days to make submissions to the inquiry into this bill, it would prevent us and our organisations speaking clearly about this bill. Well, it could not have been more wrong, and I want to congratulate every single one of the over 4,500 people who, amid everything else putting pressure on them, took the time to make submissions to the inquiry and who spoke with such clarity and courage in the face of this awful law. We heard such powerful evidence from so many people, across three days of hearings, about the harms that this would do to disabled people, the pressure it would place on families, th",
+   "stage": "Motion",
+   "ayes": 10,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-22/3"
+  },
+  {
+   "key": "federal-representatives-10535",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Dai Le by leave—I move amendments (1) to (3) circulated in my name together: (1) Schedule 1, item 4, page 4 (line 23), after \"circumstances\", insert \"(other than the person's linguistic environment)\". (2) Schedule 1, item 92, page 35 (line 30), at the end of subsection 25A(1), add: ; and (d) is linguistically and culturally accessible at the person's geographical location. (3) Schedule 1, item 92, page 35 (line 31) to page 36 (line 4), omit subsection 25A(2). In my second reading contribution, I raised serious concerns about how the 'appropriate treatment' provisions in the National Disability Insurance Scheme Amendment (Securing the NDIS for Future Generations) Bill 2026 would play out for families in communities like mine. My three amendments today go directly to those concerns. They are not an attempt to delay or derail reform. They are an attempt to make it work for the people who will be hurt most if we get this wrong. I have moved these amendments not to stop reform but to make sure reform is fair, inclusive, practical and safe for people living with disability from culturally and linguistically diverse backgrounds and people from low socioeconomic backgrounds—people who already face additional barriers when trying to navigate a government system that is highly complicated, even for those who are well-resourced and speak English as their first language. As I said in my second reading amendment, I support and welcome the stronger integrity measures for NDIS service providers and plan managers outlined in schedule 2 of the bill. The NDIS must be protected from fraud, rorting and misuse. Australians living with disability deserve a scheme that is trusted, well managed and sustainable. But sustainability and financial viability cannot come at the cost of fairness, and they certainly should not be achieved by pushing the most vulnerable participants into greater uncertainty or into a system of bureaucracy that is harder to understand, harder to access and even furt",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 72,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 72
+    }
+   },
+   "party_coverage": {
+    "dated": 82
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/3"
+  },
+  {
+   "key": "federal-representatives-10536",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Nicolette Boele I move the amendment circulated in my name: (1) Schedule 3, page 100 (after line 6), after Part 2, insert: Part 2A — Significant NDIS rules _National Disability Insurance Scheme Act 2013_ 13A After section 209D Insert: 209E Additional consultation requirements for certain National Disability Insurance Scheme rules (1) This section applies to National Disability Insurance Scheme rules made for the purposes of any of the following provisions: (a) a provision relating to functional capacity assessments or assessment methodologies; (b) a provision relating to eligibility criteria or early intervention requirements; (c) a provision relating to the determination of supports or the setting of funding levels. (2) Before making rules to which this section applies, the Minister must: (a) publish an exposure draft of the proposed rules; and (b) allow a period of not less than 28 days beginning on the day the exposure draft is published (the _consultation period_) during which persons may make submissions on the proposed rules; and (c) take reasonable steps to consult the following persons during the consultation period: (i) people with disability; (ii) organisations representing the disability community and disability sector, such as Disability Representative and Carer Organisations; (iii) any other persons the Minister considers appropriate. (3) Before making rules to which this section applies, the Minister must publish: (a) a statement summarising the feedback received during the consultation period and the Minister's response to that feedback; and (b) a disability impact statement setting out the expected effect of the proposed rules on participants and prospective participants. I move this amendment to strengthen consultation requirements for the key National Disability Insurance Scheme rules. This amendment goes to a simple but fundamental principle that decisions about people with disability should not be made without them. It speaks to the profound trut",
+   "stage": "Consideration in detail",
+   "ayes": 11,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 69
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 81
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/4"
+  },
+  {
+   "key": "federal-representatives-10537",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Zali Steggall by leave—I move amendments (1) to (4) as circulated in my name together: (1) Schedule 1, item 21, page 9 (line 22), at the end of subsection 48A(1), add: ; and (e) alternatively to paragraphs (a) to(d), the participant demonstrates that: (i) the supports are no longer available; or (ii) the plan is insufficient to meet the participant's reasonable and necessary support needs; or (iii) new evidence relevant to the participant's support needs has emerged. (2) Schedule 1, item 34, page 13 (line 8), after \"participants\", insert \", and the reasonable and necessary supports required by participants, including those necessary for participants to undertake paid employment, volunteering and study\". (3) Schedule 1, item 34, page 13 (lines 11 to 18), omit subsection 34A(5). (4) Schedule 1, item 34, page 13 (after line 18), at the end of section 34A, add: I move these amendments to the National Disability Insurance Scheme Amendment (Securing the NDIS for Future Generations) Bill 2026 in the hope of putting forward some targeted, practical amendments that will complement the many other amendments that have been moved by my fellow crossbench members of parliament. The amendments I moved today seek to ensure that sustainability is not achieved by removing basic fairness, basic review rights or the individualised nature of the scheme. Procedural fairness should be a basic which is underwritten in this legislation. I simply fail to understand why the government and the minister are not agreeing to these practical, sensible amendments. The NDIS was built on a simple promise that Australians with disability would have access to the reasonable and necessary supports they needed to live with dignity, participate in the community and exercise choice and control over their own lives. The NDIS must be sustainable. It must be well governed. It must be able to deal with waste, fraud and poor practice. Sustainability cannot become a slogan used to justify blunt instruments and p",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 68
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 80
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/5"
+  },
+  {
+   "key": "federal-representatives-10538",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Helen Haines I move amendment (4) on sheet 1, revised 30 June 2026, as circulated in my name: (4) Schedule 1, item 92, page 35 (line 31) to page 36 (line 4), omit subsection 25A(2), substitute: (2A) Treatment may not be _appropriate treatment_ for a person's impairment or impairments if the person's individual circumstances restrict the person from accessing the treatment. This bill would prevent people from accessing the NDIS until they've undertaken what the government says is 'all appropriate treatment'. The details will be dealt with in regulation, so we don't know exactly what that will mean in practice. However, the bill explicitly states that a treatment may still be considered appropriate even if a person's financial circumstances or geographical location prevent them from accessing it. Now, this is unacceptable. It completely ignores the reality of service provision outside of major cities. It could put the NDIS out of reach of rural and regional Australians, who simply don't have the local options and can't realistically access what is considered appropriate treatment. My community are really worried about this. They're worried about the impacts of the bill. When I look at things like this, I think they have every right to be worried. My amendment would reverse this provision to clarify that a treatment may not be appropriate for a person who can't access it. It's all I've got to say about it, really, because to me this seems so obvious that I can't believe that I actually have to say it. Mark Butler Very quickly, we won't be supporting this amendment, but we are dealing with some of the issues raised by the member for Indi in another amendment that we will be supporting. Marion Scrymgour The question is that the amendment as moved by the member for Indi be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 11,
+   "noes": 66,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/6"
+  },
+  {
+   "key": "federal-representatives-10539",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Helen Haines by leave—I move amendments (1) to (3) and (5) on sheet 1, revised 30 June 2026, as circulated in my name, together: (1) Schedule 1, item 34, page 12 (after line 16), after subsection 34A(1), insert: (1A) The specified group of supports must not relate to activities of daily living. (2) Schedule 1, item 73, page 26 (before line 9), before subsection 34(1A), insert: (1AA) If the CEO is not satisfied of a matter in subsection (1) in relation to a statement of participant supports, the CEO must notify the relevant participant, in writing, of the reasons for not being so satisfied. (3) Schedule 1, item 73, page 27 (lines 6 to 35), omit subsections 34(1E) and (1F). (5) Schedule 1, item 97, page 39 (lines 3 to 7), omit subsection 25B(6), substitute: (6) Before making National Disability Insurance Scheme rules declaring that a support is an alternative support for an impairment, the Minister must be satisfied that: (a) it is not appropriate to fund or provide a support for the impairment through the National Disability Insurance Scheme; and (b) the alternative support is reasonably available and accessible. I will make some brief remarks to support these amendments. They respond to key concerns raised by my constituents, the very people who will be impacted by the changes proposed under this bill. These things include the need for greater transparency and trust in decision-making and the importance of protecting approved funding for participants' basic needs. Amendment (1) would protect funding for activities of daily living from blanket funding reductions under a new ministerial power. While the government has said the new power won't be used for that purpose, there's nothing in the bill to guarantee that. In terms of amendment (2), people with a disability of course deserve certainty about funding for basic essential supports, and this amendment would provide that. It's really critical that we get this right and build that certainty for them. Amendment (2) wo",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 66,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 76
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/7"
+  },
+  {
+   "key": "federal-representatives-10540",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Helen Haines by leave—I move: (6) Schedule 3, page 101 (after line 12), at the end of the Schedule, add: Part 4 — Whistleblower protections _National Disability Insurance Scheme Act 2013_ 18 After subsection 73ZA(2) Insert: (2A) The disclosure of the information by the discloser qualifies for protection under this Division if it is made for the purpose of seeking assistance, advice, treatment or counselling in relation to the disclosure and is made to: (a) a legal practitioner; or (b) a medical practitioner or psychologist; or (c) a union or professional association. Again, I will make a brief remark. This amendment ensures whistleblowers are able to make disclosures in the context of seeking support for themselves—for example, in seeking support from a legal or a medical practitioner. Now, the government's recently made improvements to NDIS whistleblower protections, and I really welcome those. But I think many Australians, in fact all Australians, would be very surprised to learn that, under this legislation more broadly across the NDIA and NDIS, whistleblowers may not legally be allowed to talk about their own situations to their own doctor or lawyer. I've been on the record very strongly in this place calling for whistleblower reforms to be strengthen. Under this particular situation, we need to make sure that every protection is afforded to people who are whistleblowers through the NDIS system. So I put this to the minister, and I hope the government can support me on this really important amendment. Mark Butler The member for Indi is right in saying that she has a deep interest and deep understanding of this area. We consider ourselves a government that has tried to work with the member for Indi and others in improving supports for whistleblowers across government programs, including the NDIS. I'm quite attracted to the idea behind this amendment. The advice I've received is that we would need to do quite a bit more work. There are some very complex issues the",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 61,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 59
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 70
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/8"
+  },
+  {
+   "key": "federal-representatives-10541",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Helen Haines I move the amendment on sheet 2, as circulated in my name: (1) Schedule 3, item 4, page 91 (after line 2), after subsection 45C(16), insert: (16A) If the Agency provides advice to the Minister under subsection (14), the Agency must at the same time provide a summary of the advice to the Minister. (16B) The Minister must cause a copy of advice provided to the Minister under subsection (14), or the summary of the advice provided under subsection (16A), to be tabled in each House of the Parliament within 5 sitting days after the Minister makes the determination to which the advice relates. Constituents in Indi have made it clear to me that it matters whether the minister follows NDIA advice. More than 90 per cent of Indi constituents who responded to my survey regarding the NDIS changes said transparency of ministerial pricing decisions is really important. My amendment would strengthen transparency by requiring the minister to table NDIA advice, or a summary of that advice, within five sitting days of making that determination. The summary must be provided by the NDIA itself at the same time as the advice. I really thank the government for working with me on this particular amendment and for working with me, more broadly, on trying to find ways to improve this legislation. Mark Butler Thank you. We agree. Lisa Chesters The question is that the amendment on sheet 2, as moved by the member for Indi, be agreed to. Question agreed to. Monique Ryan I move amendment (1) as circulated in my name: (1) Clause 2, page 3 (after line 3), at the end of the clause, add: (3) Despite subsection (1), the provisions mentioned in items 3 to 6 of the table do not commence until the day after the Minister has caused to be tabled in each House of the Parliament a statement setting out: (a) the status of foundational supports, including Thriving Kids, in each jurisdiction; and (b) whether the Minister considers those supports referenced in (a) to be established, funded and oper",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 49,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 59
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/9"
+  },
+  {
+   "key": "federal-representatives-10542",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Monique Ryan I move amendment (5) as circulated in my name: (5) Schedule 1, item 34, page 12 (after line 16), after subsection 34A(1), insert: (1A) A determination under this section may specify classes of participants to whom the determination applies or does not apply. A class of participants may be identified by reference to any one or more of the following: (a) a characteristic of participants (including their circumstances); (b) the nature or type of supports provided under a plan; (c) the support needs (as assessed) of participants. I move amendment (5) with the support of the Justice and Equity Centre, Inclusion Australia and Down Syndrome Australia. The ministerial support determination proposed by this bill is a blunt instrument. It reduces funding without significant regard to individual circumstances or to the way that people actually use supports in their daily lives. I, along with Inclusion Australia and Down Syndrome Australia, am particularly concerned about its potential impact on the small number of NDIS participants who need support every hour of every day. These are the people with permanent and profound disability that the NDIS was established to support. This includes people with down syndrome and people with intellectual disability who have very high support needs. Many are amongst the most marginalised Australians. Some have spent their entire lives in state run institutions or group homes, and they rely on that 24/7 continuous support to live safely and with dignity. Applying a blanket 50 per cent reduction to their community and participation supports without recognising those quite unique circumstances could have profound implications for those individuals. Firstly, it creates a real risk that people who require 24-hour support will not receive funding in a way that reflects how those supports are delivered. Their support needs don't fit neatly within a standard funding model, and neither should this legislation. Secondly, it risks confinin",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    }
+   },
+   "party_coverage": {
+    "dated": 59
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/10"
+  },
+  {
+   "key": "federal-representatives-10543",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Monique Ryan I move this amendment because it provides an important safeguard for NDIS participants. This amendment is straightforward. It provides that a support determination under proposed subsection 34A(4) may relate only to supports for social and community participation. It'll force the government to put its money where its mouth is. The government has represented that section 34A will be used to cut social and community participation supports. But the bill, as drafted and confirmed by the explanatory memorandum, empowers the minister to reduce funding across almost any support category. That includes daily living, transport, assistive technology, specialist disability accommodation and more. My amendment (6) asks the government to explicitly limit support determination powers in section 34A to social and community supports only. The purpose of this amendment is simple. It is to stop the broad determination-making power in this bill being turned into a back door used through delegated legislation to quietly strip away essential disability supports while no-one is watching. There is real, raw fear in the disability community right now about how this ministerial power might be wielded—perhaps not by this minister but by subsequent governments, for example, those perhaps administered by One Nation, which has indicated it would abolish the NDIS. People aren't imagining things. They fear that this legislation could be used to hollow out the everyday living supports that they rely on to get through the day. Let me be blunt. I disagree with the proposed 50 per cent cut to social and community participation supports. I disagree with most of section 34A of this bill. I believe it's a blunt instrument, and I think that it will land hard on the lives of people with a disability. But this amendment goes further than that disagreement. It would build a wall around something which is even more important. It would ensure that the support determination power could never be tu",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 57,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    }
+   },
+   "party_coverage": {
+    "dated": 67
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/11"
+  },
+  {
+   "key": "federal-representatives-10544",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Monique Ryan I move amendment (11) on sheet 1, as circulated in my name: (11) Schedule 1, item 92, page 36 (after line 12), after subsection 25A(3), insert: (3A) A person is not required to undertake treatment that is: (a) unreasonably inaccessible or unavailable; or (b) not clinically appropriate; or (c) associated with unreasonable risk. Among the most concerning provisions in this bill is the new definition of 'permanent' disability for eligibility purposes. Under the bill, an impairment will only be considered permanent—and therefore make the applicant eligible for NDIS support—if all appropriate treatment options have been exhausted; no further treatment is likely to materially improve, reverse or alleviate the impairment; and the impairment is likely to persist for a lifetime. Applicants must have tried all treatments commonly available in Australia, regardless of whether or not they can afford them or whether the treatments are accessible where they live. Persons in rural and regional Australia might not be able to access specialist treatment that is theoretically available in a capital city. The House Standing Committee on Health, Aged Care and Disability is looking into this issue at this very time. A person with limited income may not be able to afford treatments. Even though the government has assured me that 'appropriate treatments' means those listed on the PBS, many items on our Medicare schedule still have associated out-of-pocket costs, are not readily available at times and may be out of reach for some individuals. What the government is trying to do in legislating this definition is to overturn the Federal Court's previous decision in Davis, which established the precedent that financial circumstances must be considered when determining if treatment is available. Whether a person can afford a treatment will form part of the factual circumstances that a decision-maker may need to examine in deciding if a treatment is one that an individual can, in r",
+   "stage": "Consideration in detail",
+   "ayes": 11,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 42
+    }
+   },
+   "party_coverage": {
+    "dated": 55
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/12"
+  },
+  {
+   "key": "federal-representatives-10548",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Monique Ryan by leave—I move: (11) Schedule 1, item 92, page 36 (after line 12), after subsection 25A(3), insert: (3A) A person is not required to undertake treatment that is: (a) unreasonably inaccessible or unavailable; or (b) not clinically appropriate; or (c) associated with unreasonable risk. (12) Schedule 3, item 4, page 91 (line 9), at the end of subsection 45C(17), add: ; and (d) any independent pricing advice obtained under subsection (18); and (e) the impact of the determination on the availability of supports, including in thin markets and regional areas. (13) Schedule 3, item 4, page 91 (after line 9), at the end of section 45C, add: (18) Before making a determination under subsection (1), the Minister must: (a) obtain independent pricing advice; and (b) publish that advice; and (c) consult participants and providers. Treasury modelling tabled in the Senate shows that, of the $38.1 billion predicted to be saved from cuts to the NDIS over the next four years, just $0.9 billion is expected to come from making the minister the decision-maker on pricing and related fraud measures. The same modelling shows that $9.3 billion in savings is projected to come from functional capacity savings and $13.2 billion from cutting social and community participation supports. That's nearly 60 per cent of the total savings purely from reducing supports and tightening eligibility. We all know that, during 2024-25 budget estimates, it was revealed that the NDIA had awarded two contracts—one in February 2023 and one in September 2023—with a total value of $400,000 to the Redbridge Group. The purpose of those contracts was to conduct focus groups and message testing to identify how to best frame the changes proposed in the NDIS bill. Redbridge polling found that, while the NDIS is loved by the general public of Australia, the general public and participants would show qualified tolerance for funding cuts and stricter eligibility criteria were these austerity measures positioned",
+   "stage": "Consideration in detail",
+   "ayes": 10,
+   "noes": 68,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/16"
+  },
+  {
+   "key": "federal-representatives-10549",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Monique Ryan by leave—I move amendments (2) to (4), (8) and (9) to the NDIS Amendment (Securing the NDIS for Future Generations) Bill 2026: (2) Schedule 1, item 21, page 9 (line 10 and 11), omit \"either of both\", submit \"any\". (3) Schedule 1, item 21, page 9 (line 16), omit \"and\". (4) Schedule 1, item 21, page 9 (after line 16), after subparagraph 48A(1)(b)(ii), insert: (iii) an alteration in the participant's plan such that it is insufficient to meet the participant's reasonable and necessary support needs; and (8) Schedule 1, item 34, page 13 (after line 18), at the end of section 34A, add: (6) A support determination that is reasonably likely to result in a material reduction in funding for a class of supports must be accompanied, at the time the determination is tabled in each House of the Parliament, by: (a) a statement of reasons for the determination; and (b) an assessment of the likely impact of the determination on participants; and (c) actuarial or financial analysis relied upon in making the determination; and (d) a summary of consultation undertaken with people with disability and representative organisations. (7) A support determination to which subsection (6) applies does not take effect unless, within 15 sitting days after the determination is tabled in each House of the Parliament, each House passes a resolution approving the determination. (8) If a House of the Parliament does not pass a resolution approving the determination within the period referred to in subsection (7), the determination is taken never to have had effect. (9) In this section _material reduction in funding_ includes a reduction that is reasonably likely to have a significant impact on participants' access to supports. (9) Schedule 1, item 34, page 13 (after line 18), after section 34A, insert: 34AA Effect of support determination If a determination under section 34A has the effect of reducing the funding available to a participant under the participant's plan, the participant's p",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 64,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 73
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/17"
+  },
+  {
+   "key": "federal-representatives-10550",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Monique Ryan by leave—I move amendments (1) and (2) on sheet 2, as circulated in my name, together: (1) Clause 2, page 2 (table item 1), omit \"Sections 1 to 3\", substitute \"Sections 1 to 4\". (2) Page 3 (after line 8), after clause 3, insert: 4 Review of amendments (1) The Minister must cause a review to be conducted of the operation of the amendments made by this Act. (2) The review must be conducted at the same time as the review under section 4 of the _National Disability Insurance Scheme Amendment (Getting the NDIS Back on Track No. 1) Act 2024_ of the operation of the amendments made by that Act. (3) The persons conducting the review must be independent of the Agency and of the Department. (4) The review must consider the following matters: (a) access to the NDIS; (b) participant outcomes, including continuity and quality of supports; (c) review and appeal rights under the _National Disability Insurance Scheme Act 2013_; (d) the viability and sustainability of the provider market; (e) service delivery in thin markets; (f) the interaction between the amendments made by this Act and any foundational supports or related systems of support. (5) The persons conducting the review must give the Minister a written report of the review. (6) The Minister must cause a copy of the report of the review to be tabled in each House of the Parliament within 15 sitting days of that House after the Minister receives the report. This bill as currently drafted contains no mechanism for a review, no trigger for scrutiny and no obligation to return to this parliament and account for what these changes have delivered. I've moved these amendments today because that omission is not acceptable. The people that this legislation affects can't afford for us to pass reforms and then walk away. This bill could remove as many as 241,000 participants from the scheme. All of them deserve to know that the parliament will be required to look back, measure and answer for decisions that have been mad",
+   "stage": "Consideration in detail",
+   "ayes": 101,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 108
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/18"
+  },
+  {
+   "key": "federal-representatives-10551",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Steve Georganas The question now is that the bill, as amended, be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 100,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 109
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/19"
+  },
+  {
+   "key": "federal-representatives-10552",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Mark Butler I move: That the third reading be made an order of the day for the next sitting. Milton Dick The question is that the third reading be made an order of the day for the next sitting.",
+   "stage": "Consideration in detail",
+   "ayes": 90,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 86,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/20"
+  },
+  {
+   "key": "federal-senate-10678",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to order, the time allotted for the second reading of this bill has expired. The question is that opposition amendments on sheet 3982 be agreed to.",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/3"
+  },
+  {
+   "key": "federal-senate-10679",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the amendments circulated by the Australian Greens. The question is that the amendments on sheets 3974, 3975, 3976, 3977, 3978, 3979, 3980 and 3981 be agreed to. _Greens' circulated amendments—_ SHEET 3974 Omit all words after \"That\", substitute \"the Senate rejects the bill and: (a) notes that: (i) culturally and linguistically diverse (CALD) people face significant barriers to accessing and navigating the NDIS, (ii) CALD people are already significantly underrepresented in the NDIS, comprising less than 10% of participants nationally, (iii) evidence provided by the National Ethnic Disability Alliance to the bill inquiry warned that the Government's changes risk exacerbating inequality for CALD NDIS participants, and (iv) culturally safe Foundational Supports are not currently available outside the NDIS, and despite this, the Government intends to remove 241,000 participants from the NDIS by 2031 before appropriate alternative supports are established; and (b) calls on the Government to withdraw the bill\". \\_\\_\\_\\_\\_ SHEET 3975 Omit all words after \"That\", substitute \"the Senate rejects the bill and: (a) notes that: (i) the 2026-27 Federal Budget cuts $37.8 billion from the NDIS over 4 years, while only raising $3.6 billion in taxes from wealthy property investors in the same time period, (ii) the Government continues to spend billions of dollars each year on tax concessions that overwhelmingly benefit wealthy property investors, and (iii) budgets are about choices, and the Government should be prioritising NDIS supports for disabled people over providing concessions to wealthy property investors; and (b) calls on the Government to withdraw the bill\". \\_\\_\\_\\_\\_ SHEET 3976 Omit all words after \"That\", substitute \"the Senate rejects the bill and: (a) notes that: (i) this Labor Government has rolled out the Integrated Assessment Tool (IAT), which uses an algorithm to assess eligibility and determine funding levels for aged care supports,",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/4"
+  },
+  {
+   "key": "federal-senate-10680",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "David Pocock by leave—President, under the standing orders I ask that my name be recorded as opposing clause (b) in each of the Greens' amendments. Sue Lines The question now is that the amendment moved by Senator David Pocock on sheet 3983 be agreed to. _Senator David Pocock's circulated amendment—_ At the end of the motion, add \", but the Senate: (a) notes that: (i) the expansion of automated decision-making authorised by this bill has been described in evidence to the Community Affairs Legislation Committee as unprecedented in Australia law, (ii) the automated decision-making powers in this bill extend beyond routine administrative tasks to decisions involving discretion, evaluative judgement and decisions that would normally require a human decision-maker to form a particular state of mind, and (iii) recommendations 17.1 and 17.2 of the Report of the Royal Commission in the Robodebt Scheme called for: (A) a consistent legal framework for automated decision-making, including transparency, review rights and public access to the rules and algorithms used, and (B) an independent legal body to monitor and audit automated decision-making systems for fairness, accuracy, bias and usability; and (b) calls on the Government to ensure that the provisions of the bill permitting automated decisions involving evaluative judgement or the formation of a particular state of mind are not utilised until recommendations 17.1 and 17.2 of the Report of the Royal Commission into the Robodebt Scheme have been implemented\". Question negatived. I will now deal with the amendment circulated by Senator Thorpe. The question is that the amendment on sheet 3856 be agreed to. _Senator Thorpe's circulated amendment—_ Omit all words after \"That\", substitute \"the Senate rejects the bill and is of the opinion that: (a) it will significantly impact all people with disability getting supports to live everyday life; and (b) it was subject to inadequate consultation with First People with disability a",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/5"
+  },
+  {
+   "key": "federal-senate-10681",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Sue Lines The question is that the bill now be read a second time.",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/6"
+  },
+  {
+   "key": "federal-senate-10688",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Karen Grogan Pursuant to the order agreed to this morning, the time allocated for the remaining stages of this bill has expired. I'll first deal with the amendments moved by Senator Steele-John on sheet 3832. The question is that part 4 and item 68 of schedule 1, on sheet 3832, stand as printed.",
+   "stage": "Limitation of debate",
+   "ayes": 28,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/13"
+  },
+  {
+   "key": "federal-senate-10689",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Karen Grogan The question is that the remaining amendments on sheet 3832 be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/14"
+  },
+  {
+   "key": "federal-senate-10690",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Karen Grogan I will now deal with amendments circulated by the government. I understand that the minister has documents to table. Jenny McAllister I table a further addendum to the explanatory memorandum and supplementary explanatory memoranda relating to the government amendments to be moved to this bill. The addendum responds to matters raised by certain committees. Karen Grogan The question is that items 23 to 26 of schedule 1 stand as printed. _Government's circulated amendment_ (7) Schedule 1, items 23 to 26, page 10 (lines 13 to 20), to be opposed. Question negatived. The TEMPORARY CHAIR: We'll now deal with the amendment circulated by Senator Roberts. Senator Roberts, this gives effect to your amendment as looked at by the clerks. The question is that part 7 in amendment (7) on sheet IC116 revised be agreed to. _One Nation's circulated amendment_ AMENDMENT TO GOVERNMENT AMENDMENTS [REVISED SHEET IC116] (1) Amendment (7), Part 7, to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 37,
+   "noes": 3,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/15"
+  },
+  {
+   "key": "federal-senate-10691",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Limitation of debate",
+   "ayes": 30,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/16"
+  },
+  {
+   "key": "federal-senate-10692",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "David Pocock by leave—I was hoping I could note my support noted for amendment (2) on sheet 3829 and amendments (2) and (4) on sheet 3830. Long debate text truncated.",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/17"
+  },
+  {
+   "key": "federal-senate-10693",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "David Pocock Sorry, Chair, because we're batching, could I note my opposition to sheets 3826, 3829, 3830, 3833, 3844 and 3850. Karen Grogan Certainly. We'll now go to Senator Pocock's amendments. The first question is that part 4 of schedule 1 stand as amended and section 59D of item 11 in schedule 3 stand as printed. _Senator David Pocock's circulated amendments—_ SHEET 3984 (2) Schedule 1, Part 4, page 12 (line 1) to page 14 (line 24), to be opposed. \\_\\_\\_\\_\\_ SHEET 3987 (6) Schedule 3, item 11, page 97 (line 24) to page 99 (line 3), section 59D to be opposed.",
+   "stage": "Limitation of debate",
+   "ayes": 29,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/18"
+  },
+  {
+   "key": "federal-senate-10694",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Karen Grogan The question now is that Senator David Pocock's remaining amendments (1), (3), (4) and (5) on sheet 3984; amendments on sheet 3985; and remaining amendments (1) to (5) on sheet 3987 be agreed to. _Senator David Pocock's circulated amendments_ SHEET 3984 (1) Clause 2, page 2 (table item 3), omit the table item. (3) Schedule 1, item 45, page 16 (line 28) to page 17 (line 2), omit subsection 38(3). (4) Schedule 1, item 50, page 18 (lines 5 to 10), omit the note. (5) Schedule 3, item 11, page 95 (line 12), omit \"subsections 34A(2) and 34B(4)\", substitute \"subsection 34B(4)\". \\_\\_\\_\\_\\_ SHEET 3985 (1) Schedule 1, item 34, page 14 (after line 24), at the end of section 34A, add: _Exemptions_ (6) If a determination under subsection (1) applies in relation to a participant's plan, the participant or the participant's plan nominee may apply to the CEO for an exemption from the determination in relation to the participant's plan. (7) The application must: (a) be in the form (if any) approved by the CEO; and (b) include any information, and be accompanied by any documents, required by the CEO. (8) If the CEO receives an application under subsection (6), the CEO must: (a) if the CEO is satisfied that the effect of the determination would be to create an unacceptable risk to the participant's safety, or cause or materially increase the risk of the participant becoming socially isolated—grant the exemption; or (b) otherwise—refuse the exemption. (9) If the CEO grants the exemption under paragraph (8)(a): (a) the CEO must notify, in writing, the participant of the grant of the exemption; and (b) the determination is taken to have no effect, and to not have had effect from the date that the application was made under subsection (6), in relation to the participant's plan. Note: For notification of a decision to refuse the exemption under paragraph (8)(b), see subsection 100(1). _[exemptions for support determinations_ (2) Schedule 1, page 14 (after line 24), after item",
+   "stage": "Limitation of debate",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/19"
+  },
+  {
+   "key": "federal-senate-10695",
+   "date": "2026-08-18",
+   "house": "senate",
+   "question": "Karen Grogan The question now is that the remaining stages of the bill be agreed to and the bill be now passed.",
+   "stage": "Limitation of debate",
+   "ayes": 30,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-18/20"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1205415",
+   "speaker": "Jordon Steele-John",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2026-08-17",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment (Securing the NDIS for Future Generations) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00066",
+   "assent_date": "2026-08-20"
+  }
+ ]
+}

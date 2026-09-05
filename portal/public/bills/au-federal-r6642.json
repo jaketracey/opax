@@ -1,0 +1,337 @@
+{
+ "key": "au-federal-r6642",
+ "title": "Aged Care Legislation Amendment (Serious Incident Response Scheme and Other Measures) Bill 2020",
+ "short_title": "Aged Care Legislation Amendment (Serious Incident Response Scheme and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-03-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6642_ems_8b48ae7c-3b81-46b7-982f-75997f7e671d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6642_ems_35da9cba-6e65-4829-9840-dc0268f66ae4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6642%22",
+   "document_date": "2020-12-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00009",
+   "document_date": "2021-03-01",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6888",
+   "date": "2021-02-02",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-02.110.6) to keep the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. The usual second reading motion is \"*that the bill be read a second time*,\" which is parliamentary jargon for agreeing with the main idea of the bill. This vote was put after the MP for Hotham [Clare O'Neil](https://theyvoteforyou.org.au/people/representatives/hotham/clare_o'neil) (Labor) proposed an [amendment](https://www.openaustralia.org.au/debate/?id=2021-02-02.17.3). ### Proposed amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes the systemic, ongoing failures in Australia's aged care system as evidenced by the Royal Commission into Aged Care Quality and Safety, including, but not restricted to, serious incidents in residential aged care;* > > *(2) further notes the bill as drafted only deals with incidents in residential aged care facilities and not incidents that occur in home care; and* > > *(3) calls on the Government to explain their plan to deal with serious incidents that occur in home care.\"*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 54
+    },
+    "Liberal": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 120
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-02/5"
+  },
+  {
+   "key": "federal-senate-6926",
+   "date": "2021-02-04",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2021-02-04.148.1) introduced by South Australian Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Independent), which means they failed. Senator Patrick [explained that](https://www.openaustralia.org.au/senate/?gid=2021-02-04.148.1): > *this amendment is simply about making staffing ratios, and the qualifications of staff, available to people who may wish to put themselves into an aged-care facility. It may also assist relatives making choices in terms of putting people into facilities. It is a no-cost option, but it is informative to the users of the system.*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 22,
+    "dated": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-04/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-401158",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government has delayed too long in addressing serious incidents in aged care, noting that the bill implements recommendations from the Australian Law Reform Commission and the Carnell-Paterson review from 2017. The speaker criticized the bill for excluding home care, leaving over a million Australians without additional protections, and called on the government to urgently extend the scheme to cover home care."
+  },
+  {
+   "slug": "speech-401160",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Serious Incident Response Scheme and Other Measures) Bill 2020, which creates a Serious Incident Response Scheme requiring residential aged care providers to report a broader range of incidents, removes exemptions for assaults by residents with cognitive impairments, and strengthens whistleblower protections. The speaker highlighted increased federal aged care funding from $13.3 billion in 2012–13 to $23.9 billion in 2020–21, with $27 billion projected by 2023–24, and an additional 23,000 home-care packages in the current financial year."
+  },
+  {
+   "slug": "speech-401161",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care Legislation Amendment (Serious Incident Response Scheme and Other Measures) Bill 2020, which introduces a Serious Incident Response Scheme for residential aged care, expands incident definitions to include neglect and psychological abuse, and removes the exemption for reporting abuse by perpetrators with cognitive impairment, but criticised the bill for failing to cover home care and the government for taking four years to act, citing 5,233 reported assaults in 2018–19 and 50,000 unreported cases per KPMG."
+  },
+  {
+   "slug": "speech-401164",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that record funding for aged care is due to the growing number of baby boomers, not government achievement, and supported the bill to establish a Serious Incident Response Scheme, noting that KPMG estimated over 50,000 unreported assaults in residential care annually."
+  },
+  {
+   "slug": "speech-401166",
+   "speaker": "Vince Connelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speech advocated for the Serious Incident Response Scheme, which requires residential aged care providers to manage and report incidents such as sexual misconduct and neglect, and grants the Aged Care Quality and Safety Commissioner broad enforcement powers including civil penalties; it also noted that coalition government spending on aged care has reached $23.9 billion this year and home-care packages have tripled."
+  },
+  {
+   "slug": "speech-401167",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Aged Care Legislation Amendment Bill 2020 as overdue, citing prior reports from 2017, the Australian Law Reform Commission’s elder abuse report, the Carnell-Paterson Oakden review, and budget funding. They argued the aged-care system remains broken due to understaffing, low wages, and casualisation across facilities."
+  },
+  {
+   "slug": "speech-401296",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care Legislation Amendment (Serious Incident Response Scheme and Other Measures) Bill 2020 should cover in-home care and that the current definitions of neglect, intention and recklessness are ambiguous, raising concerns about accidental incidents. They also criticised the Morrison government for underfunding aged care, cited the royal commission's interim report titled *Neglect*, and referenced the opposition's eight-point plan including minimum staffing levels and reducing home-care package waiting lists for over 100,000 Australians."
+  },
+  {
+   "slug": "speech-401297",
+   "speaker": "Kristy McBain",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Morrison government's delayed and inadequate aged-care reforms, citing over 100,000 Australians on home-care waiting lists and over 1,100 in Eden-Monaro, and called for deep, lasting reform beyond the long-overdue Serious Incident Response Scheme."
+  },
+  {
+   "slug": "speech-401298",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The member for Warringah welcomed the Serious Incident Response Scheme but argued it only addresses symptoms of a neglected aged-care system, calling for increased staffing ratios, funding, and broader reform. She cited concerns from providers and Leading Age Services Australia about unclear incident definitions and penalties, and noted that 28,000 Australians died waiting for home-care packages last year and 36.9% of nursing-home residents presented to an emergency department in 2018-19."
+  },
+  {
+   "slug": "speech-401299",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The speaker supported Labor's amendments to the Serious Incident Response Scheme bill, arguing the Morrison government inexcusably delayed action on elder abuse for years, citing 5,000 reported cases annually and a KPMG estimate of 50,000 unreported cases, while over 30,000 older Australians died waiting for home-care packages and 685 died in aged care during COVID-19 due to insufficient government planning."
+  },
+  {
+   "slug": "speech-401300",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-02-02",
+   "stage_hint": null,
+   "brief": "The Aged Care Legislation Amendment (Serious Incident Response Scheme and Other Measures) Bill 2020 introduces the Serious Incident Response Scheme from 1 April 2021 to prevent and respond to abuse and neglect in residential aged care, with new powers for the Aged Care Quality and Safety Commission to enforce compliance and an addendum tabled addressing scrutiny committee concerns."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care Legislation Amendment (Serious Incident Response Scheme and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00009",
+   "assent_date": "2021-03-01"
+  }
+ ]
+}

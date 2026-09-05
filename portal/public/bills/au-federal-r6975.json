@@ -1,0 +1,96 @@
+{
+ "key": "au-federal-r6975",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Stop PEP11 and Protect Our Coast) Bill 2023",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Stop PEP11 and Protect Our Coast) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-13",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-09-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6975%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6975%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6975%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6975_ems_b617fb05-4bcb-4679-9c8c-aeb6ad9caa61%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6975%22",
+   "document_date": "2023-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8062",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "question": "Motions - Offshore Petroleum and Greenhouse Gas Storage Amendment (Stop Pep11 and Protect Our Coast) Bill 2023 - Consider bill now",
+   "stage": "Motion",
+   "ayes": 47,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 37,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 61
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-29/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

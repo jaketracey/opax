@@ -1,0 +1,440 @@
+{
+ "key": "au-federal-alrc-2413",
+ "title": "Charities Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-29",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-27",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00100",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1117",
+   "date": "2013-06-18",
+   "house": "representatives",
+   "question": "Bert Van Manen I have the pleasure to rise this afternoon to speak on the Charities Bill 2013 and the Charities (Consequential Amendments and Transitional Provisions) Bill 2013. For some 400 years the definition of charity has been recognised through common law but today this bill seeks to introduce a definition of charity and charitable purpose from 1 January 2014 across all Commonwealth legislation and to enshrine it in statute. These changes, as with many other changes we see from this government, risk disadvantaging the very charities that we are seeking to support and creating a new wave of legal disputes and test cases at great cost to the sector and ultimately of no benefit to our communities. Currently, charitable purposes are commonly categorised, following the terminology of the Commissioners for Special Purposes of Income Tax v Pemsel rulings as the four 'heads of charity'. These are: the relief of poverty; the advancement of education; the advancement of religion; and other purposes beneficial to the community. For a purpose to be charitable within the legal meaning under the common law, the purpose must be within the 'spirit and intendment' of the Statute of Elizabeth, and for the public benefit. But now we see a change in all of that. The government say that they want to provide greater clarity and certainty for charities, the public and regulators in determining whether an entity is charitable—because they obviously do not believe in the people, the unpaid workers and volunteers who run these organisations. Through trying to provide 'greater clarity', the proposed amendment to the charitable purposes has been changed from the four 'heads of charity' to a list of 12. I do not know how that provides any greater clarity, so let us go through them for the sake of discussion: That is wonderfully clear. When I examined this legislation, one of the biggest issues I had, particularly because there are many people in the electorate of Forde relying heavily on",
+   "stage": "Second reading",
+   "ayes": 71,
+   "noes": 69,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-18/1"
+  },
+  {
+   "key": "federal-senate-2424",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "Mitch Fifield I rise to speak on the Charities Bill 2013 and the Charities (Consequential Amendments and Transitional Provisions) Bill 2013. Acting Deputy President Bishop, I know that I do not need to convince you of the great work that charities do in our community and of the incredible contribution they make to the nation. It is fair to say that Australia would be unrecognisable if the charitable contribution of individuals and of organisations was withdrawn. These organisations really are—it is a cliche but it is true—the glue that holds the community together. They fill in the gaps between what government does, what families do and what businesses do. No government could ever seek to replicate the tremendous good that charities do in our community. I think it is very important that we as a parliament and government more generally are at the service of charities, doing all that can be done to make life easier for charitable organisations rather than making life more difficult. It is for that reason—to avoid making life more difficult for charitable organisations—that the opposition do have misgivings about this legislation. At the heart of the bill is the attempt to seek to introduce a statutory definition of charity and charitable purpose for the purposes of all Commonwealth legislation. This bill in fact represents the first time legislation has sought to comprehensively define charity for the purposes of Commonwealth law. The current definition has been with us for a little while. It is not currently defined in our statutes. Rather, it is the product of over 400 years of common law based on the Statute of Elizabeth. Given the long history of the current definition, the opposition is of the view that if government believes there is good reason to change the definition then the onus is on the government to make the case for a change from the status quo. The opposition are yet to be convinced by the case that the government has put forward. Our concern is that c",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/13"
+  },
+  {
+   "key": "federal-senate-2425",
+   "date": "2013-06-27",
+   "house": "senate",
+   "question": "John Hogg The question now is that the remaining stages of these bills be agreed to and the bills be now passed.",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 64,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-27/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-273412",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-273413",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823695",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823696",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-29",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275983",
+   "speaker": "Kevin Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276130",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276132",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276133",
+   "speaker": "Louise Markus",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276135",
+   "speaker": "Jamie Briggs",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276137",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276138",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276139",
+   "speaker": "Ewen Jones",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276140",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276142",
+   "speaker": "Steven Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276269",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276270",
+   "speaker": "Natasha Griggs",
+   "party": "Country Liberal Party",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276276",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276277",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276282",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824592",
+   "speaker": "Kate Lundy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": "The Charities Bill 2013 was introduced to create a statutory definition of charity for all Commonwealth legislation, providing greater clarity and reducing compliance costs, with provisions including extending charitable purposes to public debate (reflecting the Aid/Watch decision) and post-disaster rebuilding of community assets."
+  },
+  {
+   "slug": "speech-825291",
+   "speaker": "Mitch Fifield",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-27",
+   "stage_hint": null,
+   "brief": "The Coalition opposed the Charities Bill 2013, warning it could create legal disputes and burden charities, while the Greens supported it after securing clarifications that protect advocacy and environmental purposes. The government argued the bill modernises charity law, reduces red tape, and establishes a single regulatory \"passport\" for the sector."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Charities Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00100",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

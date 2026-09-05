@@ -1,0 +1,196 @@
+{
+ "key": "au-federal-r5848",
+ "title": "Defence Legislation Amendment (2017 Measures No. 1) Bill 2017",
+ "short_title": "Defence Legislation Amendment (2017 Measures No. 1) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2017-10-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-10-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5848_ems_346c0d7a-3eb2-4117-b8de-176eb1b03e66%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5848%22",
+   "document_date": "2017-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00117",
+   "document_date": "2017-10-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-353913",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (2017 Measures No. 1) Bill 2017, which includes four schedules: allowing negative drug test results for prescribed or over-the-counter medications, expanding employment and education protections for all reservists, transferring hydrographic functions from the Royal Australian Navy to the Australian Geospatial-Intelligence Organisation, and enabling former ADF members to apply for reassessment of medical discharge eligibility while updating the definition of \"eligible child\" for superannuation benefits."
+  },
+  {
+   "slug": "speech-354164",
+   "speaker": "Cathy O'Toole",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The member for Herbert supported the Defence Legislation Amendment Bill, which includes four schedules to smooth medication testing processes, expand protections for reservists, update the definition of an eligible child, and allow reclassification for members who leave Defence. He noted that Townsville’s ADF community constitutes approximately 20 per cent of the population and highlighted the work of the Townsville Defence Community Reference Group, naming members such as Floss Foster, Ray Martin, Nicky Rothwell, Phillip Thompson, Lieutenant General John Caligari (Ret.), Peter Hindle, Trevor Mullins, Bill Whitburn, Andrew Clinkaberry and Walter Davis."
+  },
+  {
+   "slug": "speech-354165",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (2017 Measures No. 1) Bill 2017, focusing on schedule 2 to expand employment, education and anti-victimisation protections for Reserve members, and noted the need for further flexibility to recognise Reserve service and support women and single mothers."
+  },
+  {
+   "slug": "speech-354166",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (2017 Measures No. 1) Bill 2017, arguing it streamlines drug testing for prescribed medications, extends protections for Reservists against victimisation and employment disruption, and allows former Defence members with undiagnosed medical conditions to have their discharge reassessed for superannuation purposes."
+  },
+  {
+   "slug": "speech-354167",
+   "speaker": "Ross Hart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "Labor supported the Defence Legislation Amendment (2017 Measures No. 1) Bill 2017, which includes simplifying drug test procedures for prescribed medication, expanding employment and education protections for Reservists, transferring hydrographic functions to the Australian Geospatial-Intelligence Organisation, and updating superannuation definitions for children and medical discharge reclassification."
+  },
+  {
+   "slug": "speech-354168",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The bill's increased protections for Reservists were strongly supported, with examples given of their contributions including Greg Sher's service in East Timor and Afghanistan, NORFORCE's role in the Northern Territory intervention, and Reservists' work during the Sydney Olympics."
+  },
+  {
+   "slug": "speech-354169",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The bill amends multiple defence and related laws to expand conditions for disregarding positive drug tests, extend employment and education protections to all reservists, transfer hydrographic and meteorological functions to the Australian Geospatial-Intelligence Organisation, and align superannuation provisions while clarifying the definition of an eligible child."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Legislation Amendment (2017 Measures No. 1) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00117",
+   "assent_date": "2017-10-30"
+  }
+ ]
+}

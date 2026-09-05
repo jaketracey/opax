@@ -1,0 +1,167 @@
+{
+ "key": "au-federal-r5113",
+ "title": "Australian Research Council Amendment Bill 2013",
+ "short_title": "Australian Research Council Amendment Bill 2013",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2013-11-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2014-02-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-02-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5113_ems_0cebdaa2-277d-4208-bcf0-154c812cb6d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5113%22",
+   "document_date": "2013-11-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00001",
+   "document_date": "2014-02-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2013-11-14",
+  "sentences": [
+   "This bill would update the funding limits for Australian Research Council grant programs to account for inflation and add a new spending year.",
+   "It would change three existing annual funding amounts and set a figure for the year starting 1 July 2016.",
+   "The extra spending over four financial years would be $814.876 million."
+  ],
+  "changes": [
+   "The bill would apply indexation to funding caps for three financial years: 2013–14, 2014–15 and 2015–16.",
+   "It would add a funding figure for the financial year starting 1 July 2016.",
+   "It would increase the special appropriation available to the Australian Research Council by $814.876 million over four years."
+  ],
+  "affected": "The Australian Research Council and researchers who receive grants through the National Competitive Grants Program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:07:03Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-281128",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281131",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-281132",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-12-10",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Research Council Amendment Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00001",
+   "assent_date": "2014-02-28"
+  }
+ ]
+}

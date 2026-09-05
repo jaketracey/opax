@@ -1,0 +1,509 @@
+{
+ "key": "au-federal-r6704",
+ "title": "Tertiary Education Quality and Standards Agency (Charges) Bill 2021",
+ "short_title": "Tertiary Education Quality and Standards Agency (Charges) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2021-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-08-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6704_ems_b1591477-50a5-48cc-9d9c-8ccb072c3bd3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6704_ems_35b644c5-102f-4862-9dc5-c0966ed82ccf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6704%22",
+   "document_date": "2021-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00081",
+   "document_date": "2021-08-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-13",
+  "sentences": [
+   "The bill would create a new fee for registered higher education providers to cover the costs of TEQSA's monitoring and oversight activities.",
+   "It would allow TEQSA to collect the fee through associated changes to the TEQSA Act, with the amount set by regulation after stakeholder consultation.",
+   "The fee would be phased in from 1 January 2022, starting at 20 per cent of costs, rising to 50 per cent on 1 January 2023, and reaching full cost recovery from 1 January 2024."
+  ],
+  "changes": [
+   "Establishes a new charge on registered higher education providers to recover TEQSA's sector risk monitoring and regulatory oversight costs.",
+   "Authorises regulations to prescribe the charge amount, including indexation, and to exempt providers from paying.",
+   "Phases in the charge over three years starting 1 January 2022, with percentages increasing to full cost recovery by 1 January 2024."
+  ],
+  "affected": "Registered higher education providers and the Tertiary Education Quality and Standards Agency.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:39:01Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7154",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-05-25.110.15) to keep the usual second reading motion unchanged. The usual second reading motion is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*,\" which is parliamentary jargon for agreeing with the main idea of the bill. Sydney MP [Tanya Plibersek](https://theyvoteforyou.org.au/people/representatives/sydney/tanya_plibersek) (Labor) proposed to change it with the amendment below. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the bill places a further impost on universities as they continue to face an unprecedented crisis as a result of the COVID-19 pandemic, during which the Government has failed Australian university students and staff by:* > > *(1) excluding universities from COVID support; and* > > *(2) making it more expensive for thousands of Australian students to get a university education\".*",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 41,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 145
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-25/5"
+  },
+  {
+   "key": "federal-representatives-7155",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "question": "Tertiary Education Quality and Standards Agency (Charges) Bill 2021 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 80,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 147
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-25/6"
+  },
+  {
+   "key": "federal-senate-7370",
+   "date": "2021-08-05",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2021-08-03.10.1) introduced by NSW Senator Mehreen Faruqi (Greens), which means it failed. This amendment would have added the words below to a [motion](https://theyvoteforyou.org.au/divisions/senate/2021-08-05/6) that the bill be read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add: \", but the Senate is of the opinion that:* > > *(a) the Morrison Government is on a relentless mission to decimate the higher education sector;* > > *(b) these two bills represent a worrying continuation in the Government's larger pattern of defunding the higher education sector and shifting the costs of providing higher education away from the Commonwealth; and* > > *(c) education is a public good, which should be publicly funded\".*",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 15,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "member": 5,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-05/5"
+  },
+  {
+   "key": "federal-senate-7371",
+   "date": "2021-08-05",
+   "house": "senate",
+   "question": "Tertiary Education Quality and Standards Agency (Charges) Bill 2021 and another - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "member": 5,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-05/6"
+  },
+  {
+   "key": "federal-senate-7387",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "Tertiary Education Quality and Standards Agency (Charges) Bill 2021 and another - in Committee - Keep bills in current form",
+   "stage": "In committee",
+   "ayes": 18,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "member": 6,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/14"
+  },
+  {
+   "key": "federal-senate-7388",
+   "date": "2021-08-09",
+   "house": "senate",
+   "question": "Tertiary Education Quality and Standards Agency (Charges) Bill 2021 and another - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 18,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "member": 6,
+    "earliest": 12
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-08-09/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-406043",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The bill introduces a new annual charge on all higher education providers registered with TEQSA to recover the costs of its risk monitoring and regulatory oversight activities, with the amount to be set by regulations. The charge will be phased in from 1 January 2022 (20% of costs in 2022, 50% in 2023, 100% in 2024) and is expected to collect around $5.7 million annually, replacing the current partial recovery of about 15% of TEQSA's total costs."
+  },
+  {
+   "slug": "speech-406044",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-13",
+   "stage_hint": null,
+   "brief": "The bills increase TEQSA's cost recovery from about 15% to full cost through higher application fees (from 1 January 2022) and a new annual charge phased in at 20% in 2022, 50% in 2023 and 100% in 2024, originally announced in the 2018–19 budget but delayed due to COVID-19."
+  },
+  {
+   "slug": "speech-406655",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tertiary Education Quality and Standards Agency (Charges) Bill 2021 and the amendment bill, arguing that higher education providers should pay increased cost recovery fees—phased in over three years—to fund TEQSA’s regulatory activities, noting that current cost recovery is about 15% and that the sector had $38 billion in revenue in 2017."
+  },
+  {
+   "slug": "speech-406656",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "Labor opposes the Tertiary Education Quality and Standards Agency (Charges) Bill 2021, arguing that the cost‑recovery measure unfairly burdens a higher education sector already devastated by 17,000 job losses, a 10% real funding cut over three years, soaring student debt of $60,000, and a government‑driven brain drain of researchers."
+  },
+  {
+   "slug": "speech-406807",
+   "speaker": "Ian Goodenough",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tertiary Education Quality and Standards Agency (Charges) Bill 2021 and related amendment, which phase in increased cost recovery for TEQSA from 15% to full cost by 2024, and noted $245 million in federal funding for Edith Cowan University's new Perth campus, set to open in 2025 with $695 million total cost."
+  },
+  {
+   "slug": "speech-406808",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-25",
+   "stage_hint": null,
+   "brief": "The speaker argued for passing the Tertiary Education Quality and Standards Agency cost recovery bills, with fee waivers during COVID and a three-year transition from 2022; they cited $1.5 billion in additional support for public universities, $53 million for private providers, and rebutted opposition claims by stating no public university met JobSeeker eligibility thresholds (30% revenue decline) and that several universities—including Monash ($267M surplus), Melbourne ($178M), Flinders ($35M), USQ ($12M), and Western Sydney ($13M)—reported surpluses in 2020."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tertiary Education Quality and Standards Agency (Charges) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00081",
+   "assent_date": "2021-08-13"
+  }
+ ]
+}

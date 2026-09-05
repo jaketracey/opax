@@ -1,0 +1,466 @@
+{
+ "key": "au-federal-r7103",
+ "title": "Attorney-General’s Portfolio Miscellaneous Measures Bill 2023",
+ "short_title": "Attorney-General’s Portfolio Miscellaneous Measures Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2024-06-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-06-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7103_ems_59427c90-8a07-48c8-9886-2a490702d8e5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7103_ems_6d154bfc-da0a-405d-b0f0-8501fcf07225%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7103_ems_5dad11de-002f-4d1b-b595-098856015f18%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7103%22",
+   "document_date": "2023-11-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00041",
+   "document_date": "2024-06-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-15",
+  "sentences": [
+   "This bill would give the Federal Court of Australia new powers to hear certain offences investigated by the Australian Securities and Investments Commission.",
+   "It would also let the Sheriff of the Federal Court ask a state or territory jury official to provide a jury panel for the court.",
+   "The bill would make minor changes to the Marriage Act to clarify the Commonwealth Marriage Celebrants Program and improve accessibility for couples marrying."
+  ],
+  "changes": [
+   "Confer jurisdiction on the Federal Court to hear summary and indictable offences within ASIC's regulatory remit.",
+   "Enable the Sheriff to request a jury panel from a state or territory jury official.",
+   "Make minor amendments to the Marriage Act to clarify and improve the Commonwealth Marriage Celebrants Program.",
+   "Make minor and technical amendments to other legislation in the Attorney-General's portfolio."
+  ],
+  "affected": "The Federal Court of Australia, the Sheriff of the Federal Court, state and territory jury officials, ASIC, marriage celebrants, and marrying couples.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:37Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8647",
+   "date": "2024-02-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2024-02-07.139.2) to agree with the main idea of the bill. In parliamentary jargon, they voted in favour of a motion to agree with the main idea of the bill. ### What does this bill do? According to the [bill digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd34) (which is a document prepared by the parliamentary library): > *The purpose of the [Attorney-General’s Portfolio Miscellaneous Measures Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7103) is to make a range of amendments to update and clarify the intended operation of legislation administered by the Attorney-General. It includes:* > > * *amendments to confer jurisdiction on the Federal Court of Australia to hear and determine a range of indictable and summary corporate crime offences within the regulatory remit of the Australian Securities and Investments Commission* > > * *amendments to the Federal Court of Australia Act 1976 to allow the Federal Court to enter into a formal arrangement with a state or territory to use its established jury preparation processes. This will provide an additional option for preparing a jury panel* > > * *minor and technical amendments to the Marriage Act 1961 to improve accessibility for marrying couples and provide greater clarity of meaning* > > * *repeal of section 213A of the Native Title Act 1993 to abolish the Native Title Respondents Scheme and Native Title Officer Funding Scheme.* > > * *The Senate Legal and Constitutional Affairs Legislation Committee has reported on the Bill. The Committee recommended:* > >> * *further guidance on the proposed reforms to the Federal Court’s criminal jurisdiction and jury selection process be provided in the Explanatory Memorandum to the Bill* >> > * *the Guidelines on the Marriage Act 1961 for authorised celebrants be amended to provide information on t",
+   "stage": "Second reading",
+   "ayes": 88,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-02-07/3"
+  },
+  {
+   "key": "federal-senate-8930",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [Government amendment](https://www.openaustralia.org.au/senate/?gid=2024-05-16.238.3). This means the amendment was successful and that it will now become part of the bill. ### Amendment text > *(1) Schedule 4, page 55 (after line 18), after Part 2, insert:* > >> *Part 2A — Membership of Parliamentary Joint Committee on Human Rights* >> >> *Human Rights (Parliamentary Scrutiny) Act 2011* >> >> *10A Subsection 5(1)* >> >>> *Omit \"10\", substitute \"12\".* >> >> *10B Paragraphs 5(1)(a) and (b)* >> >>> *Omit \"5\", substitute \"6\".*",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/37"
+  },
+  {
+   "key": "federal-senate-8931",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2024-05-16.240.1) \"*that part 2 of schedule 4 stand as printed*\". In other words, they voted to keep that part as it is. This motion was introduced in response to an amendment that: > *(1) Schedule 4, Part 2, page 55 (lines 1 to 18), to be opposed.* ### What is part 2 of schedule 4? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd34): > *Part 2 of Schedule 4 of the Bill repeals section 213A of the Native Title Act 1993. This section, ‘Assistance from Attorney General’, provides the statutory basis for the Native Title Respondents Scheme (NTRS) (also referred to as the Native Title Respondents Funding Scheme) and the associated Native Title Officer Funding Scheme (NTOFS) (‘the schemes’). Repealing this section (and the accompanying repeal of subsection94P, dealing with reports about breaches of the requirement to act in good faith by recipients of NTRS funds) has the effect of abolishing the schemes. [...]* > > *Abolishing the schemes was an election commitment by the ALP, and has been ALP policy for some time, having previously been a 2019 election commitment. After the 2022 election, their abolition was announced in the October 2022 budget as a budget saving (Budget October 2022–23 - Budget Paper 2, p. 48). The projected saving is $6.4 million over 4 years ($1.6 million/year) and $1.8 million a year ongoing.* > > *As rationale for abolition, the Attorney-General’s Second Reading Speech states: ‘Many significant questions of native title law have now been settled and the government considers that many current native title respondents, which are generally commercially viable or sound entities, would have the capacity to deal with native title matters as part of their ordinary business costs.’ As discussed below, this essentially repeats previous rationales for the scheme’s restriction by both Coalition and ALP governme",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/38"
+  },
+  {
+   "key": "federal-senate-8932",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "Attorney-General's Portfolio Miscellaneous Measures Bill 2023 - Second Reading - Consideration of UN conventions",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 3,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/39"
+  },
+  {
+   "key": "federal-senate-8933",
+   "date": "2024-05-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2024-05-16.244.1) to agree with the remaining stages of the bill so that it will now be passed in the Senate. ### What does this bill do? According to the [bill digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd34) (which is a document prepared by the parliamentary library): > *The purpose of the [Attorney-General’s Portfolio Miscellaneous Measures Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7103) is to make a range of amendments to update and clarify the intended operation of legislation administered by the Attorney-General. It includes:* > > * *amendments to confer jurisdiction on the Federal Court of Australia to hear and determine a range of indictable and summary corporate crime offences within the regulatory remit of the Australian Securities and Investments Commission* > > * *amendments to the Federal Court of Australia Act 1976 to allow the Federal Court to enter into a formal arrangement with a state or territory to use its established jury preparation processes. This will provide an additional option for preparing a jury panel* > > * *minor and technical amendments to the Marriage Act 1961 to improve accessibility for marrying couples and provide greater clarity of meaning* > > * *repeal of section 213A of the Native Title Act 1993 to abolish the Native Title Respondents Scheme and Native Title Officer Funding Scheme.* > > * *The Senate Legal and Constitutional Affairs Legislation Committee has reported on the Bill. The Committee recommended:* > >> * *further guidance on the proposed reforms to the Federal Court’s criminal jurisdiction and jury selection process be provided in the Explanatory Memorandum to the Bill* >> > * *the Guidelines on the Marriage Act 1961 for authorised celebrants be amended to provide information on the proposed requirement for celebrants to meet s",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-05-16/40"
+  },
+  {
+   "key": "federal-representatives-8938",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2024-05-28.101.1) \"That the [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7103_sched_43b37ab5-9dee-45e2-b057-26611a93995c%22;rec=0) be agreed to.\" This means the amendment was successful and that it will now become part of the bill. ### Amendment text > *(1) Schedule 4, page 55 (after line 18), after Part 2, insert:* > >> *Part 2A — Membership of Parliamentary Joint Committee on Human Rights* >> >> *Human Rights (Parliamentary Scrutiny) Act 2011* >> >> *10A Subsection 5(1)* >> >>> *Omit \"10\", substitute \"12\".* >> >> *10B Paragraphs 5(1)(a) and (b)* >> >>> *Omit \"5\", substitute \"6\".*",
+   "stage": "Consideration of Senate message",
+   "ayes": 87,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 31
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-28/2"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Attorney-General’s Portfolio Miscellaneous Measures Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00041",
+   "assent_date": "2024-06-11"
+  }
+ ]
+}

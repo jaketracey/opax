@@ -1,0 +1,411 @@
+{
+ "key": "au-federal-r7079",
+ "title": "Disability Services and Inclusion Bill 2023",
+ "short_title": "Disability Services and Inclusion Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2023-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-12-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7079_ems_2706975c-b2f0-4ec2-a0cd-bdb62eef9348%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7079_ems_f54bf5aa-ed0c-41a2-b637-d05dcf0ae9b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7079_ems_81b5e326-18d5-41ca-a4a1-e446514309b6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7079%22",
+   "document_date": "2023-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00107",
+   "document_date": "2023-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-14",
+  "sentences": [
+   "This bill would replace the Disability Services Act 1986 and create a new funding and regulation framework for disability programs outside the NDIS.",
+   "The framework would include a mandatory Code of Conduct for service providers and set quality safeguards for supports and services.",
+   "The bill does not define disability, to avoid excluding people, and existing grants would continue unchanged until current funding agreements end."
+  ],
+  "changes": [
+   "Repeal and replace the Disability Services Act 1986.",
+   "Establish a modern legislative framework for funding and regulating disability programs outside the NDIS.",
+   "Introduce a mandatory Code of Conduct for service providers and their staff.",
+   "Set statutory funding conditions to ensure quality and safe supports.",
+   "Allow regulatory alignment with other quality and safeguard systems.",
+   "Provide for information management and delegation of powers."
+  ],
+  "affected": "People with disability, their families and carers, and service providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8499",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-11-17.16.1) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the text of the usual motion will remain unchanged. It was introduced by West Australian Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens). ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) acknowledges that:* > >> *(i) the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability recommended that a Minister for Disability Inclusion should be appointed, and* >> >> *(ii) that disability ministers have been appointed by previous governments; and* > > *(b) calls on the Government to:* > >> *(i) appoint a Minister for Disability Inclusion in line with the Royal Commission's recommendation, and* >> >> *(ii) provide ongoing and needs-based funding for Disability Representative Organisations, other disability organisations and advocacy services\".*",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/2"
+  },
+  {
+   "key": "federal-senate-8500",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted against Greens amendment (1) on [sheet 2210](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7079_amend_6e39f590-d1e2-47a9-80bf-ca5ac48b3aa8%22;rec=0), which means it failed. ### What is the purpose of this amendment? West Australian Senator [Jordan Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens) [explained that](https://www.openaustralia.org.au/senate/?gid=2023-11-17.24.2): > *This amendment seeks to do something pretty simple—that is, to update the title of the bill so that it actually reflects the content and purpose of this bill.* ### Amendment text > *(1) Clause 1, page 1 (line 7), omit “ and Inclusion ”.*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 21,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 3,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/3"
+  },
+  {
+   "key": "federal-senate-8501",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted against [requests for amendments and an amendment](https://www.openaustralia.org.au/senate/?gid=2023-11-17.60.1) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens). ### What is the purpose of these amendments? Senator Rice [explained that](https://www.openaustralia.org.au/senate/?gid=2023-11-17.60.1): > *These amendments relate to improving the accessibility to and improving the rate of the disability support pension, which are critical and central to meeting the objective of this act to achieve the economic and social inclusion of people with disabilities. As I noted in my second reading speech, the Senate community affairs committee did a very comprehensive inquiry into the adequacy of the disability support pension a couple of years back. That committee made some consensus recommendations, but we have not had a response from government on those recommendations, which is pretty upsetting given how much work went into that committee report and the input that we had from people with disabilities. As I said, the recommendations we came up with had cross-party support. What these amendments seek to do is to implement some of those recommendations. [...]* > > *These amendments would raise the base rate of the Disability Support Pension. They would increase the income-free area for people under 21, make the program of support voluntary and remove the requirement that a condition be diagnosed, reasonably treated and stabilised. Our amendments go further than any recent reforms to the payment, and are an absolutely critical step to improving the accessibility, the inclusivity and the adequacy of the payment.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 20,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/4"
+  },
+  {
+   "key": "federal-senate-8502",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2023-11-17.76.1) on sheets 2181, 2182 and 2172, which were moved by West Australian Senator [Jordan Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens). ### What was the purpose of these amendments? Senator Steele-John [explained that](https://www.openaustralia.org.au/senate/?gid=2023-11-17.76.1): > *These amendments end segregation for disabled people in housing, in work and in education. In Australia in 2023, a disabled child is forced to go to a segregated special school where disabled children are physically prevented from being educated alongside their non-disabled peers. In 2023, a disabled person can legally be paid dollars on the hour for their labour packing earphones for Qantas or putting food in packages for the Defence Force. Twenty thousand of us are forced into these forms of segregated work, and don't you tell me about choice. I hope that in the course of this debate the government does not once bring forward the discriminatory nonsense of choice. When disabled people and our families are repeatedly refused entry to mainstream settings including mainstream schools, when employers don't return our requests to be interviewed for a job and when we are told that our support needs cannot be met by an employer in the workplace, we are left then with no option. Don't you dare tell disabled people that, just because of certain policies and procedures of the disability support pension, it is perfectly fine for us to be paid dollars on the hour, when this government sets the policies of the disability support pension. And don't you dare tell us that we have to choose between being segregated together in institutional housing settings and loneliness in isolation. I am so sick of advocates for segregated housing explaining to me: 'Oh, Senator, if we got rid of segregated housing, disabled people would be lonely. Don't you know that disabled pe",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/5"
+  },
+  {
+   "key": "federal-senate-8503",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted against the [amendments](https://www.openaustralia.org.au/senate/?gid=2023-11-17.80.1) on sheets 2169, 2204, 2179, 2171, 2180, 2170, 2209, 2175, 2178, 2173, 2211, 2176, 2177 and 2202, which were moved together by West Australian Senator [Jordan Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens). ### What was the purpose of these amendments? Senator Steele-John [explained that](https://www.openaustralia.org.au/senate/?gid=2023-11-17.83.1): > *Firstly, we seek in parts of these amendments to correct basic administrative flaws in the bill that were flagged by disabled people during the inquiry and yet have not been clarified in the bill. We seek in these amendments to do things such as make clear that services and advocacy provided and funded under the bill extend to online and digital spaces. [...] We seek to ensure that the code of conduct put forward by the government is actually enforced and monitored by a dedicated commission which has the capacity and ability to uphold and investigate complaints brought by disabled people. [...]* > > *We seek in these amendments to give effect to the UN Convention on the Rights of Persons with Disabilities. Australia has been a signatory to this convention, has ratified this convention, since 2008. One of our amendments simply calls on the government to ensure that no service that is funded under this act violates the principles of our commitments under the UN convention. [...]* > > *We seek also to implement basic recommendations given to the government during the course of the inquiry, in relation to how this bill can better support First Nations people through the adoption and implementation of key recommendations and principles within the Closing the Gap framework, to which all government departments administering these services are already committed. [...]* > > *As Senator Ruston flagged in her contribution, we seek to ensure that the government establish a national, c",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 20,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/6"
+  },
+  {
+   "key": "federal-senate-8508",
+   "date": "2023-11-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-11-17.96.1) introduced by South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor), which means it passed. ### Motion text > *That today:* > > *(a) the questions on all remaining stages of the following bills be put at 3 pm:* > >> *Disability Services and Inclusion Bill 2023* >> >> *Disability Services and Inclusion (Consequential Amendments and Transitional Provisions) Bill 2023* >> >> *Inspector-General of Live Animal Exports Amendment (Animal Welfare) Bill 2023* >> >> *Ministers of State Amendment Bill 2022* >> >> *Social Security and Other Legislation Amendment (Miscellaneous Measures) Bill 2023* >> >> *Social Security and Other Legislation Amendment (Supporting the Transition to Work) Bill 2023;* > > *(b) paragraph (a) operate as a limitation of debate under standing order 142;* > > *(c) divisions may take place after 3.30 pm; and* > > *(d) the Senate adjourn without debate on the motion of a minister.* #### No rebellion Note, this division record is currently showing Victorian Senator [David Van](https://theyvoteforyou.org.au/people/senate/victoria/david_van) (Independent) as a rebel voter against the rest of the Liberal Party, which is an error. Senator Van left the Liberal Party in June 2023.",
+   "stage": "Business motion",
+   "ayes": 28,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 4,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-17/11"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Disability Services and Inclusion Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00107",
+   "assent_date": "2023-12-04"
+  }
+ ]
+}

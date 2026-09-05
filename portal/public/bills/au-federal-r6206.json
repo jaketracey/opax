@@ -1,0 +1,357 @@
+{
+ "key": "au-federal-r6206",
+ "title": "Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-10-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-10-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-10-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6206_ems_e6f32748-5048-4036-89b3-ce1a0f899d42%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6206%22",
+   "document_date": "2018-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00134",
+   "document_date": "2018-10-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-10-16",
+  "sentences": [
+   "The bill would cut the corporate tax rate for certain small and medium businesses and increase a tax offset for their owners.",
+   "It would lower the corporate rate for base rate entities—those with passive income at or below 80% and turnover under $50 million—from 27.5% to 26% in 2020-21 and then to 25% from 2021-22 onward.",
+   "The small business income tax offset would rise to 13% of eligible individuals' tax liability in 2020-21 and to 16% from 2021-22, with the annual cap remaining at $1,000."
+  ],
+  "changes": [
+   "Accelerates the reduction of the corporate tax rate for base rate entities.",
+   "Increases the small business income tax offset rate.",
+   "Sets the corporate rate at 26% for 2020-21 and 25% for later years.",
+   "Sets the offset rate at 13% for 2020-21 and 16% for later years.",
+   "Retains the $1,000 annual cap on the offset."
+  ],
+  "affected": "Corporate tax entities that are base rate entities and eligible individuals with small business income.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:51Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5487",
+   "date": "2018-10-18",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-10-18.4.2) introduced by Victorian Senator [Mitch Fifield](https://theyvoteforyou.org.au/people/senate/victoria/mitch_fifield) (Liberal), which means it succeeded. ### Motion text > *That on Thursday, 18 October 2018—* > > *(a) the [Government Procurement (Judicial Review) Bill 2017](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r5871) and the [Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6206) be called on immediately and have precedence over all government business until determined;* > > *(b) if by 11.45 am the bills have not been finally considered, the questions on all remaining stages shall be put without debate; and* > > *(c) paragraph (b) of this order shall operate as a limitation of debate under standing order 142*",
+   "stage": "Business motion",
+   "ayes": 35,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 18,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-10-18/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-370695",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018 was moved for a second reading, proposing to bring forward tax cuts for small and medium businesses by five years. Companies with turnover up to $50 million would see their rate reduced to 26% in 2020–21 and 25% in 2021–22, while unincorporated businesses with turnover up to $5 million would receive an increased tax discount of 13% in 2020–21 and 16% in 2021–22, benefiting around 940,000 companies and 2.35 million unincorporated businesses."
+  },
+  {
+   "slug": "speech-370704",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The Labor Party will support the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018, backing lower tax rates for small and medium enterprises and facilitating the government's decision to bring the cuts forward. The speaker also noted that under a Shorten Labor government, businesses would additionally have access to the Australian Investment Guarantee, an accelerated depreciation measure."
+  },
+  {
+   "slug": "speech-370709",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018 was argued to deliver tax relief for small and medium businesses, with a focus on lowering the corporate tax rate to 25 per cent by 2026–27 for businesses with an aggregated turnover of less than $50 million."
+  },
+  {
+   "slug": "speech-370711",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018, which reduces the company tax rate for businesses with income under $50 million from 27.5% to 26% and then to 25% by 2021–22, benefiting 3.3 million businesses employing 6.6 million Australians at a cost of $3.2 billion over the forward estimates, and argued that Labor’s Australian Investment Guarantee provides a superior offering for small business compared to the Liberal Party."
+  },
+  {
+   "slug": "speech-370713",
+   "speaker": "Andrew Wallace",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill, which would reduce the company tax rate to 25% five years earlier for the 18,651 small and family businesses in his electorate of Fisher, and cited the Fisher Business Council and local businesses including HeliMods, Chatter-boxes, and Art on Cairncross; he also criticised Labor and the Greens on tax policy, claiming Labor has \"$200 billion of tax stored up.\""
+  },
+  {
+   "slug": "speech-370830",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018, claiming the Labor Party undid a $25 billion surplus left by the Howard government and left the country in ruin."
+  },
+  {
+   "slug": "speech-370835",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-370837",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill, which brings forward a company tax rate reduction from 27.5% to 25% for businesses with turnover under $50 million and provides a 13% tax cut for unincorporated businesses by 2020-21. The speaker claimed the bill will deliver $3.2 billion in tax relief over forward estimates, criticised Labor for proposing to repeal personal income tax cuts and reintroduce the budget repair levy, and warned against Labor’s proposed 30% tax on trust distributions and potential death duties."
+  },
+  {
+   "slug": "speech-370842",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "Labor supported the bill to lower tax rates for small and medium businesses, funding the cuts by delaying its proposed Australian Investment Guarantee by one year. The speaker criticised the government for failing to fund the tax cuts, for rising electricity prices, delays to the banking royal commission, and the NBN rollout."
+  },
+  {
+   "slug": "speech-370844",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018, which reduces the tax rate to 25% by 2021-22 for businesses with turnover up to $50 million, and promoted Labor's alternative Australian Investment Guarantee—a 20% tax deduction on investments over $20,000—along with policies on energy, TAFE, access to justice, phoenixing, sham contracting, and NBN service guarantees."
+  },
+  {
+   "slug": "speech-370845",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018 will benefit small and medium businesses, citing examples like instant asset write-offs and no changes to dividend imputation rules. They criticised opposition policies on capital gains tax, dividend imputation, and trust taxes, and noted that 15,000 small and medium businesses in the electorate of Forde would benefit from the tax cuts."
+  },
+  {
+   "slug": "speech-370846",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018, noting bipartisan support, and highlighted that 25,000 small businesses in the Perth electorate would benefit. They also argued that Labor supports both small business and working Australians, citing the restoration of penalty rates for 700,000 workers."
+  },
+  {
+   "slug": "speech-370847",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018, which fast-tracks company tax cuts to 25% by 2021-22 for businesses under $50 million turnover and brings forward the unincorporated business tax discount to maximum $1,000, benefiting 15,015 local businesses in Robertson and 2.35 million unincorporated businesses nationally."
+  },
+  {
+   "slug": "speech-370848",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018 gives $2 billion in tax cuts to companies with up to $50 million turnover, which could instead fund public schools, renewable energy, or lifting Newstart above the poverty line. They criticised the Labor Party for supporting what they called trickle-down economics and urged a fairer tax system to fund universal services like public health and education."
+  },
+  {
+   "slug": "speech-370849",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The bill's tax cuts for small and medium businesses were supported, citing 430,000 jobs created in businesses up to $50 million. Labor's proposed tax increases on income, housing, capital gains, and superannuation were criticised as harmful to businesses and renters."
+  },
+  {
+   "slug": "speech-370850",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018, which accelerates tax relief so businesses with turnover below $50 million face a 25% rate in 2021-22 instead of 2026-27, and similarly fast-tracks the 16% tax discount for unincorporated businesses."
+  },
+  {
+   "slug": "speech-370851",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-16",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Bill 2018 accelerates the company tax rate reduction to 25% for businesses with turnover below $50 million, with a 26% rate in 2020-21 and 25% in 2021-22, and brings forward increases to the unincorporated small business tax discount rate to 13% in 2020-21 and 16% from 2021-22, benefiting over three million businesses employing around seven million Australians."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Lower Taxes for Small and Medium Businesses) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00134",
+   "assent_date": "2018-10-25"
+  }
+ ]
+}

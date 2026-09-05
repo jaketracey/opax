@@ -1,0 +1,113 @@
+{
+ "key": "au-federal-r6844",
+ "title": "Treasury Laws Amendment (Enhancing Tax Integrity and Supporting Business Investment) Bill 2022",
+ "short_title": "Treasury Laws Amendment (Enhancing Tax Integrity and Supporting Business Investment) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2022-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6844%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6844%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6844%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6844%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6844%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6844_ems_a6b78da4-ef65-4f7a-aa79-4797220dbea0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6844%22",
+   "document_date": "2022-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-02-09",
+  "sentences": [
+   "This bill is part of a package that includes the Income Tax Amendment (Labour Mobility Program) Bill 2022, and the package is described in this explanatory memorandum.",
+   "Schedule 1 would let the Tax Commissioner order a business that has not kept proper tax records to take a course on record-keeping, instead of paying a fine.",
+   "The Tax Commissioner could start giving these directions three months after the bill becomes law."
+  ],
+  "changes": [
+   "The Tax Commissioner could direct an entity to take an approved course on keeping tax records.",
+   "The direction would be an alternative to existing financial penalties for failing to keep tax records.",
+   "The change starts on the first 1 January, 1 April, 1 July or 1 October after Royal Assent."
+  ],
+  "affected": "Businesses that have failed to meet their tax-related record-keeping obligations.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:05Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-417592",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-02-09",
+   "stage_hint": null,
+   "brief": "The bill reduces the effective tax rate on income earned by foreign resident workers in the Australian Agriculture Worker Program and the Pacific Australia Labour Mobility scheme from 32.5% to 15%."
+  },
+  {
+   "slug": "speech-419513",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-03-29",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment bill includes measures on tax record-keeping penalties, FIFA Women's World Cup exemptions, self-assessment of intangible asset depreciation, unfair contract term reforms, cyclone grant tax exemptions, a reduced 15% tax rate for foreign agricultural workers, and minor technical amendments. The government was criticised for not implementing banking royal commission recommendations—including a compensation scheme of last resort—and for inaction on scams, the Youpla funeral insurance collapse affecting 17,000 people, and disaster mitigation; a second reading amendment was moved with eight priorities including financial integrity, support for women's sport, worker rights, Pacific relations, skills investment, disaster mitigation, small business protection, and cost of living relief."
+  },
+  {
+   "slug": "speech-419743",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-03-30",
+   "stage_hint": null,
+   "brief": "The MP argued that the Treasury Laws Amendment Bill 2022 supports small business through lower tax rates, instant asset write-offs, and a new measure allowing businesses struggling with record-keeping to take a free two‑hour online course instead of paying financial penalties, while from July 2023 intangible assets may be depreciated based on actual economic life."
+  }
+ ],
+ "acts": []
+}

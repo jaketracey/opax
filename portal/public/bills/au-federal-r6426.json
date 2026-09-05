@@ -1,0 +1,681 @@
+{
+ "key": "au-federal-r6426",
+ "title": "Customs Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019",
+ "short_title": "Customs Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2019-12-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6426_ems_8d5f3031-1911-4847-a508-ecf5688cbd98%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6426%22",
+   "document_date": "2019-10-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00108",
+   "document_date": "2019-12-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 9,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-16",
+  "sentences": [
+   "The bill changes the Customs Act 1901 so that goods from Peru, Indonesia, and Hong Kong can enter Australia with discounted import taxes.",
+   "It sets up rules for identifying which goods count as originating from each of those places and lets regulations require exporters and producers to keep records when they claim those discounts.",
+   "Budget papers say the Hong Kong deal would cost the government $40 million in lost revenue over the forecast period, while the Peru and Indonesia deals would have little or no revenue effect."
+  ],
+  "changes": [
+   "Creates rules for classifying Peruvian, Indonesian, and Hong Kong goods as eligible for lower customs duty rates.",
+   "Allows regulations to impose record-keeping duties on exporters and producers claiming preferential rates.",
+   "Works with a separate tariff bill that will list the actual reduced duty rates in the Customs Tariff Act 1995."
+  ],
+  "affected": "Australian exporters and producers of goods shipped to Peru, Indonesia, and Hong Kong, and importers of those goods into Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:56:04Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5911",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "question": "Customs Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019 and another - Second Reading - Protect Australian industry",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-21/1"
+  },
+  {
+   "key": "federal-representatives-5912",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "question": "Customs Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019 - Consideration in Detail - ISDS clauses",
+   "stage": "Consideration in detail",
+   "ayes": 5,
+   "noes": 93,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 97
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-21/2"
+  },
+  {
+   "key": "federal-senate-6028",
+   "date": "2019-11-25",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-11-25.14.1) introduced by WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means the motion failed. ### Motion text > *At the end of the motion, add:* > > *\", but the Senate is of the opinion that:* > >> *(a) the current process for negotiating trade agreements needs to be amended to increase transparency around the negotiations and final text of agreements;* >> >> *(b) all trade agreements should be subject to independent national interest assessments;* >> >> *(c) [investor-state dispute settlement](https://en.wikipedia.org/wiki/Investor-state_dispute_settlement) (ISDS) provisions need to be excluded from all trade agreements; and* >> >> *(d) human rights, labour, and environmental protection provisions must be included in all trade agreements.\"*",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 14,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-25/2"
+  },
+  {
+   "key": "federal-senate-6029",
+   "date": "2019-11-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-11-25.136.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). ### Main idea of the bill According to the [bill webpage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6426): > *Introduced with the Customs Tariff Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019 to give effect to the Peru-Australia Free Trade Agreement, the Indonesia-Australia Comprehensive Economic Partnership Agreement and the Free Trade Agreement between Australia and Hong Kong, China, the bill amends the Customs Act 1901 to introduce new rules of origin to determine preferential rates of duty for certain goods originating from Peru, Indonesia and Hong Kong in accordance with the applicable agreement.*",
+   "stage": "Second reading",
+   "ayes": 51,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 15,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-25/3"
+  },
+  {
+   "key": "federal-senate-6030",
+   "date": "2019-11-26",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-11-26.4.3) introduced by WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens) in respect to [investor-state dispute settlement](https://en.wikipedia.org/wiki/Investor-state_dispute_settlement). Senator Steele-John explained that: > *This amendment deals with the very pernicious clauses within these agreements that give corporations the right to sue governments. People might not be aware—although we've previously covered it pretty comprehensively in the debate—so I'll make it very clear: this deals with the inclusion of ISDS clauses, so the pathways through which corporations are able to sue governments for taking action in relation to regulating in the public interest. Australia has had more experience than many nations of the potential impact of these clauses. We have had the experience very close to hand of the way in which Philip Morris utilised an ISDS clause in a previous agreement with Hong Kong to pursue the Australian government in relation to plain-packaging laws after we had had that legislative decision upheld by the highest court in our land.* The Labor Party did not support the amendments, with ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor) [explaining that](https://www.openaustralia.org.au/senate/?gid=2019-11-26.6.1): > *The improved ISDS clauses in these agreements include safeguards on the public interest, which allows Australia to regulate on legitimate public welfare objectives. This includes the protection of public health, safety and the environment.* ### Motion text > *(1) Clause 2, pages 2 and 3, table items 2 to 4, omit the table items, substitute:* > > *2. Schedule 1* > >> *If the Peru-Australia Free Trade Agreement, done at Canberra on 12 February 2018, enters into force for Australia—the first day that bilateral side letters exchanged between Aust",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 19,
+    "member": 11,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-26/1"
+  },
+  {
+   "key": "federal-senate-6031",
+   "date": "2019-11-26",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-11-26.50.1) introduced by WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens) in respect to requiring labour market testing. Senator Steele-John [explained that](https://www.openaustralia.org.au/senate/?gid=2019-11-26.50.1): > *We in the Greens would never quibble or seek to oppose the ability of any person to come to Australia and to work and be protected while they work in a safe workplace. But what we see, particularly with the Indonesia agreement, is a process being opened up by which permits have been granted to that nation for work which can be utilised without undertaking the pretty basic principle of checking to make sure whether or not there is anybody currently present within the community who is able to do that job and who has the qualifications to do that job.* However, ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor) [explained that](https://www.openaustralia.org.au/senate/?gid=2019-11-26.51.1): > *I think it's important to add here that there is no change to labour market testing and the conditions that have applied since 1995. These agreements that we are dealing with are not changing the arrangements that have been in place. With respect, I think Senator Steele-John might be incorrect about some of the concerns that he is raising, and Labor will not be supporting the amendment.* ### Motion text > *(2) Clause 2, pages 2 and 3, table items 2 to 4, omit the table items, substitute:* > > *2. Schedule 1* > >> *If the Peru‑Australia Free Trade Agreement, done at Canberra on 12 February 2018, enters into force for Australia—the first day that bilateral side letters exchanged between Australia and each other party to the Agreement agreeing that labour market testing must occur in relation to contractual service suppliers, working holiday visa holders and training vi",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "dated": 20,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-26/2"
+  },
+  {
+   "key": "federal-senate-6032",
+   "date": "2019-11-26",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2019-11-26.64.1) introduced by WA Senator Jordon Steele-John (Greens), which means it failed. The amendment was introduced in order to replace a table item 4 in clause 2 of the [Customs Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6426). Senator Steele-John [explained that](https://www.openaustralia.org.au/senate/?gid=2019-11-26.64.1) the amendment related to the Australia-Hong Kong Free Trade Agreement. It would have delayed the commencement of Schedule 3 until the latest of the following dates: > *(a) 20 October 2020;* > > *(b) the day this Act receives the Royal Assent;* > > *(c) the day the Free Trade Agreement between Australia and Hong Kong, China, done at Sydney on 26 March 2019, enters into force for Australia.* > > *However, the provisions do not commence at all if the event mentioned in paragraph (c) does not occur.* > > *The Minister must announce, by notifiable instrument, the day the Agreement enters into force for Australia.* The [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6426_ems_8d5f3031-1911-4847-a508-ecf5688cbd98%22;rec=0) explains that: > *Schedule 3 of the Bill amends the Customs Act to provide rules for determining whether goods are Hong Kong originating goods and therefore entitled to be imported into Australia at preferential rates of customs duty. The amendments also enable regulations to prescribe record keeping obligations on exporters and producers of goods exported to Hong Kong, China for which a preferential rate of customs duty is claimed.*",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 18,
+    "earliest": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-26/3"
+  },
+  {
+   "key": "federal-senate-6033",
+   "date": "2019-11-26",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2019-11-26.69.1) introduced by SA Senator [Rex Patrick](https://theyvoteforyou.org.au/people/senate/sa/rex_patrick) (Centre Alliance), which means they failed. Senator Patrick [explained that](https://www.openaustralia.org.au/senate/?gid=2019-11-26.69.1) the amendments: > *will insert a schedule into the bill to amend the Productivity Commission Act 1998 to require a wideranging and independent inquiry by the commission into the impacts of Australia's bilateral and regional trade agreements. The last [Productivity Commission](https://en.wikipedia.org/wiki/Productivity_Commission) inquiry on free trade agreements was almost a decade ago.* ### Amendments text > *(1) Clause 2, page 2 (table item 1), omit \"Sections 1 to 3\", substitute \"Sections 1 to 4\".* > > *(2) Page 3 (after line 11), after clause 3, add:* > > *4 Impact of bilateral and regional trade agreements on Australia ' s trade and economic performance—Productivity Commission inquiry* > > *(1) By the day after this section commences, the Productivity Minister must, under Part 3 of the Productivity Commission Act 1998, refer to the Productivity Commission for inquiry the following matters:* > >> *(a) the contribution of Australia's bilateral and regional trade agreements to reducing trade and investment barriers and safeguarding against the introduction of new barriers;* >> >> *(b) the impact of trade agreements on trade flows, investment returns and productivity growth, employment and labour markets, and the development of manufacturing and value-added export industries;* >> >> *(c) any related matters.* > > *(2) In referring the matter to the Productivity Commission for inquiry, the Productivity Minister must:* > >> *(a) under paragraph 11(1) (a) of the Productivity Commission Act 1998, require the Productivity Commission to hold hearings for the purposes of the inquiry; and* >> >> *(b) under paragraph 11(1) (b) of that Act, s",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 24,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-26/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-382813",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The bill implements free trade agreements with Indonesia, Peru, and Hong Kong, aiming to increase export opportunities and reduce tariffs on Australian goods. The agreements cover 99% of Australian exports to Indonesia duty-free, new quotas for dairy and grains to Peru, and zero tariffs on all goods to Hong Kong, with support from over 30 industry groups."
+  },
+  {
+   "slug": "speech-383313",
+   "speaker": "Dave Sharma",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that free trade is essential for Australia's economic prosperity and announced three free trade agreements with Indonesia, Peru, and Hong Kong, which will eliminate over 99% of tariffs on Australian goods to Indonesia and Peru and codify existing trade with Hong Kong, aiming to cover 90% of Australia's trade by free trade agreements by 2022."
+  },
+  {
+   "slug": "speech-383315",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "Labor announced support for the Customs Amendment and Tariff Amendment bills after obtaining written commitments from Trade Minister Simon Birmingham on worker protections, including no new labour market testing waivers, criminal penalties for exploitation, and termination of the 1993 Indonesia bilateral investment treaty. The agreements are expected to boost Australian exports and jobs, with specific benefits for steel, grain, education and manufacturing sectors."
+  },
+  {
+   "slug": "speech-383316",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019, which enables free trade agreements with Indonesia, Hong Kong and Peru, arguing the Indonesia deal is vital given trade is 42% of GDP and Indonesia’s large market. Labor’s second reading amendment, moved by the member for Brand, sought improvements such as labour market testing, protections for working holidaymakers, replacing the 1993 investment treaty’s ISDS clause, and a review of the new clause; the trade minister agreed to most demands in a 21 October response, allowing Labor’s support."
+  },
+  {
+   "slug": "speech-383423",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Indonesia-Australia Comprehensive Economic Partnership Agreement (IA-CEPA) will boost trade and jobs, and announced Labor's support after securing commitments to protect Australian workers, including no additional labour testing waivers, equal treatment for visa holders, and improved investor-state dispute settlement clauses."
+  },
+  {
+   "slug": "speech-383424",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Bill 2019 and related bills, arguing the trade agreements with Indonesia, Hong Kong, and Peru will create jobs and economic growth. The speaker cited four reasons for support: bigger markets mean more jobs, deepening ties with Indonesia is critical, improvements were negotiated on investment protections and labour standards, and engagement with Asia is needed during weak economic growth and global uncertainty."
+  },
+  {
+   "slug": "speech-383425",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the free trade agreement with Indonesia, arguing it will eliminate tariffs on grain, cattle, and steel, and create opportunities for Australian vocational education and healthcare providers, while noting that only 2% of Australian exports currently go to Indonesia."
+  },
+  {
+   "slug": "speech-383426",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor supports the free trade agreements with Indonesia, Hong Kong, and Peru, citing recommendations from the Joint Standing Committee on Treaties (JSCOT) including labour market testing protections, termination of the old Indonesia bilateral investment treaty’s survival clause, and independent economic modelling. He also noted that the government should monitor Hong Kong’s autonomous status and that civil society and unions need better consultation in future trade negotiations."
+  },
+  {
+   "slug": "speech-383427",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Peru-Australia, Hong Kong, and Indonesia free trade agreements, focusing on the Indonesia-Australia Comprehensive Economic Partnership Agreement, and noted that Australia exports more to the UK than to Indonesia despite its proximity, with benefits for sectors like steel (BlueScope in Port Kembla) and education, while calling for more Indonesian language study in schools."
+  },
+  {
+   "slug": "speech-383431",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "Labor supported the Customs Amendment bills for trade agreements with Indonesia, Hong Kong and Peru after the government agreed to demands including retaining labour market testing, modernising investor-state dispute settlement (ISDS) provisions, and holding an inquiry into treaty transparency. The speaker also raised concerns about unlicensed electricians and called for stronger enforcement of workplace laws."
+  },
+  {
+   "slug": "speech-383433",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The speaker criticised the ignorance of MPs, noting that the previous speaker from Newcastle represents a major coalmining area while the world's biggest coalmining area is in Indonesia."
+  },
+  {
+   "slug": "speech-383446",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-21",
+   "stage_hint": null,
+   "brief": "The Customs Amendment and Customs Tariff Amendment bills implement Australia's obligations under free trade agreements with Indonesia, Peru, and Hong Kong, eliminating over 99% of tariffs on Australian goods exports to Indonesia and Peru while guaranteeing existing duty-free access to Hong Kong. The speaker urged Parliament to pass the bills without delay to benefit Australian businesses, exporters, workers, investors, and farmers."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Growing Australian Export Opportunities Across the Asia-Pacific) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00108",
+   "assent_date": "2019-12-03"
+  }
+ ]
+}

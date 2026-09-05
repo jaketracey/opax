@@ -1,0 +1,199 @@
+{
+ "key": "au-federal-r5606",
+ "title": "Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016",
+ "short_title": "Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-03-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-03-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5606_ems_04dea95a-b368-4d35-af43-7495be278c44%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5606%22",
+   "document_date": "2016-02-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00018",
+   "document_date": "2016-03-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-328107",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The Labor member moved an amendment to the bill calling on the government to make capital gains tax and negative gearing fairer and more sustainable, citing that price-to-income ratios have doubled over 20 years, young homeownership has fallen 25 percentage points, low-income homeownership has halved, and Sydney and Melbourne rank as the world’s second and fourth most unaffordable cities. The member also criticized Treasurer Scott Morrison for lacking economic ideas and referenced former Treasurer Joe Hockey and former Liberal Premier Jeff Kennett as supporters of reforming negative gearing."
+  },
+  {
+   "slug": "speech-328228",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016 but raised concerns that the tightened eligibility and definitional changes, as noted by Chartered Accountants Australia and the Tax Institute, could increase complexity for small businesses. They also announced Labor's proposed reforms to negative gearing and the capital gains tax discount, which would not change the CGT discount for small business assets."
+  },
+  {
+   "slug": "speech-328229",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016 allows small businesses to change legal structure without incurring an immediate capital gains tax liability, effective from 1 July 2016, with an estimated $40 million cost to revenue. The bill was welcomed by industry groups and the 30,000 small businesses in the electorate of Brisbane."
+  },
+  {
+   "slug": "speech-328230",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "Labor supported the Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016, which allows businesses with revenue under $2 million to defer capital gains taxes when restructuring. The speaker also criticised the coalition government for lacking an economic vision, citing a $38 billion budget deficit, 6% unemployment, 12.7% youth unemployment, and 761,000 unemployed people, and argued that government policies—such as abandoning the car industry and creating uncertainty in naval shipbuilding—harm small businesses."
+  },
+  {
+   "slug": "speech-328231",
+   "speaker": "Dennis Jensen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016 allows small businesses to change legal structures without triggering capital gains tax at the time of change, at a cost of $40 million over the forward estimates. The speaker also argued that the previous Labor government harmed small businesses through declining productivity, increased red tape, introduction of a carbon tax, and abolition of the entrepreneurs tax offset, while the Turnbull government claims to have cut taxes, introduced asset deductibility, and secured free trade agreements to support small business."
+  },
+  {
+   "slug": "speech-328232",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016 will incentivise small business innovation and start-ups by removing capital gains tax obligations when changing business structures. He cited Reserve Bank Governor comments on long-term growth from innovation and productivity, claimed 447,800 jobs were created under the Coalition from January 2014 to January 2016, and criticised Labor’s proposed negative gearing and capital gains tax changes as economically reckless, comparing them to Venezuela’s policies."
+  },
+  {
+   "slug": "speech-328233",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016, which allows small businesses to change their legal structure without incurring a capital gains tax liability at that time, costing $40 million over the forward estimates. The speaker noted that 97% of Australian businesses are small, with 12,000 businesses and 70,000 employees in the Lindsay electorate, projected to grow to 120,000 by 2031."
+  },
+  {
+   "slug": "speech-328235",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-22",
+   "stage_hint": null,
+   "brief": "The coalition government argued its small business policies, including tax cuts and deregulation, are essential for economic growth, with small businesses comprising 97% of all Australian businesses, employing over 4.7 million people and generating $340 billion annually. The speaker welcomed the Tax Laws Amendment (Small Business Restructure Roll-over) Bill 2016, which allows businesses with turnovers under $2 million to restructure without capital gains tax liability, part of a $5 billion support package, and praised the appointment of Kate Carnell AO as Small Business and Family Enterprise Ombudsman."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax Laws Amendment (Small Business Restructure Roll-over) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00018",
+   "assent_date": "2016-03-08"
+  }
+ ]
+}

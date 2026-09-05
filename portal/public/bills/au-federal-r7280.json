@@ -1,0 +1,1502 @@
+{
+ "key": "au-federal-r7280",
+ "title": "Electoral Legislation Amendment (Electoral Reform) Bill 2024",
+ "short_title": "Electoral Legislation Amendment (Electoral Reform) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2025-02-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_0b688c86-e387-47e2-a54f-11e446816338%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_1bef67e3-90cc-463c-a98f-252427060bf7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_47d52a85-eacf-4548-a8ac-cf25d11199d1%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_8119e562-f71a-437c-998f-9a19ffebd1ed%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_f8f07494-5341-4e57-b5e2-415aa4d32f11%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_f77c81ec-800a-47eb-bb7b-3c893cbff257%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_43db4ef4-a24f-4bf4-902f-7ce29b8dc4f7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_cd8afe17-52a1-4e1e-82cc-f2af254db99c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7280_ems_3b53fa00-1259-4649-9cfe-7a62b286acbb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7280%22",
+   "document_date": "2024-11-18",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00016",
+   "document_date": "2025-02-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9219",
+   "date": "2024-11-18",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/28037/&sid=0000) introduced by Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent), which means it failed. ### Motion text > *That Electoral Legislation Amendment (Electoral Reform) Bill 2024 and the Electoral Legislation Amendment (Electoral Communications) Bill 2024 be referred to the Joint Standing Committee on Electoral Reform for consideration and an advisory report by 3 March 2025.*",
+   "stage": "Reference to Committee",
+   "ayes": 14,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 63,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-18/1"
+  },
+  {
+   "key": "federal-senate-9222",
+   "date": "2024-11-19",
+   "house": "senate",
+   "question": "The majority voted against a motion introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent) and Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie), which means it failed. ### Motion text > *That the Electoral Legislation Amendment (Electoral Reform) Bill 2024 and the Electoral Legislation Amendment (Electoral Communications) Bill 2024 be referred to the Joint Standing Committee on Electoral Matters for inquiry and report by 3 March 2025.*",
+   "stage": "Reference to Committee",
+   "ayes": 18,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 46,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-19/3"
+  },
+  {
+   "key": "federal-representatives-9412",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7280_amend_533c53a8-b747-41b2-80aa-c887bbd8cebd%22;rec=0) introduced by Warringah MP [Zali Steggall](https://theyvoteforyou.org.au/people/representatives/warringah/zali_steggall) (Independent), which means it failed. This amendment would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after “That” be omitted with a view to substituting the following words:* > > *“whilst declining to give the bill a second reading, the House:* > > *(1) is of the opinion that the bill:* > >> *(a) should not proceed further until referred to the Joint Standing Committee on Electoral Matters, to inquire into the intended and unintended consequences, with a report due to the House by the first sitting day of 2025;* >> >> *(b) creates an unfair playing field, giving advantage to incumbents over new candidates by failing to give all candidates the same public funding for administrative support and failing to account for incumbent resources such as an office, staff, a vehicle and marketing budget whilst imposing a spending cap on candidates;* >> >> *(c) provides disproportionate yearly administrative assistance funding to major political parties, and fails to account for any economies of scale; and* >> >> *(d) entrenches political party advantage over independent candidates by imposing a spending cap on individual seats while still permitting additional party advertising under a party’s $90m national cap;* > > *(2) requests that:* > >> *(a) an assessment of realistic administrative compliance costs under the bill be undertaken; and* >> >> *(b) a cap be placed on administrative assistance funding to political parties to accurately reflect admini",
+   "stage": "Report from Federation Chamber",
+   "ayes": 14,
+   "noes": 49,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 62,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/3"
+  },
+  {
+   "key": "federal-representatives-9413",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "Electoral Legislation Amendment (Electoral Reform) Bill 2024 - Report from Federation Chamber - Agree with the bill's main idea",
+   "stage": "Report from Federation Chamber",
+   "ayes": 49,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 47,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 62,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/4"
+  },
+  {
+   "key": "federal-representatives-9414",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-11-20.33.2) introduced by Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent), which means they failed. These amendments would have removed schedule 4 and schedule 7 from the bill. ### What do schedules 4 and 7 do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd036): > *Schedule 4—Expenditure caps* > >> *Establishes annual caps on electoral expenditure incurred by prescribed persons (including registered political parties, candidates, Members of the House of Representatives, and Senators). There is an overall Federal cap, as well as Division and Senate caps.* > *Schedule 7—Administrative assistance funding and election funding* > >> *Amends a range of funding arrangements, including establishing a framework to provide quarterly administrative assistance funding to registered political parties and independent Members of Parliament, increasing election funding payable (from currently $3.346 to $5 per vote), and establishing advance payment of election funding to incumbent persons.* ### Amendment text > *(1) Clause 2, page 2 (table item 5, column 1), omit “to 4”, substitute “and 3”.* > > *(2) Clause 2, page 2 (table item 8, column 1), omit “Schedules 6 and 7”, substitute “Schedule 6”.* > > *(3) Schedule 4, page 95 (line 1) to page 129 (line 8), omit the Schedule.* > > *(4) Schedule 7, page 169 (line 1) to page 188 (line 29), omit the Schedule.*",
+   "stage": "Consideration in detail",
+   "ayes": 8,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/5"
+  },
+  {
+   "key": "federal-representatives-9415",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (1) to (8)](https://www.openaustralia.org.au/debate/?id=2024-11-20.47.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means they were unsuccessful. ### Amendment text > *(1) Schedule 4, item 2, page 97 (after line 21), after the definition of Federal cap in section 302ALA, insert:* > >> *Independent House candidate means a candidate for election to the House of Representatives, for a Division, at any time while the candidate is not endorsed by a registered political party.* >> >> *Independent House candidate Divisional cap means 150% of the Divisional cap.* > > *(2) Schedule 4, item 2, page 97 (lines 23 to 25), omit “a candidate for election to the House of Representatives, for a Division, at any time while the candidate is not endorsed by a registered political party”, substitute “an Independent House candidate”.* > > *(3) Schedule 4, item 2, page 98 (lines 1 to 3), omit the definition of Independent House of Representatives by-election cap in section 302ALA, substitute:* > >> *Independent House of Representatives by-election cap , for a by-election, means:* >> >>> *(a) for an Independent House candidate—120% of the Independent House candidate Divisional cap that applies on the 2 day the writ for the by-election is issued; or* >>> >>> *(b) otherwise—120% of the Divisional cap that applies on the 2 day the writ for the by-election is issued.* > > *(4) Schedule 4, item 2, page 98 (lines 4 and 5), omit the definition of Independent House of Representatives cap in section 302ALA, substitute:* > >> *Independent House of Representatives cap means:* >> >>> *(a) for an Independent House candidate—the Independent House candidate Divisional cap; or* >>> >>> *(b) otherwise—the Divisional cap.* > > *(5) Schedule 4, item 2, page 98 (before line 6), before the definition of Independent Senate candidate or Senator in section 302ALA, insert:*",
+   "stage": "Consideration in detail",
+   "ayes": 7,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/6"
+  },
+  {
+   "key": "federal-representatives-9417",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "The majority voted against [amendment (1)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7280_amend_d77a9d7b-2239-4b84-9f8e-848fb4434043%22;rec=0) moved by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means it was unsuccessful. ### Amendment text > *(1) Clause 2, page 2 (table item 8), omit the table item, substitute:* > >> *8. Schedule 6* >> >>> *1 July 2026.* >>> >>> >>> *1 July 2026* >> >> *8A. Schedule 7, Part 1* >> >>> *The day after the report of an independent audit of the administrative expenditure incurred by registered political parties is tabled in each House of the Parliament.* >> >> *8B. Schedule 7, Part 2* >> >>> *1 July 2026.* >>> >>> *1 July 2026*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 10,
+   "noes": 51,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 61
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/8"
+  },
+  {
+   "key": "federal-representatives-9418",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (5) to (7)](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7280_amend_d77a9d7b-2239-4b84-9f8e-848fb4434043%22;rec=0) moved by Indi MP [Helen Haines](https://theyvoteforyou.org.au/people/representatives/indi/helen_haines) (Independent), which means they were unsuccessful. ### Amendment text > *(5) Schedule 7, item 3, page 172 (after line 5), after the paragraph beginning “The amount of the funding for a registered political party” in section 302AA, insert:* > >> *The amount of the funding for a registered political party’s expenditure group is subject to a cap.* > > *(6) Schedule 7, item 3, page 172 (line 26), omit “The amount”, insert “Subject to subsection (2A), the amount”.* > > *(7) Schedule 7, item 3, page 173 (after line 24), after subsection 302AB(2), insert:* > >> *(2A) The amount worked out under subsection (2) must not exceed an amount equal to $3,750 multiplied by 32.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 10,
+   "noes": 50,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 60
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/9"
+  },
+  {
+   "key": "federal-representatives-9419",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "Electoral Legislation Amendment (Electoral Reform) Bill 2024 - Report from Federation Chamber - Agree with the bill",
+   "stage": "Report from Federation Chamber",
+   "ayes": 48,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 63
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/10"
+  },
+  {
+   "key": "federal-representatives-9420",
+   "date": "2024-11-20",
+   "house": "representatives",
+   "question": "Electoral Legislation Amendment (Electoral Reform) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 49,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 46,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 64
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-20/11"
+  },
+  {
+   "key": "federal-senate-9520",
+   "date": "2025-02-06",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-06.23.7) to an [original motion](https://www.openaustralia.org.au/senate/?gid=2025-02-06.22.1), which means it was unsuccessful. ### Amendment text > *Omit \"not be referred to a committee\", substitute \"be referred immediately to the Finance and Public Administration Legislation Committee for inquiry and report by 5 June 2025\".* ### Original motion text > *At the end of the motion, add \"and the [Electoral Legislation Amendment (Electoral Reform) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7280) and the provisions of the [Electoral Legislation Amendment (Electoral Communications) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7279) not be referred to a committee.\"*",
+   "stage": "Committee motion",
+   "ayes": 18,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-06/2"
+  },
+  {
+   "key": "federal-senate-9561",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2025-02-12.154.2) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it failed. ### Motion text > *That—* > > *(a) the [Electoral Legislation Amendment (Electoral Reform) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7280) be divided into two bills and amended, in accordance with the amendments on sheet 3248, to create two bills as follows:* > >> *(i) Electoral Legislation Amendment (Electoral Reform) Bill 2024—containing Schedules 1, 2, 5, 6 and 8 to 11, and* >> >> *(ii) Electoral Legislation Amendment (Caps and Funding) Bill 2025—containing Schedules 3, 4 and 7;* > > *(b) the bills be printed; and* > > *(c) the Electoral Legislation Amendment (Caps and Funding) Bill 2025 be referred to the Finance and Public Administration Legislation Committee for inquiry and report by 23 May 2025.*",
+   "stage": "Business motion",
+   "ayes": 17,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/5"
+  },
+  {
+   "key": "federal-senate-9587",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2025-02-12.247.2): > *That so much of the standing orders be suspended as would prevent further consideration of the second reading stage of the [Electoral Legislation Amendment (Electoral Reform) Bill 2024](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7280) without limitation of time.* In other words, they voted to suspend the usual procedural rules in order to let another vote take place - in this case, further consideration of a bill's second reading stage (which is the stage when our senators consider the main idea of the bill).",
+   "stage": "Business motion",
+   "ayes": 19,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/31"
+  },
+  {
+   "key": "federal-senate-9588",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-12.252.3) introduced by Queensland Senator [Larissa Waters](https://theyvoteforyou.org.au/people/senate/queensland/larissa_waters) (Greens), which means it failed. This amendment would have added the text below to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) any legislation to deliver electoral reforms must strengthen democracy and not just the political fortunes of the major parties,* >> >> *(ii) the Greens are concerned that the proposed reforms entrench incumbency advantages that stack outcomes in favour of the two-party system, and* >> >> *(iii) the Greens continue to advocate for genuine electoral reform including getting big money out of politics, banning donations from fossil fuel corporations and other social harm industries, implementing truth in political advertising laws, strengthening the Lobbying Code of Conduct and enforcing longer post-parliamentary cooling-off periods for Ministers before they go to work for industries they were regulating; and* > > *(b) calls on the Government to:* > >> *(i) separate the transparency measures in this bill so that Parliament can pass them as a matter of urgency, and* >> >> *(ii) support an inquiry into the funding elements of the bill to allow for democratic scrutiny of its provisions\".*",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/32"
+  },
+  {
+   "key": "federal-senate-9589",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-12.254.1) introduced by Queensland Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (One Nation), which means it failed. This amendment would have added the text below to the usual second reading motion, which is \"that the bill be read a second time\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) calls on the Government to:* > >> *(i) hold a referendum to alter the Constitution so that;* >> >>> *(A) senators and members of the House of Representatives serve four years terms, and* >>> >>> *(B) elections for the House of Representatives and the whole Senate must be held on the same day, and* >>> >>> *(C) the number of senators from each State is fixed at no more than twelve, and* >>> >>> *(D) the number of senators from the Australian Capital Territory and the Northern Territory is fixed at no more than two, and* >>> >>> *(E) senators and members of the House of Representatives must resign from the Parliament if their party affiliation, or status as an independent, at the time of their election changes during the course of their term, and* >> >> *(ii) modernise and digitise the electoral roll so that an elector is automatically marked as having voted in an election as soon as they are provided with a ballot paper as currently occurs in Queensland\".*",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/33"
+  },
+  {
+   "key": "federal-senate-9590",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-12.257.1) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means it failed. This amendment would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) the Senate notes that:* > >> *(i) the bill and the associated explanatory memorandum are together more than 400 pages long,* >> >> *(ii) there has been limited parliamentary scrutiny of the more than 400 pages,* >> >> *(iii) Australians expect the Senate, as the house of review, to consider legislation carefully,* >> >> *(iv) in the midst of cost of living pressures, the Government is giving itself and other parties substantial increases in public funding instead of prioritising increased support to Australians who are doing it tough,* >> >> *(v) the bill creates an unfair playing field, giving advantage to incumbents over new candidates by failing to give all candidates the same public funding for administrative support and failing to account for incumbent resources such as an office, staff, a vehicle and marketing budget whilst imposing a spending cap on candidates,* >> >> *(vi) the bill provides disproportionate yearly administrative assistance funding to major political parties, and fails to account for any economies of scale,* >> >> *(vii) the bill entrenches political party advantage over independent candidates by imposing a spending cap on individual seats while still permitting additional party advertising under a party's $90 million national cap,* >> >> *(viii) the bill provisions particularly disadvantage independent candidates from diverse cultural and socio-economic backgrounds, resulting in a parliamentary system and policy o",
+   "stage": "Second reading",
+   "ayes": 19,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/34"
+  },
+  {
+   "key": "federal-senate-9591",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "Electoral Legislation Amendment (Electoral Reform) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/35"
+  },
+  {
+   "key": "federal-senate-9592",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted in favour of [Government amendments](https://www.openaustralia.org.au/senate/?gid=2025-02-12.349.3) that were introduced by Senator Farrell (Labor) ### What do these amendments do? See the [official government website](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7280%22) for the explanatory memoranda that the Government produced to explain the changes they have made with sheets EE102, EE103, EE105, FJ101, SC130, SC131, SC136 and SC138. ### Amendment text See the [official government website](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr7280%22) for the amendment text on sheets EE102, EE103, EE105, FJ101, SC130, SC131, SC136 and SC138.",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 18,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/36"
+  },
+  {
+   "key": "federal-senate-9593",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-02-12.351.3) introduced by Pauline Hanson's One Nation Party, which means they were unsuccessful. These amendments related to the removal of administrative assistance funding, voter identification, 1 week pre-poll voting period, postal voting deadline and how-vote-cards. ### Amendment text See the official parliamentary website for the text of amendments (1)-(8) and (11)-(12) on sheet [3309](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7280_amend_6b86f322-88df-4424-af71-f080e62ee69d%22;rec=0) and those on sheets [3299](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7280_amend_eb531dc1-6f39-46d1-a997-d80e68d865c5%22;rec=0), [3307](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7280_amend_5d2895fb-851c-43f4-a39a-4cf592b8306b%22;rec=0), [3308](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7280_amend_81592817-8e8b-4f2d-b7d0-c2596afb6f4d%22;rec=0) and [3310](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7280_amend_71d6f22e-9133-41b3-9146-83454478b3fe%22;rec=0).",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/37"
+  },
+  {
+   "key": "federal-senate-9594",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-12.353.3) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means it failed. ### Amendment text > *(1) Clause 1, page 1 (lines 6 and 7), omit \"Electoral Reform\", substitute \"Sham Democracy\".*",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/38"
+  },
+  {
+   "key": "federal-senate-9595",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "Electoral Legislation Amendment (Electoral Reform) Bill 2024 - in Committee - Prohibiting donations from tobacco, liquor and gambling industries",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/39"
+  },
+  {
+   "key": "federal-senate-9596",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-12.357.1) introduced by West Australian Senator [Fatima Payman](https://theyvoteforyou.org.au/people/senate/wa/fatima_payman) (Australia's Voice), which means it failed. ### Amendment text **SHEET 3187** > *(1) Clause 1, page 1 (lines 6 and 7), omit \"Electoral Reform\", substitute \"Compromising Our Rightful Representation and Undermining Political Trust\".* **SHEET 3266** > *(1) Clause 2, page 3 (table item 14), omit \"10 and 11\", substitute \"10, 11 and 12\".* > > *(2) Page 221 (after line 29), at the end of the Bill, add:* > >> *Schedule 12 — Ceasing allowances for former members* >> >> *Parliamentary Business Resources Act 2017* >> >> *1 Paragraph 3(2)(a)* >> >>> *Repeal the paragraph.* >> >> *2 Paragraph 3(2)(aa)* >> >>> *Omit \"in recognition that the resources mentioned in paragraph (a) will not be provided\".* >> >> *3 Section 13* >> >>> *Omit \"A former member may be paid allowances and expenses relating to ceasing to be a member, as determined by the Remuneration Tribunal.\".* >> >> *4 Section 15 (heading)* >> >>> *Omit \"former members and\".* >> >> *5 Subsection 15(1)* >> >>> *Repeal the subsection.* >> >> *6 Subsection 15(2)* >> >>> *Omit \"(2)\".* >> >> *7 Subsection 15(2)* >> >>> *Omit \"in recognition that allowances are not payable to such persons under subsection (1) of this section\".* >> >> *8 Section 46* >> >>> *Repeal the section.* >> >> *9 Subsection 46A(1)* >> >>> *Omit \"(1)\".* >> >> *10 Subsections 46A(2) and (3)* >> >>> *Repeal the subsections.* >> >> *11 Application and transitional provision* >> >>> *(1) The amendments of the Parliamentary Business Resources Act 2017 made by this Schedule apply in relation to a person who is a former member if the person ceases to be a member on or after the commencement of this item.* >>> >>> *(2) Despite the repeal of subsection 15(1) and section 46 of the Parliamentary Business Resources Act 2017 by this Schedule, Part 4 of",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/40"
+  },
+  {
+   "key": "federal-senate-9597",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-02-12.359.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it failed. ### Amendment text **SHEET 3158** > *(1) Clause 2, page 2 (after table item 13), insert:* > >> *13A. Schedule 9A* >> >> *The day after this Act receives the Royal Assent.* > > *(2) Page 205 (after line 19), after Schedule 9, insert:* > >> *Schedule 9A — Fair territory representation* >> >> *Commonwealth Electoral Act 1918* >> >> *1 Subsections 40(1) to (3)* >> >>> *Repeal the subsections, substitute:* >>> >>> *(1) The Australian Capital Territory and the Northern Territory are each to be represented in the Senate by senators for the Territory directly chosen by the people of the Territory voting as one electorate.* >>> >>> *(2) The number of senators for each of these Territories is to be half of the number of senators for a State (rounded up or down to the nearest whole number (rounding up if the number ends in .5)).* >> >> *2 Sections 42 and 43* >> >>> *Repeal the sections, substitute:* >>> >>> *42 Term of service of a senator for a Territory* >>> >>> *(1) Section 13 of the Constitution applies in relation to a senator for the Australian Capital Territory or the Northern Territory as if:* >>> >>>> *(a) a reference in that section to a State included a reference to the Territory; and* >>>> >>>> *(b) a reference in that section to:* >>>> >>>>> *(i) when the Senate first meets; or* >>>>> >>>>> *(ii) the first election;* >>>> >>>> *included a reference to the first Senate election held after the commencement of this subsection.* >>> >>> *(2) The term of service of a senator for any other Territory:* >>> >>>> *(a) commences on the day of the senator's election; and* >>>> >>>> *(b) ends on the day immediately before the polling day for the next general election.* >>> >>> *43 Times of elections of senators for Territories* >>> >>>",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/41"
+  },
+  {
+   "key": "federal-senate-9598",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "Electoral Legislation Amendment (Electoral Reform) Bill 2024 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 27,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 7,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/42"
+  },
+  {
+   "key": "federal-representatives-9599",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "question": "Electoral Legislation Amendment (Electoral Reform) Bill 2024 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 65,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 80
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/1"
+  },
+  {
+   "key": "federal-representatives-9600",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/4) to consider the [Senate amendments](https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/4) immediately.",
+   "stage": "Consideration of Senate message",
+   "ayes": 65,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 80
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/2"
+  },
+  {
+   "key": "federal-representatives-9601",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "question": "Electoral Legislation Amendment (Electoral Reform) Bill 2024 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 67,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 82
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/3"
+  },
+  {
+   "key": "federal-representatives-9602",
+   "date": "2025-02-13",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2025-02-13.12.1) to agree with the [Senate amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7280_sched_c95aa8a0-1359-4bfe-8553-46cb6737dade%22;rec=0), which means that the vote has now been passed in its final form in both houses of parliament and will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2425/25bd036) (which is a document prepared by the parliamentary library): > *The Electoral Legislation Amendment (Electoral Reform) Bill 2024 (the Bill) amends the Commonwealth Electoral Act 1918 and the Referendum (Machinery Provisions) Act 1984 to reform Australia’s Commonwealth electoral processes, with the aim of enhancing ‘the integrity of federal elections through improved transparency and accountability.’* > > *Key reforms in the Bill include:* > > * *lower disclosure threshold for political donations ($1,000, from a current threshold of $16,900)* > > * *new caps on how much donors can give to individual parties or candidates ($20,000) and in total ($640,000) each calendar year* > > * *new caps on how much parties ($90 million nationally, capped at $800,000 within each electoral division) and independent candidates ($800,000 within each electoral division) may incur in electoral expenditure in House of Representatives campaigns* > > * *new caps on how much parties (proportional to the number of House of Representatives divisions in each State or Territory, up to $9,200,000 in New South Wales) and independent candidates (one sixth of the party cap in each State) may incur in electoral expenditure in Senate campaigns* > > * *new administrative funding for parties and incumbent independent members to offset compliance costs and increased public funding for candidates who receive mo",
+   "stage": "Consideration of Senate message",
+   "ayes": 67,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 82
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-13/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194514",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194522",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194539",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194540",
+   "speaker": "Gerard Rennick",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194542",
+   "speaker": "Don Farrell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Electoral Legislation Amendment (Electoral Reform) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00016",
+   "assent_date": "2025-02-20"
+  }
+ ]
+}

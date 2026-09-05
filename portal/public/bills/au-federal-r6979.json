@@ -1,0 +1,710 @@
+{
+ "key": "au-federal-r6979",
+ "title": "Treasury Laws Amendment (2023 Measures No. 1) Bill 2023",
+ "short_title": "Treasury Laws Amendment (2023 Measures No. 1) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2023-11-27",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6979_ems_de7e0691-4f30-451f-b207-95aba989fd22%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6979_ems_14f1205e-090b-44a1-af2b-744ed115ad8d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6979%22",
+   "document_date": "2023-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00101",
+   "document_date": "2023-11-27",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-7988",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debate/?id=2023-03-08.176.2) introduced by Hume MP [Angus Taylor](https://theyvoteforyou.org.au/people/representatives/hume/angus_taylor) (Liberal), which means they were rejected. ### What do these amendments do? Mr Taylor [explained that](https://www.openaustralia.org.au/debate/?id=2023-03-08.176.2): > *The coalition is moving these amendments to remove schedule 4 and schedule 5. The coalition support the measures in schedules 1 to 3. We think they are sensible paths forward...* > > *Schedule 4 amends the Income Tax Assessment Act to limit the ability of listed companies to offer franking credits on off-market share buybacks, raising $200 million a year in tax clawbacks, particularly from older Australians. Schedule 5 amends the Income Tax Assessment Act to limit the ability of listed companies to offer franking credits on capital, raising $50 million over five years. These two measures will limit the ability of companies to offer franking credits to shareholders.* ### Amendment text > *(1) Clause 2, page 2 (table item 6), omit the table item.* > > *(2) Schedules 4 and 5, page 34 (line 1) to page 44 (line 12), omit the Schedules.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 82,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-09/7"
+  },
+  {
+   "key": "federal-senate-8031",
+   "date": "2023-03-27",
+   "house": "senate",
+   "question": "Documents - Treasury Laws Amendment (2023 Measures No. 1) Bill 2023 - Order for the Production of Documents",
+   "stage": "Documents",
+   "ayes": 26,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 6,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-27/3"
+  },
+  {
+   "key": "federal-senate-8465",
+   "date": "2023-11-15",
+   "house": "senate",
+   "question": "The majority voted against a motion introduced by West Australian Senator [Dean Smith](https://theyvoteforyou.org.au/people/senate/wa/dean_smith) (Liberal), which means it failed. ### Motion text > *Omit all words after \"That\", substitute:* > >> *(a) the Senate notes that:* >> >>> *(i) the now Prime Minister said in May 2022, 'We've said we have no intention to make any super changes',* >>> >>> *(ii) the now Treasurer said in April 2022, 'We've made it very clear Kieran, that we don't have any proposals for tax increases...', and* >>> >>> *(iii) since these statements the Prime Minister and the Treasurer have announced a doubling of taxes on superannuation; and* >> >> *(b) further consideration of the bill be postponed until the Minister representing the Prime Minister tables a letter from the Prime Minister that includes the following elements:* >> >>> *(i) a commitment to dump his new doubling of super taxes,* >>> >>> *(ii) a commitment to never tax unrealised capital gains, and* >>> >>> *(iii) an apology for breaking his promises to the Australian people.*",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 47,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-15/1"
+  },
+  {
+   "key": "federal-senate-8466",
+   "date": "2023-11-15",
+   "house": "senate",
+   "question": "The majority voted in favour of [government amendments (1) to (16) on sheet ZB218](https://www.openaustralia.org.au/senate/?gid=2023-11-15.13.2), which means they'll now be included in the bill. When introducing these amendments, Northern Territory Senator [Malarndirri McCarthy](https://theyvoteforyou.org.au/people/senate/nt/malarndirri_mccarthy) (Labor) also introduced a [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6979_ems_14f1205e-090b-44a1-af2b-744ed115ad8d%22;rec=0) which provided further information. ### Amendment text > *(1) Clause 2, page 2 (table item 5), omit the table item, [substitute](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6979_amend_e5a61c87-6fd4-4cc3-aab7-a39486be1b6c%22;rec=0):* > > *(2) Clause 2, page 2 (table item 6), omit the table item, [substitute](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6979_amend_e5a61c87-6fd4-4cc3-aab7-a39486be1b6c%22;rec=0):* > > *(3) Schedule 4, item 21, page 40 (lines 7 to 9), omit \"after 7:30 pm, by legal time in the Australian Capital Territory, on 25 October 2022\", substitute \"on or after 18 November 2022\".* > > *(4) Schedule 4, item 21, page 40 (lines 14 and 15), omit \"after 7:30 pm, by legal time in the Australian Capital Territory, on 25 October 2022\", substitute \"on or after 18 November 2022\".* > > *(5) Schedule 5, item 1, page 41 (line 7), after \"a distribution\", insert \"or a part of a distribution\".* > > *(6) Schedule 5, item 2, page 41 (line 13), after \"of a kind\", insert \", or a part (the relevant part) of a distribution (also a relevant distribution) of a kind,\".* > > *(7) Schedule 5, item 2, page 41 (line 27), after \"funding of\", insert \"a substantial part of\".* > > *(8) Sch",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-15/2"
+  },
+  {
+   "key": "federal-senate-8467",
+   "date": "2023-11-15",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping schedule 2 unchanged (in parliamentary jargon, they voted that it \"stand as printed\"). This vote was put after Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation) [proposed that](https://www.openaustralia.org.au/senate/?gid=2023-11-15.16.1): > *(3) Schedule 2, page 14 (line 1) to page 20 (line 6), to be opposed.* ### What does schedule 2 do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd063): > *Schedule 2 amends the Australian Securities and Investments Commission Act 2001 (ASIC Act) to lay the necessary foundations to implement sustainability reporting standards in Australia.* > *Currently, sustainability reporting in Australia is undertaken on a voluntary basis.*",
+   "stage": "In committee",
+   "ayes": 45,
+   "noes": 3,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-15/3"
+  },
+  {
+   "key": "federal-senate-8468",
+   "date": "2023-11-15",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (2023 Measures No. 1) Bill 2023 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-15/4"
+  },
+  {
+   "key": "federal-senate-8471",
+   "date": "2023-11-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-11-15.370.4) \"*schedule 4 stand as amended.*\" In other words, they voted to keep the amended schedule 4 in the bill. This vote was put after West Australian Senator [Dean Smith](https://theyvoteforyou.org.au/people/senate/wa/dean_smith (Liberal) [proposed](https://www.openaustralia.org.au/senate/?id=2023-11-15.305.1) that schedule 4 be opposed. ### What is Schedule 4? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd063): > *Schedule 4 amends the Income Tax Assessment Act 1936 (ITAA 1936) and the Income Tax Assessment Act 1997 (ITAA 1997) so that no part of an off-market share buy-back can be taken to be a dividend.* It was further [amended by the Government](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6979_amend_e5a61c87-6fd4-4cc3-aab7-a39486be1b6c%22;rec=0).",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-15/7"
+  },
+  {
+   "key": "federal-senate-8472",
+   "date": "2023-11-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-11-15.372.4) \"*schedule 5 stand as amended.*\" In other words, they voted to keep the amended schedule 5 in the bill. This vote was put after West Australian Senator [Dean Smith](https://theyvoteforyou.org.au/people/senate/wa/dean_smith (Liberal) [proposed that](https://www.openaustralia.org.au/senate/?gid=2023-11-15.372.1) schedule 5 be opposed. ### What is Schedule 5? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd063): > *Schedule 5 further limits the ability of companies to issue franked dividends by disallowing the use of franking credits on certain distributions that are funded by capital raising activities.* It was further [amended by the Government](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6979_amend_e5a61c87-6fd4-4cc3-aab7-a39486be1b6c%22;rec=0).",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-15/8"
+  },
+  {
+   "key": "federal-senate-8473",
+   "date": "2023-11-15",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-11-15.374.1) to pass the amended bill in the Senate. It will now return to the House of Representatives, where our MPs will consider whether they agree with the Senate amendments. If so, the bill will become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd063): > *Schedule 1 amends the Corporations Act 2001 to:* > > * *allow for multiple registrations of relevant financial advisers and* > > * *allow the Australian Securities and Investments Commission (ASIC) to make decisions using assisted decision-making technology.* > > *Schedule 2 amends the Australian Securities and Investments Commission Act 2001 (ASIC Act) to lay the necessary foundations to implement sustainability reporting standards in Australia.* > > *Schedule 3 amends the Tax Agent Services Act 2009 (TAS Act) to address the regulation of tax and BAS agents. Schedule 3 partially implements the recommendations included in the Government’s response to the Tax Practitioners Board Review released on 27 November 2020.* > > *Schedule 4 amends the Income Tax Assessment Act 1936 (ITAA 1936) and the Income Tax Assessment Act 1997 (ITAA 1997) so that no part of an off-market share buy-back can be taken to be a dividend.* > > *Schedule 5 further limits the ability of companies to issue franked dividends by disallowing the use of franking credits on certain distributions that are funded by capital raising activities.*",
+   "stage": "Third reading",
+   "ayes": 32,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-15/9"
+  },
+  {
+   "key": "federal-representatives-8478",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion \"*That the [Senate] amendments be agreed to.*\" These [Senate amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6979_sched_0afccbbb-fe40-495e-963e-97aecc8edf24%22;rec=0) were introduced [by the Government](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6979_amend_e5a61c87-6fd4-4cc3-aab7-a39486be1b6c%22;rec=0) and by South Australian Senator [Barbara Pocock](https://theyvoteforyou.org.au/people/senate/sa/barbara_pocock) (Greens) [on behalf of the Greens Party](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6979_amend_d5ed6c2a-acd2-456e-830e-3dfd5de1bf17%22;rec=0). This means the amendments will now be integrated into the bill.",
+   "stage": "Consideration of Senate message",
+   "ayes": 80,
+   "noes": 60,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 138,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-16/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828022",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "Five bills were referred to the Federation Chamber for further consideration: the Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023, the Migration (Visa Pre-application Process) Charge Bill 2023, the Australia Council Amendment (Creative Australia) Bill 2023, the Royal Commissions Amendment (Enhancing Engagement) Bill 2023, and the Treasury Laws Amendment (2023 Measures No. 1) Bill 2023."
+  },
+  {
+   "slug": "speech-828029",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "The coalition opposes schedules 4 and 5 of the Treasury Laws Amendment Bill, which limit franking credits in share buybacks and capital raisings, breaking Labor’s pre-election promise not to change franking credits; the coalition will move amendments to remove those schedules and will not support the bill if they are kept. The measures are estimated to raise $600 million over five years, mostly from Australians over 75."
+  },
+  {
+   "slug": "speech-828244",
+   "speaker": "Jerome Laxale",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The government supported the Treasury Laws Amendment (2023 Measures No. 1) Bill 2023, arguing it improves tax integrity, introduces sustainability standards to combat greenwashing, and aligns franking credit rules. The opposition opposed schedules 4 and 5, which restrict franking credits, calling them a broken election promise and a tax on retirees and investors."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2023 Measures No. 1) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00101",
+   "assent_date": "2023-11-27"
+  }
+ ]
+}

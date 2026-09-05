@@ -1,0 +1,516 @@
+{
+ "key": "au-federal-r6497",
+ "title": "National Vocational Education and Training Regulator Amendment (Governance and Other Matters) Bill 2020",
+ "short_title": "National Vocational Education and Training Regulator Amendment (Governance and Other Matters) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education, Skills and Employment",
+ "status": "passed",
+ "status_as_of": "2020-09-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-08-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-09-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6497_ems_3c6bf2ca-5f9b-48fc-be22-7a708ae537f4%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6497_ems_aef1b612-f053-40ae-b933-3a96f2d43c87%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6497%22",
+   "document_date": "2020-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00077",
+   "document_date": "2020-09-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-13",
+  "sentences": [
+   "This bill would change how Australia's vocational education and training regulator is governed.",
+   "It would replace the current leadership of a chief commissioner and two commissioners with a single full-time regulator appointed by the Governor-General.",
+   "The new regulator would serve a term of up to five years and would be ineligible if they have held an executive role at a registered training organisation in the two years before appointment."
+  ],
+  "changes": [
+   "Create a single independent statutory office holder to lead the National VET Regulator.",
+   "Establish a new advisory council with up to nine part-time members to provide expert advice to the regulator.",
+   "Improve information sharing with the National Centre for Vocational Education Research to support policy development and funding allocation.",
+   "Prohibit people who have been an executive officer of a registered training organisation in the previous two years from becoming the National VET Regulator."
+  ],
+  "affected": "The National VET Regulator, the Australian Skills Quality Authority, registered training organisations, and vocational education and training sector stakeholders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:44:25Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6218",
+   "date": "2020-02-13",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2020-02-13.11.1) to the usual second reading, which is \"*that the bill be read a [second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the Government:* > > *(1) has failed to fix the problems in the vocational training sector; and* > > *(2) instead has:* > >> *(a) cut TAFE and training by over $3 billion;* >> >> *(b) presided over simultaneous crises of youth unemployment and skills shortages;* >> >> *(c) failed business, which is struggling to fill the skilled roles they have on offer; and* >> >> *(d) also failed young people desperate for work, who are unable to fill those positions because they have missed out on opportunities for training\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-13/1"
+  },
+  {
+   "key": "federal-representatives-6398",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-06-16.119.1): > *That the debate be adjourned and the resumption of the debate made an order of the day for a later hour this day.*",
+   "stage": "Second reading",
+   "ayes": 60,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 107
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-16/6"
+  },
+  {
+   "key": "federal-representatives-6417",
+   "date": "2020-06-17",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-06-17.7.14) to keep the original motion unchanged. In parliamentary jargon, they voted \"*that the words proposed to be omitted stand part of the question.*\" The original motion is \"*That this bill be now read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/).*\" To read a bill for a second time is the same as agreeing with the main idea of the bill. Cooper MP [Ged Kearney](https://theyvoteforyou.org.au/people/representatives/cooper/ged_kearney) (Labor) to change the original motion in the following way: > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that:* > > *(1) the Government has damaged Australia's world-class vocational training system by:* > >> *(a) cutting funding for vocational education and TAFE by over $3 billion;* >> >> *(b) presiding over simultaneous crises of skills shortages and youth unemployment; and* >> >> *(c) failing to tackle falling completion rates, with more people dropping out of vocational training courses than finishing them; and* > > *(2) this bill fails to deliver the reform needed to fix problems in the vocational training sector\".*",
+   "stage": "Second reading",
+   "ayes": 60,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 105
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-17/1"
+  },
+  {
+   "key": "federal-senate-6474",
+   "date": "2020-08-24",
+   "house": "senate",
+   "question": "The same number of senators voted for and against the [amendment](https://www.openaustralia.org.au/senate/?id=2020-08-24.149.1), which means it didn't achieve majority and so failed. The amendment was introduced by WA Senator Louise Pratt (Labor), who [explained that](https://www.openaustralia.org.au/senate/?id=2020-08-24.149.1): > *The purpose of our amendment is to ensure that there is TAFE, union and employer sector representation on [ASQA](https://www.asqa.gov.au/about)'s advisory council. Labor very much believes—and we look for the chamber's support on this issue—that it is critical that there is a public provider at the table and that the legislation before us today should mandate that this is so. Given the important role this council will have in providing strategic advice about regulatory matters, it is indeed an imperative that the council represents a cross-section of the sector while also providing essential expertise.* ### Amendment text > *(1) Schedule 1, item 41, page 15 (after line 24), after section 177, insert:* > > *177A Membership—TAFE sector and union representatives* > > *The membership of the Advisory Council must include representatives of the following:* > > *(a) public technical and further education (TAFE) sector;* > > *(b) trade unions.*",
+   "stage": "In committee",
+   "ayes": 24,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 21,
+    "earliest": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-08-24/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-388134",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-13",
+   "stage_hint": null,
+   "brief": "The bill replaces the Australian Skills Quality Authority’s three-commissioner structure with a single CEO, establishes an expert advisory council, and clarifies ministerial directions, supported by $18.1 million in reforms following the Braithwaite and Joyce reviews."
+  },
+  {
+   "slug": "speech-390910",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-05-12",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the bill, which replaces ASQA's chief commissioner and CEO with a single independent CEO, establishes a National Vocational Education and Training Regulator Advisory Council, and enhances information sharing with the National Centre for Vocational Education Research, responding to a rapid review of ASQA's governance."
+  },
+  {
+   "slug": "speech-392379",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the bill but argues it fails to address systemic problems in the vocational training sector, citing $3 billion in cuts, $919 million in underspent funding, and declines of 73% in apprenticeship advertisements and 150,000 fewer apprentices under the Liberal government."
+  },
+  {
+   "slug": "speech-392384",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued for integrating vocational education and training with university education through education hubs like the Joondalup precinct, combining competency-based skills with academic skills, and called for investment and reform to revive the VET sector, noting the bill does not go far enough."
+  },
+  {
+   "slug": "speech-392385",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Vocational Education and Training Regulator Amendment (Governance and Other Matters) Bill 2020 and an amendment by the member for Cooper, but criticised the government for a $919 million underspend on TAFE over five years, a decline of 140,000 apprentices and trainees since 2013, and for failing to guarantee balanced representation of TAFE and unions on the proposed advisory council."
+  },
+  {
+   "slug": "speech-392386",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Vocational Education and Training Regulator Amendment Bill 2020, which restructures ASQA’s governance by replacing its three-commissioner model with a single CEO, establishing an expert advisory council, improving data sharing, and clarifying ministerial directions, arguing that a strong regulator is essential for the $1.6 billion VET sector serving over four million students."
+  },
+  {
+   "slug": "speech-392387",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "Labor will support the bill's ASQA governance reforms but argues the government has neglected vocational education, cutting $3 billion from TAFE and underspending $919 million on training over five years while failing to address a skills crisis."
+  },
+  {
+   "slug": "speech-392388",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the National Vocational Education and Training Regulator Amendment (Governance and Other Matters) Bill 2020 should be passed to replace ASQA’s current chief commissioner and commissioners with a single CEO, improving regulatory governance. They highlighted Tasmania’s 9.7% increase in apprentices and trainees in the 12 months to June 2019 and named national award winners Debra Guntrip and Circular Head Christian School from the Braddon electorate."
+  },
+  {
+   "slug": "speech-392389",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Liberal government’s $3 billion in cuts and neglect of the TAFE system have caused 140,000 fewer apprentices and trainees, critical skills shortages, and high youth unemployment, while the bill is only a mild administrative tweak that fails to deliver genuine reform. Labor supports the bill but opposes the move to full cost-recovery for ASQA, warning it may shift costs onto students, and criticises the HomeBuilder scheme as inadequate for addressing the tradie shortage."
+  },
+  {
+   "slug": "speech-392390",
+   "speaker": "Anne Webster",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The speaker supported the National Vocational Education and Training Regulator Amendment (Governance and Other Matters) Bill 2020, arguing it strengthens the Australian Skills Quality Authority as the national VET regulator and raises the status of vocational education. They highlighted regional needs in the Mallee electorate, including SuniTAFE's SMART Farm project, the National Agricultural Workforce Strategy, and earlier career education starting in year 7 and 8."
+  },
+  {
+   "slug": "speech-392391",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "Labor supported the National Vocational Education and Training Regulator Amendment (Governance and Other Matters) Bill 2020, which restructures ASQA with a single CEO and an advisory council, but argued TAFE must be represented on the council. The speaker criticised the Coalition for cutting $3 billion from TAFE, underspending $919 million in training budgets, and overseeing a 73% drop in apprenticeship advertisements and 150,000 fewer apprentices."
+  },
+  {
+   "slug": "speech-392542",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported Labor's amendment and did not oppose the bill, but argued that the new advisory council should include union representatives from unions like the Electrical Trades Union, Australian Manufacturing Workers' Union and Australian Workers' Union, citing a loss of over 140,000 apprentices over seven years under Liberal governments and a projected 100,000 further losses due to COVID-19."
+  },
+  {
+   "slug": "speech-392544",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the National Vocational Education and Training Regulator Amendment Bill is a minor tweak that fails to address systemic problems, citing 140,000 fewer apprentices before COVID and 2,000 lost per week, and called on the minister to advocate for proper funding in cabinet."
+  },
+  {
+   "slug": "speech-392545",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The speaker supported Labor's amendments to the National Vocational Education and Training Regulator Amendment (Governance and Other Matters) Bill 2020, criticising the Morrison government's record on skills training. They cited a fall in apprenticeships from 412,000 to 276,000 between 2013 and 2019, a $3 billion funding cut to TAFE, and a $919 million underspend over five years, while noting South Australia's apprenticeship numbers halved to around 16,000 and TAFE closures in Tea Tree Gully, Port Adelaide and Parafield."
+  },
+  {
+   "slug": "speech-392695",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The bill amends ASQA's governance and information-sharing but Labour argued it falls short of needed reforms, criticising the exclusion of TAFE and union representatives from the advisory council and noting $3 billion in cuts to TAFE, a 73% drop in apprenticeships, and a $919 million underspend."
+  },
+  {
+   "slug": "speech-392697",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the National Vocational Education and Training Regulator Amendment Bill 2020 is a minor tweak from a failed government, not genuine reform. They claimed the Liberal government has cut $3 billion from TAFE and training, overseen a loss of 150,000 apprentices and trainees nationwide and over 600 in the Northern Territory, and created simultaneous crises of youth unemployment and skills shortages in trades like plumbing and carpentry."
+  },
+  {
+   "slug": "speech-392699",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-06-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill’s governance reforms are minor and fail to address the $3 billion in TAFE cuts, a 73% drop in apprenticeships, and $919 million in underspent training funds, while criticising the exclusion of TAFE and union representatives from the new advisory council."
+  },
+  {
+   "slug": "speech-392818",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-06-17",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Vocational Education and Training Regulator Amendment (Governance and Other Matters) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00077",
+   "assent_date": "2020-09-03"
+  }
+ ]
+}

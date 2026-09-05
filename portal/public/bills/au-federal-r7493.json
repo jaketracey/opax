@@ -1,0 +1,2030 @@
+{
+ "key": "au-federal-r7493",
+ "title": "Treasury Laws Amendment (Tax Reform No. 1) Bill 2026",
+ "short_title": "Treasury Laws Amendment (Tax Reform No. 1) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-28",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-06-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-06-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7493_ems_a90ad43e-17d7-4cd3-859b-84ac4e6f3dea%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7493_ems_e5a9c782-fb39-4705-968e-e258fc04c742%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7493%22",
+   "document_date": "2026-05-28",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00049",
+   "document_date": "2026-06-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-05-28",
+  "sentences": [
+   "This bill is part of a package that would change how capital gains are taxed, replacing the current discount system.",
+   "The package would introduce a tax floor on gains and update the method for calculating taxable profit to reflect inflation.",
+   "The new rules would start on 1 July 2027 and would apply to future gains on assets bought before that date, with exceptions for some housing and small businesses."
+  ],
+  "changes": [
+   "Replace the 50% capital gains discount for individuals, trusts and partnerships with an indexation system for the cost base.",
+   "Create a 30% minimum tax on capital gains, exempting certain income support recipients.",
+   "Apply the new rules to gains from 1 July 2027, including those on assets bought before that date, while keeping the discount for new and affordable housing and existing small business concessions."
+  ],
+  "affected": "Individuals, trusts, partnerships, and some income support recipients who make capital gains.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10238",
+   "date": "2026-05-28",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2026-05-28.24.1): > *That the debate be adjourned.* In other words, they voted to stop discussing these bills for today and instead discuss them again on the next parliamentary sitting day.",
+   "stage": "Reference to Committee",
+   "ayes": 91,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 91,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-05-28/5"
+  },
+  {
+   "key": "federal-representatives-10243",
+   "date": "2026-06-02",
+   "house": "representatives",
+   "question": "Dan Tehan I move: That the Treasury Laws Amendment (Tax Reform No. 1) Bill 2026 and Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026 be referred to the Standing Committee on Economics for consideration and an advisory report by 30 December 2026. In question time today, it became really clear that the government doesn't know its own budget. You can't believe it, but that is where we have ended up. The government does not know its own budget, so we need to refer the budget to the House Standing Committee on Economics for reporting back to this House. I'll just give you a few examples. We asked the Prime Minister whether the budget increased taxes by $77 billion. He didn't know! And yet it's in his budget papers. We asked the Minister for Housing whether she could define a new dwelling. She couldn't define a new dwelling. This is why this must be sent to the economics committee for a hearing—it has to be. Last week we asked the Treasurer what was going to be carved out or what wasn't going to be carved out, and he could not answer. So it must be sent to the economics committee, because we need the government to understand its own budget. If it can't understand its own budget, what hope have the Australian people got of understanding it? Of course they can't do that. So we have to make sure that this goes to the economics committee. Sharon Claydon The minister, just— Do you have a point? I'm sorry— Dan Tehan Absolutely: I'm finding all the reasons why this must go to the economics committee. We even asked the Treasurer—and the Treasurer has got enormous power, given this budget, to be, basically, able to use his own pen to decide how much of a tax cut they're going to give Australians. Two hundred and fifty dollars is what the budget papers say. But, if he wants, the Treasurer can drop that figure down to zero—zilch; nothing. So this is why we need the economics committee to look at this. They have to look at this, because, if the government can't give a simple a",
+   "stage": "Bill",
+   "ayes": 90,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 137,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-02/5"
+  },
+  {
+   "key": "federal-representatives-10246",
+   "date": "2026-06-03",
+   "house": "representatives",
+   "question": "Cameron Caldwell I move: That the Treasury Laws Amendment (Tax Reform No. 1) Bill 2026 and Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026 be referred to the Standing Committee on Economics for consideration and an advisory report by 30 December 2026. Milton Dick The question is that the motion be agreed to.",
+   "stage": "Bill",
+   "ayes": 46,
+   "noes": 90,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 90
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-03/3"
+  },
+  {
+   "key": "federal-representatives-10247",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Michael McCormack It's been just 11 hours since the House rose and my contribution was interrupted by the adjournment, but, in that ensuing time, we've had many businesses face the awkward decision as to whether in fact they will continue to operate or not. Australia's small businesses are shutting at a disturbing rate: 40,000 microbusinesses lost in four years as wages that they have to pay go up. Admittedly, the workers are getting less bang for their buck, but tax reforms and calls for a three-day week just mount and small business is doing it so very tough. What I fear is that those opposite don't understand or appreciate the hardships of small business because in many cases they have not run one. They've run picket lines out in front of them and they've run them into the ground, but they haven't actually run a small business to save themselves, and they don't understand and appreciate the complexities facing the operators of those many, many small businesses. I ran one for nearly a decade, with a couple of others, and it's tough. Often you take home less pay yourself than you are in fact paying your employees, your workers. As to workers, yes, we saw the independent commission this week give a wage rise to Australia's lowest paid workers—bearing in mind Australia has one of the highest minimum wages anywhere. But I say to those workers: do not be fooled, because once you take away the power bills, the rent or mortgage costs, the grocery bills and the fuel costs, you're taking home less. We as a coalition—we as Nationals and Liberals—want people to keep more of what they earn because it's their money. The other side treat wages, superannuation and all of these things as though it is the government, the taxpayers, paying for it, when in actual fact it's the small-business owners and operators who are being slammed every day of the week. The national economy has slowed to a crawl, and the budget has not helped. You've got people who are running businesses who are",
+   "stage": "Second reading",
+   "ayes": 89,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/1"
+  },
+  {
+   "key": "federal-representatives-10248",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick The original question was that this bill be now read a second time, to which the honourable member for Hume moved as an amendment that all words after 'That' be omitted with a view to substituting other words. Subsequent amendments have been moved by honourable members. We'll deal with the immediate question, which is that the amendment moved by the honourable member for Fowler be agreed to.",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 92,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 89
+    }
+   },
+   "party_coverage": {
+    "dated": 100
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/2"
+  },
+  {
+   "key": "federal-representatives-10249",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendment moved by the honourable member for Kooyong be agreed to.",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 89,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 89
+    }
+   },
+   "party_coverage": {
+    "dated": 99
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/3"
+  },
+  {
+   "key": "federal-representatives-10250",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick The question now is that the amendment moved by the honourable member for Warringah be agreed to.",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 127,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 89
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/4"
+  },
+  {
+   "key": "federal-representatives-10251",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the amendment moved by the honourable member for Curtin be agreed to.",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 126,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 90
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/5"
+  },
+  {
+   "key": "federal-representatives-10252",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick The question before the House is that the amendment moved by the honourable member for Hume be agreed to.",
+   "stage": "Second reading",
+   "ayes": 43,
+   "noes": 92,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 90
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/6"
+  },
+  {
+   "key": "federal-representatives-10253",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the bill be now read a second time.",
+   "stage": "Second reading",
+   "ayes": 96,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/7"
+  },
+  {
+   "key": "federal-representatives-10254",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Tony Burke I move: That the debate be adjourned. Milton Dick The question is that the debate be adjourned and the resumption of the debate be made an order of the day for a later hour this day.",
+   "stage": "Second reading",
+   "ayes": 92,
+   "noes": 48,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/8"
+  },
+  {
+   "key": "federal-representatives-10257",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the bill be agreed to, and, in accordance with the resolution agreed to earlier, the question now is that amendments (1) to (4) circulated by the member for Hume be agreed to. _Opposition's circulated amendments_ (1) Clause 2, page 2 (table items 2, 3 and 4), omit the table items. (2) Clause 2, page 2 (table item 5), omit the table item. (3) Schedule 1, page 3 (line 1) to page 47 (line 24), omit the Schedule. (4) Schedule 2, page 48 (line 1) to page 53 (line 11), omit the Schedule. Angus Taylor Australians need cost-of-living relief after four years of Labor's raging homegrown inflation. They do need cost-of-living relief, with a broken economy that we saw yesterday, productivity down five per cent and the standard of living down almost four per cent. We see that the only thing left growing the economy is record levels of migration. So we support Labor's $250 annual income tax cut. We support Labor's $1,000 deduction for work related expenses. These cost-of-living measures could have passed this parliament easily, with bipartisan support. But tricky Labor and this tricky Treasurer have deliberately tied these measures to their toxic taxes, using a single piece of legislation, an omnibus bill, for their tax cuts and toxic tax increases. They could have put forward separate bills—one bill for tax cuts and one bill for tax increases—but they didn't, and what Australians see is a bad faith government playing a cynical, tricky game, because that's what they do every single day of the week. Back in 2022, on the day he was sworn in—the day he was sworn in—the Prime Minister said: I look forward to leading a Government … that doesn't seek to have wedges … I reckon he's eaten a lot of wedges! But here is the truth: the Prime Minister's word is never his bond—never, never. Ramming this 'wedgislation' through the parliament without sufficient scrutiny is an act of political expediency—an act of political bastardry! Labor is more interested in h",
+   "stage": "Consideration in detail",
+   "ayes": 43,
+   "noes": 93,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 4
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 89
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/11"
+  },
+  {
+   "key": "federal-representatives-10258",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick In accordance with the resolution agreed to earlier, the question now is that the amendment circulated by the member for Warringah be agreed to. _Member for Warringah's circulated amendment—_ (1) Schedule 1, page 47 (before line 2), before item 82, insert: 81A Application of amendments — general The amendments made by this Schedule apply only in relation to CGT assets that are real property. Zali Steggall The government argues that this legislation is about making the tax system fairer between income earned from wages and income earned from passive investments. But that framing is too simplistic. A capital gain is often realised only after many years of risk, delayed reward, reinvestment, losses or uncertainty. If we want an economy that backs enterprise, innovation and productivity, we must recognise and reward responsible risk-taking. I support the principle of reforming housing tax settings. Negative gearing and capital gains tax concessions have too often encouraged investment into established housing rather than new supply, and that has contributed to a market where too many young Australians are locked out. That is why I support the bulk of this legislation, schedules 2, 3 and 4. But schedule 1 requires amendment, and that is the amendment I have moved. This bill goes much further than housing. It extends the CGT changes across shares, ETFs, managed funds, startups, small and larger business assets, employee equity trusts and family business succession. If the government's policy target is speculative investment in established housing, then the legislation should target that. It should not drag productive investment, business risk-taking and modest long-term savings into the same net. The government has framed this package as reform for workers, first home buyers and future generations. But the concerns raised consistently with me in Warringah are that the CGT changes are not properly targeted. Young professionals, small-business owners, startup fo",
+   "stage": "Consideration in detail",
+   "ayes": 7,
+   "noes": 104,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 111
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/12"
+  },
+  {
+   "key": "federal-representatives-10259",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick In accordance with the resolution agreed to earlier, the question now is that amendments (1) to (4) circulated by the member for Wentworth be agreed to. _M_ _ember for Wentworth's circulated amendments—_ (1) Schedule 1, page 9 (after line 13), after item 7, insert: 7A At the end of Division 102 Add: 102-31 Income averaging (1) The regulations may provide for or in relation to the proportional allocation, by individuals, of capital gains over the shorter of: (a) the period for which the individual holds the relevant \\*CGT asset; and (b) a period of 10 years. (2) Regulations made for the purposes of subsection (1) may directly amend the text of this Act. (2) Schedule 1, page 9 (before line 14), before item 8, insert: 7B After section 110-10 Insert: 110-11 Indexation of capital losses (1) The regulations may provide for or in relation to indexing the \\*reduced cost base of a \\*CGT asset. (2) Regulations made for the purposes of subsection (1) may directly amend the text of this Act. (3) The Minister must take reasonable steps to ensure that regulations are in force for the purposes of subsection (1) within 6 months after the commencement of this section. (3) Schedule 1, Part 2, page 40 (line 1) to page 43 (line 26), omit the Part. (4) Schedule 1, Part 4, page 47 (after line 24), at the end of the Part, add: 84A Application of amendments — active assets The amendments made by this Schedule do not apply in relation to a \\*CGT asset that is an \\*active asset. Allegra Spender I've been advocating for tax reform since I was first elected, and I welcome the government's guts to bring a serious proposal forward. I share many of the ambitions the Treasurer has identified in his budget, but I cannot support the bill's proposals in their current form. It's not because I don't support the intent. The government has correctly diagnosed significant problems in Australia's tax system. It's not because I don't support the broad direction of measures. I believe we do need",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 69,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/13"
+  },
+  {
+   "key": "federal-representatives-10260",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick In accordance with the resolution agreed to earlier, the question now is that amendments (1) and (2) as circulated by the honourable member for Kooyong be agreed to. _Member for Kooyong's circulated amendments—_ (1) Clause 2, page 2 (table item 4), omit \"Parts 3 and 4\", substitute \"Parts 2A, 3 and 4\". (2) Schedule 1, page 43 (after line 26), after Part 2, insert: Part 2A — Relief for small businesses _Income Tax Assessment Act 1997_ 60A After section 152-12 Insert: 152-13 Indexation of thresholds (1) The regulations may provide for or in relation to the annual indexation, in line with the consumer price index, of the following amounts: (a) the amount of $2 million mentioned in paragraph 152-10(1AA)(b) (meaning of CGT small business entity); (b) the amount of $6,000,000 mentioned in section 152-15 (maximum net asset value test). (2) Regulations made for the purposes of subsection (1) may directly amend the text of this Act. Monique Ryan While we're making generational changes to Australia's capital gains tax system, we need to ensure that wholesale reforms don't come at the expense of clear modernisations. The thresholds for small businesses claiming capital gains tax exemptions is such an area of clear modernisation. The existing CGT small-business concession regime, the SBC regime, provides a sliding scale of concessional tax treatment to business owners when they sell their businesses. That regime is preserved by this budget. Under the current Income Tax Act 1997, in order to qualify for the regime, small businesses must have either an aggregated turnover of less than $2 million or combined net assets of less than $6 million. Those thresholds have been unchanged for almost 20 years. The maximum net asset value test was first introduced in 1999, with the Howard government's discount. At that time, the threshold was $5 million for small businesses. That was lifted to $6 million in 2007. The $2 million annual turnover level has also been static since 2007",
+   "stage": "Consideration in detail",
+   "ayes": 50,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 87
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/14"
+  },
+  {
+   "key": "federal-representatives-10261",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Milton Dick The question is that the bill be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 93,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/15"
+  },
+  {
+   "key": "federal-representatives-10262",
+   "date": "2026-06-04",
+   "house": "representatives",
+   "question": "Jim Chalmers by leave—I move: That this bill be now read a third time. Milton Dick The question is now that this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 94,
+   "noes": 49,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 7
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Labor": {
+     "ayes": 90,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-04/16"
+  },
+  {
+   "key": "federal-senate-10272",
+   "date": "2026-06-22",
+   "house": "senate",
+   "question": "Katy Gallagher I move: That these bills may proceed without formalities, may be taken together and be now read a first time. Claire Chandler I ask that the question be divided so that the question that the bill proceed without formalities is put separately? Slade Brockman Alright. I will put those questions separately. Claire Chandler Thank you very much. My understanding is that I can now speak on that motion; I would like to do so to explain what we are doing here today. I have sought that the question be divided so that the question relating to these bills proceeding without formalities can be put separately. While it is a common occurrence in this chamber for bills to proceed without formalities, and indeed the motion that is currently before the chair is rarely debated, it's worth understanding why we are seeking for this to occur. Usually, putting a question without formalities allows for expedited proceedings which provide for a simple, rational and flexible means of considering bills. But nothing about these bills, or the government's approach, has been simple, rational or flexible. I want to be very clear about what is actually before the Senate today. The bills that will be brought on shortly were rushed through a process and followed by a Senate inquiry that, frankly, I can only describe as a stitch-up. This is a bill that will bundle higher taxes on housing, savings, small business, start-ups and family wealth, and this government has the audacity to call that tax reform. The Australian people and Australian businesses are angry and disappointed with Labor's toxic taxes. The government, like I said, is calling this tax reform, but it's not. They are very major changes to the tax system and they come with very real consequences, because when you strip it all back and when you take away the branding and the label 'tax reform No. 1' you are left with a set of measures that will increase taxes, make the system more complicated and introduce new risks into th",
+   "stage": "Bill",
+   "ayes": 32,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-22/4"
+  },
+  {
+   "key": "federal-senate-10273",
+   "date": "2026-06-22",
+   "house": "senate",
+   "question": "Slade Brockman The question before the chair now is that the bills may proceed without formalities.",
+   "stage": "Bill",
+   "ayes": 32,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-22/5"
+  },
+  {
+   "key": "federal-representatives-10338",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "question": "Anthony Albanese I move: That the amendments be agreed to. Our Labor government is delivering real change to make a real difference—real change built on Australian values: fairness, aspiration and opportunity for all. A $250 tax cut for working Australians, a $1,000 instant tax deduction and a fair crack for first home buyers—these reforms are for young Australians who have been locked out of the housing market for too long, but they're also for their parents and grandparents who want to see the next generation have the opportunity and security of a roof over their head. These reforms are also about rebalancing our tax system and better aligning income from work compared to income derived from assets. Overwhelmingly, most Australians have nothing to sell but their time and nothing to give but their hard work. That is how most Australians earn their income. They work their guts out every day to provide for their families and put food on the table, and for too long the economy has not been working for them. We want an economy that works for people, not people working for an economy. Our government isn't going to sit back and let that continue. We're not going to kick the can down the road. We're not going to try and explain away a broken system. We are doing something about it. We're backing aspiration, rewarding hard work and giving young people a fair crack. We are delivering real change. Young people have waited long enough for a rebalancing of that system. That is why this legislation that will give young Australians a fair crack should be supported by this parliament, so that young Australians can get access to their own home. I move: That the question be now put. Milton Dick The question is that the question be put.",
+   "stage": "Consideration of Senate message",
+   "ayes": 90,
+   "noes": 47,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-25/5"
+  },
+  {
+   "key": "federal-representatives-10339",
+   "date": "2026-06-25",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2026-06-25.107.2): \"*That the amendments be agreed to.*\" In other words, they voted to agree with the Senate's amendments to the bill. This means that the final version of the bill has now been passed in both houses of parliament and so can now become law. ### What were the Senate amendments? See the [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7493_ems_e5a9c782-fb39-4705-968e-e258fc04c742%22;rec=0) for more information about [these amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7493_sched_776af8ad-0010-41d2-8b19-b20a5ac02cf5%22;rec=0).",
+   "stage": "Consideration of Senate message",
+   "ayes": 98,
+   "noes": 39,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 89,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-06-25/6"
+  },
+  {
+   "key": "federal-senate-10341",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Sue Lines Pursuant to order agreed to on Tuesday, the Senate will now further consider the Treasury Laws Amendment tax reform number one bill of 2026 and a related bill. The second reading debate on the bills concluded yesterday evening, and I'm now required to put the questions on the second reading of the bills. I will now put the questions before the chair and then the remaining stages on the second reading of the bills. I'll begin with the second reading amendment moved by Senator Chandler. The question is that the amendment on sheet 3883 be agreed to. _Opposition's circulated amendment—_ Omit all words after \"That\", substitute \"the Senate: (a) calls on the Government to immediately pass laws to end bracket creep and implement a Tax Back Guarantee, by indexing the personal income tax brackets to inflation starting with the first two tax brackets in 2028-29, and the remaining tax brackets from 2031-32; and (b) notes this will deliver lower income taxes, permanently, to all Australians and ensure that income taxes cannot rise without the passage of new laws\".",
+   "stage": "Limitation of debate",
+   "ayes": 24,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 48,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/1"
+  },
+  {
+   "key": "federal-senate-10342",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Sue Lines I will now deal with the remaining second reading amendments circulated by the opposition. The question is that the amendments on sheet 3884, 3887 and 3892 be agreed to. _Opposition's circulated amendments—_ SHEET 3884 Omit all words after \"That\", substitute \"the Senate (a) notes that: (i) the Government is reducing housing supply in the midst of a housing crisis, (ii) the Government's higher taxes mean 35,000 fewer homes, higher rents and less housing investment, (iii) the Government's higher taxes add to the cost of housing, with existing taxes, fees and charges already adding up to 50 per cent to the cost of a new home, and (iv) the Government is already more than 100,000 dwellings behind its own 1.2 million housing target and is projected to miss the target by well over 200,000 dwellings; and (b) calls on the Government to introduce legislation to ban APRA-regulated super fund investment in residential property\". \\_\\_\\_\\_\\_ SHEET 3887 Omit all words after \"That\", substitute \"the Senate notes that: (a) the Economics Legislation Committee inquiry into this bill was a rushed sham; (b) the inquiry did not have enough time to enable the committee to consider hundreds of submissions; (c) Treasury officials refused to provide evidence, refused to undertake basic preparations for their appearance and refused to table answers to questions on notice within a reasonable timeframe; and (d) the Treasurer announced amendments one day after the committee concluded its hearing, making a mockery of transparency, scrutiny and proper parliamentary process\". \\_\\_\\_\\_\\_ SHEET 3892 Omit all words after \"That\", substitute \"the Senate notes that: (a) the Government's higher taxes will starve junior minerals explorers of capital; (b) 75% of Australia's economic mineral discoveries are made by small and mid-tier explorers who rely on investors willing to back high-risk projects; (c) discovery to production can take 15 years and therefore Australians will pay the price for decad",
+   "stage": "Limitation of debate",
+   "ayes": 24,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/2"
+  },
+  {
+   "key": "federal-senate-10343",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "David Pocock by leave—Please can I record my support for 3887 in that group of amendments. Sue Lines I will now deal with the second reading amendment circulated by Senator David Pocock. The question is that the amendment on sheet 3870 be agreed to. _Senator David Pocock's circulated amendment—_ At the end of the motion, add \", but the Senate: (a) notes that: (i) despite substantial investments from the Albanese Labor Government in new social and affordable housing through the Housing Australia Future Fund, there remains a shortfall of around 640,000 affordable homes in Australia, and (ii) the reforms to CGT and negative gearing will deliver significant ongoing benefit to the budget, with at least $6 billion in revenue not foregone over the forward estimates; and (b) calls on the Albanese Government to reinvest a majority portion of these savings in new public, social and affordable housing\".",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/3"
+  },
+  {
+   "key": "federal-senate-10344",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Sue Lines The question is that these bills be now read a second time.",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/4"
+  },
+  {
+   "key": "federal-senate-10345",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "David Pocock I move: That the motion be amended as follows: At the end of the motion, add \"and the provisions of Schedule 1 to the Treasury Laws Amendment (Tax Reform No. 1) Bill 2026 and the provisions of the Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026 be referred to the Economics Legislation Committee for inquiry and report by 14 September 2026\". Claire Chandler I move: Omit all words after \"That\", substitute: (1) That it be an instruction to the committee of the whole to divide the Treasury Laws Amendment (Tax Reform No. 1) Bill 2026 to: (a) incorporate Schedules 1 and 2 in a separate bill; and (b) add to that bill enacting words, provisions for titles and commencement, and a provision giving effect to the amending schedules. (2) That the bill incorporating Schedules 1 and 2 be referred to the Economics Legislation Committee for inquiry and report by 21 September 2026. I understand I can speak to that, so I will. I just want to be very clear here about exactly what the opposition is proposing. Senator Pocock's motion, which he has just moved, relates to incorporating schedule 1 into a separate bill and sending that off to further committee inquiry. Now, the opposition would like to see both schedule 1 and schedule 2 of the bill removed and, again, sent off to an appropriate Senate inquiry. I've said this before in the debate on these bills, and I will say it again. Schedule 1and schedule 2 will deliver a net tax increase to Australians—schedule 1 through changes to the capital gains tax and schedule two with changes to the negative gearing regime. As I said in my second reading speech yesterday, the coalition supports schedule 3 and schedule 4 of these bills simply because we will always support lower taxes. But we also want to see schedule 1 and schedule 2 of the bill, the schedules that contain the changes to negative gearing and to capital gains tax, referred to the Economics Legislation Committee for inquiry and report by 21 of September 2026. If",
+   "stage": "Limitation of debate",
+   "ayes": 23,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/5"
+  },
+  {
+   "key": "federal-senate-10346",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Sue Lines The question is that the motion as moved by Senator David Pocock be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 24,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/6"
+  },
+  {
+   "key": "federal-senate-10354",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Slade Brockman Pursuant to order agreed to on Tuesday, the time allotted for debate on these bills and two further bills has expired. I'll now put the question before the chair and then put the questions on the remaining stages of the bill. I will begin with amendments (3) and (4) on sheet 3882, moved by Senator Chandler, to the Treasury Laws Amendment (Tax Reform No. 1) Bill 2026. The question is that schedules 1 and 2 stand as printed.",
+   "stage": "Limitation of debate",
+   "ayes": 34,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/14"
+  },
+  {
+   "key": "federal-senate-10355",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Slade Brockman As the last question was resolved in the affirmative, the consequential amendment on sheet 3882 will not be put. For clarity, as the One Nation amendments on sheet 3881 are identical to opposition amendments which were negatived, the question on the One Nation amendments will not be put. I will now deal with the amendments circulated by the government. We move to sheet AU131. The question is that the amendments on sheet AU131 be agreed to. _Government's circulated amendments to_ _Treasury Laws Amendment (Tax Reform No. 1) Bill 2026_ (1) Schedule 1, item 13, page 12 (line 6), omit \"new residential dwellings etc.\", substitute \"new residential dwellings\". (2) Schedule 1, item 13, page 16 (line 6), omit \"new residential dwellings etc.\", substitute \"new residential dwellings\". (3) Schedule 1, item 24, page 27 (line 12), omit \"new residential dwellings etc.\", substitute \"new residential dwellings\". (4) Schedule 1, item 27, page 28 (lines 3 to 5), omit \"a new residential dwelling, to the provision of affordable housing, or to other CGT assets of a kind determined by the Minister\", substitute \"a new residential dwelling or to the provision of affordable housing\". (5) Schedule 1, item 28, page 28 (line 8), omit \"new residential dwellings etc.\", substitute \"new residential dwellings\". (6) Schedule 1, item 30, page 28 (line 26), omit \"New residential dwellings etc.\", substitute \"New residential dwellings\". (7) Schedule 1, item 30, page 29 (lines 14 to 19), omit subsections 115-102(2) and (3), substitute: _CGT assets to which this section relates_ (2) This subsection covers a \\*new residential dwelling. (8) Schedule 1, item 42, page 32 (line 15), omit \"new residential dwellings etc.\", substitute \"new residential dwellings\". (9) Schedule 1, item 42, page 32 (line 27), omit \"new residential dwellings etc.\", substitute \"new residential dwellings\". (10) Schedule 1, item 58, page 40 (lines 24 and 25), omit \"to ensure a rate of tax of 30% on those gains (before applyin",
+   "stage": "Limitation of debate",
+   "ayes": 11,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/15"
+  },
+  {
+   "key": "federal-senate-10356",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Slade Brockman I will now deal with the remaining Australian Greens amendments. The question is that the amendments on sheet 3886 be agreed to. _Australian Greens' circulated amendments_ _to the_ _Treasury Laws Amendment (Tax Reform No. 1) Bill 2026_ (1) Title, page 1 (line 2), after \"taxation\", insert \"and superannuation\". (2) Clause 2, page 2 (after table item 6), insert: (3) Page 65 (after line 25), at the end of the Bill, add: Schedule 5 — Limited recourse borrowing arrangements _Superannuation Industry (Supervision) Act 1993_ 1 At the end of subsection 67 A( 2) Add: ; and (c) for an asset that is real property—the asset is business real property (within the meaning of section 66 of this Act). 2 Application of amendment (1) The amendment made by this Schedule applies in relation to arrangements entered into on or after the commencement of this Schedule under which money is borrowed, or borrowings of money are maintained, for the acquisition of assets. (2) However, the amendment does not apply in relation to such an arrangement to the extent that: (a) the arrangement is for maintaining (or refinancing) a borrowing of money under another arrangement entered into before that commencement; or (b) the acquisition of the asset (to which the borrowing under the arrangement relates) happens under an arrangement entered into before that commencement. Note: This item means each of the following continues to be covered by the exception in subsection 67A(1) of the _Superannuation Industry (Supervision) Act 1993_: (a) a borrowing arrangement entered into before commencement; (b) a refinancing arrangement covered by paragraph (2)(a); (c) a borrowing arrangement for which the related asset is acquired under an arrangement entered into before that commencement (even if the settlement for the acquisition of the asset happens after that commencement).",
+   "stage": "Limitation of debate",
+   "ayes": 33,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/16"
+  },
+  {
+   "key": "federal-senate-10357",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Slade Brockman I will now deal with amendments circulated by Senator David Pocock. The question is that the amendments on sheets 3869, 3872, 3873, 3874, 3875, 3876, 3877 and 3879 be agreed to. _Senator David Pocock's circulated amendments to the_ _Treasury Laws Amendment (Tax Reform No. 1) Bill 2026_ SHEET 3869 (1) Clause 2, page 2 (table items 2 to 4), omit the table items. (2) Omit Schedule 1 and incorporate it as an amending schedule to a separate bill (the _second bill_). (3) Insert at the beginning of the second bill: A Bill for an Act to amend the law relating to taxation, and for related purposes The Parliament of Australia enacts: 1 Short title This Act is the _Treasury Laws Amendment (CGT Adjustments) Act 2026_. 2 Commencement (1) Each provision of this Act specified in column 1 of the table commences, or is taken to have commenced, in accordance with column 2 of the table. Any other statement in column 2 as effect according to its terms. Note: This table relates only to the provisions of this Act as originally enacted. It will not be amended to deal with any later amendments of this Act. (2) Any information in column 3 of the table is not part of this Act. Information may be inserted in this column, or information in it may be edited, in any published version of this Act. 3 Schedules Legislation that is specified in a Schedule to this Act is amended or repealed as set out in the applicable items in the Schedule concerned, and any other item in a Schedule to this Act has effect according to its terms. \\_\\_\\_\\_\\_ SHEET 3872 (1) Clause 2, page 2 (table item 1), omit \"to 3\", substitute \"to 4\". (2) Page 2 (after line 11), after clause 3, insert: 4 Independent review of amendments _Requirement to conduct review_ (1) The Minister must cause an independent review to be conducted of the operation of the amendments made by this Act. _Timing of review_ (2) The persons conducting the review must complete the review before 1 July 2029. (3) For the purposes of subsectio",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/17"
+  },
+  {
+   "key": "federal-senate-10358",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Wendy Askew by leave—On behalf of Senator Lambie, can we please note that she was opposed to the amendments on sheet 3874? Slade Brockman Thank you, Senator Askew. I'll now deal with the amendment circulated by Jacqui Lambie Network and Senator David Pocock on sheet 3880, but, before putting the question on the amendment, I will deal with the amendments to the amendment circulated by One Nation. The question is that One Nation's amendments on sheet 3896 to Jacqui Lambie Network and Senator David Pocock's amendment on sheet 3880 be agreed to. _One Nation's circulated amendments to Jacqui Lambie Network and David Pocock's circulated amendment to the Treasury Laws Amendment (Tax Reform No. 1) Bill 2026—_ AMENDMENTS TO JACQUI LAMBIE NETWORK AND SENATOR DAVID POCOCK AMENDMENT [SHEET 3880] (1) Amendment (1), item 1, heading to subsection (3A), omit \"_one residential dwelling_\" substitute \"_two residential dwellings_\". (2) Amendment (1), item 1, subsection (3C), omit \"one, and only one, \\*residential dwelling\", substitute \"up to 2 \\*residential dwellings\". (3) Amendment (1), item 1, after subsection (3D), insert: (3DA) At any one time, you may have an election under subsection (3C) in force for a maximum of 2 \\*residential dwellings.",
+   "stage": "Limitation of debate",
+   "ayes": 24,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/18"
+  },
+  {
+   "key": "federal-senate-10359",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Slade Brockman The question is now that the amendment from Jacqui Lambie Network and Senator David Pocock on sheet 3880 be agreed to. _Circulated amendment of_ _Jacqui Lambie Network and Senator David Pocock_ _to the_ _Treasury Laws Amendment (Tax Reform No. 1) Bill 2026_ (1) Schedule 2, item 1, page 49 (after line 27), after subsection 26-155(3), insert: _Exception for one residential dwelling_ (3A) For the purposes of subsection (1), disregard amounts you could otherwise deduct, and amounts of assessable income, to the extent those amounts relate to the using or holding of an \\*ownership interest in a \\*residential dwelling: (a) that you \\*acquire on or after 7.30pm, by legal time in the Australian Capital Territory, on 12 May 2026; and (b) in respect of which you have made an election under subsection (3C). (3B) Despite subsection 118-130(2), for the purposes of paragraph (3A)(a) of this section, for a \\*residential dwelling that you \\*acquire under a contract, you have an \\*ownership interestin the residential dwelling from the time when you enter into the contract. (3C) You may make an election for the purposes of paragraph (3A)(a) in respect of one, and only one, \\*residential dwelling. (3D) An election under subsection (3C) must be: (a) in the \\*approved form; and (b) given to the Commissioner. (3E) An election you make under subsection (3C) in respect of a \\*residential dwelling: (a) cannot be varied; and (b) remains in force until you cease holding an \\*ownership interest in the residential dwelling.",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/19"
+  },
+  {
+   "key": "federal-senate-10360",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Slade Brockman I will now deal with the requests for amendments to the Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026 circulated by One Nation. In accordance with the usual practice, the statements accompanying the requests circulated to this bill will be incorporated in _Hansard_. The question is that the requests for amendment on sheet 3895 be agreed to. _One Nation's circulated_ _reques_ _ts_ _for_ _amendment_ _s_ _to_ _the Income Tax Rates Amendment (Tax Reform No. 1) Bill 202_ _6_ That the House of Representatives be requested to make the following amendments: (1) Schedule 1, heading, page 3 (line 1), omit \"Amendments\", substitute \"Minimum tax on capital gains\". (2) Page 3 (after line 19), at the end of the Bill, add: Schedule 2 — Indexation of income tax thresholds _Income Tax Rates Act 1986_ 1 Subsection 3(1) Insert: _income tax threshold_ means the following amounts (subject to indexation under section 20A): (a) the dollar amount mentioned in the definition of _tax-free threshold_ in this subsection; (b) each dollar amount mentioned in the table in clause 1 of Part I of Schedule 7 (table dealing with tax rates for resident taxpayers); (c) each dollar amount mentioned in the table in clause 1 of Part II of Schedule 7 (table dealing with tax rates for non-resident taxpayers); (d) each dollar amount mentioned in the table in clause 1 of Part III of Schedule 7 (table dealing with tax rates for working holiday makers). 2 At the end of Part II Add: Division 5 — Indexation of income tax thresholds 20A Indexation of income tax thresholds _Indexation_ (1) On 1 July 2027 and each later 1 July (the _indexation day_), each income tax threshold is replaced by the amount worked out using the following formula: (2) However, subsection (1) does not apply for an indexation day if the indexation factor for the indexation day is 1 or less. (3) The amount worked out under subsection (1) is to be rounded to the nearest whole dollar (rounding 50 cents upwards). _Indexati",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/20"
+  },
+  {
+   "key": "federal-senate-10361",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Slade Brockman Pursuant to order, I will report the bill. Treasury Laws Amendment (Tax Reform No. 1) Bill 2026 reported with amendments, including an amendment to the title of the bill; Income Tax Rates Amendment (Tax Reform No. 1) Bill 2026 reported without amendment. Sue Lines Senator David Pocock has circulated an amendment to the motion that the report from the committee be adopted. I understand that Senator Chandler has circulated an amendment to Senator David Pocock's amendment. As this amendment was not circulated within the required timeframe, it can only be considered by leave. Senator Chandler, are you seeking leave to move the amendment? Claire Chandler Yes, I am, President. Leave not granted. Sue Lines The question is that Senator Pocock's amendment be agreed to.",
+   "stage": "Limitation of debate",
+   "ayes": 26,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/21"
+  },
+  {
+   "key": "federal-senate-10362",
+   "date": "2026-06-25",
+   "house": "senate",
+   "question": "Sue Lines The question now is that the remaining stages of the bill be agreed to, and the bills be now passed.",
+   "stage": "Limitation of debate",
+   "ayes": 35,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-06-25/22"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1203221",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203225",
+   "speaker": "Allegra Spender",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-05-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203296",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203303",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203340",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203378",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203379",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203420",
+   "speaker": "Cameron Caldwell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-06-03",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203452",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203697",
+   "speaker": "David Pocock",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-06-22",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203781",
+   "speaker": "Penny Wong",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203990",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204090",
+   "speaker": "Claire Chandler",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204099",
+   "speaker": "Slade Brockman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Tax Reform No. 1) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00049",
+   "assent_date": "2026-06-26"
+  }
+ ]
+}

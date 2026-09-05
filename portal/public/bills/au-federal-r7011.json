@@ -1,0 +1,635 @@
+{
+ "key": "au-federal-r7011",
+ "title": "Family Law Amendment Bill 2023",
+ "short_title": "Family Law Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2023-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7011_ems_4e93ba1f-fdac-4ae9-8f64-705cc73925a0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7011_ems_d1cda51f-252e-4d31-971d-f8beb49453b9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7011_ems_dd304c74-06f7-4234-9def-fc7c5449438c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7011_ems_dd76ef8e-6b94-4783-a34d-89daf1544c99%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7011%22",
+   "document_date": "2023-03-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00087",
+   "document_date": "2023-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-29",
+  "sentences": [
+   "The bill would change the main family law Act to make separation less complicated and focus on what is best for children.",
+   "It would rewrite the part of the Act that deals with parenting orders, add rules for hearing children's views, and give courts a new power to stop repeated legal harassment.",
+   "The changes would also bring forward a review of the Federal Circuit and Family Court of Australia Act by two years."
+  ],
+  "changes": [
+   "Simplify the framework for deciding parenting arrangements and children's best interests.",
+   "Allow children to express their views to an Independent Children's Lawyer in appropriate cases.",
+   "Create a new court power to prevent systems abuse by stopping repetitive applications.",
+   "Better recognise Aboriginal and Torres Strait Islander children's cultural rights and kinship concepts.",
+   "Make the consequences of not following parenting orders clearer.",
+   "Introduce harmful proceedings orders to stop vexatious litigants filing without court permission."
+  ],
+  "affected": "Separating families, children, family courts, and Aboriginal and Torres Strait Islander communities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8096",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of the main idea of the bill. In parliamentary jargon, they voted to read it for a second time. This means that they can now consider it in greater detail. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd076) summary: > * *The Bill will amend the Family Law Act 1975, the stated purpose being to make the family law system safer and simper, and ensure the best interests of children are placed at its centre.* > > * *The amendments implement a number of recommendations from the Australian Law Reform Commission’s 2019 report into the state of Australia’s family law system and elements of the Government Response to the 2021 Joint Select Committee inquiry into Australia’s Family Law System.* > > * *There are 9 Schedules to the Bill which include:* > >> * *the redrafting of provisions to do with the enforcement of parenting orders and the protection of personal information in family court proceedings (Schedules 2 and 6)* >> >> * *amendments aimed at acknowledging Aboriginal or Torres Strait Islander notions of family and kinship (Schedule 3)* >> >> * *changes to the role of the Independent Children’s Lawyer (Schedule 4)* >> >> * *the introduction of a new ‘harmful proceedings order’ power to prevent a vexatious litigant from filing and serving new applications without first obtaining leave (Schedule 5)* >> >> * *a regulation making power with respect to family report writers (Schedule 7).* > > * *The key amendments are in Schedule 1, which amends the legislative framework for making parenting orders, including changes to the section which covers the factors to be considered when making parenting arrangements in the best interests of the child. The Schedule also repeals the presumption of equal shared parental responsibility and the mandatory consideration of certain times arrangements for parents. There is a strong focus amongst stakeholders on these amendm",
+   "stage": "Second reading",
+   "ayes": 88,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-11/2"
+  },
+  {
+   "key": "federal-senate-8423",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping [schedule 1](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd076#scroll-nav__10), [schedule 2](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd076#scroll-nav__11) and [schedule 8](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr7011_first-reps%2F0008;query=Id%3A%22legislation%2Fbills%2Fr7011_first-reps%2F0000%22;rec=0) unchanged. This vote was in response to a motion to oppose those schedules and means that they will remain as they are.",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 54,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/11"
+  },
+  {
+   "key": "federal-senate-8424",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted against amendments on sheets [2066](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_41b39855-3125-4fd2-ad1c-4db693a40393%22;rec=0) and [2073](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_32ad176b-ab3d-4274-905e-90a5b1161e5c%22;rec=0), and the amendments on [2067](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_4a2d4598-6855-412c-8c94-d6cb17cf3748%22;rec=0), [2068](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_4cfdfeec-cba2-45fd-bea0-f891fb2f2d15%22;rec=0), [2070](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_de30a43e-21f5-414d-86ac-db144e1fd2b4%22;rec=0), [2071](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_c664f977-ee38-4c68-92d2-6590bdd632ec%22;rec=0), [2072](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_5c749977-c372-4246-933c-d059bfaa2071%22;rec=0) and [2076](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_ab482200-dab5-43c0-8032-15f28b1a240e%22;rec=0), which means they failed. They'd been introduced by West Australian Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal).",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/12"
+  },
+  {
+   "key": "federal-senate-8425",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted against an amendment on [sheet 2069](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_c15ac4dd-81b6-48ce-85e5-ac96a2c2bfd3%22;rec=0) to omit certain [table items](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fbills%2Fr7011_first-reps%2F0000%22;rec=0), which means the amendment failed. It was introduced by WA Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal).",
+   "stage": "In committee",
+   "ayes": 26,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/13"
+  },
+  {
+   "key": "federal-senate-8426",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted against One Nation amendments on sheets [2123](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_6e00c655-95bc-492b-883e-bccca895d5ab%22;rec=0) and [2132](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_24d89161-26b8-46af-ba90-b895e0296073%22;rec=0), which means they failed.",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/14"
+  },
+  {
+   "key": "federal-senate-8427",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted against One Nation amendments on sheets [2131](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_989e1420-5062-4652-a71b-efeaf7522dfd%22;rec=0) and [2135](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr7011_amend_661a61ae-d3a6-4b84-8aa2-0129fce4ef86%22;rec=0), which means they failed. There was one rebel voted, with Queensland Senator [Gerard Rennick](https://theyvoteforyou.org.au/people/senate/queensland/gerard_rennick) (Liberal) voting \"Yes\" against the rest of the Liberal Party.",
+   "stage": "In committee",
+   "ayes": 4,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 44,
+    "member": 5,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/15"
+  },
+  {
+   "key": "federal-senate-8428",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-10-19.61.1) to pass the bills. In parliamentary jargon, they voted to read them for a third time. This means that the bill will now return to the House of Representatives, where our MPs will decide on whether they agree with the [Senate amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr7011_sched_20d5e2f4-d8ff-4ed8-a047-5285cbbe7b1d%22;rec=0) and so allow the bills to become law. ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd076) summary: > * *The Bill will amend the Family Law Act 1975, the stated purpose being to make the family law system safer and simper, and ensure the best interests of children are placed at its centre.* > > * *The amendments implement a number of recommendations from the Australian Law Reform Commission’s 2019 report into the state of Australia’s family law system and elements of the Government Response to the 2021 Joint Select Committee inquiry into Australia’s Family Law System.* > > * *There are 9 Schedules to the Bill which include:* > >> * *the redrafting of provisions to do with the enforcement of parenting orders and the protection of personal information in family court proceedings (Schedules 2 and 6)* >> >> * *amendments aimed at acknowledging Aboriginal or Torres Strait Islander notions of family and kinship (Schedule 3)* >> >> * *changes to the role of the Independent Children’s Lawyer (Schedule 4)* >> >> * *the introduction of a new ‘harmful proceedings order’ power to prevent a vexatious litigant from filing and serving new applications without first obtaining leave (Schedule 5)* >> >> * *a regulation making power with respect to family report writers (Schedule 7).* > > * *The key amendments are in Schedule 1, which amends the legislative framewo",
+   "stage": "Third reading",
+   "ayes": 38,
+   "noes": 3,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/16"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-829444",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-29",
+   "stage_hint": null,
+   "brief": "The Family Law Amendment (Information Sharing) Bill 2023 was moved to enhance information sharing between family law courts and state/territory child protection, police and firearms authorities, introducing new court orders for particulars and production of documents, and safeguards for sensitive information, with the aim of improving child safety and closing gaps between federal and state systems."
+  },
+  {
+   "slug": "speech-829773",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The Northern Australia Infrastructure Facility Amendment (Miscellaneous Measures) Bill 2023, the Infrastructure Australia Amendment (Independent Review) Bill 2023, the Family Law Amendment Bill 2023, the Family Law Amendment (Information Sharing) Bill 2023, and the Crimes and Other Legislation Amendment (Omnibus) Bill 2023 were referred to the Federation Chamber for further consideration at the adjournment of the debate on the second reading of each bill."
+  },
+  {
+   "slug": "speech-829780",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The coalition member argued the Family Law Amendment Bill 2023 contains untested solutions that could worsen outcomes for Australian families, opposing the repeal of the presumption of equal shared parental responsibility and raising concerns about enforcement, Indigenous children provisions, and independent children's lawyers."
+  },
+  {
+   "slug": "speech-829840",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-05-09",
+   "stage_hint": null,
+   "brief": "The coalition supports the intent of many measures in the Family Law Amendment Bill 2023 but cannot support it without further scrutiny, citing concerns over practical impacts in remote areas, lack of consultation on a review date change for the Federal Circuit and Family Court merger, and inadequate testing of solutions. The coalition will back a committee inquiry to examine the bill before finalising its position."
+  },
+  {
+   "slug": "speech-830058",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2023-05-11",
+   "stage_hint": null,
+   "brief": "The member moved amendments to the Family Law Amendment Bill 2023 requiring a reasonable attempt to consult on long‑term decisions, codifying the *Rice v Asplund* test for reopening final parenting orders before any hearing, and requiring a reasonable attempt to understand obligations as a defence to contravention. Further amendments sought to include family violence history and family violence orders as mandatory considerations, define repeated legal systems abuse as family violence, and add cultural‑linguistic background factors for children’s best interests. The government did not support the amendments, noting the bill would be referred to a committee."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Family Law Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00087",
+   "assent_date": "2023-11-06"
+  }
+ ]
+}

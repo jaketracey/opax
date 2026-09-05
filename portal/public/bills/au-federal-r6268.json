@@ -1,0 +1,160 @@
+{
+ "key": "au-federal-r6268",
+ "title": "Australian Veterans’ Recognition (Putting Veterans and their Families First) Bill 2019",
+ "short_title": "Australian Veterans’ Recognition (Putting Veterans and their Families First) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6268%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6268%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6268%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6268%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6268_ems_08a90c1d-29d5-4146-b739-b5dd33d94fad%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6268%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375079",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The Australian Veterans' Recognition (Putting Veterans and their Families First) Bill 2019 was introduced to establish an Australian Defence Veterans' Covenant enshrined in legislation, issue a veteran card and lapel pin, and require the Department of Veterans' Affairs to adopt a beneficial approach to claims."
+  },
+  {
+   "slug": "speech-376665",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Veterans' Recognition (Putting Veterans and their Families First) Bill 2019 but criticised the Australian Defence Veterans' Covenant for excluding currently serving ADF personnel and for lacking a legislative requirement for annual reporting to parliament. The opposition also criticised the veterans discount card for having no committed business partners and costing $11.1 million to rebadge the DVA healthcare card, while highlighting longest claim wait times of 547 days (VEA) and 548 days (DRCA)."
+  },
+  {
+   "slug": "speech-376672",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Veterans' Recognition Bill 2019, which legislates a commitment to veterans and creates a recognition program including a veterans card, lapel pin and covenant. He also noted presenting a Unit Citation for Gallantry to Vietnam veteran Geoffrey Eaton and acknowledged advocacy by constituents Graeme and Brent Mickelberg."
+  },
+  {
+   "slug": "speech-376673",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Veterans' Recognition (Putting Veterans and their Families First) Bill 2019 but criticised it for excluding currently serving members and lacking an annual reporting mechanism, noting a $171.6 million cut to the Department of Veterans' Affairs in the budget. They also praised local RSL sub-branches in Wollongong and Woonona Bulli, listing numerous executives and volunteers by name."
+  },
+  {
+   "slug": "speech-376674",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Veterans' Recognition (Putting Veterans and their Families First) Bill 2019, noting a total investment of over $11.5 billion in services for more than 280,000 veterans and families, an increase of $300 million. The bill introduces a Defence Veterans' Covenant with an oath, a Veterans' Recognition Program issuing a veterans' card for anyone with one day of continuous full-time service, a lapel pin, and a covenant printout, along with ongoing business concessions."
+  },
+  {
+   "slug": "speech-376676",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Veterans' Recognition (Putting Veterans and their Families First) Bill 2019, which creates an Australian Defence Veterans' Covenant, but argued the Morrison government's version omitted currently serving members and an annual reporting requirement. Labor referred the bill to the Senate Standing Committee on Foreign Affairs, Defence and Trade, which recommended passage, so no amendments were moved."
+  },
+  {
+   "slug": "speech-376825",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Veterans' Recognition Bill but argued it should include currently serving members and an annual reporting statement, and announced a Labor government would build the Scott Palmer Service and Veterans' Support Hub in Darwin, while raising concerns about possible DVA funding cuts and a rumoured move under Centrelink."
+  },
+  {
+   "slug": "speech-376826",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The Labor MP supported the Australian Veterans' Recognition Bill 2019, which establishes an Australian Defence Veterans' Covenant for veterans and their families, but argued it should also cover currently serving members and include annual parliamentary reporting on government obligations; Labor also committed $121 million over four years to address veterans unemployment, a Western Front Fellowship, a Senate inquiry into antimalarials in the ADF, and backing a royal commission into banking to include the Commonwealth Superannuation Corporation."
+  },
+  {
+   "slug": "speech-376830",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Veterans' Recognition Bill but argued it was an imperfect copy of Labor's earlier proposal, which would have included currently serving personnel and required annual parliamentary reporting on government obligations. The speaker noted the bill creates an Australian Defence Veterans' Covenant and a beneficial interpretation clause for veterans' legislation, while criticising the government's public service staffing cap for causing delays in the Department of Veterans' Affairs."
+  },
+  {
+   "slug": "speech-376831",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The Australian Veterans' Recognition (Putting Veterans and their Families First) Bill 2019 was supported, but criticised for excluding currently serving personnel from the covenant and for lacking reporting requirements to measure its effectiveness. Veterans consulted opposed a single ministry for Defence personnel and veterans and rejected insurance-style language for services, while strongly supporting a standalone Department of Veterans' Affairs and maintained services for war widows."
+  },
+  {
+   "slug": "speech-376832",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-03",
+   "stage_hint": null,
+   "brief": "The bill creates the Australian Defence Veterans' Covenant and a general recognition clause; Labor supports it but argues it should cover current serving members and require parliamentary reporting rather than annual reporting."
+  }
+ ],
+ "acts": []
+}

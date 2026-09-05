@@ -1,0 +1,195 @@
+{
+ "key": "au-federal-r6632",
+ "title": "Regulatory Powers (Standardisation Reform) Bill 2020",
+ "short_title": "Regulatory Powers (Standardisation Reform) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2021-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-03-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6632_ems_d6167c85-ebf7-4ceb-90fa-8b6a6a7e6f47%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6632_ems_4a5c8cf2-a3cc-4420-9b9e-78bf30079fbf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6632%22",
+   "document_date": "2020-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00032",
+   "document_date": "2021-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-03",
+  "sentences": [
+   "This bill would update six Commonwealth Acts to use standard regulatory powers from the Regulatory Powers Act.",
+   "It would replace existing regulatory regimes in some Acts with the standard provisions and add new powers to others.",
+   "The bill would amend the Defence Force Discipline Act 1982, Education Services for Overseas Students Act 2000, Fisheries Management Act 1991, Tertiary Education Quality and Standards Agency Act 2011, Tobacco Advertising Prohibition Act 1992, and Tobacco Plain Packaging Act 2011."
+  ],
+  "changes": [
+   "Replaces existing regulatory regimes in some Acts with standard provisions from the Regulatory Powers Act.",
+   "Adds additional regulatory powers to current regimes in some Acts.",
+   "Provides regulatory powers to Acts that currently lack them.",
+   "Includes modifications to standard powers where needed for effective regulation."
+  ],
+  "affected": "Regulatory agencies, businesses, and individuals subject to the regulatory powers in the six amended Acts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-399716",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The Regulatory Powers (Standardisation Reform) Bill 2020 was moved for a second reading to amend six Commonwealth acts—the Education Services for Overseas Students Act 2000, Fisheries Management Act 1991, Tertiary Education Quality and Standards Agency Act 2011, Defence Force Discipline Act 1982, Tobacco Advertising Prohibition Act 1992, and Tobacco Plain Packaging Act 2011—to trigger the standard provisions of the Regulatory Powers (Standard Provisions) Act 2014, repealing or narrowing bespoke regimes and making minor amendments to the act itself to expand monitoring powers and update offence descriptions."
+  },
+  {
+   "slug": "speech-403460",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Regulatory Powers (Standardisation Reform) Bill 2020 but raised concerns that schedule 1 could unnecessarily broaden regulatory monitoring powers, citing Law Council and Senate committee calls for clearer definitions, and moved a second reading amendment demanding greater certainty, stakeholder consultation, and justification for future changes."
+  },
+  {
+   "slug": "speech-403462",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The Regulatory Powers (Standardisation Reform) Bill 2020 amends six Commonwealth acts—including the Defence Force Discipline Act, Fisheries Management Act, and Tobacco Plain Packaging Act—to replace existing regulatory regimes with standardised provisions for monitoring, investigation, and enforcement. The bill is intended to simplify and streamline regulatory powers across the Commonwealth statute book."
+  },
+  {
+   "slug": "speech-403465",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Regulatory Powers (Standardisation Reform) Bill 2020, arguing it would reduce red tape and standardise regulatory powers across multiple acts, including the Fisheries Management Act and TEQSA, citing past regulatory overreach by TEQSA and the need for clearer compliance for businesses and industries like commercial fishing."
+  },
+  {
+   "slug": "speech-403466",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "Acting as a business owner, the member argued the Regulatory Powers (Standardisation Reform) Bill 2020 would streamline complex regulations that force businesses to close, citing an example of a cafe owner who shut down due to onerous award rules. The bill standardises regulatory powers across seven Commonwealth acts, including the Defence Force Discipline Act 1982, to enable investigation of service offences off Defence Force land."
+  },
+  {
+   "slug": "speech-403467",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-24",
+   "stage_hint": null,
+   "brief": "The Regulatory Powers (Standardisation Reform) Bill 2020 is the second tranche of amendments to standardise Commonwealth regulatory powers, aiming to simplify and streamline them, increase legal certainty, and ensure accountability."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Regulatory Powers (Standardisation Reform) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00032",
+   "assent_date": "2021-03-26"
+  }
+ ]
+}

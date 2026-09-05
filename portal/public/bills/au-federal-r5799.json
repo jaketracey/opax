@@ -1,0 +1,570 @@
+{
+ "key": "au-federal-r5799",
+ "title": "Parliamentary Entitlements Legislation Amendment Bill 2017",
+ "short_title": "Parliamentary Entitlements Legislation Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5799_ems_df6646b3-d889-4214-99e1-1a93561d5746%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5799%22",
+   "document_date": "2017-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00004",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-02-09",
+  "sentences": [
+   "This bill would tighten rules on travel benefits for current and former parliamentarians.",
+   "It would add a 25% penalty on incorrect travel claims and limit children's travel to those under 18.",
+   "The Life Gold Pass scheme would be renamed the Parliamentary Retirement Travel Entitlement, with benefits reduced or removed for most former members except former prime ministers."
+  ],
+  "changes": [
+   "Adds a 25% loading to certain travel claim adjustments.",
+   "Reduces the age limit for children's travel from 25 to 18.",
+   "Renames the Life Gold Pass scheme and cuts benefits.",
+   "Imposes expiry dates on travel entitlements.",
+   "Closes the scheme to new retirees after the bill starts.",
+   "Removes spouse travel except for former prime ministers."
+  ],
+  "affected": "Current and former parliamentarians, their spouses and children, and the Department of Finance.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:39:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4576",
+   "date": "2017-02-16",
+   "house": "senate",
+   "question": "Parliamentary Entitlements Legislation Amendment Bill 2017 - in Committee - Get rid of gold pass",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 9
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 11,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-16/8"
+  },
+  {
+   "key": "federal-senate-4577",
+   "date": "2017-02-16",
+   "house": "senate",
+   "question": "Parliamentary Entitlements Legislation Amendment Bill 2017 - in Committee - Former PMs and the gold pass",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 12,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-16/9"
+  },
+  {
+   "key": "federal-senate-4578",
+   "date": "2017-02-16",
+   "house": "senate",
+   "question": "Parliamentary Entitlements Legislation Amendment Bill 2017 - in Committee - Prime ministers",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 12
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 10,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-16/10"
+  },
+  {
+   "key": "federal-senate-4579",
+   "date": "2017-02-16",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr5799_amend_972809b4-931d-4b07-9b0c-43f8afd80192%22;rec=0) introduced by Australian Conservative Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi) (SA), which means it was unsuccessful. Senator Bernardi [explained that](http://www.openaustralia.org.au/senate/?gid=2017-02-16.190.1): > *I think it is only reasonable that those who retire from this place who are eligible for a defined benefit pension scheme are not able to access it until they reach the preservation age, like every other Australian, of 60 years of age. This will prevent circumstances where we have seen leaders of political parties in this place retire at the ripe old age of 38, or thereabouts, and they are still living on the taxpayers' purse.* ### Amendment text > *(1) Schedule 2 , page 19 (before line 4) , before heading specifying Parliamentary Entitlements Act 1990 , insert:* > *Parliamentary Contributory Superannuation Act 1948* > *1A At the end of section 18* > *Add:* >> *(13) Despite anything in this Act, any instrument under this Act or any other law relating to Parliamentary superannuation, a member is not entitled to any benefit under this Act, or any other law relating to Parliamentary superannuation, unless the member is at least 60 years old.*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 26,
+    "earliest": 6,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-16/11"
+  },
+  {
+   "key": "federal-senate-4580",
+   "date": "2017-02-16",
+   "house": "senate",
+   "question": "Parliamentary Entitlements Legislation Amendment Bill 2017 - in Committee - Gold Pass travel entitlement",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 11,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-16/12"
+  },
+  {
+   "key": "federal-senate-4581",
+   "date": "2017-02-16",
+   "house": "senate",
+   "question": "The majority voted against an amendment introduced by Senator [Nick Xenophon](https://theyvoteforyou.org.au/people/senate/sa/nick_xenophon) (SA), which means it was unsuccessful. There was one rebel voter in this division: Liberal Senator [Ian Macdonald](https://theyvoteforyou.org.au/people/senate/queensland/ian_macdonald) (Qld). Senator Macdonald voted Yes against the majority of the Liberal Party. Voting against your own party is know as [crossing the floor](http://www.peo.gov.au/learning/fact-sheets/crossing-the-floor.html). ### What was the amendment? Senator Xenophon explained that: > *This amendment provides for a loading. Then, if you breach the rules, if you make a claim for a payment that you should not have made, you are liable to pay at least double the amount to which the section applies ...* > *... In other words, if you are a repeat offender, you pay more, just like other laws that are enforced, whether it is traffic offences or other offences. If you are a repeat offender, you should pay more ...* > *...The current penalty of a 25 per cent loading is akin to being slapped with a piece of wet lettuce leaf. It is not effective. There is nothing like a financial penalty, given human nature, to keep people on their toes to make sure they comply. That is why this amendment is so important.* ### Amendment text > *(1) Schedule 2, item 7, page 23 (lines 31 to 33), omit subsection 10C(4), substitute:* > *(4) The recipient is liable to pay the Commonwealth, by way of penalty for the contravention of section 7A (the current contravention), an amount equal to:* > *(a) if the recipient has not contravened that section, or has contravened that section once, during the period of 12 months immediately preceding the day on which the claim to which the current contravention relates is made—200% of the amount to which this section applies; or* > *(b) if the recipient has contravened that section 2 or more times during the period of 12 months immediately preceding the da",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 11
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 8,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-16/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-340612",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-09",
+   "stage_hint": null,
+   "brief": "The bill terminates Life Gold Pass travel for all current holders except retired former prime ministers and their spouses, renames the remaining benefit to parliamentary retirement travel, removes spousal travel for other former parliamentarians, reduces travel for former prime ministers, imposes a 25 per cent penalty on adjusted travel claims unless corrected within 28 days, and establishes a constitutional mechanism for recovering overpayments."
+  },
+  {
+   "slug": "speech-341436",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-14",
+   "stage_hint": null,
+   "brief": "The opposition supported the Parliamentary Entitlements Legislation Amendment Bill 2017 to remove the Life Gold Pass from all current and future recipients, arguing the entitlement is inappropriate amid high economic insecurity and no longer meets community standards."
+  },
+  {
+   "slug": "speech-341490",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Parliamentary Entitlements Legislation Amendment Bill 2017, arguing that retrospectively abolishing the Life Gold Pass from 14 May 2014 for long-serving former MPs—who earned it over 21 years under different salary conditions—was a dangerous precedent, while supporting other provisions like a 25% loading for deliberate travel claim misrepresentations and limiting dependent children’s travel to under 18."
+  },
+  {
+   "slug": "speech-341491",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The speaker argued the Parliamentary Entitlements Legislation Amendment Bill is \"too little, too late\" and a kneejerk reaction, criticising the 25 per cent penalty loading on incorrect claims as insufficient while supporting the end of the Life Gold Pass for former MPs except Prime Ministers. They foreshadowed an amendment to substantially increase penalties and estimated that requiring economy class for flights under two hours would save over $2 million annually."
+  },
+  {
+   "slug": "speech-341493",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The Parliamentary Entitlements Legislation Amendment Bill 2017 accelerates the end of the Life Gold Pass travel scheme for all current holders except retired former prime ministers and their spouses, limits former prime ministers to 30 domestic return trips per year and their spouses to 20, and reduces the dependent child travel age from under-25 to under-18. The bill also introduces a 25% penalty loading on claims requiring adjustment unless due to departmental error or corrected within 28 days, and creates a mechanism to recover payments beyond entitlement."
+  },
+  {
+   "slug": "speech-341526",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-02-15",
+   "stage_hint": null,
+   "brief": "The Parliamentary Entitlements Legislation Amendment Bill 2017 was supported, which establishes an independent authority (modelled on the UK IPSA) to administer claims and provide monthly public disclosure of MPs' and senators' expenses. An amendment will be moved to add a community representative to the authority's board, which currently comprises the President of the Remuneration Tribunal, a former MP, a former judiciary member, and an auditor."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Parliamentary Entitlements Legislation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00004",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

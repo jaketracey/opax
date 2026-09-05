@@ -1,0 +1,249 @@
+{
+ "key": "au-federal-r6978",
+ "title": "Migration (Visa Pre-application Process) Charge Bill 2023",
+ "short_title": "Migration (Visa Pre-application Process) Charge Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2023-10-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-10-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6977_ems_32bce521-e17d-4b68-a671-46c7d5e25c96%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6978%22",
+   "document_date": "2023-02-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00085",
+   "document_date": "2023-10-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-16",
+  "sentences": [
+   "This bill is part of a package that would allow the minister to run a random selection process, called a ballot, for people to apply for certain visas.",
+   "The bill would impose a charge, which could be zero, on people who register for a ballot, with different amounts set by regulation.",
+   "The charge would be less than $100, indexed annually, and is treated as a tax because its link to the cost of running the ballot is unclear."
+  ],
+  "changes": [
+   "Imposes a charge on people who register for a visa pre-application ballot.",
+   "Allows different charges for different ballots and classes of people, set by regulation.",
+   "Treats the charge as a tax to comply with constitutional requirements."
+  ],
+  "affected": "People who register for a visa pre-application ballot, particularly those from Pacific countries and Timor-Leste.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:14Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7985",
+   "date": "2023-03-09",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-03-09.35.2) to agree with the bill after it was considered by the Federation Chamber. This means that they can now vote on whether to [pass it](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) in the House of Representatives. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/Migration_Amendment_Australia_Engagement_in_the_Pacific_and_Other_Measures_Bill_2023): > *The purpose of the Migration (Visa Pre-application Process) Charge Bill 2023 (the Charge Bill) is to impose a charge on a person who registers in a visa pre-application process as set out in the provisions of the Amendment Bill. A separate Bill is required to impose the charge as there is a possibility the proposed charges may amount to a tax and section 55 of the Constitution requires that a law imposing taxation must not deal with any other matter.*",
+   "stage": "Report from Federation Chamber",
+   "ayes": 86,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-03-09/4"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827777",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-16",
+   "stage_hint": null,
+   "brief": "The bill establishes a ballot-based visa pre-application process for the Pacific engagement visa, which will provide up to 3,000 permanent residency places annually for nationals of participating Pacific island countries and Timor-Leste from July 2023, without impacting existing skilled migration program places."
+  },
+  {
+   "slug": "speech-827778",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-16",
+   "stage_hint": null,
+   "brief": "The Migration (Visa Pre-application Process) Charge Bill 2023 imposes a nominal charge (up to A$100) on registered participants in visa pre-application processes, with a $25 fee for the Pacific engagement visa ballot to deter non-genuine applicants. The bill supports a new permanent Pacific engagement visa program to boost Pacific migration and strengthen regional ties."
+  },
+  {
+   "slug": "speech-828022",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-07",
+   "stage_hint": null,
+   "brief": "Five bills were referred to the Federation Chamber for further consideration: the Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023, the Migration (Visa Pre-application Process) Charge Bill 2023, the Australia Council Amendment (Creative Australia) Bill 2023, the Royal Commissions Amendment (Enhancing Engagement) Bill 2023, and the Treasury Laws Amendment (2023 Measures No. 1) Bill 2023."
+  },
+  {
+   "slug": "speech-828243",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The government announced the Pacific Engagement Visa, which will allocate up to 3,000 permanent residency places annually through a random ballot for nationals of Pacific countries and Timor-Leste, arguing it strengthens regional ties and avoids brain drain by not selecting on skills."
+  },
+  {
+   "slug": "speech-828419",
+   "speaker": "Anne Urquhart",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "Presented the Selection of Bills Committee's second report for 2023, referring the Governor-General Amendment (Cessation of Allowances in the Public Interest) Bill 2023, the Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023, and the Social Security (Administration) Amendment (Income Management Reform) Bill 2023 to committees for inquiry, with amendments setting reporting dates including 6 June 2023 for the income management bill and 13 June 2023 for the migration bill."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration (Visa Pre-application Process) Charge Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00085",
+   "assent_date": "2023-10-26"
+  }
+ ]
+}

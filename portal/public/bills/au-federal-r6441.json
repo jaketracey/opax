@@ -1,0 +1,250 @@
+{
+ "key": "au-federal-r6441",
+ "title": "Health Legislation Amendment (Data-matching and Other Matters) Bill 2019",
+ "short_title": "Health Legislation Amendment (Data-matching and Other Matters) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2019-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6441_ems_08e8f4c8-05a6-4c64-89a3-896528dee514%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6441%22",
+   "document_date": "2019-10-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00121",
+   "document_date": "2019-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-23",
+  "sentences": [
+   "This bill would allow the Chief Executive Medicare to match data from different health programs to check for incorrect payments and fraud.",
+   "It would let the Chief Executive Medicare authorise another Commonwealth agency to do the matching, and require the minister to set rules for how data is matched through a legislative instrument.",
+   "The bill would also let services funded by the Department of Veterans' Affairs be considered when deciding if a health practitioner has engaged in a prescribed pattern of inappropriate practice under the Professional Services Review scheme."
+  ],
+  "changes": [
+   "Authorises data matching for compliance-related purposes such as detecting overpayments, fraud, and inappropriate practice.",
+   "Requires the minister to make principles for data matching, including a public register of matched information and destruction of personal data when no longer needed.",
+   "Gives the Australian Information Commissioner oversight of the data matching scheme.",
+   "Extends the Professional Services Review scheme to include services provided under laws administered by the Minister for Veterans' Affairs for determining a prescribed pattern of services."
+  ],
+  "affected": "Health practitioners, Medicare and PBS claimants, the Chief Executive Medicare, the Australian Information Commissioner, and the Department of Veterans' Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:05Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6066",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2019-11-27.196.2) introduced by McMahon MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen) (Labor), which means it failed. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes that the real risk to Medicare is the Government's cuts and neglect\".*",
+   "stage": "Second reading",
+   "ayes": 61,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/29"
+  },
+  {
+   "key": "federal-representatives-6067",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "Health Legislation Amendment (Data-Matching and Other Matters) Bill 2019 - Third Reading - Vote without delay",
+   "stage": "Third reading",
+   "ayes": 69,
+   "noes": 53,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 40,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 121
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/30"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-385191",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Health Legislation Amendment (Data-matching and Other Matters) Bill 2019, which expands data-matching across agencies including Medicare, the PBS, and the Department of Home Affairs to combat a small number of fraudulent health providers. The party welcomed assurances that compliance activities will not be automated and that the Office of the Australian Information Commissioner will oversee the scheme, while moving a second reading amendment noting that the real risk to Medicare is government cuts and neglect."
+  },
+  {
+   "slug": "speech-385194",
+   "speaker": "Greg Hunt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The government will not accept the amendment but thanks the opposition for supporting the Health Legislation Amendment (Data-matching and Other Matters) Bill 2019, which aims to detect fraud, incorrect claiming and inappropriate practices in Medicare, PBS and child dental benefits through data matching, with oversight by the Australian Information Commissioner and strong privacy protections, noting that even 0.5% of improper payments costs around $180 million annually."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Legislation Amendment (Data-matching and Other Matters) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00121",
+   "assent_date": "2019-12-12"
+  }
+ ]
+}

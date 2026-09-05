@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7113",
+ "title": "Online Safety Amendment (Protecting Australian Children from Online Harm) Bill 2023",
+ "short_title": "Online Safety Amendment (Protecting Australian Children from Online Harm) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-27",
+ "originating_house": "representatives",
+ "sponsor": "COLEMAN, David, MP",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10783",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-08-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7113%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7113%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-08-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7113%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7113_ems_c873709b-c9b2-4d71-9744-02bdc6da3ef3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7113%22",
+   "document_date": "2023-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-27",
+  "sentences": [
+   "The bill would require the federal minister for online safety to run a test of tools that check how old a user is.",
+   "The test would follow a plan the eSafety Commissioner published in August 2023 for stopping children from seeing harmful material online.",
+   "The government had earlier rejected the idea of a test and instead wanted industry rules, but the Coalition supports the trial this bill would start."
+  ],
+  "changes": [
+   "Requires the minister to conduct an age verification trial.",
+   "Aligns the trial with the eSafety Commissioner's August 2023 Roadmap.",
+   "Responds to a referral from the former Coalition Government after the 2020 Protecting the Age of Innocence report."
+  ],
+  "affected": "The minister, the eSafety Commissioner, and children who might be protected from online harms such as pornography.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

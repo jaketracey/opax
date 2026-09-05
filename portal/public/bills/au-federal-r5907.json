@@ -1,0 +1,1202 @@
+{
+ "key": "au-federal-r5907",
+ "title": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017",
+ "short_title": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-15",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2017-10-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5907_ems_978e8b30-1d13-4ced-bfc2-428f25095021%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5907%22",
+   "document_date": "2017-06-15",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00113",
+   "document_date": "2017-10-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-4742",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, Commercial Broadcasting (Tax) Bill 2017 - Second Reading - Agree to bills' main idea",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-21/5"
+  },
+  {
+   "key": "federal-representatives-4743",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, Commercial Broadcasting (Tax) Bill 2017 - Consideration in Detail - 2 out of 3 cross-media control rule",
+   "stage": "Consideration in detail",
+   "ayes": 67,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-21/6"
+  },
+  {
+   "key": "federal-representatives-4744",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, Commercial Broadcasting (Tax) Bill 2017 - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 67
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 16,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-06-21/7"
+  },
+  {
+   "key": "federal-senate-4902",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority voted in favour of [adjourning the debate](http://www.openaustralia.org.au/senate/?gid=2017-09-11.217.1) and so put off further discussion on these bills until a later time. ### What do the bills do? The two bills are the: * [Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5907); and the * [Commercial Broadcasting (Tax) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5908). Most significantly, the bills were introduced to get rid of certain media ownership, control and diversity laws, like the ‘75% audience reach rule’, which stops commercial television broadcasting licensees from controlling licences if the combined licence area has a population over 75% of Australia' population. It would also get rid of the ‘2 out of 3 cross-media control rule’, which stops a company from having control over more than two out of three regulated media platforms in any one commercial radio licence area. Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd08).",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 36,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/11"
+  },
+  {
+   "key": "federal-senate-4903",
+   "date": "2017-09-11",
+   "house": "senate",
+   "question": "The majority supported continuing their discussion of the bill [on the next sitting day](http://www.openaustralia.org.au/senate/?gid=2017-09-11.219.1). In other words, they agreed to resume debate the next time they were sitting in the Senate. ### What do the bills do? The two bills are the: * [Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5907); and the * [Commercial Broadcasting (Tax) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5908). Most significantly, the bills were introduced to get rid of certain media ownership, control and diversity laws, like the ‘75% audience reach rule’, which stops commercial television broadcasting licensees from controlling licences if the combined licence area has a population over 75% of Australia' population. It would also get rid of the ‘2 out of 3 cross-media control rule’, which stops a company from having control over more than two out of three regulated media platforms in any one commercial radio licence area. Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd08).",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 36,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-11/12"
+  },
+  {
+   "key": "federal-senate-4917",
+   "date": "2017-09-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2017-09-13.191.1): > *That if by 7.20 pm today, the Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017 and the Commercial Broadcasting (Tax) Bill 2017 have not been finally considered then:* > > *(a) the routine of business from not later than 7.20 pm shall be consideration of the bills listed above; and* > > *(b) the Senate shall adjourn without debate after it has finally considered the bills or at 11 pm, whichever is the earlier.*",
+   "stage": "Business motion",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-13/9"
+  },
+  {
+   "key": "federal-senate-4918",
+   "date": "2017-09-13",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](http://www.openaustralia.org.au/senate/?gid=2017-09-13.212.20) introduced by WA Senator [Rachel Siewert](https://theyvoteforyou.org.au/people/senate/wa/rachel_siewert) (Greens). The amendment changes the second motion text - which is normally \"*That these bills be now read a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html)*\" - by adding: > *\"but the Senate is of the opinion that all free-to-air television broadcasters should use the financial relief afforded by the reduction in licensing fees to offer audio description services for people who are blind or vision-impaired, and ensure provisioning of captioning services on all broadcast programs aligning thus with the National Disability Strategy 2010-2020, which calls for all broadcast programs to be fully captioned\".* This change doesn't have any legal affect - that is, it won't force the Government to do what it asks for. However, it does have political influence in that it represents the will of the Senate. ### What does it mean to read the bills \"a second time\"? There are [several stages](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) that a bill must pass through before becoming law. When the Senate is asked to read a bill for the \"second time\", it means that they are being asked whether they agree with the main idea of the bill. If this vote is successful, they'll then go on to discuss it in greater detail. ### What do the bills do? The two bills are the: * [Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5907); and the * [Commercial Broadcasting (Tax) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5908). Most significantly, the bills were introduced to get rid of certain media ownership, control and diversity laws, like the ‘75% audience reach rule’, w",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-13/10"
+  },
+  {
+   "key": "federal-senate-4919",
+   "date": "2017-09-13",
+   "house": "senate",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, Commercial Broadcasting (Tax) Bill 2017 - Second Reading - Against non-statutory review",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-13/11"
+  },
+  {
+   "key": "federal-senate-4920",
+   "date": "2017-09-13",
+   "house": "senate",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, Commercial Broadcasting (Tax) Bill 2017 - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 18,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-13/12"
+  },
+  {
+   "key": "federal-senate-4921",
+   "date": "2017-09-13",
+   "house": "senate",
+   "question": "A large majority voted against [amendments](http://www.openaustralia.org.au/senate/?id=2017-09-13.224.1) to the bills introduced by SA Senator [Cory Bernardi](https://theyvoteforyou.org.au/people/senate/sa/cory_bernardi) (Australian Conservatives). Along with Bernardi, only Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) supported them. ### What were the amendments? See [the debate](http://www.openaustralia.org.au/senate/?id=2017-09-13.224.1) for a copy of the amendments as well as an explanation as to what they would change. Senator Bernardi, who introduced them, [told the Senate](http://www.openaustralia.org.au/senate/?gid=2017-09-13.230.1): > *I don't even agree with all of these amendments, quite frankly, but I have read the [standing orders](https://www.peo.gov.au/learning/fact-sheets/standing-orders.html) and I'm compelled to vote for them. I want to put that on the record. But please do not refer to these as the 'Bernardi amendments'. This is the Burston-McKenzie amendment package. I am just the conduit, the vessel, through which they have been introduced into the Senate in the most effective and efficient manner that there can possibly be.* ### What do the bills do? The two bills are the: * [Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5907); and the * [Commercial Broadcasting (Tax) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5908). Most significantly, the bills were introduced to get rid of certain media ownership, control and diversity laws, like the ‘75% audience reach rule’, which stops commercial television broadcasting licensees from controlling licences if the combined licence area has a population over 75% of Australia' population. It would also get rid of the ‘2 out of 3 cross-media control rule’, which stops a company fr",
+   "stage": "In committee",
+   "ayes": 2,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 33,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-13/13"
+  },
+  {
+   "key": "federal-senate-4926",
+   "date": "2017-09-14",
+   "house": "senate",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, Commercial Broadcasting (Tax) Bill 2017 - in Committee - 2-out-of-3 cross media rule",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-14/5"
+  },
+  {
+   "key": "federal-senate-4927",
+   "date": "2017-09-14",
+   "house": "senate",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, Commercial Broadcasting (Tax) Bill 2017 - in Committee - 2-out-of-3 cross media rule",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 15,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-14/6"
+  },
+  {
+   "key": "federal-senate-4928",
+   "date": "2017-09-14",
+   "house": "senate",
+   "question": "The majority voted against [amendments](http://www.openaustralia.org.au/senate/?gid=2017-09-14.235.1) introduced by SA Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens), which means they were rejected. ### What do the amendments do? Senator Hanson-Young [explained that](http://www.openaustralia.org.au/senate/?gid=2017-09-14.235.38) *\"These amendments put in place the power of the parliament to disallow the government's intended review to inquire into the ABC and SBS.\"* She argued that this was important in light of a [deal made between the Government and One Nation](http://www.abc.net.au/news/2017-08-16/labor-and-greens-slam-dirty-media-law-deal-wth-one-nation/8810826), which includes a commitment to hold a *\"competitive neutrality review\"* into the ABC and SBS - something that [the Australian Greens strongly oppose](http://www.openaustralia.org.au/senate/?id=2017-09-14.218.2). ### What do the bills do? The two bills are the: * [Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5907); and the * [Commercial Broadcasting (Tax) Bill 2017](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5908). Most significantly, the bills were introduced to get rid of certain media ownership, control and diversity laws, like the ‘75% audience reach rule’, which stops commercial television broadcasting licensees from controlling licences if the combined licence area has a population over 75% of Australia' population. It would also get rid of the ‘2 out of 3 cross-media control rule’, which stops a company from having control over more than two out of three regulated media platforms in any one commercial radio licence area. Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd08).",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 14,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-14/7"
+  },
+  {
+   "key": "federal-senate-4929",
+   "date": "2017-09-14",
+   "house": "senate",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, Commercial Broadcasting (Tax) Bill 2017 - in Committee - Agree with bills",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 14,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-14/8"
+  },
+  {
+   "key": "federal-senate-4930",
+   "date": "2017-09-14",
+   "house": "senate",
+   "question": "Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017 and another - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 14,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-09-14/9"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-349032",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The Australian government introduced the Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017 to modernise media regulation, including repealing broadcasting licence fees and datacasting charges, abolishing the 75% audience reach rule and the two-out-of-three cross-media control rule, and extending anti-siphoning reforms, with a $4.6 million annual transitional support package for 19 broadcasters. The bill also increases local content obligations for regional television licensees following a trigger event and is part of a broader reform package announced on 6 May 2017, supported unanimously by the media industry."
+  },
+  {
+   "slug": "speech-349033",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-15",
+   "stage_hint": null,
+   "brief": "The Commercial Broadcasting (Tax) Bill 2017 introduces a new spectrum tax to replace broadcasting licence fees, raising about $40 million annually and providing overall fee relief for broadcasters, with regional broadcasters paying significantly less based on transmitter power and spectrum use. The bill is part of the government's Broadcast and Content Reform Package, has unanimous industry support, and is contingent on the passage of the Broadcasting Reform Bill."
+  },
+  {
+   "slug": "speech-349825",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-20",
+   "stage_hint": null,
+   "brief": "Labor supported the majority of the broadcasting reform bills but opposed repealing the two-out-of-three cross-media rule, warning it would worsen Australia’s already high media ownership concentration and harm diversity, and criticised the government’s piecemeal approach for lacking holistic, evidence-based reform."
+  },
+  {
+   "slug": "speech-349885",
+   "speaker": "Keith Pitt",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, which abolishes the 75 per cent reach rule and the two-out-of-three cross-media rule, introduces higher local content obligations for regional commercial television licensees after ownership changes, and abolishes broadcasting licence fees while maintaining other diversity rules and the anti-siphoning list for major sporting events."
+  },
+  {
+   "slug": "speech-349886",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued against repealing the two-out-of-three rule, which limits media owners to two of three platforms (radio, TV, newspaper) in a market, citing that Murdoch-owned titles account for 64.2% of metropolitan circulation and Fairfax 26.4%, and that further concentration would harm democratic diversity. They supported other measures in the bill, including licence fee relief, but opposed removing the ownership restriction."
+  },
+  {
+   "slug": "speech-349888",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017 is necessary to modernise Australian media law, citing the 90% decline in Prime Media's value over a decade and a 14% drop in newspaper advertising in 2016, and supported abolishing the two-out-of-three and 75% ownership rules, reducing broadcast licence fees, banning gambling ads during children's sports broadcasts, revising the antisiphoning list, and providing a $30 million package for women's and niche sports on subscription TV."
+  },
+  {
+   "slug": "speech-349889",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The government argued that the Broadcasting Legislation Amendment Bill 2017 and Commercial Broadcasting (Tax) Bill 2017 will abolish broadcasting licence fees, introduce a spectrum tax, and remove the 75% audience reach rule and two-out-of-three rule while maintaining protections for local content and competition, with the package having unanimous media industry support."
+  },
+  {
+   "slug": "speech-349895",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The Commercial Broadcasting (Tax) Bill 2017 supports the Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017, particularly regarding spectrum fees, and was commended to the House."
+  },
+  {
+   "slug": "speech-354490",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the two amendments to the Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017 concerning programming requirements and trigger events, but argued the government’s media reform deal was made behind closed doors, citing 61% voter disapproval, $30 million in taxpayer-funded handouts to Fox Sports, and unanswered questions about a journalism innovation fund."
+  },
+  {
+   "slug": "speech-354492",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Legislation Amendment Bill 2017 is opposed by 61% of Australians and will cause job losses in regional Australia, not job creation. They criticised government deals with crossbenchers, including a $60 million fund for the Nick Xenophon Team and a competitive neutrality inquiry targeting the ABC."
+  },
+  {
+   "slug": "speech-354493",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Broadcasting Legislation Amendment (Broadcasting Reform) Bill 2017 is urgently needed to help Australian media businesses compete with global internet companies, and criticised the shadow minister for opposing the reforms with illogical arguments, including a claim that industry support for the bill disqualified it."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Broadcasting Legislation Amendment (Broadcasting Reform) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00113",
+   "assent_date": "2017-10-16"
+  }
+ ]
+}

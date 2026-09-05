@@ -1,0 +1,210 @@
+{
+ "key": "au-federal-r5337",
+ "title": "Health and Other Services (Compensation) Care Charges (Amendment) Bill 2014",
+ "short_title": "Health and Other Services (Compensation) Care Charges (Amendment) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2014-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5337_ems_2e72bf81-82b6-4faa-9231-182f0e9281bf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5337%22",
+   "document_date": "2014-09-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00127",
+   "document_date": "2014-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 5,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-25",
+  "sentences": [
+   "This bill is part of a two-bill package that also includes the Aged Care and Other Legislation Amendment Bill 2014, together addressing a gap in recovering past care costs for home care when a care recipient gets compensation.",
+   "The package would align home care cost recovery with existing residential care rules, allowing the Commonwealth to recover such costs from compensation payments.",
+   "The amendments that expand charges on compensation are placed in this separate bill to satisfy section 55 of the Constitution."
+  ],
+  "changes": [
+   "The bill would amend the Health and Other Services (Compensation) Care Charges Act 1995 to enable recovery of past home care costs from compensation payments.",
+   "The bill would remove the inequality between home and residential care in cost recovery.",
+   "The bill would help avoid delays in moving to residential care while compensation is pending.",
+   "The bill would reduce financial losses to the Commonwealth."
+  ],
+  "affected": "Home care recipients who receive compensation payments, and the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:38:00Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-299997",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300000",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300002",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300004",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300010",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300262",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-300263",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health and Other Services (Compensation) Care Charges (Amendment) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00127",
+   "assent_date": "2014-12-04"
+  }
+ ]
+}

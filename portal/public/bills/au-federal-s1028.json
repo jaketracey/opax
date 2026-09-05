@@ -1,0 +1,98 @@
+{
+ "key": "au-federal-s1028",
+ "title": "Australian Broadcasting Corporation Amendment (Rural and Regional Advocacy) Bill 2015",
+ "short_title": "Australian Broadcasting Corporation Amendment (Rural and Regional Advocacy) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2015-12-01",
+ "originating_house": "senate",
+ "sponsor": "MCKENZIE, Sen Bridget",
+ "sponsor_party": "Nationals",
+ "sponsor_person_id": "10758",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1028%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1028%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1028%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1028%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1028%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1028%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1028%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1028_ems_d60c7e47-87e2-43fe-9770-bf7ba50f8b15%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1028%22",
+   "document_date": "2015-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-12-01",
+  "sentences": [
+   "The bill would change the Australian Broadcasting Corporation's charter to improve services for rural and regional Australia.",
+   "It would require the ABC Board to include two members who live in regional areas and create a Rural and Regional Advisory Council.",
+   "The bill also sets up a way to check and report on how well the ABC meets its obligations to rural and regional audiences."
+  ],
+  "changes": [
+   "Amends the ABC's charter regarding rural and regional services.",
+   "Requires two regional-residing members on the ABC Board.",
+   "Establishes a Rural and Regional Advisory Council.",
+   "Creates a reporting mechanism for rural and regional service quality."
+  ],
+  "affected": "The Australian Broadcasting Corporation and rural and regional communities in each state and territory.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

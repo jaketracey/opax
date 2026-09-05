@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-r6563",
+ "title": "Public Governance, Performance and Accountability Amendment (Sustainable Procurement Principles) Bill 2020",
+ "short_title": "Public Governance, Performance and Accountability Amendment (Sustainable Procurement Principles) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-06-15",
+ "originating_house": "representatives",
+ "sponsor": "WILKIE, Andrew, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10727",
+ "portfolio": "(s) WILKIE, Andrew, MP",
+ "status": "lapsed",
+ "status_as_of": "2021-02-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6563%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-06-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6563%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6563%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6563_ems_1f6f9960-81a4-40d0-8ada-9c37ad154252%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6563%22",
+   "document_date": "2020-06-15",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-06-15",
+  "sentences": [
+   "The bill would require federal government agencies to buy recycled goods and consider sustainability when purchasing.",
+   "Agencies would have to ensure at least 30% of their goods procurement is recycled, and follow mandatory sustainable procurement principles.",
+   "The bill amends the Public Governance, Performance and Accountability Act 2013 and does not specify a start date."
+  ],
+  "changes": [
+   "Creates a duty for accountable authorities of Commonwealth entities to procure recycled goods.",
+   "Requires that at least 30% of an entity's procurement of goods is recycled goods.",
+   "Introduces mandatory sustainable procurement principles for purchasing decisions.",
+   "Requires consideration of goods that can be reused, repaired or recycled.",
+   "Requires preference for goods containing recycled material.",
+   "Requires consideration of environmental impacts and fair and ethical sourcing practices."
+  ],
+  "affected": "Commonwealth entities and their accountable authorities.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:02Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-392201",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-06-15",
+   "stage_hint": null,
+   "brief": "The bill amends the Public Governance, Performance and Accountability Act 2013 to require Commonwealth entities to ensure at least 30% of goods procured are recycled, and to apply mandatory sustainable procurement principles considering reuse, repair, recycling, environmental impacts and ethical sourcing. The speaker argued the measure is needed to address Australia’s 70 million tonnes of annual waste (only 55% recycled) and to create markets for recycled materials, citing support from the Waste Management and Resource Recovery Association of Australia."
+  }
+ ],
+ "acts": []
+}

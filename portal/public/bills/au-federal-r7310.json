@@ -1,0 +1,306 @@
+{
+ "key": "au-federal-r7310",
+ "title": "Social Security Legislation Amendment (Technical Changes) Bill 2025",
+ "short_title": "Social Security Legislation Amendment (Technical Changes) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2025-02-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2025-02-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7310_ems_a1ff3b68-3970-4428-b42a-1461b5342516%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7310%22",
+   "document_date": "2025-02-05",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00006",
+   "document_date": "2025-02-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-05",
+  "sentences": [
+   "The bill would create different payment rates for disability support pension recipients under 21 based on their living situation.",
+   "It would set a lower rate for those living with a parent and a higher rate for those living independently, matching longstanding policy.",
+   "The bill also confirms that rates for youth recipients do not depend on full-time study or apprenticeship status, and validates past rate decisions."
+  ],
+  "changes": [
+   "Creates different disability support pension rates for recipients under 21 depending on their circumstances.",
+   "Sets a lower rate for dependent youth living at home and a higher rate for independent youth.",
+   "Removes the effect of full-time study or apprenticeship status on youth disability support pension rates.",
+   "Validates past rate decisions for youth recipients that were based on the dependent rate."
+  ],
+  "affected": "Disability support pension recipients under 21 and the Department of Social Services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-9315",
+   "date": "2025-02-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of agreeing with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a second time. This means they can now consider it in more detail. ### What does this bill do? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7310_ems_a1ff3b68-3970-4428-b42a-1461b5342516%22;rec=0) (which is a political documents prepared by the party that introduces the bill): > *The Social Security Legislation Amendment (Technical Changes) Bill 2025 (the Bill) amends the Social Security Act 1991 to make provision for the payment of different rates for disability support pension recipients aged under 21, depending on their circumstances. This includes a lower single dependent living at home rate, and a higher independent rate, consisting with longstanding policy and service delivery arrangements.* The Minister for Social Security [Amanda Rishworth](https://theyvoteforyou.org.au/people/representatives/kingston/amanda_rishworth) (Kingston MP) [explained further](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/28686/&sid=0000) that: > *These technical amendments are necessary as a recent merits review decision highlighted an unintended consequence of the Employment and Workplace Relations Legislation Amendment (Welfare to Work and Other Measures) Act 2005. Those changes introduced the partial-capacity-to-work rule to the independence criteria, which was intended to apply to youth allowance recipients only. It's now understood that a drafting error in the 2005 amendments means that certain DSP recipients under 21 are impacted. This in turn affected the rates of support those recipients were entitled to receive. Without this bill, it would mean that arrangements would be at odds with the objective of Australia's Disability Strategy, providing a perverse incentive for",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 5,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 85,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-02-11/2"
+  },
+  {
+   "key": "federal-senate-9580",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2025-02-12.218.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. It would have added the text below to the usual second reading motion, which is \"that the bill be read a second time\" (which is parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) the Disability Support Pension (DSP) partner income test traps disabled people in abusive relationships by forcing people into a dynamic of financial dependency,* >> >> *(ii) the DSP partner income test also prevents members of the community from forming relationships and getting married, and genuine marriage and partner equality must include the abolition of the partner income test,* >> >> *(iii) the low rate of the DSP forces many disabled people in vicious cycles of poverty, fear and pain,* >> >> *(iv) the tightening of eligibility of the DSP forces many people living with disability to rely on the lower rate under JobSeeker, entrenching poverty and disadvantage,* >> >> *(v) poverty is a political choice; and* > > *(b) calls on the Government to:* > >> *(i) abolish the punitive partner income test for the DSP, and* >> >> *(ii) raise the rate of income support payments as a matter of urgency\".*",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/24"
+  },
+  {
+   "key": "federal-senate-9581",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2025-02-12.221.1) to read the bill for a second time (parliamentary jargon for agreeing with the main idea of the bill). This means the Senate can now discuss the bill in more detail. ### What does this bill do? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7310_ems_a1ff3b68-3970-4428-b42a-1461b5342516%22;rec=0) (which is a document prepared by the Government, which introduced the bill): > *The Social Security Legislation Amendment (Technical Changes) Bill 2025 (the Bill) amends the Social Security Act 1991 to make provision for the payment of different rates for disability support pension recipients aged under 21, depending on their circumstances. This includes a lower single dependent living at home rate, and a higher independent rate, consisting with longstanding policy and service delivery arrangements.* > > *The measures in the Bill make provision for appropriate rates to be available to disability support pension recipients under 21 (also referred to as “youth” recipients) based on their circumstances, including their family situation. For example, the dependent rate may be paid to youth recipients who are undertaking study or training while living at a home of their parent, and the independent rate may be paid to those living independently or away from home.* > > *The Bill provides that disability support pension rates for youth recipients are not affected by whether they are undertaking full-time study or are a new apprentice. This addresses the unintended impact on payment rates caused by the Employment and Workplace Relations Legislation Amendment (Welfare to Work and Other Measures) Act 2005.* > > *The Bill also validates past rate decisions and other matters that were previously based on the dependent rate, in relation to disability",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/25"
+  },
+  {
+   "key": "federal-senate-9582",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2025-02-12.223.1) to agree with the remaining stages of the bill and so pass the bill in the Senate. Because the bill has already been agreed to in the House of Representatives, it can now become law. ### What does this bill do? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7310_ems_a1ff3b68-3970-4428-b42a-1461b5342516%22;rec=0) (which is a document prepared by the Government, which introduced the bill): > *The Social Security Legislation Amendment (Technical Changes) Bill 2025 (the Bill) amends the Social Security Act 1991 to make provision for the payment of different rates for disability support pension recipients aged under 21, depending on their circumstances. This includes a lower single dependent living at home rate, and a higher independent rate, consisting with longstanding policy and service delivery arrangements.* > > *The measures in the Bill make provision for appropriate rates to be available to disability support pension recipients under 21 (also referred to as “youth” recipients) based on their circumstances, including their family situation. For example, the dependent rate may be paid to youth recipients who are undertaking study or training while living at a home of their parent, and the independent rate may be paid to those living independently or away from home.* > > *The Bill provides that disability support pension rates for youth recipients are not affected by whether they are undertaking full-time study or are a new apprentice. This addresses the unintended impact on payment rates caused by the Employment and Workplace Relations Legislation Amendment (Welfare to Work and Other Measures) Act 2005.* > > *The Bill also validates past rate decisions and other matters that were previously based on the dependent rate, in relatio",
+   "stage": "Third reading",
+   "ayes": 25,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 5,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/26"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194231",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194272",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-11",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1194522",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Security Legislation Amendment (Technical Changes) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00006",
+   "assent_date": "2025-02-14"
+  }
+ ]
+}

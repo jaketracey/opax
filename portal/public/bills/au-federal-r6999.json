@@ -1,0 +1,715 @@
+{
+ "key": "au-federal-r6999",
+ "title": "Jobs and Skills Australia Amendment Bill 2023",
+ "short_title": "Jobs and Skills Australia Amendment Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2023-08-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-08-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-08-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-08-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6999_ems_cca0a13b-31e3-4081-a2c0-6f61d5a32b1b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6999_ems_afe65d88-8c90-404f-a811-1e62d5a9ec0f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6999_ems_262a3f1f-05b0-4898-b78e-66a12a01a15e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6999%22",
+   "document_date": "2023-03-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00054",
+   "document_date": "2023-08-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2023-03-22",
+  "sentences": [
+   "The bill would make permanent the structure and duties of Jobs and Skills Australia, a body that gives independent advice to the government.",
+   "It would create a Commissioner and up to two Deputy Commissioners to lead the agency, and let the Minister set up an advisory board with representatives from states, unions, employers and others.",
+   "The Minister must order a review of the agency within two years of the changes starting, and table the review in Parliament."
+  ],
+  "changes": [
+   "Renames the head of the agency from Director to Commissioner.",
+   "Adds functions including advising on insecure work, analysing skills gaps, and publishing an annual work plan.",
+   "Requires a parliamentary review within two years of commencement."
+  ],
+  "affected": "Jobs and Skills Australia, the Minister, the Department of Employment and Workplace Relations, and stakeholders in vocational education, training and the labour market.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8095",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-05-11.4.2) to agree with the main idea of the bill. In other words, they voted to read it for a second time. This means that they can now consider it in greater detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd071a) summary: * *The [Jobs and Skills Australia Amendment Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6999) (the Bill) amends the Jobs and Skills Australia Act 2022 (the JSA Act) to provide for governance arrangements and functions of Jobs and Skills Australia (JSA).* * *The JSA Act established JSA as a statutory body within the Department of Employment and Workplace Relations (DEWR) and set out its interim functions and staffing arrangements, including establishing a JSA Director to commence JSA’s work.* * *This Bill establishes the permanent arrangements for JSA, following consultation.* * *The Bill amends the JSA Act to establish the role of the JSA Commissioner and JSA Deputy Commissioners, establish a Ministerial Advisory Board, and expand the functions of JSA. It also sets out transparency measures in relation to JSA’s work plan and reporting and provides for a review of the operation of the JSA Act in 2 years.*",
+   "stage": "Second reading",
+   "ayes": 90,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-11/1"
+  },
+  {
+   "key": "federal-representatives-8097",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "question": "Jobs and Skills Australia Amendment Bill 2023 - Consideration in Detail - Composition of advisory board",
+   "stage": "Consideration in detail",
+   "ayes": 84,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-11/3"
+  },
+  {
+   "key": "federal-representatives-8098",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2023-05-11.132.1) introduced by Farrer MP [Sussan Ley](https://theyvoteforyou.org.au/people/representatives/farrer/sussan_ley) (Liberal), which means it failed. ### What do these amendments do? Ms Farrer [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-11.132.1): > *The coalition is moving these amendments to alter the time line under which a review into the operation of the act must commence and to ensure a geographical spread of appointees.* ### Amendment text > *(4) Schedule 1, item 37, page 18 (line 4), omit \"2 years\", substitute \"12 months\".*",
+   "stage": "Consideration in detail",
+   "ayes": 83,
+   "noes": 59,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-11/4"
+  },
+  {
+   "key": "federal-representatives-8099",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "question": "Jobs and Skills Australia Amendment Bill 2023 - Consideration in Detail - Independent selection process",
+   "stage": "Consideration in detail",
+   "ayes": 78,
+   "noes": 14,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 92
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-11/5"
+  },
+  {
+   "key": "federal-representatives-8100",
+   "date": "2023-05-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/debate/?id=2023-05-11.138.1) introduced by Gorton MP [Brendan O'Connor](https://theyvoteforyou.org.au/people/representatives/gorton/brendan_o'connor) (Labor), which means they were successful and will now be part of the bill. ### What does the amendment do? Mr O'Connor [explained that](https://www.openaustralia.org.au/debate/?id=2023-05-11.138.1): > *The government amendments to the bill will expand representation in Jobs and Skills Australia's governance arrangements to ensure its analysis and advice continue to be informed by tripartite expertise, knowledge and lived experience of the labour market and skills systems. That includes those in small business and those in regional, rural and remote Australia.* ### Amendment text > *(1) Schedule 1, item 31, page 9 (lines 28 and 29), omit paragraphs 16B(1)(c) and (d), substitute:* > >> *(c) 4 members representing employee organisations;* >> >> *(d) 4 members representing employer organisations;* > > *(2) Schedule 1, item 31, page 10 (after line 16), after subparagraph 16B(4)(a)(ix), insert:* > >> *(ixa) regional, rural and remote Australia;*",
+   "stage": "Consideration in detail",
+   "ayes": 88,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-05-11/6"
+  },
+  {
+   "key": "federal-representatives-8269",
+   "date": "2023-08-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2023-08-07.127.1) to agree with the [Senate amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fsched%2Fr6999_sched_85518236-14e0-433c-910c-523e54f03ab3%22;rec=0). This means that the bill in its final form has now been agreed to in both the House and the Senate and so it will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd071a) summary: * *The [Jobs and Skills Australia Amendment Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6999) (the Bill) amends the Jobs and Skills Australia Act 2022 (the JSA Act) to provide for governance arrangements and functions of Jobs and Skills Australia (JSA).* * *The JSA Act established JSA as a statutory body within the Department of Employment and Workplace Relations (DEWR) and set out its interim functions and staffing arrangements, including establishing a JSA Director to commence JSA’s work.* * *This Bill establishes the permanent arrangements for JSA, following consultation.* * *The Bill amends the JSA Act to establish the role of the JSA Commissioner and JSA Deputy Commissioners, establish a Ministerial Advisory Board, and expand the functions of JSA. It also sets out transparency measures in relation to JSA’s work plan and reporting and provides for a review of the operation of the JSA Act in 2 years.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 79,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 29
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 128,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-07/1"
+  },
+  {
+   "key": "federal-senate-8274",
+   "date": "2023-08-07",
+   "house": "senate",
+   "question": "Jobs and Skills Australia Amendment Bill 2023 - Second Reading - TAFE funding and work conditions",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/5"
+  },
+  {
+   "key": "federal-senate-8275",
+   "date": "2023-08-07",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-08-07.82.2) introduced by WA Senator [Michaelia Cash](https://theyvoteforyou.org.au/people/senate/wa/michaelia_cash) (Liberal), which means it failed. ### What does this amendment do? Senator Cash [explained that](https://www.openaustralia.org.au/senate/?gid=2023-08-07.82.2): > *we're seeking to amend the bill to improve Jobs and Skills Australia through specifically establishing a role for Jobs and Skills Australia understanding and in respect of the volunteer sector.* > > *It actually emerged during a round table convened by the Deputy Leader of the Opposition last Friday with the peak skills organisations and the volunteer sector that currently the government does not adequately take into account the volunteering sector in its actual deliberations when it's looking at the jobs and skills that we do require going forward. This is a missed opportunity, because even though the work is predominantly unpaid across the volunteer sector, the sector still remains a large part of our workforce.* ### Amendment text > *(1) Schedule 1, item 12, page 4 (after line 25), after subparagraph 9(1)(a)(viii), insert:* > >> *(ix) the size, composition and skills requirements of the volunteer sector;*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/6"
+  },
+  {
+   "key": "federal-senate-8276",
+   "date": "2023-08-07",
+   "house": "senate",
+   "question": "Jobs and Skills Australia Amendment Bill 2023 - in Committee - Make up of JSA advisory board",
+   "stage": "In committee",
+   "ayes": 27,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/7"
+  },
+  {
+   "key": "federal-senate-8277",
+   "date": "2023-08-07",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-08-07.94.1) to pass the bill in the Senate. In other words, they voted to read it for a third time. This means that the bill will now be sent back to the House of Representatives, where our MPs will decide on whether they agree with the Senate amendments. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2223a/23bd071a) summary: * *The [Jobs and Skills Australia Amendment Bill 2023](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6999) (the Bill) amends the Jobs and Skills Australia Act 2022 (the JSA Act) to provide for governance arrangements and functions of Jobs and Skills Australia (JSA).* * *The JSA Act established JSA as a statutory body within the Department of Employment and Workplace Relations (DEWR) and set out its interim functions and staffing arrangements, including establishing a JSA Director to commence JSA’s work.* * *This Bill establishes the permanent arrangements for JSA, following consultation.* * *The Bill amends the JSA Act to establish the role of the JSA Commissioner and JSA Deputy Commissioners, establish a Ministerial Advisory Board, and expand the functions of JSA. It also sets out transparency measures in relation to JSA’s work plan and reporting and provides for a review of the operation of the JSA Act in 2 years.*",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 24,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 7,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-08-07/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-828794",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-22",
+   "stage_hint": null,
+   "brief": "The government introduced the Jobs and Skills Australia Amendment Bill 2023 to establish Jobs and Skills Australia as a permanent, independent statutory body with tripartite governance—including union, employer and state/territory representation—to provide labour market and skills advice. The bill expands its functions to include workforce forecasting, regional analysis, studies on insecure work and disadvantage, and skills needs related to migration, clean energy and foundation skills, alongside existing investments such as $6.3 billion for vocational education in 2022-23, 480,000 fee-free TAFE places, and 10,000 New Energy Apprenticeships."
+  },
+  {
+   "slug": "speech-829613",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The coalition supported the Jobs and Skills Australia Amendment Bill 2023 but will move amendments to remove mandated union representation on its ministerial advisory board, instead requiring small-business and rural/regional representatives and one member from each state and territory. They also propose an independent review within 12 months rather than two years, and will oppose the bill if the amendments are not supported, arguing the agency is not independent and the government is prioritising \"jobs for mates\" over merit."
+  },
+  {
+   "slug": "speech-829615",
+   "speaker": "Carina Garland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-03-30",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Jobs and Skills Australia Amendment Bill 2023 to establish a statutory body addressing Australia's skills crisis, with $6.3 billion allocated for VET, 180,000 fee-free TAFE places in 2023, and a new five"
+  },
+  {
+   "slug": "speech-829922",
+   "speaker": "Aaron Violi",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The coalition argued the Jobs and Skills Australia Amendment Bill 2023 would give unions up to 50% representation on the ministerial advisory board despite only 12.5% of employees being union members, and proposed amendments to remove three union seats, add small‑business and rural/regional/remote representatives, and mandate a review within 12 months."
+  },
+  {
+   "slug": "speech-829925",
+   "speaker": "Sam Rae",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The Jobs and Skills Australia Amendment Bill 2023 was argued to permanently establish Jobs and Skills Australia to address Australia’s skills crisis, citing the second-highest labour supply shortage among OECD countries, 65% employer recruitment difficulty (80% in construction), and a commitment to 180,000 fee-free TAFE places in 2023, growing to 480,000 over five years, with $6.3 billion for VET and a tripling of the bulk-billing incentive."
+  },
+  {
+   "slug": "speech-829957",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-05-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Jobs and Skills Australia Amendment Bill 2023 addresses a skills shortage caused by nine years of Liberal government neglect, which left 85,000 fewer apprenticeships than in 2013. The bill establishes Jobs and Skills Australia as a permanent statutory body with tripartite governance to provide independent advice on labour market needs, including a national study on adult literacy, numeracy, and digital literacy, and is backed by $6.3 billion for vocational education and training and fee-free TAFE places."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Jobs and Skills Australia Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00054",
+   "assent_date": "2023-08-17"
+  }
+ ]
+}

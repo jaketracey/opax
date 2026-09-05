@@ -1,0 +1,241 @@
+{
+ "key": "au-federal-r7290",
+ "title": "Health Legislation Amendment (Modernising My Health Record—Sharing by Default) Bill 2024",
+ "short_title": "Health Legislation Amendment (Modernising My Health Record—Sharing by Default) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health and Aged Care",
+ "status": "passed",
+ "status_as_of": "2025-02-14",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7290_ems_057fc16a-d9ed-4ba5-b50d-7e499ede914b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7290_ems_b4279af0-142b-4c88-be17-1c46ea3b7cd2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7290%22",
+   "document_date": "2024-11-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00008",
+   "document_date": "2025-02-14",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2024-11-21",
+  "sentences": [
+   "This bill would require key health information to be uploaded to a patient's My Health Record unless an exception applies.",
+   "Constitutional corporations that provide health services would have to register with My Health Record and upload information, and Medicare benefits for certain services would depend on that upload.",
+   "The rules specifying which services and information must be shared would be set out under the My Health Records Act 2012 and the Health Insurance Act 1973."
+  ],
+  "changes": [
+   "Requires constitutional corporations providing health services to register with My Health Record and upload health information.",
+   "Makes Medicare benefits for specific health services conditional on uploading information about those services.",
+   "Creates a process for prescribed healthcare providers to ask for extra time to update their systems.",
+   "Introduces new information-sharing powers to enforce the sharing-by-default requirements."
+  ],
+  "affected": "Constitutional corporations providing health services, healthcare recipients, and prescribed healthcare providers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9583",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-02-12.232.1) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Greens), which means it failed. It would have added the text below to the usual second reading motion, which is \"*that the bill be read a second time*\" (which is parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) significant barriers exist in accessing and transferring medical records for people in prisons, including minimal use of My Health Record, which disrupts continuity of care,* >> >> *(ii) the National Review of First Nations Health Care in Prisons (the Review) identified urgent reforms needed to address substandard healthcare in prisons, including improving access to medical records upon entry, transfer and release,* >> >> *(iii) recommendation 157 from the 1991 Royal Commission into Aboriginal Deaths in Custody (the Royal Commission) states that:* >> >>> *… efforts must be made by the Prison Medical Service to obtain a comprehensive medical history for the prisoner including medical records from a previous occasion of imprisonment, and where necessary, prior treatment records from hospitals and health services. In order to facilitate this process, procedures should be established to ensure that a prisoner's medical history files accompany the prisoner on transfer to other institutions and upon re-admission and that negotiations are undertaken between prison me dical, hospital and health services to establish guidelines for the transfer of such information,* >> >> *(iv) systemic issues, such as incompatible information systems, force individuals and their advocates to submit freedom of information requests to access their own medical records, further delaying appropriate care,* >> >> *(v) Aboriginal Community Controlled Heal",
+   "stage": "Health Legislation Amendment (Modernising My Health Record",
+   "ayes": 12,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 27,
+    "member": 6,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/27"
+  },
+  {
+   "key": "federal-senate-9584",
+   "date": "2025-02-12",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2025-02-12.235.1) introduced by Victorian Senator [Lidia Thorpe](https://theyvoteforyou.org.au/people/senate/victoria/lidia_thorpe) (Independent), which means they failed. The amendments related to medicare benefits payable for services provided to persons in prison and special arrangements for pharmaceutical benefits in prisons. ### Amendment text **SHEET 3250** > *That the House of Representatives be requested to make the following amendment:* > > *(1) Schedule 1, page 26 (after line 21), after item 25, insert:* > > *25A After subsection 19(2)* > > *Insert:* > >> *(2A) Despite subsection (2), a medicare benefit is payable in respect of a professional service if:* >> >>> *(a) the professional service has been rendered by, or on behalf of, or under an arrangement with:* >>> >>>> *(i) a State or an internal Territory; or* >>>> >>>> *(ii) an authority established by a law of a State or a law of an internal Territory; and* >>> >>> *(b) the professional service has been rendered in relation to a person who is in prison or has been recently released from prison; and* >>> >>> *(c) the professional service is of a kind specified in an instrument made under subsection (2B).* >> >> *(2B) The Minister must, by legislative instrument, specify one or more kinds of professional services for the purposes of paragraph (2A)(c).* >> >> *(2C) The first instrument made under subsection (2B) must be made by the end of the period of 12 months beginning on the day this subsection commences.* Statement pursuant to the order of the Senate of 26 June 2000 > *Amendment (1)* > >> *Amendment (1) is framed as a request because it amends the bill to increase the kinds of professional services in relation to which a Medicare benefit is payable. Specifically, it would require payments in relation to certain services provided to people in prison or recently released from prison. The amendment would therefore increa",
+   "stage": "Health Legislation Amendment (Modernising My Health Record",
+   "ayes": 14,
+   "noes": 23,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-02-12/28"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1194522",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-02-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Legislation Amendment (Modernising My Health Record—Sharing by Default) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00008",
+   "assent_date": "2025-02-14"
+  }
+ ]
+}

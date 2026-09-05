@@ -1,0 +1,578 @@
+{
+ "key": "au-federal-r6499",
+ "title": "Australian Education Amendment (Direct Measure of Income) Bill 2020",
+ "short_title": "Australian Education Amendment (Direct Measure of Income) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-02-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2020-03-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6499_ems_bb099c22-0e04-4d0b-afdd-bf7d7f3a76ca%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6499%22",
+   "document_date": "2020-02-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00036",
+   "document_date": "2020-03-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-02-26",
+  "sentences": [
+   "This bill would change how the Australian Government calculates funding for non-government schools by using a direct measure of parents' income instead of an area-based socioeconomic status score.",
+   "The new direct measure of income methodology would be set out in regulations, and schools would transition to it between 2020 and 2022 when it is most financially beneficial for them.",
+   "Non-government schools transitioning to an 80 per cent Commonwealth share of the Schooling Resource Standard would get an extra two years, until 2029, to adjust."
+  ],
+  "changes": [
+   "Replace the term 'SES score' with 'CTC score' in the Act.",
+   "Allow regulations to prescribe a new method for calculating a school's CTC score based on a direct measure of income.",
+   "Allow regulations to alter how the Commonwealth share is calculated and the transition period to manage adverse financial impacts.",
+   "Broaden the definition of 'majority Aboriginal and Torres Strait Islander school' and let the Minister determine such schools to avoid unintended application of the capacity to contribute methodology.",
+   "Amend the Act to provide clear authority and appropriation for GST-inclusive payments."
+  ],
+  "affected": "Non-government schools and their communities, including parents and legal guardians, as well as the Australian Government and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6298",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "question": "Australian Education Amendment (Direct Measure of Income) Bill 2020 - Second Reading - Stop Ms Hammond from speaking",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 78,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-04/2"
+  },
+  {
+   "key": "federal-representatives-6299",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "question": "Australian Education Amendment (Direct Measure of Income) Bill 2020 - Second Reading - Stop Mr Wallace from speaking",
+   "stage": "Second reading",
+   "ayes": 59,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-04/3"
+  },
+  {
+   "key": "federal-representatives-6300",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "question": "Australian Education Amendment (Direct Measure of Income) Bill 2020 - Second Reading - Stop Ms Allen from speaking",
+   "stage": "Second reading",
+   "ayes": 65,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 40
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-04/4"
+  },
+  {
+   "key": "federal-representatives-6301",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "question": "Australian Education Amendment (Direct Measure of Income) Bill 2020 - Second Reading - Stop Mr Leeser from speaking",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Labor": {
+     "ayes": 62,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-04/5"
+  },
+  {
+   "key": "federal-representatives-6302",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "question": "Australian Education Amendment (Direct Measure of Income) Bill 2020 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-04/6"
+  },
+  {
+   "key": "federal-representatives-6303",
+   "date": "2020-03-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-03-04.115.5) to suspend the usual procedural rules - known as [standing orders](https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/standing-orders/) - so that the [third reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) can be moved without delay. To read a bill for a third time is to pass it in the House.",
+   "stage": "Third reading",
+   "ayes": 77,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 66
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-03-04/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-388958",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-02-26",
+   "stage_hint": null,
+   "brief": "The Australian Education Amendment (Direct Measure of Income) Bill 2020 introduces a new methodology to calculate non‑government school communities’ capacity to contribute, replacing the previous socio‑economic status score with a direct measure of income. The bill will increase Commonwealth recurrent funding by an estimated $1.3 billion over 2019‑20 to 2022‑23 and $3.4 billion over ten years, with total Commonwealth education investment reaching over $314 billion from 2018 to 2029."
+  },
+  {
+   "slug": "speech-390019",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "Labor supported the bill's move to a direct measure of family income for non-government school funding but argued the government continues to neglect public schools, leaving them at only 95% of fair funding by 2023 while non-government schools reach 100%, and noted Australia's worst-ever PISA results in reading, maths and science."
+  },
+  {
+   "slug": "speech-390024",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The Australian Education Amendment (Direct Measure of Income) Bill introduces a more accurate methodology for calculating non-government schools' capacity to contribute, with an additional $1.3 billion in recurrent funding from 2019‑20 to 2022‑23 and $3.4 billion over ten years to 2028‑29, raising total Commonwealth investment to $314 billion. The bill implements recommendations from the National School Resourcing Board and increases per‑student funding for schools such as Beenleigh Special School, St Matthew’s Catholic Primary School, and St Philomena School in the Forde electorate."
+  },
+  {
+   "slug": "speech-390025",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The Australian Education Amendment (Direct Measure of Income) Bill 2020 changes funding for non-government schools to use actual parental income rather than the SES measure, which the speaker supported as correcting an aberration where schools in low-socioeconomic areas like Corio, Geelong attract disproportionate funding. The speaker noted 810 private schools will gain and 59 will lose funding, but criticised the bill for adding no money to public schools and failing to address overall education inequality."
+  },
+  {
+   "slug": "speech-390026",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The Australian Education Amendment (Direct Measure of Income) Bill 2020 is supported to ensure funding for every child regardless of school system choice, with the government committing a record $314 billion in recurrent school funding from 2018 to 2029, growing from $21 billion to $32 billion annually."
+  },
+  {
+   "slug": "speech-390033",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Education Amendment (Direct Measure of Income) Bill 2020 and its move from the SES model to a direct measure of income for funding non-government schools, noting $3.2 billion in transition funding and a $1.2 billion affordability fund. They also criticised the government for past cuts to education, including $3 billion from TAFE and $2.2 billion from universities."
+  },
+  {
+   "slug": "speech-390034",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill, arguing that the coalition’s approach of reform and targeted investment—rather than simply increasing spending—is needed to address a decline in Australian students’ PISA scores since 2000, with declines particularly during the Rudd–Gillard–Rudd government, which also presided over a $54½ billion deficit and proposed $387 billion in new taxes."
+  },
+  {
+   "slug": "speech-390037",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The Australian Education Amendment (Direct Measure of Income) Bill 2020 provides no funding for public schools while allocating $3.4 billion to private schools, with 99% of public schools projected to be funded below the Schooling Resource Standard by 2023 compared to 100% of private schools above it. The speaker argued for needs-based funding, noting that one in five public school teachers buy food or equipment for students and 45% buy clothes or toiletries out of their own pockets."
+  },
+  {
+   "slug": "speech-390039",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-390182",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The speech supported the Australian Education Amendment (Direct Measure of Income) Bill 2020, arguing it will replace the geographic socioeconomic score with a direct measure of parental income to allocate Commonwealth funding more fairly to non-government schools, with an extra $1.2 billion in transition funding and a goal of equal support for students with the same need by 2029."
+  },
+  {
+   "slug": "speech-390183",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Australian Education Amendment (Direct Measure of Income) Bill 2020, which shifts non‑government school funding to a direct measure of family income, but argued the government neglects public schools by spending $3.4 billion on private schools while refusing extra funding for under‑resourced public schools, and noted declining PISA results in reading, maths and science."
+  },
+  {
+   "slug": "speech-390184",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Australian Education Amendment (Direct Measure of Income) Bill 2020, stating it completes reforms to ensure all Australian school students receive equitable funding."
+  },
+  {
+   "slug": "speech-390189",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "Labor will not oppose the Australian Education Amendment (Direct Measure of Income) Bill 2020, which uses de-identified ATO data to calculate non-government school funding, and has referred it to a Senate inquiry while supporting the member for Sydney's amendment. The speech also criticised the Morrison government for funding public schools to only 20 per cent of the Schooling Resource Standard, citing declining literacy and numeracy results and the example of St Brendan's Catholic Primary School in Moorooka."
+  },
+  {
+   "slug": "speech-390190",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Education Amendment (Direct Measure of Income) Bill 2020, noting Centre Alliance secured $23.5 billion in total education funding—$4.9 billion above the original proposal—and a six-year timeline for underfunded schools to reach targets. The bill implements a National School Resourcing Board recommendation to calculate non-government school funding based on families' direct income rather than postcode-based socioeconomic scores."
+  },
+  {
+   "slug": "speech-390195",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "Labor supported the Australian Education Amendment (Direct Measure of Income) Bill 2020, which replaces the SES-based capacity-to-contribute score with a direct measure of median parental income for non-government schools, funded by a $3.4 billion budget allocation. The speaker also noted concerns from the Coalition for Regional Independent Schools (chair Stephen Higgs, representing 50 schools) about potential funding cuts, and criticised the lack of similar funding increases for the public education system."
+  },
+  {
+   "slug": "speech-390199",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "The Australian Education Amendment (Direct Measure of Income) Bill 2020 introduces a new methodology for calculating non-government schools' financial capacity, based on the 2018 National School Resourcing Board review, with $3.4 billion in additional funding for the direct measure and $1.2 billion for the Choice and Affordability Fund through 2029. The bill also adjusts transition rates for non-government schools to the schooling resourcing standard and establishes a review process by July 2020 for unique circumstances."
+  },
+  {
+   "slug": "speech-390206",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-03-04",
+   "stage_hint": null,
+   "brief": "Labor supports the Australian Education Amendment (Direct Measure of Income) Bill 2020, arguing it provides a more accurate measure of parental income for school funding. The change will likely increase Commonwealth funding for low-fee non-government schools drawing from lower-income communities."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Education Amendment (Direct Measure of Income) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00036",
+   "assent_date": "2020-03-26"
+  }
+ ]
+}

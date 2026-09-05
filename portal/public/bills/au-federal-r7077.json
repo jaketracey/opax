@@ -1,0 +1,54 @@
+{
+ "key": "au-federal-r7077",
+ "title": "National Housing Finance and Investment Corporation Amendment (Unlocking Regional Housing) Bill 2023",
+ "short_title": "National Housing Finance and Investment Corporation Amendment (Unlocking Regional Housing) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-11",
+ "originating_house": "representatives",
+ "sponsor": "HAINES, Helen, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10929",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-06-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7077%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7077%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7077%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7077_ems_0d518dd5-a283-48e7-9ef9-b5332655269f%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7077%22",
+   "document_date": "2023-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

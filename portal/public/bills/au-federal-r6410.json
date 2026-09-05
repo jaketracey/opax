@@ -1,0 +1,212 @@
+{
+ "key": "au-federal-r6410",
+ "title": "Treasury Laws Amendment (International Tax Agreements) Bill 2019",
+ "short_title": "Treasury Laws Amendment (International Tax Agreements) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6410_ems_3cd82a8c-fb53-4556-b8f5-b64e65436807%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6410%22",
+   "document_date": "2019-09-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00107",
+   "document_date": "2019-11-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5953",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (International Tax Agreements) Bill 2019 - Second Reading - Israel and national tax authorities",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 44
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-24/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-384119",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The mover proposed an amendment recognising Australia’s long-standing relationship with Israel and the need for tax authority cooperation, and argued the Treasury Laws Amendment (International Tax Agreements) Bill implements a 2019 double taxation convention with Israel to reduce withholding taxes, prevent tax evasion, and incorporate OECD BEPS provisions."
+  },
+  {
+   "slug": "speech-384120",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (International Tax Agreements) Bill 2019 eliminates double taxation between Australia and Israel, aiming to foster closer economic ties, support innovation, and prevent tax evasion, while not affecting Australia's support for a two-state solution."
+  },
+  {
+   "slug": "speech-384121",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The bill gives force of law to an Australia–Israel taxation treaty to prevent double taxation and introduces a general domestic source of income rule to streamline future tax negotiations. It cites 2018 bilateral trade of nearly $1.3 billion, 20 Israeli companies listed on the ASX, and states the treaty does not change Australia's commitment to a two-state solution."
+  },
+  {
+   "slug": "speech-384122",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Treasury Laws Amendment (International Tax Agreements) Bill 2019, which implements a tax treaty with Israel to eliminate double taxation and increase cooperation on tax avoidance, and highlighted research partnerships such as between the Baker Heart and Diabetes Institute and Sheba Medical Center. The speaker also referenced the case of Malka Leifer and stressed the importance of continuing pressure for her return to face justice."
+  },
+  {
+   "slug": "speech-384123",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (International Tax Agreements) Bill 2019 implements a new tax treaty between Australia and Israel, including a deemed-source-of-income rule. The treaty aims to boost trade and investment opportunities for Australian businesses and combat international tax avoidance."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (International Tax Agreements) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00107",
+   "assent_date": "2019-11-28"
+  }
+ ]
+}

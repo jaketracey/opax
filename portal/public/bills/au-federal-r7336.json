@@ -1,0 +1,195 @@
+{
+ "key": "au-federal-r7336",
+ "title": "Early Childhood Education and Care (Strengthening Regulation of Early Education) Bill 2025",
+ "short_title": "Early Childhood Education and Care (Strengthening Regulation of Early Education) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2025-08-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7336_ems_b5d2ad81-b493-4532-a381-76c7f90943a0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7336%22",
+   "document_date": "2025-07-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00031",
+   "document_date": "2025-08-02",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-23",
+  "sentences": [
+   "The bill would amend the Family Assistance Administration Act to strengthen regulation of early childhood education and care providers.",
+   "It would make quality and safety the main factor in approving and keeping provider approvals, and expand the Secretary's power to publicise enforcement actions.",
+   "Authorised persons could enter service premises without consent during operating hours, with written authorisation from the Secretary, and for In Home Care the Secretary must also be satisfied consent cannot reasonably be obtained."
+  ],
+  "changes": [
+   "Make quality and safety the paramount consideration for approving and maintaining child care subsidy provider approvals.",
+   "Expand the Secretary's power to publicise actions such as suspensions, cancellations, conditions, refusals and infringement notices.",
+   "Allow authorised persons to enter approved service premises without consent during operating hours or ordinary business hours.",
+   "Streamline the process for applying for monitoring warrants by allowing the Secretary to delegate that power to a limited cohort of officers."
+  ],
+  "affected": "Early childhood education and care providers, particularly those administering the Child Care Subsidy, and In Home Care services.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9669",
+   "date": "2025-07-31",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Victorian Senator [Steph Hodgins-May](https://theyvoteforyou.org.au/people/senate/victoria/steph_hodgins-may) (Greens). ### Amendment text > *At the end of the motion, add \", but the Senate:* > > *(a) notes the need for broader reform to make early childhood education and care universal and high-quality; and* > > *(b) calls on the Government to establish an independent national Early Childhood Education and Care Commission, which should:* > >> *(i) have regulatory powers to monitor and enforce compliance with the National Quality Standards,* >> >> *(ii) be tasked with leading national coordination and sector-wide reform, and* >> >> *(iii) drive the long-term transition to a free, universal and high-quality early education system\".*",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-31/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195671",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Early Childhood Education and Care (Strengthening Regulation of Early Education) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00031",
+   "assent_date": "2025-08-02"
+  }
+ ]
+}

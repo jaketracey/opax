@@ -1,0 +1,473 @@
+{
+ "key": "au-federal-r6213",
+ "title": "Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-10-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-03-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-02-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-03-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6213_ems_17aa08fb-610b-4eef-ae53-cc157e44fb58%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6213_ems_5e8c09e1-ed6e-4414-b93a-504069cf1238%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6213_ems_33c00c5c-5a07-41ac-bdab-b6212e81d691%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6213%22",
+   "document_date": "2018-10-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00017",
+   "document_date": "2019-03-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-10-24",
+  "sentences": [
+   "The bill would create tougher penalties for misconduct in corporate and financial sectors.",
+   "It would update criminal and civil penalties in laws overseen by the Australian Securities and Investments Commission, including new formulas for fines and expanded civil penalty rules.",
+   "The bill would also let courts prioritise compensating victims over collecting financial penalties."
+  ],
+  "changes": [
+   "Increase maximum prison terms for some criminal offences.",
+   "Introduce a method to set financial penalties for criminal offences.",
+   "Remove imprisonment and raise fines for all strict and absolute liability offences.",
+   "Add ordinary criminal offences alongside strict and absolute liability offences.",
+   "Expand the civil penalty regime by raising fines and covering more offences.",
+   "Harmonise and broaden the infringement notice system."
+  ],
+  "affected": "Companies and individuals in the corporate and financial sector.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:50Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5553",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "question": "The majority voted against [opposition amendments](https://www.openaustralia.org.au/debate/?id=2018-11-28.124.2), which means they failed. The amendments related to the cap the Government is placing on civil penalties, which the Opposition oppose because, according to Labor MP [Clare O'Neil](https://theyvoteforyou.org.au/people/representatives/hotham/clare_o'neil): > \"*it's very out of step with other pecuniary penalties handed down in Australia and overseas. It is out of step with the contemporary reality of financial service providers and banks, and it creates a regime that's not effectively futureproofed as our financial institutions continue to grow in size.* > *I want to note that the Consumer Action Law Centre was very strong on this point when they made a submission to the ASIC enforcement reviews processes. I'm going to quote a little bit from their submission. They said, 'We are not convinced that theirs is a strong policy justification for introducing a maximum limit on civil penalties of one million penalty units, that's currently $210 million. Setting a maximum does not recognise that there are large differences in size of banks, insurers and superannuation funds and that a penalty in excess of this amount may be appropriate in the context of very large corporations.'*\" ### What is this bill about? The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6213) was introduced to \"*introduce a stronger penalty framework for corporate and financial sector misconduct*\". It was introduced in response to recommendations made by the [ASIC Enforcement Review Taskforce report](https://treasury.gov.au/review/asic-enforcement-review/).",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-11-28/2"
+  },
+  {
+   "key": "federal-representatives-5554",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "question": "The majority voted against a [Labor Party amendment](https://www.openaustralia.org.au/debate/?id=2018-11-28.137.1) that would have increased the term of imprisonment of the offences included in the bill from 10 years to 15 years. ### What is this bill about? The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6213) was introduced to \"*introduce a stronger penalty framework for corporate and financial sector misconduct*\". It was introduced in response to recommendations made by the [ASIC Enforcement Review Taskforce report](https://treasury.gov.au/review/asic-enforcement-review/).",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 141
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-11-28/3"
+  },
+  {
+   "key": "federal-senate-5568",
+   "date": "2018-11-29",
+   "house": "senate",
+   "question": "The majority voted against [paragraph (c)](https://www.openaustralia.org.au/senate/?gid=2018-11-29.22.1) of the amendment moved by Tasmanian Senator [Anne Urquhart](https://theyvoteforyou.org.au/people/senate/tasmania/anne_urquhart) (Labor), which means it failed. ### Amendment text > *At the end of the motion, add: ...* > > *(c) and, in respect of the [Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr6213%22), the provisions of the bill be referred immediately to the Economics Legislation Committee for inquiry and report by 8 February 2019; ...*",
+   "stage": "Committee motion",
+   "ayes": 31,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 34,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-29/3"
+  },
+  {
+   "key": "federal-senate-5669",
+   "date": "2019-02-13",
+   "house": "senate",
+   "question": "The majority voted against [clause (e)](https://www.openaustralia.org.au/senate/?gid=2019-02-13.15.21) of the [motion](https://www.openaustralia.org.au/senate/?gid=2019-02-13.15.1) moved by Victorian Senator [Jacinta Collins](https://theyvoteforyou.org.au/people/senate/victoria/jacinta_collins) (Labor), which means it failed. ### Motion text > *That: [...]* > > *(e) at the conclusion of consideration of the message, government business order of the day No.4 [Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr6213%22) shall be called on and have precedence over all government business until determined.*",
+   "stage": "Business motion",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 20,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-02-13/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-373137",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The Labor MP supported the Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018 and moved a second reading amendment criticising the government’s continued failure to address corporate misconduct, while arguing the bill strengthens penalties for white-collar crime but does not go far enough given revelations from the banking royal commission."
+  },
+  {
+   "slug": "speech-373140",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018 increases maximum imprisonment penalties for serious white-collar crimes, raises civil penalties for individuals by more than fivefold and for corporations by more than tenfold, and allows courts to impose penalties up to three times the benefit gained or 10% of annual turnover (capped at $210 million). Courts will also be required to prioritise compensating victims over collecting penalties from offenders."
+  },
+  {
+   "slug": "speech-373141",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The Labor MP supported the Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018, arguing stronger penalties are needed to deter corporate misconduct. They criticised the government for voting against a banking royal commission 26 times and noted that only 27 of over 10,000 victims who made submissions to the commission were heard in person."
+  },
+  {
+   "slug": "speech-373142",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018 for tougher corporate penalties, but criticised the banking royal commission for failing to adequately investigate systemic foreclosures of small businesses and farmers, citing inadequate time, limited victim hearings, and unexamined misconduct by receivers and valuers. The speaker called on the Treasurer to direct the Small Business and Family Enterprise Ombudsman to investigate third-party agents and urged a ban on banks using non-financial covenants to foreclose on performing loans."
+  },
+  {
+   "slug": "speech-373147",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The government’s Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018 raises civil penalties up to 500% (to a maximum of $1 million or three to five times the benefit gained) and quadruples criminal penalties, including imprisonment up to 10 years, following broad consultation across jurisdictions. The speaker rejected the opposition’s call for a 700% increase as a stunt, arguing the government’s substantial increases already provide a strong deterrent against misconduct."
+  },
+  {
+   "slug": "speech-373149",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The Greens member supported amendments to the Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018, noting that several measures—including penalties of three times the benefit gained, increased administrative penalties, and relinquishment orders—originated from the Greens' election policy and were now reflected in the bill."
+  },
+  {
+   "slug": "speech-373150",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment Bill 2018, arguing that proposed increases—such as criminal penalties rising from $200,000 to $1.03 million and civil penalties from $1 million to $10.5 million—are sufficient deterrents, and criticised the opposition’s push for even tougher measures as unhelpful."
+  },
+  {
+   "slug": "speech-373154",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment bill but argued it falls short, moving amendments to increase jail terms and remove the $210 million penalty cap for big business. The argument also referenced the Abbott-Turnbull-Morrison government's resistance to a banking royal commission, ASIC's finding that 75% of advice files failed best-interest obligations, and CBA charging dead customers for over a decade."
+  },
+  {
+   "slug": "speech-373168",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Bill 2018 increases criminal penalties by 400 per cent, with the government asserting it has struck a decent balance in line with global jurisdictions and is satisfied with the harshness of the penalties."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Strengthening Corporate and Financial Sector Penalties) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00017",
+   "assent_date": "2019-03-12"
+  }
+ ]
+}

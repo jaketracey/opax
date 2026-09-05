@@ -1,0 +1,206 @@
+{
+ "key": "au-federal-r5442",
+ "title": "Social Services Legislation Amendment Bill 2015",
+ "short_title": "Social Services Legislation Amendment Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-03-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5442_ems_d49f0d6a-f132-4fc1-8c63-c6d395531301%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5442%22",
+   "document_date": "2015-03-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-03-25",
+  "sentences": [
+   "The bill would stop social security payments for people held in psychiatric confinement after being charged with a serious violent offence.",
+   "It would treat such confinement as disqualifying regardless of whether the person is undergoing rehabilitation, reversing a Federal Court ruling that allowed payments in some cases.",
+   "The change would start on 1 July 2015, as stated in the 2014-15 Mid-Year Economic and Fiscal Outlook."
+  ],
+  "changes": [
+   "The bill would deny social security payments to people in psychiatric confinement due to serious criminal charges.",
+   "It would define a serious offence as violent crimes like murder, attempted murder, manslaughter, rape, and attempted rape.",
+   "The bill would allow payments during a period of integration back into the community."
+  ],
+  "affected": "People charged with serious violent offences who are in psychiatric confinement.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:57:31Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3786",
+   "date": "2015-05-28",
+   "house": "representatives",
+   "question": "Jenny Macklin I am speaking today on the Social Services Legislation Amendment Bill 2015. This bill will take income support payments away from people in psychiatric confinement who are charged with a serious offence and who are undergoing a course of rehabilitation. Since 1986, legislation has provided that a person undergoing psychiatric confinement who is undertaking a course of rehabilitation can receive income support payments. They are people who have been found to be suffering very serious mental health issues like schizophrenia; bipolar disorder; intellectual disabilities; acquired brain injuries from a car, sporting accident or a stroke; and other conditions that impair mental functioning. The people impacted by this measure will have been charged with serious offences, which is why any change to the arrangements for people in psychiatric confinement needs to be properly considered. Any change should be based on extensive consultation and debated sensitively. Unfortunately, the government has not consulted on the changes in this bill prior to its announcement. The government did not speak to the patients who may be impacted by these measures, to their families or to their carers. They did not speak to the mental health advocacy organisations or to state and territory governments. They did not speak to the psychiatric institutions that provide the care. Little has changed since the announcement. No genuine effort has been made to communicate this decision to make sure that those impacted by the measure are aware of the change and can prepare accordingly. The government has left mental health services to communicate with patients, families and carers. This is just not good enough. A proper process of consultation is needed for such a complex, sensitive and serious matter. Today's consideration of the bill pre-empts the findings of a Senate inquiry. A public hearing as part of that inquiry was held only last week. There have been 26 written submissions to the",
+   "stage": "Second reading",
+   "ayes": 79,
+   "noes": 44,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-05-28/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-311067",
+   "speaker": "Jenny Macklin",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Social Services Legislation Amendment Bill 2015 would remove income support from people in psychiatric confinement charged with serious offences, undermining rehabilitation and shifting costs to states and families, and criticised the government for failing to consult—noting 26 submissions opposed the bill, Queensland would lose $850 per patient per fortnight and incur $150,000 extra weekly costs, and the government had previously cut $80 billion from school and hospital funding."
+  },
+  {
+   "slug": "speech-311068",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The speaker argued that social security payments should be stopped for people charged with serious violent offences—such as murder, rape, or offences punishable by at least seven years' imprisonment—who are confined to psychiatric institutions due to mental impairment and not yet convicted or unfit to stand trial, saving over $30 million and affecting about 350 people initially. The bill preserves payments during community reintegration and for those with non-serious offences or in psychiatric confinement unrelated to an offence."
+  },
+  {
+   "slug": "speech-311069",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment Bill 2015 would cease social security payments to people in psychiatric confinement charged with serious offences, treating them like prisoners, but the speaker argued it was rushed, lacked consultation, and could hinder rehabilitation while shifting about $50 million in costs to states."
+  },
+  {
+   "slug": "speech-311070",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment Bill 2015, which denies social security payments to people undergoing psychiatric confinement after being charged with a serious offence (such as murder, rape, or manslaughter), saving approximately $29.6 million over the forward estimates and affecting about 350 people initially and 50 each year thereafter."
+  },
+  {
+   "slug": "speech-311071",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The speaker supported the Social Services Legislation Amendment Bill 2015, which stops social security payments for people in psychiatric confinement after being charged with a serious offence, aligning them with prisoners and removing any monetary incentive to plead mental unfitness. Payments would cease from 1 July 2015, with the minister deciding the integration period for resumption of benefits."
+  },
+  {
+   "slug": "speech-311072",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-05-28",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment Bill 2015 will cease social security payments from 1 July 2015 for people in psychiatric confinement after being charged with serious violent offences such as murder or rape, shifting responsibility to state governments, with payments resuming when reintegration into the community begins."
+  }
+ ],
+ "acts": []
+}

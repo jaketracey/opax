@@ -1,0 +1,101 @@
+{
+ "key": "au-federal-s1451",
+ "title": "Higher Education Support Amendment (End Dirty University Partnerships) Bill 2025",
+ "short_title": "Higher Education Support Amendment (End Dirty University Partnerships) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-02-13",
+ "originating_house": "senate",
+ "sponsor": "FARUQI, Sen Mehreen",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10912",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1451%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1451%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1451%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1451%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1451%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1451%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1451_ems_12ddb061-97df-4e67-b57e-9df7b87ca814%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1451%22",
+   "document_date": "2025-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-02-13",
+  "sentences": [
+   "This bill would stop universities that get Commonwealth money from having financial ties with certain harmful industries.",
+   "Universities would have to reveal all current partnerships with those industries and sell off any related investments.",
+   "The bill names the fossil fuel, gambling, tobacco and weapons industries and lets the minister add more industries by a legislative instrument."
+  ],
+  "changes": [
+   "Prohibits monetary partnerships between Commonwealth-funded universities and identified harmful industries.",
+   "Requires universities to disclose and divest from all partnerships and investments with those industries.",
+   "Bans universities from appointing leaders who have investments in those industries to their governing body."
+  ],
+  "affected": "Commonwealth-funded universities and their governing bodies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:04:12Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195265",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

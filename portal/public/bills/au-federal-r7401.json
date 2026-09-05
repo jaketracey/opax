@@ -1,0 +1,222 @@
+{
+ "key": "au-federal-r7401",
+ "title": "Migration Amendment (Combatting Migrant Exploitation) Bill 2025",
+ "short_title": "Migration Amendment (Combatting Migrant Exploitation) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-06",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2026-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-04-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-04-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7401_ems_bb9926e7-daf0-453b-af1d-9d03287a4712%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7401%22",
+   "document_date": "2025-11-06",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00039",
+   "document_date": "2026-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-06",
+  "sentences": [
+   "The bill would create a public list of employers who are allowed to sponsor skilled migrants.",
+   "The Department of Home Affairs would host the list on its website, showing each sponsor's name, business number, location, how many workers they have sponsored and the jobs those workers do.",
+   "The government says this would help temporary skilled migrants find new legitimate sponsors and reduce their risk of exploitation."
+  ],
+  "changes": [
+   "Establishes a public register of approved work sponsors.",
+   "Requires the register to include sponsor names, Australian Business Numbers, postcodes, numbers of nominated workers and their occupations.",
+   "Directs the Department of Home Affairs to maintain the register on its website."
+  ],
+  "affected": "Temporary skilled migrant workers and employers who sponsor them under standard business or accredited sponsorship arrangements.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-10201",
+   "date": "2026-04-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2026-04-01.70.1) to read the bill for a second time, which is parliamentary jargon for agreeing with the main idea of the bill. ### What is the bill's main idea? According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7401_ems_bb9926e7-daf0-453b-af1d-9d03287a4712%22;rec=0), which a document prepared by the Government (the party that introduced the bill): > *On 11 December 2023, the Australian Government released its Migration Strategy outlining reform directions for Australia’s skilled visa programs. The Migration Strategy is informed by extensive consultation with business, unions and other stakeholders, and more than 450 submissions received as part of the Review of the Migration System. The Migration Strategy includes reforms targeting temporary skilled migration to address skills needs and promote worker mobility.* > > *Australia’s skilled migration framework includes mechanisms aimed at ensuring that holders of certain skilled temporary visas are offered remuneration and employment conditions that are at least equivalent to what is, or would be, provided to an Australian worker performing the same work at the same location.* > > *The Migration Amendment (Combatting Migrant Exploitation) Bill 2025 (the Bill) contains amendments of the Migration Act 1958 (the Migration Act) to implement a commitment made by the Government in the Migration Strategy. The amendments in the Bill will allow for the implementation and maintenance of a public register of approved work sponsors. This register, which will be maintained on the website of the Department of Home Affairs, will promote transparency and worker mobility for temporary skilled migrant workers in Australia.* > > *The amendments in the Bill will amend the Migration Act to provide for the publication of a r",
+   "stage": "Limitation of debate",
+   "ayes": 36,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-04-01/24"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1198461",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-06",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199041",
+   "speaker": "Alex Hawke",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1199168",
+   "speaker": "Rowan Holzberger",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-11-27",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Combatting Migrant Exploitation) Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00039",
+   "assent_date": "2026-04-08"
+  }
+ ]
+}

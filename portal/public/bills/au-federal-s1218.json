@@ -1,0 +1,809 @@
+{
+ "key": "au-federal-s1218",
+ "title": "National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019",
+ "short_title": "National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-25",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "National Disability Insurance Scheme",
+ "status": "passed",
+ "status_as_of": "2019-12-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-12-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1218_ems_a0cbc30c-db42-4e94-9e06-fb7f245afaf5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1218_ems_2f32d2c9-b814-4c37-9981-5e324eeb14be%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1218_ems_ef750937-b2e6-4842-ae65-076330795cb7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1218%22",
+   "document_date": "2019-07-25",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00113",
+   "document_date": "2019-12-09",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2019-07-25",
+  "sentences": [
+   "The bill would improve how the National Disability Insurance Scheme Act 2013 operates by introducing simpler governance arrangements.",
+   "Schedule 2 would require the CEO or any officer of the National Disability Insurance Agency, and the NDIS Quality and Safeguards Commissioner or any Commission officer, to comply with a formal notice or summons from a Royal Commission to produce documents, information or give evidence, subject only to public interest immunity.",
+   "Producing or disclosing information or giving evidence under the Royal Commission requirement would not breach the confidentiality provisions of the National Disability Insurance Scheme Act 2013."
+  ],
+  "changes": [
+   "Introduce streamlined governance arrangements under the National Disability Insurance Scheme Act 2013.",
+   "Require relevant agency and commission officers to comply with Royal Commission notices or summonses, subject only to public interest immunity.",
+   "Exempt such compliance from the confidentiality provisions of the National Disability Insurance Scheme Act 2013."
+  ],
+  "affected": "The National Disability Insurance Agency, its CEO and officers, the NDIS Quality and Safeguards Commissioner and Commission officers, and Royal Commissions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5978",
+   "date": "2019-11-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a motion introduced by Tasmanian Senator [Carol Brown](https://theyvoteforyou.org.au/people/senate/tasmania/carol_brown) (Labor), which means the words below will be added to the usual second reading motion, which is \"*that the bill be [read for a second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). This motion does not make any legal changes in and of itself but is politically influential because it represents the will of the Senate. ### Motion text > *At the end of the motion, add:* > > *\", but the Senate calls on the Government to:* > > *(a) remove the average staffing level cap for the National Disability Insurance Agency set out in Part 2 of Budget Paper No. 4 (2019–20); and* > > *(b) directly employ the number of people required to administer the National Disability Insurance Scheme and the National Disability Insurance Scheme Act 2013.\"*",
+   "stage": "Second reading",
+   "ayes": 33,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 28,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-13/10"
+  },
+  {
+   "key": "federal-senate-5979",
+   "date": "2019-11-13",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-11-13.194.1) introduced by NT Senator [Malarndirri McCarthy](https://theyvoteforyou.org.au/people/senate/nt/malarndirri_mccarthy) (Labor) that would have amended the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) \"*that the bill be read a second time*\", which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add:* > > *\", and the further consideration of the bill be an order of the day for the first sitting day after the findings and recommendations of the 2019 review of the NDIS Act and the new NDIS Participant Service Guarantee are publicly released.\"*",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 28,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-13/11"
+  },
+  {
+   "key": "federal-senate-5980",
+   "date": "2019-11-13",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-11-13.191.2) to agree with the main idea of the bill, as amended. In parliamentary jargon, they voted to read the bill [for a second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that they can now discuss the bill in greater detail. ### Main idea of the bill According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd026): > *The purpose of the National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019 (the Bill) is to amend the National Disability Insurance Scheme Act 2013 (NDIS Act) to:* > > * *introduce new requirements for appointments to the Board of the National Disability Insurance Agency (the Agency) and the Independent Advisory Council* > * *establish a 28 day requirement for consultation with host jurisdictions for certain matters and* > * *re-categorise some of the National Disability Insurance Scheme rules (NDIS rules) from Category A and Category C to Category D.*",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 28,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-13/12"
+  },
+  {
+   "key": "federal-senate-5981",
+   "date": "2019-11-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2019-11-14.89.1): > *That the committee report progress and ask leave to sit again.* It was introduced by WA Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal).",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 29,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-14/1"
+  },
+  {
+   "key": "federal-senate-5982",
+   "date": "2019-11-14",
+   "house": "senate",
+   "question": "National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 28,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-14/2"
+  },
+  {
+   "key": "federal-senate-5983",
+   "date": "2019-11-14",
+   "house": "senate",
+   "question": "National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-14/3"
+  },
+  {
+   "key": "federal-senate-5984",
+   "date": "2019-11-14",
+   "house": "senate",
+   "question": "National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019 - in Committee - Let a vote happen",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-14/4"
+  },
+  {
+   "key": "federal-senate-5991",
+   "date": "2019-11-14",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fs1218_amend_4e45c01e-f4d9-4538-8422-ab8ab815172d%22;rec=0) introduced by WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means they failed. The amendments concerned the appointment and termination of members of the Board and Advisory Council. ### Motion text > *(1) Schedule 1, item 7, page 6 (lines 17 to 24), omit subsection 127(4), substitute:* > >> *(4) Before the Minister appoints a Board member other than the Chair, the Minister must:* >> >>> *(a) seek the support of all the host jurisdictions for the appointment; and* >>> >>> *(b) be satisfied that the appointment is supported by the Commonwealth; and* >>> >>> *(c) secure the support of a majority of host jurisdictions for the appointment.* >> >> *[appointment of Board members]* > > *(2) Schedule 1, item 7, page 7 (lines 20 to 27), omit subsection 127(4D).* > >> *[appointment of Board members]* > > *(3) Schedule 1, page 7 (after line 27), after item 7, insert:* > >> *7A Subsection 134(4)* >> >> *Repeal the subsection, substitute:* >> >> *(4) Before the Minister terminates the appointment of a Board member other than the Chair, the Minister must:* >> >>> *(a) seek the support of all the host jurisdictions for the termination; and* >>> >>> *(b) be satisfied that the termination is supported by the Commonwealth; and* >>> >>> *(c) secure the support of a majority of the host jurisdictions for the termination.* >> >> *[termination of Board members]* > > *(4) Schedule 1, item 11, page 9 (lines 21 to 25), omit the item, substitute:* > >> *11 Subsections 147(2) to (3A)* >> >> *Repeal the subsections, substitute:* >> >> *(2) The Minister must consult the host jurisdictions about the appointment of the Principal Member.* >> >> *(3) Before the Minister appoints a member of the",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 14,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-14/11"
+  },
+  {
+   "key": "federal-senate-5992",
+   "date": "2019-11-14",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-11-14.196.1) to pass the bill as amended, which means the bill will now be sent to the House of Representatives for their consideration. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd026): > *The purpose of the National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019 (the Bill) is to amend the National Disability Insurance Scheme Act 2013 (NDIS Act) to:* > > * *introduce new requirements for appointments to the Board of the National Disability Insurance Agency (the Agency) and the Independent Advisory Council* > * *establish a 28 day requirement for consultation with host jurisdictions for certain matters and* > * *re-categorise some of the National Disability Insurance Scheme rules (NDIS rules) from Category A and Category C to Category D.*",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 26,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 14,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-14/12"
+  },
+  {
+   "key": "federal-representatives-6056",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2019-11-27.157.1) to the usual [second reading motion](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), which is that the bill be read for a second time. Reading a bill for a second time is the same as agreeing with its main idea. ### Main idea of the bill According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd026), this bill was introduced in order to: > * *introduce new requirements for appointments to the Board of the National Disability Insurance Agency (the Agency) and the Independent Advisory Council* > > * *establish a 28 day requirement for consultation with host jurisdictions for certain matters and* > > * *re-categorise some of the National Disability Insurance Scheme rules (NDIS rules) from Category A and Category C to Category D.* ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House:* > > *(1) declines to give the bill a second reading; and* > > *(2) calls on the Government to introduce legislation to provide that, after a mandated period of time, decisions under the scheme are deemed to be approved, including but not limited to decisions concerned with:* > >> *(a) planning, plan reviews, amendments, and appeals of planning decisions;* >> >> *(b) provision of services under the scheme including assistive technology, home modifications, and care; and* >> >> *(c) settlement of invoices owed to service providers.\"*",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Labor": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/19"
+  },
+  {
+   "key": "federal-representatives-6057",
+   "date": "2019-11-27",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2019-11-27.161.1) to agree with the main idea of the bill, as amended. In parliamentary jargon, they voted to read the bill [for a second time](https://www.peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that they can now discuss the bill in greater detail. ### Main idea of the bill According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd026): > *The purpose of the National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019 (the Bill) is to amend the National Disability Insurance Scheme Act 2013 (NDIS Act) to:* > > * *introduce new requirements for appointments to the Board of the National Disability Insurance Agency (the Agency) and the Independent Advisory Council* > * *establish a 28 day requirement for consultation with host jurisdictions for certain matters and* > * *re-categorise some of the National Disability Insurance Scheme rules (NDIS rules) from Category A and Category C to Category D.*",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-11-27/20"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-385004",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The speaker opposed the National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019, arguing it would lower the standard for appointing NDIA board members from requiring all states and territories' support to a simple majority. They cited a University of Western Australia report highlighting the NDIS's $4 billion+ underutilisation, unsustainability, and major gaps in responsibility and funding between governments."
+  },
+  {
+   "slug": "speech-385159",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The speaker supported the NDIS Amendment (Streamlined Governance) Bill 2019 to reduce delays in board appointments, criticised the withholding of draft plans from participants, and urged the government to address the exclusion of people who acquire a disability after age 65 from accessing the NDIS."
+  },
+  {
+   "slug": "speech-385160",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-11-27",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme Amendment (Streamlined Governance) Bill 2019 simplifies rule-making and decision-making under the NDIS Act and ensures the Royal Commission into Violence, Abuse, Neglect and Exploitation of People with Disability has clear authority to obtain information from the NDIA and NDIS Commission."
+  }
+ ],
+ "acts": [
+  {
+   "title": "National Disability Insurance Scheme Amendment (Streamlined Governance) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00113",
+   "assent_date": "2019-12-09"
+  }
+ ]
+}

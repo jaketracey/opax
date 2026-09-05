@@ -1,0 +1,1771 @@
+{
+ "key": "au-federal-r6111",
+ "title": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-05-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-06-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-06-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6111_ems_8090d46d-800b-40c9-ace7-1fdc3419acdf%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6111%22",
+   "document_date": "2018-05-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00047",
+   "document_date": "2018-06-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5213",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2018-05-23.98.2) introduced by Labor MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen) (McMahon), which means it failed. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give [the bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6111) a [second reading](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html), the House calls on the Government to:* > *(1) amend the bill to separate the measures which implement personal income tax relief from 1 July 2018, so that these measures can be passed by the Parliament without delay;* > *(2) introduce new legislation implementing the remainder of the measures in the bill only when further financial information, including year-on-year costs of each step of the Government’s full seven-year personal income tax scheme, is made available to the Parliament; and* > *(3) support the Opposition’s personal income tax plan to deliver bigger, better and fairer tax relief to Australians.*",
+   "stage": "Second reading",
+   "ayes": 60,
+   "noes": 69,
+   "outcome": "negative",
+   "party_splits": {
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 129
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-05-23/1"
+  },
+  {
+   "key": "federal-representatives-5214",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (1) to (7) and (12) to (23)](https://www.openaustralia.org.au/debates/?id=2018-05-23.108.1) moved by Labor MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen), which means they failed. Bowen MP explained that: > *The amendments that I just moved will effectively split this bill. Those elements that start on 1 July this year would remain and those elements that start on 1 July 2022 and 1 July 2024 would be removed. It is, frankly, good governance to allow both houses of parliament, and this House in particular, to vote on each tranche on its own merits.* ### What does this bill do? The [bill was introduced to](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6111): * *introduce a low and middle income tax offset to reduce the tax payable by low and middle income earners that are Australian residents in the 2018-19, 2019-20, 2020-21 and 2021-22 financial years;* * *merge the low and middle income offset and the current low income tax offset into a new low income tax offset from the 2022-23 financial year; and* * *progressively increase the income tax rate thresholds in the 2018-19, 2022-23 and 2024-25 financial years.*",
+   "stage": "Consideration in detail",
+   "ayes": 63,
+   "noes": 69,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 132
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-05-23/2"
+  },
+  {
+   "key": "federal-representatives-5215",
+   "date": "2018-05-23",
+   "house": "representatives",
+   "question": "The majority voted against [amendments (8) to (11)](https://www.openaustralia.org.au/debate/?id=2018-05-23.112.1) moved by Labor MP [Chris Bowen](https://theyvoteforyou.org.au/people/representatives/mcmahon/chris_bowen), which means they failed. These amendments were related to the Labor Party's policy for \"bigger and better personal income tax cuts\" from 1 July 2019. ### What does this bill do? The [bill was introduced to](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6111): * *introduce a low and middle income tax offset to reduce the tax payable by low and middle income earners that are Australian residents in the 2018-19, 2019-20, 2020-21 and 2021-22 financial years;* * *merge the low and middle income offset and the current low income tax offset into a new low income tax offset from the 2022-23 financial year; and* * *progressively increase the income tax rate thresholds in the 2018-19, 2022-23 and 2024-25 financial years.*",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-05-23/3"
+  },
+  {
+   "key": "federal-senate-5236",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2018-06-19.287.1) to the usual second reading motion, which is that the bill be read a second time (parliamentary jargon for agreeing with the main idea of the bill). This means the original motion will remain unchanged. ### Amendment text > *At the end of the motion, add \"but the Senate notes that the bill:* > > *(a) significantly reduces the progressive nature of the income tax system;* > > *(b) does not target low income earners, who are most affected by bracket creep;* > > *(c) does not improve the living standards of those who are unable to find work;* > > *(d) will not help reduce inequality; and* > > *(e) locks in tax cuts that:* > >> *(i) are premised on economic forecasts that have a high degree of uncertainty; and* >> >> *(ii) in 7 years' time, will constrain a future government's capacity to provide public services and to invest in public infrastructure\".*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 37,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 22,
+    "dated": 34,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/1"
+  },
+  {
+   "key": "federal-senate-5237",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - Second Reading - Raise minimum wage, Newstart and Youth Allowance",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 59,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 22,
+    "dated": 33,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/2"
+  },
+  {
+   "key": "federal-senate-5238",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "The same number of senators voted for and against leaving unchanged the the tables dealing with tax rates for resident taxpayers, non-resident taxpayers and working holiday-makers for the 2024-25 year of income or a later year of income. This means that the motion failed and the tables did not get enough support from the Senators. This vote was put after the [Opposition proposed](https://www.openaustralia.org.au/senate/?gid=2018-06-20.25.1) that these table be apposed.",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 22,
+    "dated": 36,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/3"
+  },
+  {
+   "key": "federal-senate-5246",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-06-20.128.1) introduced by West Australian Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal). In effect, it would speed up consideration of the [Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6111) and therefore limit debate. ### Motion text > *That:* > > *(a) government business order of the day no. 1 (Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018) be considered under a limitation of time, and that the time allotted for all remaining stages be until 6.30 pm today;* > > *(b) paragraph (a) of this order shall operate as a limitation of debate under standing order 142; and* > > *(c) on the reporting of any messages from the House of Representatives relating to the bill, the message be considered immediately in committee of the whole and any questions on the remaining stages of the bill be put immediately without amendment or debate.*",
+   "stage": "Business motion",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 22,
+    "dated": 35,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/11"
+  },
+  {
+   "key": "federal-senate-5252",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - in Committee - Senator Storer's amendments",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 38,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/17"
+  },
+  {
+   "key": "federal-senate-5253",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-06-20.190.1) to keep sections 61-110 and 61-115 in item 1 and item 5 and part 3 of [schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6111_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6111_first-reps%2F0000%22;rec=0) as they are. In other words, they voted that those parts \"stand as printed\". This division was put after the Labor party [proposed](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6111_amend_e8de06e6-6157-43e2-b230-d3955c1c3efb%22;rec=0) that those parts should be opposed.",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 37,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/18"
+  },
+  {
+   "key": "federal-senate-5254",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "The majority voted against amendments (1), (3), (4), (6) and (8) to (11) on [sheet 8449](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6111_amend_e8de06e6-6157-43e2-b230-d3955c1c3efb%22;rec=0), amendments (2), (13), (15), (17) and (19) on [sheet 8449](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6111_amend_e8de06e6-6157-43e2-b230-d3955c1c3efb%22;rec=0) and amendments (1) to (3), (5), (7), (9) and (10) on [sheet 8450](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6111_amend_b5916d2c-7d59-4611-861b-38c50fd5bb85%22;rec=0), which means they failed. All of these amendments were introduced by South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor). These amendments were on the subject of the Low Income Tax Offset, the section 159N rebate and the proposed tax rates more generally, however there was no time given during the Committee stage to discuss them in any detail.",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 38,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/19"
+  },
+  {
+   "key": "federal-senate-5255",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - in Committee -  Low and Middle Income Tax Offset",
+   "stage": "In committee",
+   "ayes": 22,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 37,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/20"
+  },
+  {
+   "key": "federal-senate-5256",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping items 12 and 13 of [schedule 1](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6111_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6111_first-reps%2F0000%22;rec=0#2d293c2021494e159b5a794af1ecd385) and the tables dealing with tax rates for resident taxpayers, non-resident taxpayers and working holiday-makers for the 2022-23 or the 2023-24 year of income as they are. This means that they will 'stand as printed'. This vote took place after South Australian Senator [Penny Wong](https://theyvoteforyou.org.au/people/senate/sa/penny_wong) (Labor) voted to oppose all those parts. Senator Wong [explained that](https://www.openaustralia.org.au/senate/?gid=2018-06-20.20.2): > *These are the tax rates that the government is seeking to change from 2024-25. What I would say to members of the crossbench and senators in this place is that we have two objections to this. One is a fundamental policy objection. It is a fiscal risk. It locks in a very fast-growing program which costs not only billions of dollars a year but grows at 12 per cent, which has consequences both for the budget and for economic and fiscal risk. It is also a fundamental restructure of our tax system. As I referred, one of the academics who made submissions to the Senate committee talked about this as being contrary to essentially 100 years of progressive taxation in this country. It is the wrong thing to do. I make the third point that it was well made by [Senator Storer](https://theyvoteforyou.org.au/people/senate/sa/tim_storer) in his very careful and considered speech on the second reading that there is no reason to allow the government to hold these tax cuts, which would occur in six years time—you would have to elect Malcolm Turnbull twice—and make them a pre-condition of tax cuts which can be delivered next month. That is nothing other than a political strategy. As Senator Storer said:* > >> *There is",
+   "stage": "In committee",
+   "ayes": 45,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 38,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/21"
+  },
+  {
+   "key": "federal-senate-5257",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - In committee - Changes to tax rates",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 38,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 38,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/22"
+  },
+  {
+   "key": "federal-senate-5258",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-06-20.203.1) that [part 3 of schedule 2](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6111_first-reps%2F0002;query=Id%3A%22legislation%2Fbills%2Fr6111_first-reps%2F0000%22;rec=0#06c0bf62a9b749438782b0b635fbf6c5) stand as printed. This means that that part will remain as it is. The vote was put after South Australian Senator [Tim Storer](https://theyvoteforyou.org.au/people/senate/sa/tim_storer) moved that it should be opposed. ### What is Part 3 of Schedule 2? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd115): > *Part 3 of Schedule 2 amends the Rates Act to subsequently repeal the tables containing the new tax rates that apply under the PITP [Personal Income Tax Plan], as they are superseded by further changes. The personal income tax rate and threshold tables that apply in 2018–19, 2019–20, 2020–21 and 2021–22 would be repealed from 1 July 2024 and the income tax rate and threshold tables that apply in 2022–23 and 2023–24 are repealed from 1 July 2026.* > > *Despite the repeal of the tables, item 25 states that the rates and thresholds in the repealed tables continue to apply to the relevant income years.*",
+   "stage": "In committee",
+   "ayes": 38,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 20,
+    "dated": 38,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/23"
+  },
+  {
+   "key": "federal-senate-5259",
+   "date": "2018-06-20",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-06-20.207.3) to pass the bill in the Senate. In parliamentary jargon, they voted to [read the bill for a third time](https://en.wikipedia.org/wiki/Reading_(legislature)). ### What happens now? Since some amendments were added to the bill in the Senate, the bill will now return to the House of Representatives, where our MPs will decide on [whether they agree with the changes](https://theyvoteforyou.org.au/divisions/representatives/2018-06-21/4). If they do, then the bill will become law. If they don't, it will return to the Senate where our senators will decide on whether to insist on the amendments (which means the bill fails) or not (which means the bill will become law). ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd115): > *The Government announced its Personal Income Tax Plan (PITP) in the 2018–19 Budget. The PITP reduces personal income taxes over the next seven years through a combination of changes to tax offsets for low and middle income earners and changes in income tax thresholds. The changes will be implemented over three steps, commencing in 2018–19, 2022–23 and 2024–25. The 2018–19 changes are targeted at low and medium income earners, with the changes in 2022–23 and 2024–25 applying to individuals on higher taxable incomes.* > > *The Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 (the Bill) seeks to implement all components of the PITP. The PITP will be implemented in three steps, commencing in the 2018–19, 2022–23 and 2024–25 income years.* > > * *Step one in 2018–19; introduces the new Low and Middle Income Tax Offset (LAMITO) – a non-refundable tax offset of up to $530 per annum for individuals earning up to $125,333:* > >> * *the LAMITO will only apply in the 2018–19, 2019–20, 2020–21 and 2021–22 income years* >> >> * *from 2022–23 subsequent changes t",
+   "stage": "Third reading",
+   "ayes": 38,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 21,
+    "dated": 38,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-20/24"
+  },
+  {
+   "key": "federal-representatives-5260",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - Consideration of Senate Message - Put the question",
+   "stage": "Consideration of Senate message",
+   "ayes": 73,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 57,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-21/1"
+  },
+  {
+   "key": "federal-representatives-5261",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - Consideration of Senate Message - Speed things along",
+   "stage": "Consideration of Senate message",
+   "ayes": 74,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-21/2"
+  },
+  {
+   "key": "federal-representatives-5262",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2018-06-21.3.2) to speed things along. In parliamentary jargon, they voted to 'put the question' and so stop discussing the matter.",
+   "stage": "Consideration of Senate message",
+   "ayes": 75,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-21/3"
+  },
+  {
+   "key": "federal-representatives-5263",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "question": "The majority agreed with a [motion](https://www.openaustralia.org.au/debates/?id=2018-06-21.3.2) to disagree with the [Senate amendments](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6111). While being considered in the Senate, our senators had made a number of amendments to the text of the bill. Now the House of Representatives needs to decide whether they agree that the amendments should be made or not. If they had voted to agree with the amendments, then the bill could have become law. However, since they've disagreed, the Senate will now need to decide whether they will insist on the amendments or not. ### What is this bill about? The [bill was introduced to](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6111): * *introduce a low and middle income tax offset to reduce the tax payable by low and middle income earners that are Australian residents in the 2018-19, 2019-20, 2020-21 and 2021-22 financial years;* * *merge the low and middle income offset and the current low income tax offset into a new low income tax offset from the 2022-23 financial year; and* * *progressively increase the income tax rate thresholds in the 2018-19, 2022-23 and 2024-25 financial years.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-21/4"
+  },
+  {
+   "key": "federal-representatives-5264",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - Consideration of Senate Message - Put the motion",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-21/5"
+  },
+  {
+   "key": "federal-representatives-5265",
+   "date": "2018-06-21",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2018-06-21.3.2) \"that the [reasons](https://www.openaustralia.org.au/debate/?id=2018-06-21.16.1) be adopted.\" The reasons voted on in this division were the reasons why they disagreed with the Senate's amendments to the bill. In other words, the House was rejecting the Senate's amendments for the reasons set out below. ### What were the reasons? > *Reasons of the House of Representatives for disagreeing to the amendments of the Senate* > *Senate Amendments (1, 2 and 3)* > *The amendments proposed by the Senate remove step three of the Personal Income Tax Plan. Step three of the Personal Income Tax Plan simplifies and flattens the tax system by abolishing the 37 per cent tax bracket entirely, reducing the number of tax brackets from five to four.* > *The Plan is a package that gives certainty to Australian families that they will keep more of what they earn in the future. It comprises three steps.* > *Step 1, prioritises low and middle income earners by providing tax relief of up to $530 to help with cost of living pressures.* > *Step 2, protects what Australians earn from bracket creep, ensuring that a pay rise, extra overtime or working more hours do not get eaten up by higher tax rates.* > *Step 3, by simplifying and flattening the tax system, ensures that, by 2024-25, some 94 per cent of taxpayers will face a marginal tax rate no higher than 32.5 per cent based on projections.* > *High income earners will continue to pay their fair share with the tax system remaining progressive under the Personal Income Tax Plan. For example, a person on $200,000 would pay around 13 times more tax than a person on $41,000.* > *In 2015-16, the top 20 per cent of taxpayers paid around 61 per cent of all personal income tax. Under the Personal Income Tax Plan, this cohort is projected to continue to contribute a broadly similar share in 2024-25.* > *In 2015-16 those on the top tax bracket paid 3",
+   "stage": "Consideration of Senate message",
+   "ayes": 76,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-06-21/6"
+  },
+  {
+   "key": "federal-senate-5273",
+   "date": "2018-06-21",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - Consideration of House of Representatives Message - Put the question",
+   "stage": "Consideration of House message",
+   "ayes": 39,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 22,
+    "dated": 39,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-21/5"
+  },
+  {
+   "key": "federal-senate-5274",
+   "date": "2018-06-21",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - Consideration of House of Representatives Message - Don't insist on amendments",
+   "stage": "Consideration of House message",
+   "ayes": 39,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 22,
+    "dated": 39,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-21/6"
+  },
+  {
+   "key": "federal-senate-5275",
+   "date": "2018-06-21",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2018-06-21.31.1): > *That [the resolution](https://theyvoteforyou.org.au/divisions/senate/2018-06-21/6) be reported.* The resolution in this case was that the committee does not insist on the Senate amendments that the House of Representatives disagreed with. Note that a bill must be agreed to by both the House of Representatives and the Senate in order to become a law. In this case, the Senate had voted for a number of amendments that the House of Representatives didn't agree with. If the Senate had insisted on their amendments, the bill would have failed.",
+   "stage": "Consideration of House message",
+   "ayes": 39,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 23,
+    "dated": 38,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-21/7"
+  },
+  {
+   "key": "federal-senate-5276",
+   "date": "2018-06-21",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 - Adoption of Report - Don't insist on amendments",
+   "stage": "Adoption of Report",
+   "ayes": 39,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 23,
+    "dated": 38,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-06-21/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-362807",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The Liberal-National coalition argued that the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 delivers lower, fairer, and simpler taxes, providing tax relief to low- and middle-income earners first, protecting against bracket creep, and ensuring 94% of taxpayers pay no more than 32.5 cents in tax by 2024-25. The speaker claimed Labor supports over $200 billion in higher taxes, including on housing, savings, family businesses, and retirees, while the coalition’s seven-year plan is affordable and fiscally responsible."
+  },
+  {
+   "slug": "speech-362810",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The government's tax plan offers only modest relief that does not compensate for cuts to penalty rates, health insurance, energy, pensions, and public services; the bill should be split to pass the 1 July 2018 tax cuts for low- and middle-income earners immediately, while opposing the later stages."
+  },
+  {
+   "slug": "speech-362945",
+   "speaker": "Ben Morton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 delivers responsible, affordable tax relief in three steps, with 94% of taxpayers projected to face a marginal rate of 32.5% or less by 2024-25, and highlighted that 4.4 million Australians will receive $530 in immediate relief in 2018-19. The speaker also noted the government has created 415,000 jobs in 2017, reduced welfare dependency to 15%, and legislated over $41 billion in budget repair measures."
+  },
+  {
+   "slug": "speech-362949",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that tax cuts improve equality and fairness, citing the US under Reagan and Clinton and the UK under Thatcher and Blair, and claimed the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 is critical for reducing inequality in Australia. They contrasted this with high taxes and government interference in Venezuela under Hugo Chavez, which they said caused a refugee crisis."
+  },
+  {
+   "slug": "speech-362951",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The government's tax plan was abandoned soon after introduction, with supporters relying on discredited trickle-down economics."
+  },
+  {
+   "slug": "speech-362958",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018, advocating for tax cuts so that hardworking Australians keep more of their income, and noted over one million jobs created since the government took office, alongside tax relief for low- and middle-income earners and repair of a $48 billion deficit inherited from Labor."
+  },
+  {
+   "slug": "speech-362967",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018, arguing it delivers tax cuts for low- and middle-income earners, with a maximum benefit of $530 for those earning between $48,000 and $90,000, and a projected surplus in 2019-20. The speech also highlighted a $225 million investment in the Frankston to Baxter train line duplication and criticised Labor's tax policies."
+  },
+  {
+   "slug": "speech-362968",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The speech opposed the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018, arguing it relied on discredited trickle-down economics and an arbitrary 23.9% government size cap, with tax cuts disproportionately favouring high-income earners—citing a $7,225 benefit for a $200,000 earner versus $509 for the median Shortland worker. The alternative proposed was larger tax cuts for low- and middle-income earners, funded by closing tax loopholes, and rejecting cuts to services."
+  },
+  {
+   "slug": "speech-362969",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018, arguing it benefits 94% of taxpayers and eliminates bracket creep. He claimed health and school funding are increasing annually, cited a million jobs created in five years, and accused the Labor opposition of planning $200 billion in new taxes."
+  },
+  {
+   "slug": "speech-362970",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's tax plan is deceptive, claiming the $80 billion tax cut for big business is the real priority, not the modest $10 weekly increase for workers, and criticized the seven-year economic projections as unsupported by economists. They announced Labor would double the proposed tax cuts by 1 July 2019."
+  },
+  {
+   "slug": "speech-363028",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speech backed Labor’s amendments to the 2018 income tax bill, saying they would deliver larger tax cuts for low- and middle-income earners—for example, a hairdresser would get $928 instead of $530—and that 76% of taxpayers in the electorate of Solomon would benefit. It contrasted this with the government’s corporate tax cuts, including $17 billion to banks, and criticised pension cuts and the increased pension age."
+  },
+  {
+   "slug": "speech-363029",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018, detailing its three-step tax relief plan, including immediate offsets up to $530 for low- and middle-income earners, bracket creep adjustments, and the eventual abolition of the 37% tax bracket. The speaker also criticised the opposition's proposed taxes, claiming they would impose significant costs on retirees, investors, and businesses."
+  },
+  {
+   "slug": "speech-363030",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to split the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018, arguing the government should immediately pass the first tranche of tax cuts for low- and middle-income earners—including a $530 non-refundable offset for incomes up to $125,000 and raising the 32.5% bracket threshold to $90,000—instead of holding them hostage to later cuts for high-income earners and company tax reductions costing $80 billion, with $17 billion going to banks. They criticised the government’s refusal to provide costings for 2022 and 2024, its optimistic wage growth forecasts, and its cuts to Centrelink staffing (1,200 jobs in this year’s budget) and the energy supplement for pensioners, while noting Labor’s alternative plan would deliver larger tax cuts from July 2019, costed at $5.8 billion over the forward estimates."
+  },
+  {
+   "slug": "speech-363031",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The government's tax reform plan, based on pillars of responsibility, security and opportunity, would raise the 32.5% bracket threshold from $87,000 to $90,000 then $120,000 and ultimately $200,000 by 2024-25, removing the 37% bracket, and increase the low-income tax offset from $445 to $645, with 94% of taxpayers projected to face a marginal rate of 32.5% or less by 2024-25. The speaker criticised Labor for opposing the changes, arguing they would reduce complexity and provide relief for middle- and low-income earners."
+  },
+  {
+   "slug": "speech-363032",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker defended the government's Treasury Laws Amendment (Personal Income Tax Plan) Bill, arguing opposition policies would not improve housing affordability or opportunities for younger Australians, while the government's tax relief proposal supports aspirational entrepreneurialism and ownership."
+  },
+  {
+   "slug": "speech-363033",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker argued against the government's $80 billion tax cut for big businesses and $17 billion for banks, advocating instead for Labor’s alternative plan to fund debt reduction, schools, hospitals, and apprentices, while providing tax cuts averaging $930 for 10 million working Australians."
+  },
+  {
+   "slug": "speech-363034",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The member for Robertson supported the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018, arguing it would deliver tax relief of up to $530 per year to nearly 60,000 low- and middle-income earners in his electorate, as part of a three-step plan to reduce bracket creep and flatten tax rates, while criticising Labor’s proposed changes to franking credits."
+  },
+  {
+   "slug": "speech-363035",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The government's $140 billion personal income tax plan lacks transparency, with no detailed yearly cost breakdown or distributional impacts on electorates and demographics, and the bill is being rushed without proper parliamentary scrutiny."
+  },
+  {
+   "slug": "speech-363037",
+   "speaker": "Stuart Robert",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The government's seven-year personal income tax plan will provide tax relief to low- and middle-income earners, including a non-refundable offset of up to $530 and bracket threshold increases, aiming for 94% of taxpayers to face a marginal rate of 32.5% or less by 2024-25. The plan was contrasted with Labor's proposed $200 billion in tax increases, including a tax on retirees."
+  },
+  {
+   "slug": "speech-363038",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker argued against the government's three-stage personal income tax plan, stating it is unfair and regressive because it delivers 62% of benefits to the top 20% of income earners (worth $7,225 per year for high earners by 2024-25 versus $540 for those earning $50,000–$90,000) at a total medium-term cost of $140 billion, while the government simultaneously cuts spending on schools, TAFE, hospitals, pensions, and penalty rates. The speaker supported Labor's alternative, which would give a $924 tax cut to a person on $65,000."
+  },
+  {
+   "slug": "speech-363039",
+   "speaker": "Trent Zimmerman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018, which delivers a seven-year plan of personal income tax cuts including an immediate offset of up to $530 for low- and middle-income earners, bracket threshold increases, and eventual removal of the 37% rate. He also highlighted $1.6 billion for the Sydney Metro and noted 67,300 taxpayers in his electorate would benefit in the next financial year."
+  },
+  {
+   "slug": "speech-363040",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's three-stage personal income tax plan is irresponsible, building projected windfall gains into the tax base like the Howard-Costello government did, and opposed locking in cuts to 2024. They supported immediate modest cuts for low- and middle-income earners but proposed Labor's alternative: larger cuts for those earning under $125,000 (e.g., $928/year for a teacher on $65,000) funded by closing negative gearing and capital gains tax concessions, while criticising the government's $80 billion tax handout to big business."
+  },
+  {
+   "slug": "speech-363041",
+   "speaker": "Ann Sudmalis",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Personal Income Tax Plan) Bill 2018 will provide immediate tax relief of up to $530 for low- and middle-income earners over four years, a $135 tax cut for three million people from July 2018, and eventually flatten the system so that 94% of taxpayers pay only 32.5 cents in the dollar. The plan aims to tackle bracket creep, reward hard work, and drive a stronger economy."
+  },
+  {
+   "slug": "speech-363043",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-23",
+   "stage_hint": null,
+   "brief": "The government's Personal Income Tax Plan Bill 2018 is presented as a key budget measure, following the creation of one million jobs since 2013."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Personal Income Tax Plan) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00047",
+   "assent_date": "2018-06-21"
+  }
+ ]
+}

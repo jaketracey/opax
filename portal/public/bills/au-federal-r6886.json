@@ -1,0 +1,1482 @@
+{
+ "key": "au-federal-r6886",
+ "title": "Climate Change (Consequential Amendments) Bill 2022",
+ "short_title": "Climate Change (Consequential Amendments) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Climate Change, Energy, the Environment and Water",
+ "status": "passed",
+ "status_as_of": "2022-09-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6886_ems_4b360c39-7256-4789-8e9e-8aa77f3fc2f2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6886_ems_2f42245d-c463-4098-b00a-b460c7f5f2c7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6886%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00038",
+   "document_date": "2022-09-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "This bill updates several existing federal laws to help put Australia's climate goals into practice.",
+   "It would make those laws require certain government bodies and programs to consider Australia's emissions targets and its Paris Agreement commitments when making decisions.",
+   "The bill does not add new rules for government purchasing, since current rules already cover climate impacts."
+  ],
+  "changes": [
+   "It adds references to Australia's emissions targets and Paris Agreement obligations in the objects of some laws and the functions of some bodies.",
+   "It makes those references part of general decision-making for those bodies, without adding extra requirements to specific powers.",
+   "It leaves existing procurement rules unchanged."
+  ],
+  "affected": "Commonwealth entities, schemes, and government departments that run programs or policies contributing to emissions reductions.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:11:32Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7695",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Second Reading - On new fossil fuel projects",
+   "stage": "Second reading",
+   "ayes": 123,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 4
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 69,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/2"
+  },
+  {
+   "key": "federal-representatives-7696",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 87,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/3"
+  },
+  {
+   "key": "federal-representatives-7697",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of [amendments](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000) moved by Kooyong MP [Monique Ryan](https://theyvoteforyou.org.au/people/representatives/kooyong/monique_ryan) (Independent) on behalf of Curtin MP [Kate Chaney](https://theyvoteforyou.org.au/people/representatives/curtin/kate_chaney) (Independent), which means they succeeded. ### What do the amendments do? Regarding the first amendment, Dr Ryan [explained that](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000): > *This amendment clarifies the underlying climate goals of the bill, the urgency of action and a link to scientific knowledge. An acknowledgement of the object's clause of the urgency of action and a link to scientific knowledge should give business certainty that this is a new era in climate policy and that the Australian parliament has an intention to be guided by the science and to decarbonise our economy. The setting of a numerical target is the first step in this significant shift.* In relation to the second amendment, she [explained that](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000) it \"*promotes accountability and ambition to reflect that this is the start of a significant journey ahead.*\" ### Amendment text > *(1) Clause 3, page 2 (before line 15), before paragraph (a), insert:* > >> *(aa) to advance an effective and progressive response to the urgent threat of climate change drawing on the best available scientific knowledge; and* > > *(2) Clause 3, page 2 (line 21), after \"accountability\", insert \"and ambition\".*",
+   "stage": "Consideration in detail",
+   "ayes": 86,
+   "noes": 58,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/4"
+  },
+  {
+   "key": "federal-representatives-7698",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of an [amendment](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000) introduced by Goldstein MP [Zoe Daniel](https://theyvoteforyou.org.au/people/representatives/goldstein/zoe_daniel) (Independent), which means it passed and will now become part of the bill. Ms Daniel [explained that](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000): > *I've moved this amendment because the science says that we should be hitting at least 50 per cent, preferably 60 per cent, by 2030 to help keep global temperatures below two degrees and as close as possible to 1.5 degrees.* ### Amendment text > *(1) Clause 10, page 5 (lines 17 and 18), omit the note, substitute:* > > *Note: The achievement of a target involves reducing Australia's net greenhouse gas emissions to a level that is at or below the target. Accordingly, nothing in subsection (1) limits Australia's ability to reduce its net greenhouse gas emissions beyond 43% below 2005 levels by 2030.*",
+   "stage": "Consideration in detail",
+   "ayes": 87,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/5"
+  },
+  {
+   "key": "federal-representatives-7699",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Consideration in Detail - Regional Australia",
+   "stage": "Consideration in detail",
+   "ayes": 89,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/6"
+  },
+  {
+   "key": "federal-representatives-7700",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Consideration in Detail - More ambitious targets needed",
+   "stage": "Consideration in detail",
+   "ayes": 128,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 4
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 77,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/7"
+  },
+  {
+   "key": "federal-representatives-7701",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Consideration in Detail - More ambitious targets",
+   "stage": "Consideration in detail",
+   "ayes": 129,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 77,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/8"
+  },
+  {
+   "key": "federal-representatives-7702",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of an [amendment](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means it passed and will now become part of the bill. ### What does this amendment do? Ms Spender [explained that](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/25975/&sid=0000): > *The bill, as drafted, would require the minister to make an annual statement to parliament about Australia's progress in reducing emissions, relevant international developments, the government's climate change policies and the effectiveness of the government's climate change policies.* > > *My first change would require that the statement consider, sector by sector, the impact of policies. It is important that Australians can see the progress being made by each sector of the economy and understand where climate policies are effective and where they are not.* [...] > > *My second change would require the statement to consider the effectiveness of the government's policies in general, rather than climate policy specifically. This is a subtle change but an important one. It will allow the minister, with advice from the Climate Change Authority, to consider the impact of the government's policies which may be making the emissions reduction task more difficult, such as fossil fuel subsidies. Transparency will help to inform the public debate and allow voters to take an informed view of the full cost of government policies.* ### Amendment text > *(1) Clause 12, page 7 (line 16) to page 7 (line 18), omit paragraph (1)(d), substitute:* > > *(d) the effectiveness of the Commonwealth's policies in contributing to the achievement of Australia's greenhouse gas emissions reduction targets and reducing emissions in the sectors covered by those policies.* ### An",
+   "stage": "Consideration in detail",
+   "ayes": 90,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/9"
+  },
+  {
+   "key": "federal-representatives-7703",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Consideration in Detail - Transparency",
+   "stage": "Consideration in detail",
+   "ayes": 89,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/10"
+  },
+  {
+   "key": "federal-representatives-7704",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Consideration in Detail - Act on Climate Change Authority advice",
+   "stage": "Consideration in detail",
+   "ayes": 89,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 143,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/11"
+  },
+  {
+   "key": "federal-representatives-7705",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Consideration in Detail - Article 2 of the Paris Agreement",
+   "stage": "Consideration in detail",
+   "ayes": 88,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/12"
+  },
+  {
+   "key": "federal-representatives-7706",
+   "date": "2022-08-04",
+   "house": "representatives",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Consideration in Detail - Agree with the bills",
+   "stage": "Consideration in detail",
+   "ayes": 89,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 76,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 26
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 142,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-08-04/13"
+  },
+  {
+   "key": "federal-representatives-7738",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "question": "Climate Change (Consequential Amendments) Bill 2022 - Consideration of Senate Message - Agree with Senate amendment",
+   "stage": "Consideration of Senate message",
+   "ayes": 86,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 71,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 8
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2022-09-08/6"
+  },
+  {
+   "key": "federal-senate-7741",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Second Reading - Acknowledge need to end fossil fuels",
+   "stage": "Second reading",
+   "ayes": 13,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "member": 9,
+    "earliest": 29
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/3"
+  },
+  {
+   "key": "federal-senate-7742",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2022-09-08.10.2) to the usual second reading motion, \"*that the bills be read a second time.*\" To read a bill a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) is to agree with its main idea. Because this vote failed, the original motion will remain unchanged. This amendment as introduced by Queensland Senator [Malcolm Roberts](https://theyvoteforyou.org.au/people/senate/queensland/malcolm_roberts) (One Nation). ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) increased carbon dioxide is associated with increased quality of life for humans, plants and animals and reducing carbon dioxide will do harm to everyday Australians,* >> >> *(ii) the relationship between carbon dioxide output from human activity and temperature change has been disproven by scientific analysis and empirical observation,* >> >> *(iii) there is no mechanism to calculate temperature outcomes from reductions in human carbon dioxide output thus negating the reason for this bill, and* >> >> *(iv) this bill does not require consideration of the economic, social or health outcomes from policies that will be implemented under this legislation; and* > > *(b) calls on the Government to address the preceding matters in future legislation or policy\".*",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "member": 8,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/4"
+  },
+  {
+   "key": "federal-senate-7743",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Second Reading - Agree with bills' main idea",
+   "stage": "Second reading",
+   "ayes": 36,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "earliest": 36,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/5"
+  },
+  {
+   "key": "federal-senate-7745",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - in Committee - 2030 and 2035 targets",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 41,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "member": 8,
+    "earliest": 30
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/7"
+  },
+  {
+   "key": "federal-senate-7746",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - in Committee - Transparecy and ARENA loopholes",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 36,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/8"
+  },
+  {
+   "key": "federal-senate-7747",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2022-09-08.73.1) introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. ### What is the amendment? Senator Pocock [explained that](https://www.openaustralia.org.au/senate/?gid=2022-09-08.67.6) the amendment relates to ARENA: > *The first amendment requires that the annual climate change statement address Australia's progress in reducing scope 3 emissions, which we know dwarf our domestic emissions. Fossil fuel exports account for more than double our direct emissions. If we are to take climate change seriously and commit to climate action we have to reduce the source of the majority of our emissions, which is exports. I'm not saying we shut it down overnight; I'm simply saying we don't open up new projects.* > > *The second amendment requires that the Climate Change Authority consider the best available scientific knowledge in advice on emission reduction targets. We have ignored scientists for far too long. Science has to guide our policies on climate, and it makes sense to me that any advice given to the minister would be based on the best available scientific evidence that we have, given the wealth of knowledge in the scientific community, including a number of pre-eminent climate scientists across Australia and in the ACT.* ### Amendment text > *(1) Clause 12, page 7 (line 24), at the end of subclause (1), add:* > >> *; and (g) the progress made during the year towards reducing Australia's scope 3 emissions of greenhouse gas.* > > *(2) Clause 15, page 11 (after line 2), after subclause (3A), insert:* > >> *(3B) The advice given under subsection (1) must include an explanation of how the Climate Change Authority has taken into account the best available scientific knowledge for the purposes of giving the advice.*",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 47,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 35,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/9"
+  },
+  {
+   "key": "federal-senate-7748",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2022-09-08.75.1) introduced by Pauline Hanson's One Nation Party, which means it failed. ### Amendment text > *(1) Clause 12, page 7 (after line 24), after subclause (1), insert:* > > *(1A) A statement under subsection (1) must include:* > >> *(a) the total amount of Australia's greenhouse gas emissions for the financial year to which the statement relates; and* >> >> *(b) a cost benefit analysis of each of the Commonwealth's policies mentioned in the statement, including:* >> >>> *(i) the amount by which the policy reduces anthropogenic greenhouse gas emissions; and* >>> >>> *(ii) a regulatory impact statement for the policy which includes an outline of each of the matters mentioned in subsection (1B).* > > *(1B) For the purposes of subparagraph (1A)(b)(ii), the matters are the following:* > >> *(a) the impact, if any, on the Commonwealth budget of that policy in the year to which the statement relates;* >> >> *(b) the estimated impact, if any, on the Commonwealth budget of that policy in the following 3 financial years;* >> >> *(c) the impact, if any, on Australia's gross domestic product that can be specifically attributed to that policy;* >> >> *(d) the policy's compatibility with human rights (within the meaning of the Human Rights (Parliamentary Scrutiny) Act 2011).*",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 51,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 15,
+    "earliest": 33,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/10"
+  },
+  {
+   "key": "federal-senate-7749",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6885_amend_e4287260-0146-4e92-b053-9df59e3e2df5%22;rec=0) introduced by Victorian Senator [Bridget McKenzie](https://theyvoteforyou.org.au/people/senate/victoria/bridget_mckenzie) (Nationals), which means it failed. The amendment would have required that: \"*The Productivity Commission is to conduct periodic inquiries of the impacts of Australia’s nationally determined contribution on rural and regional Australia.*\"",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 36,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/11"
+  },
+  {
+   "key": "federal-senate-7750",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6886_amend_3f0d8363-9380-4fe1-a6bd-73a07cd54488%22;rec=0) introduced by the Jacqui Lambie Network and ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means it failed. The amendment related to a greenhouse gas emissions outlook report. ### Amendment text > *(1) Schedule 1, page 8 (after line 31), after item 15, insert:* > > *Charter of Budget Honesty Act 1998* > > *15A After Division 1 of Part 5 of Schedule 1* > > *Insert:* > > *Division 1A—Greenhouse gas emissions outlook report* > > *13A Public release and tabling of greenhouse gas emissions outlook report* > >> *The Treasurer is to publicly release and table a greenhouse gas emissions outlook report at the time of each budget.* > > *13B Purpose of greenhouse gas emissions outlook report* > >> *The purpose of greenhouse gas emissions outlook reports is to provide information to allow the assessment of the impact of the Government’s fiscal strategy against Australia’s greenhouse gas emissions reduction targets in section 10 of the Climate Change Act 2022.* > > *13C Contents of greenhouse gas emissions outlook report* > >> *(1) A greenhouse gas emissions outlook report is to contain the following information:* >> >>> *(a) the greenhouse gas emissions and energy consumption of the Commonwealth budget sector and Commonwealth general government sector for the budget year and the following 3 financial years;* >>> >>> *(b) the greenhouse gas emissions and energy consumption of fiscal policy actions for the budget year and the following 3 financial years;* >>> >>> *(c) the assumptions for the budget year and the following 3 financial years that have been used in preparing the report.* >> >> *(2) The information in the report is to take into account, to the fullest extent possible,",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 16,
+    "earliest": 33,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/12"
+  },
+  {
+   "key": "federal-senate-7751",
+   "date": "2022-09-08",
+   "house": "senate",
+   "question": "Climate Change Bill 2022, Climate Change (Consequential Amendments) Bill 2022 - Third Reading - Pass the bills",
+   "stage": "Third reading",
+   "ayes": 37,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "earliest": 36,
+    "member": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-08/13"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-420184",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The Climate Change (Consequential Amendments) Bill embeds Australia's greenhouse gas emissions reduction targets into the functions of entities including the Clean Energy Finance Corporation, ARENA, CSIRO, Infrastructure Australia, the Northern Australia Infrastructure Facility, and Export Finance Australia, and updates references to the Paris Agreement."
+  },
+  {
+   "slug": "speech-421193",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "A motion was moved to suspend standing orders to allow a flexible debate schedule for the Climate Change Bill 2022, including 10-minute speaking times, a possible reduction to 5 minutes after 9pm, and a minister’s discretion to adjourn after 10pm. The mover argued the approach maximises participation and contrasts with the previous government's restriction of debate, noting that all speakers were heard during recent proceedings ending at 10pm."
+  },
+  {
+   "slug": "speech-421198",
+   "speaker": "Ted O'Brien",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The government abandoned its election promise to cut household power bills by $275, legislating only a 43% emissions reduction target without any price protections, while the bill's consequential amendments risk enabling green lawfare and restricting agencies like Export Finance Australia, Infrastructure Australia and the Northern Australia Infrastructure Fund."
+  },
+  {
+   "slug": "speech-421199",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The speaker defended the Climate Change Bill 2022, arguing it implements Labor’s election policy of a 43% emissions reduction by 2030, 82% renewable energy by 2030, and lower energy prices by 2025, while criticising the member for Fairfax for ignoring facts and accusing the former government of hiding a report on rising energy prices."
+  },
+  {
+   "slug": "speech-421208",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The speaker argued the Climate Change Bill 2022 and related amendments are vital for Australia, establishing emissions reduction targets, accountability mechanisms, and independent expert advice. They announced the Albanese Labor government's policies include Rewiring the Nation, community battery investments, electric vehicle tax reductions, a safeguard mechanism for major polluters, and $45 million in ARENA funding for the University of New South Wales' solar research."
+  },
+  {
+   "slug": "speech-421210",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The MP supported the Climate Change Bill 2022 and Climate Change (Consequential Amendments) Bill 2022, which legislate Australia's emissions targets of a 43 per cent reduction by 2030 and net zero by 2050, and embed those targets across agencies including the Clean Energy Finance Corporation, ARENA, Export Finance Australia, Infrastructure Australia and the CSIRO. The MP also highlighted the Labor government's Powering Australia plan, which they said would deliver 604,000 jobs, and cited the delayed Star of the South project as a missed opportunity under the previous government."
+  },
+  {
+   "slug": "speech-421211",
+   "speaker": "Kylea Tink",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The independent MP for North Sydney supported the Climate Change Bill as a foundational step but argued for stronger action, including a 60 per cent emissions reduction target by 2030, an end to fossil fuel subsidies, no new coal and gas projects, and mandatory fuel efficiency standards, noting that 96 per cent of consulted constituents backed the legislation."
+  },
+  {
+   "slug": "speech-421215",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The MP argued that the Climate Change Bill 2022 must pass to end a decade of inaction, set a 43% emissions reduction target as a floor, and implement the Powering Australia plan—including community batteries like the one pledged for Belfield, a $3 billion National Reconstruction Fund for renewables and low‑emissions technology, and electric vehicle uptake—to create 604,000 new jobs and spur $76 billion in investment, while urging the opposition to drop nuclear distractions."
+  },
+  {
+   "slug": "speech-421343",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Climate Change Bill 2022 and related bills, arguing the Albanese government’s 43% emissions reduction target by 2030 and restoration of the Climate Change Authority are necessary steps after a decade of inaction, and that the legislation provides democratic legitimacy and accountability."
+  },
+  {
+   "slug": "speech-421351",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The Climate Change Bill 2022 and related amendments are essential to end a decade of inaction, provide investment certainty for renewables, and honour the government's election commitment; the speaker supported a 43% emissions reduction target as an initial step and criticised past political games, including the Abbott opposition and the former prime minister brandishing coal in Parliament."
+  },
+  {
+   "slug": "speech-421353",
+   "speaker": "David Smith",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The speaker supported the Climate Change Bills 2022, arguing that Australia can end the climate wars and achieve a 43% emissions reduction by 2030 and net-zero by 2050, backed by a plan creating over 600,000 jobs and $76 billion in investment."
+  },
+  {
+   "slug": "speech-421391",
+   "speaker": "Melissa Lee Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-08-03",
+   "stage_hint": null,
+   "brief": "The member opposed the Climate Change (Consequential Amendments) Bill 2022 while affirming support for climate action, citing the coalition's record of emissions reductions—meeting Kyoto targets, emissions more than 20% below 2005 levels, and a pre-election trajectory of up to 35% reduction by 2030. They called for uranium to be part of the emissions-reduction conversation, noting Western Australia's ban on new uranium mines and their approval of the last mine as environment minister."
+  },
+  {
+   "slug": "speech-421446",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2022-08-04",
+   "stage_hint": null,
+   "brief": "The member for Indi moved amendments to the Climate Change Bill 2022 requiring that climate policies and advice from the Climate Change Authority specifically address social, employment and economic benefits for rural and regional Australia, and that the Minister's annual statement to Parliament outline those benefits. The amendments also expand eligible qualifications for Authority appointments to include regional voices and require consideration of regional impacts when setting new emissions targets."
+  },
+  {
+   "slug": "speech-422671",
+   "speaker": "Kate Chaney",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The Climate Change (Consequential Amendments) Bill 2022 marks a symbolic start to a new era, shifting focus to Australia’s future as a green energy exporter amid increasing floods and fires. The bill lists areas for beginning a smooth but bold economic transition."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Climate Change (Consequential Amendments) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00038",
+   "assent_date": "2022-09-13"
+  }
+ ]
+}

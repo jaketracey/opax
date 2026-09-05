@@ -1,0 +1,146 @@
+{
+ "key": "au-federal-r7464",
+ "title": "Defence Force Discipline Amendment (RCDVS Implementation and Related Measures No. 1) Bill 2026",
+ "short_title": "Defence Force Discipline Amendment (RCDVS Implementation and Related Measures No. 1) Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-04-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "before_parliament",
+ "status_as_of": "2026-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-04-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-05-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7464_ems_b6cd5235-fe1a-4d1f-b178-8f44369905d3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7464%22",
+   "document_date": "2026-04-01",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2026-04-01",
+  "sentences": [
+   "This bill would change military discipline rules following the Royal Commission into Defence and Veteran Suicide.",
+   "It would amend the Defence Force Discipline Act 1982 to adopt commission recommendations, update how mental health is handled in the system, and add fairness and efficiency measures.",
+   "The bill also makes minor changes to several other Acts, including the Defence Act 1903 and the Defence Force Discipline Appeals Act 1955."
+  ],
+  "changes": [
+   "Implements key recommendations from the Royal Commission into Defence and Veteran Suicide.",
+   "Modernises the way mental health is treated in the military justice system.",
+   "Introduces fairness, streamlining and efficiency measures to the military discipline framework."
+  ],
+  "affected": "Defence Force personnel involved in disciplinary proceedings and military commanders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:20:08Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1202649",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202652",
+   "speaker": "Phillip Thompson",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202723",
+   "speaker": "Renee Coffey",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1202889",
+   "speaker": "Karen Grogan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-05-14",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

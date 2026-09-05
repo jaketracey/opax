@@ -1,0 +1,306 @@
+{
+ "key": "au-federal-r6740",
+ "title": "Financial Sector Reform (Hayne Royal Commission Response—Better Advice) Bill 2021",
+ "short_title": "Financial Sector Reform (Hayne Royal Commission Response—Better Advice) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-06-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6740_ems_83a55868-1aef-4604-8573-4d067ea31f74%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6740%22",
+   "document_date": "2021-06-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00115",
+   "document_date": "2021-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-06-24",
+  "sentences": [
+   "This bill would change how financial advisers are regulated, partly in response to a royal commission's recommendation.",
+   "It would make the Financial Services and Credit Panel, part of the Australian Securities and Investments Commission (ASIC), the single body that disciplines financial advisers.",
+   "New penalties, a registration system and a transfer of functions from the Financial Adviser Standards and Ethics Authority (FASEA) to a minister and ASIC are included, plus a single system for advisers who give tax advice."
+  ],
+  "changes": [
+   "Expand the Financial Services and Credit Panel's role so it handles all disciplinary matters for financial advisers.",
+   "Create new penalties and sanctions for advisers who break obligations under the Corporations Act.",
+   "Introduce a registration system for financial advisers.",
+   "Move functions from FASEA to the minister responsible for the Corporations Act and to ASIC.",
+   "Replace duplicate regulation with a single registration and disciplinary system for advisers who provide tax (financial) advice services."
+  ],
+  "affected": "Financial advisers who provide tax advice and the agencies that regulate them, including ASIC and the relevant minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:30Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7356",
+   "date": "2021-08-04",
+   "house": "representatives",
+   "question": "Financial Sector Reform (Hayne Royal Commission Response - Better Advice) Bill 2021 - Second Reading - Disagree with amendments",
+   "stage": "Financial Sector Reform (Hayne Royal Commission Response",
+   "ayes": 44,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 13,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 34
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 78
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-08-04/1"
+  },
+  {
+   "key": "federal-senate-7476",
+   "date": "2021-10-21",
+   "house": "senate",
+   "question": "The majority voted against an amendment introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it failed. The amendment would have added the text below to the usual second reading motion. A [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) motion is \"*that the bill be read a second time,*\" which is parliamentary jargon for agreeing with the main idea of [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6740). ### Amendment text > *At the end of the motion, add \", but the Senate notes the Government has:* > > *(a) failed to effectively deliver professional standards reform in the financial advice sector;* > > *(b) been too slow to implement the findings of the Hayne Royal Commission;* > > *(c) established and then shut down the failed Financial Adviser Standards and Ethics Authority;* > > *(d) failed to adequately protect consumers; and* > > *(e) caused uncertainty and unnecessary costs for thousands of financial advisers across Australia\".*",
+   "stage": "Financial Sector Reform (Hayne Royal Commission Response",
+   "ayes": 20,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "earliest": 18,
+    "dated": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-21/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-410404",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Financial Sector Reform (Hayne Royal Commission Response-Better Advice) Bill 2021, criticising opposition amendments as self-serving. They accused Labor of protecting superannuation fund allies, citing $35 million bonuses at IFM Investors, and claimed Labor’s policies would harm retirees and young Australians, while advocating for homeownership over superannuation and raising concerns about ASIC fees increasing costs for financial advice."
+  },
+  {
+   "slug": "speech-410408",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Financial Sector Reform (Hayne Royal Commission Response-Better Advice) Bill 2021, arguing it implements recommendation 2.10 and streamlines regulation to reduce costs, while defending the professionalism of financial advisers—citing that 70% of consumers agree advice improved their financial situation—and emphasising that strategic advice, not product, is key."
+  },
+  {
+   "slug": "speech-410410",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition opposed and weakened the best-interest duty for financial advisers, which Labor had introduced, and that the current bill implements Hayne royal commission recommendations 2.10 and 7.1 for a single disciplinary body, though many other recommendations remain unimplemented. They also noted concerns about educational standards for long-serving advisers and supported appointing a consumer representative to the disciplinary panel."
+  },
+  {
+   "slug": "speech-410411",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The Financial Sector Reform (Hayne Royal Commission Response-Better Advice) Bill 2021 was supported, implementing recommendation 2.10 by expanding ASIC’s disciplinary panel, introducing new penalties for advisers, and creating a two-stage registration process, while the government was criticised for a decade of inaction, undermining the earlier FoFA reforms, and failing to provide a holistic framework for financial advice."
+  },
+  {
+   "slug": "speech-410412",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's response to the Hayne royal commission has been unacceptably slow, taking 2½ years to implement recommendation No. 2, and that the government has cut ASIC's budget and directly contradicted other royal commission recommendations. Labor supports the Financial Sector Reform (Hayne Royal Commission Response-Better Advice) Bill 2021, which establishes a single disciplinary body for financial advisers and transfers functions from the Financial Adviser Standards and Ethics Authority, but calls for a two-year review and further action on outstanding recommendations."
+  },
+  {
+   "slug": "speech-410414",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill implements the banking royal commission's recommendation 2.10 to establish a single disciplinary body for financial advisers, but criticised the government for three years of delay and lack of genuine commitment to the commission's recommendations. The speaker also highlighted a crisis in the financial advice sector, with over 4,000 experienced advisers leaving in under three years, rising costs, and reduced access for everyday Australians, while warning against returning to the \"bad old days\" of sales disguised as advice."
+  },
+  {
+   "slug": "speech-410415",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-08-04",
+   "stage_hint": null,
+   "brief": "The government argued the bill implements Hayne royal commission recommendation 2.10 by establishing a single disciplinary body for financial advisers within ASIC and requiring all advisers providing personal financial advice to retail clients to be registered, while also transferring regulatory oversight of tax financial advisers from the Tax Practitioners Board to the Corporations Act 2001."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Sector Reform (Hayne Royal Commission Response—Better Advice) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00115",
+   "assent_date": "2021-10-28"
+  }
+ ]
+}

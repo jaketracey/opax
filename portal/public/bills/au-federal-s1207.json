@@ -1,0 +1,321 @@
+{
+ "key": "au-federal-s1207",
+ "title": "Civil Aviation Amendment Bill 2019",
+ "short_title": "Civil Aviation Amendment Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Cities and Regional Development",
+ "status": "passed",
+ "status_as_of": "2019-11-06",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-11-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1207_ems_d3c8df65-947b-48e4-8866-253142867a01%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1207%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00099",
+   "document_date": "2019-11-06",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill is part of a package that would amend the Civil Aviation Act 1988 to require the Civil Aviation Safety Authority (CASA) to consider costs and risk levels across different aviation sectors when setting safety standards.",
+   "The bill would put existing regulatory practice into law, while keeping safety as CASA's top priority.",
+   "The explanatory memorandum does not specify a start date or list the sectors affected."
+  ],
+  "changes": [
+   "Requires CASA to consider costs and relative risk environments of different aviation industry sectors when developing safety standards.",
+   "Codifies existing regulatory practice into legislation.",
+   "Preserves the requirement that safety of air navigation remains CASA's most important consideration."
+  ],
+  "affected": "The Civil Aviation Safety Authority (CASA) and the aviation industry sectors.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5759",
+   "date": "2019-07-22",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-07-22.145.1) introduced by Victorian Senator [Janet Rice](https://theyvoteforyou.org.au/people/senate/victoria/janet_rice) (Greens). This motion would have added the words below to the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html): \"*That this bill be now read a second time.*\" Agreeing to read a bill for a second time is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add:* > > *\", and the bill be referred to the Rural and Regional Affairs and Transport Legislation Committee for inquiry and report by 10 September 2019.\"* Senator Rice [explained that](https://www.openaustralia.org.au/senate/?gid=2019-07-22.145.1): > *I hope that the Senate will support that inquiry. But, if it doesn't go to an inquiry, then this bill, as it stands, is too dangerous. We need to know more information. We don't have justification. We have such serious concerns from the pilots and other safety standards, and there is far too much uncertainty to support this bill today.* ### What does this bill do? The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1207) was introduced \"*to require the Civil Aviation Safety Authority, in developing and promulgating aviation safety standards, to take into consideration the impacts of costs and the relative risk environment of the different aviation industry sectors.*\" Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd010).",
+   "stage": "Second reading",
+   "ayes": 9,
+   "noes": 48,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 12,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-22/4"
+  },
+  {
+   "key": "federal-senate-5760",
+   "date": "2019-07-22",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-07-22.153.1) introduced by Tasmanian Senator [Jacqui Lambie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie) (Jacqui Lambie Network), which means it failed. ### Motion text > *(1) Schedule 1, page 3 (before line 4), before item 1, insert:* > > *1A Subsection 9A(1)* > > *Repeal the subsection, substitute:* > > *(1) In exercising its powers and performing its functions, CASA must regard the achievement of the highest standard of safety of air navigation, at the lowest charges consistent with both public demand and an economic return to efficient operators, as the most important consideration.* > > *(2) Schedule 1, item 1, page 3 (before line 8), before paragraph 9A(3) (a), insert:* > >> *(aa) ensure that those aviation safety standards maintain or improve the overall safety of the civil aviation system; and* Senator Lambie [explained her amendment](https://www.openaustralia.org.au/senate/?gid=2019-07-22.153.1): > *These amendments change the language in section 9A of the Civil Aviation Act, which states 'CASA must regard the safety of air navigation as the most important consideration'. Everybody wants a safe aviation sector, but we want to see an aviation sector that is sustainable as well as safe. When it comes to aviation safety, the safest passenger is the one that never gets in a plane in the first place. The easiest way to prevent aviation accidents is to shut down aviation altogether—if every plane is grounded, every plane is safe. Excessive regulation is doing just that—keeping planes safe by keeping planes grounded.* ### What does this bill do? The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1207) was introduced \"*to require the Civil Aviation Safety Authority, in developing and promulgating aviation safety standards, to take into consideration the impacts of costs and the relative risk environme",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 22,
+    "dated": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-22/5"
+  },
+  {
+   "key": "federal-senate-5761",
+   "date": "2019-07-22",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-07-22.158.1) to pass the bill in the Senate. In parliamentary jargon, they voted to read the bill [for a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). The bill will now go to the House of Representatives for their consideration. ### What does this bill do? The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1207) was introduced \"*to require the Civil Aviation Safety Authority, in developing and promulgating aviation safety standards, to take into consideration the impacts of costs and the relative risk environment of the different aviation industry sectors.*\" Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd010).",
+   "stage": "Third reading",
+   "ayes": 38,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 8,
+    "earliest": 23,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-07-22/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-384259",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-10-24",
+   "stage_hint": null,
+   "brief": "The Civil Aviation Amendment Bill was introduced to amend the Civil Aviation Act 1988, requiring CASA to consider economic and cost impacts on industry and differing sector risks when developing safety standards."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Civil Aviation Amendment Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00099",
+   "assent_date": "2019-11-06"
+  }
+ ]
+}

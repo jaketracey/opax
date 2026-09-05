@@ -1,0 +1,196 @@
+{
+ "key": "au-federal-r6769",
+ "title": "Veterans’ Affairs Legislation Amendment (Exempting Disability Payments from Income Testing and Other Measures) Bill 2021",
+ "short_title": "Veterans’ Affairs Legislation Amendment (Exempting Disability Payments from Income Testing and Other Measures) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-10-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans’ Affairs",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6769_ems_799b5791-5cd8-4a82-a54e-7310beaf91e7%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6769%22",
+   "document_date": "2021-10-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00142",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 8,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-10-21",
+  "sentences": [
+   "This bill would stop the social security income test applying to certain veterans' disability payments, and remove a related allowance.",
+   "It would also create a two-year trial of early, voluntary rehabilitation for veterans who are not liable for their injuries.",
+   "The government says the change would end a rule that gives severely disabled veterans less rent assistance than those with milder impairments."
+  ],
+  "changes": [
+   "Exempts adjusted disability pension from the Social Security Act 1991 income test.",
+   "Repeals the definition of adjusted disability pension and the Defence Force Income Support Allowance from the Veterans' Entitlements Act 1986.",
+   "Removes all references to the Defence Force Income Support Allowance from Commonwealth primary legislation.",
+   "Establishes a two-year non-liability rehabilitation pilot.",
+   "Removes the disability income rent test so rent assistance is paid without regard to impairment level."
+  ],
+  "affected": "Veterans receiving adjusted disability pension or other disability payments from the Department of Veterans' Affairs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:49:37Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-416560",
+   "speaker": "Brendan Patrick John O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Affairs Legislation Amendment Bill 2021, which exempts disability payments from income testing and simplifies rent assistance, but moved a second reading amendment criticising the government for not increasing the Totally and Permanently Incapacitated (TPI) Payment for 27,000 veterans and for ignoring a Senate inquiry recommendation to consider an increase."
+  },
+  {
+   "slug": "speech-416563",
+   "speaker": "Shayne Kenneth Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The Labor opposition supported the Veterans' Affairs Legislation Amendment Bill 2021 as better than nothing but condemned the government for ignoring the concerns of 27,000 TPI veterans and failing to increase the TPI payment, despite a Senate committee recommendation and a 2019 promise by Prime Minister Scott Morrison. The bill exempts disability pensions from income testing and provides rent assistance to about 2,700 veterans from January 2022, but Labor argued it should be backdated to October 2020."
+  },
+  {
+   "slug": "speech-416717",
+   "speaker": "Russell Broadbent",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The speaker praised retiring MP Warren Snowdon for his achievements as Veterans' Affairs Minister, including elevating international veterans' meetings to ministerial level, launching Operation Life online suicide prevention, increasing military compensation and mental health supports, and advocating for Indigenous constitutional recognition."
+  },
+  {
+   "slug": "speech-416719",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "The member supported the bill to exempt disability payments from income testing and bring forward rent assistance, while criticising the government for not increasing the TPI payment despite a compelling case, and noting that 68% of disability pension claims were not finalised and one veteran had waited over 530 days for a case to be allocated."
+  },
+  {
+   "slug": "speech-416720",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "Labor will support the bill to exempt disability payments from income testing and simplify rent assistance for veterans and dependants. The MP criticised the government for failing to act on the Tune review's recommendations for three years, rejecting the Senate inquiry's unanimous call to increase the TPI payment, and urged the reopening of the Veterans' Affairs office in Newcastle."
+  },
+  {
+   "slug": "speech-416721",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-11-30",
+   "stage_hint": null,
+   "brief": "Labor supported the Veterans' Affairs Legislation Amendment (Exempting Disability Payments from Income Testing and Other Measures) Bill 2021 to simplify veterans' assistance, exempt disability payments from income testing, and introduce a rehabilitation pilot, but criticised the government for not increasing the TPI payment despite a Senate inquiry recommendation and for a 68% backlog in TPI claims."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Veterans’ Affairs Legislation Amendment (Exempting Disability Payments from Income Testing and Other Measures) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00142",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

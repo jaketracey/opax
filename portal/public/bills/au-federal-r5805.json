@@ -1,0 +1,226 @@
+{
+ "key": "au-federal-r5805",
+ "title": "Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill 2017",
+ "short_title": "Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-02-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2017-04-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-04-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5805_ems_4d1cc543-7e2e-4372-9893-16edcab88f9e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5805_ems_dbfa4dd1-3104-4bb4-8f6f-52434bda31d6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5805_ems_cbc33a0e-873a-4d6f-96d5-11918c544c15%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5805%22",
+   "document_date": "2017-02-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00027",
+   "document_date": "2017-04-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-343524",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The government's bill hides a $50 billion tax cut for big banks and multinationals behind a weak approach to multinational tax avoidance, raising only $200 million. Labor supports the bill but calls for an explanation, and notes its own proposals would raise $1.6 billion over the forward estimates."
+  },
+  {
+   "slug": "speech-343527",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the coalition government has already clawed back $2 billion in multinational tax avoidance this financial year and that the Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill will strengthen Australia's global leadership in addressing the problem."
+  },
+  {
+   "slug": "speech-343528",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's bill is a \"soft touch\" that raises only $200 million, whereas Labor's stronger reforms would have raised $1.6 billion over forward estimates and $5.9 billion over a decade. They criticized the government for proposing a $50 billion tax cut for big businesses and banks while cutting services for pensioners, the disabled, and low-income Australians."
+  },
+  {
+   "slug": "speech-343529",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill 2017 and the Diverted Profits Tax Bill 2017, which impose a 40% penalty rate on diverted profits and increase penalties for large multinationals (e.g., up to $525,000 for late lodgement). The laws are expected to claw back $2 billion in tax this financial year, raise $200 million over forward estimates, and have already prompted Facebook and Google to restructure their Australian tax arrangements."
+  },
+  {
+   "slug": "speech-343673",
+   "speaker": "Trevor Evans",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill 2017, stating the government has already recovered $2 billion from multinationals and expects the bill to raise $100 million annually from 2018-19. The bill increases maximum administrative penalties for significant global entities from about $5,000 to over $500,000 and introduces a 40% penalty rate on diverted profits, effective 1 July 2017."
+  },
+  {
+   "slug": "speech-343674",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill 2017, but argued the government’s approach raised only $200 million compared to Labor’s proposed $1.6 billion, while net debt had blown out from $184 billion to $317 billion under the Liberals and 109 large companies paid no tax. The speaker criticised the government for cutting 3,000 ATO jobs, giving a $50 billion tax cut mainly benefiting foreign shareholders, and failing to properly fund Medicare, schools, and family payments."
+  },
+  {
+   "slug": "speech-343675",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The government's multinational tax avoidance bill will raise only $200 million over the forward estimates, compared to Labor’s proposed $1.6 billion, while the government cut 3,000 ATO staff and gave $50 billion in business tax cuts."
+  },
+  {
+   "slug": "speech-343676",
+   "speaker": "Wayne Swan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill 2017 raises only $200 million, far below the estimated $13 billion in lost tax revenue, and fails to address debt deduction loopholes; BHP and Rio Tinto were named for transfer pricing and tax evasion, while the $50 billion corporate tax cut was opposed as ineffective trickle-down economics."
+  },
+  {
+   "slug": "speech-343677",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2017-03-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Combating Multinational Tax Avoidance) Bill 2017 but urged the government to strengthen it by reducing the threshold for \"significant global entities\" from $1 billion to $250 million, lowering the \"sufficient foreign tax\" test from 20% to 10%, and requiring multinationals to disclose potential diverted profit tax liabilities with penalties for non-disclosure. The speaker cited Apple shifting $8.9 billion in unpaid taxes to Ireland, Google paying $16 million in tax on $2.5 billion in estimated revenue, and Facebook Australia paying $814,000 in tax on an estimated $500–600 million in advertising revenue."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Combating Multinational Tax Avoidance) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00027",
+   "assent_date": "2017-04-04"
+  }
+ ]
+}

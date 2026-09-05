@@ -1,0 +1,296 @@
+{
+ "key": "au-federal-r5192",
+ "title": "Intellectual Property Laws Amendment Bill 2014",
+ "short_title": "Intellectual Property Laws Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "passed",
+ "status_as_of": "2015-02-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-11-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-02-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5192_ems_e86c4a46-d8d1-4eae-9d9b-5b5751e8ae30%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5192%22",
+   "document_date": "2014-03-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00008",
+   "document_date": "2015-02-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-19",
+  "sentences": [
+   "The bill would make changes to several intellectual property laws to improve the system.",
+   "It would allow Australian drug makers to seek a court order to produce generic versions of patented medicines for export to eligible developing countries.",
+   "The patent holder would be paid compensation negotiated to avoid disadvantaging them."
+  ],
+  "changes": [
+   "Amends the Patents Act 1990, Trade Marks Act 1995, Designs Act 2003 and Plant Breeder's Rights Act 1994.",
+   "Creates a scheme for compulsory licences to manufacture and export generic pharmaceuticals to developing countries.",
+   "Implements Australia's commitment to the TRIPS Protocol."
+  ],
+  "affected": "Australian pharmaceutical manufacturers, patent holders, and developing countries that meet specified criteria.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-285685",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-03-19",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298178",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298179",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298180",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298181",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298183",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298185",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298346",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298347",
+   "speaker": "Jill Hall",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301727",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301728",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301729",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301731",
+   "speaker": "Fiona Scott",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301733",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301734",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-301735",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-11-24",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Intellectual Property Laws Amendment Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00008",
+   "assent_date": "2015-02-25"
+  }
+ ]
+}

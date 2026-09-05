@@ -1,0 +1,113 @@
+{
+ "key": "au-federal-s1174",
+ "title": "Broadcasting Services Amendment (Audio Description) Bill 2019",
+ "short_title": "Broadcasting Services Amendment (Audio Description) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2019-02-12",
+ "originating_house": "senate",
+ "sponsor": "STEELE-JOHN, Sen Jordon",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10901",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2025-07-23",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1174_ems_ab14d63b-1a59-4f6f-95ee-bd34768aa4b8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1174%22",
+   "document_date": "2019-02-12",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-12",
+  "sentences": [
+   "This bill would require television broadcasters to offer a set weekly amount of audio-described content.",
+   "It would give the Australian Communications and Media Authority power to enforce the new rules.",
+   "The bill adds a new part to the Broadcasting Services Act, drawing on the existing captioning framework but with separate provisions for audio description."
+  ],
+  "changes": [
+   "The bill creates a minimum weekly audio description requirement for national, commercial and subscription television broadcasters.",
+   "The bill places enforcement of audio description obligations under the Australian Communications and Media Authority.",
+   "The bill inserts a new Part 9D Division 3A and makes consequential amendments to the Broadcasting Services Act 1992."
+  ],
+  "affected": "People who are blind or have low vision, and television broadcasters including national broadcasters, commercial licensees and subscription licensees.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:21:15Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1195265",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

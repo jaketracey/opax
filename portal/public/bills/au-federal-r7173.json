@@ -1,0 +1,423 @@
+{
+ "key": "au-federal-r7173",
+ "title": "Illegal Logging Prohibition Amendment (Strengthening Measures to Prevent Illegal Timber Trade) Bill 2024",
+ "short_title": "Illegal Logging Prohibition Amendment (Strengthening Measures to Prevent Illegal Timber Trade) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Agriculture, Fisheries and Forestry",
+ "status": "passed",
+ "status_as_of": "2024-09-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-06-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-08-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7173_ems_29b7cce7-c0c6-4429-a25c-47318cdc4b70%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7173_ems_0f2ae22d-9857-4696-a50b-a00bb370f594%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7173_ems_d31e29f4-c9a2-4676-a489-d4f234941e57%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7173%22",
+   "document_date": "2024-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00084",
+   "document_date": "2024-09-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2024-03-27",
+  "sentences": [
+   "The bill would update Australia's laws against illegal timber to make it harder for illegally harvested wood to enter the country and to support legal trade.",
+   "It would give regulators more enforcement options, including new strict liability offences, civil penalties for false information, and powers to test timber samples for their species and origin.",
+   "The bill would also require a review of the law's operation within five years of the changes starting, and allow the minister to make rules that can be updated as needed."
+  ],
+  "changes": [
+   "Consolidates offences and civil penalties from the regulation into the main Act for clarity.",
+   "Adds strict liability offences that can be handled through infringement notices.",
+   "Extends powers to monitor, investigate, and test regulated timber products, including under biosecurity and customs controls.",
+   "Requires importers and processors to give notice when regulated timber products arrive or are processed.",
+   "Allows the department secretary to demand information or audits to check compliance with due diligence.",
+   "Authorises publication of contravention details on the department's website and protects officials from civil proceedings when exercising powers."
+  ],
+  "affected": "Timber importers, processors of raw logs, and businesses dealing with regulated timber products would be affected, as well as the Department of Agriculture, Fisheries and Forestry and the minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:46Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8941",
+   "date": "2024-05-29",
+   "house": "representatives",
+   "question": "Illegal Logging Prohibition Amendment (Strengthening Measures to Prevent Illegal Timber Trade) Bill 2024 - Report from Federation Chamber - End native forest logging",
+   "stage": "Report from Federation Chamber",
+   "ayes": 11,
+   "noes": 102,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 56
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 112,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-29/2"
+  },
+  {
+   "key": "federal-senate-9107",
+   "date": "2024-09-09",
+   "house": "senate",
+   "question": "Illegal Logging Prohibition Amendment (Strengthening Measures to Prevent Illegal Timber Trade) Bill 2024 - Second Reading - Ending Native Forest Logging Bill 2023",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-09/1"
+  },
+  {
+   "key": "federal-senate-9108",
+   "date": "2024-09-09",
+   "house": "senate",
+   "question": "Illegal Logging Prohibition Amendment (Strengthening Measures to Prevent Illegal Timber Trade) Bill 2024 - Second Reading - Native forests",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 4,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-09/2"
+  },
+  {
+   "key": "federal-senate-9109",
+   "date": "2024-09-09",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-09-09.46.1) introduced by Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens), which means it failed. ### Amendment text > *(1) Schedule 1, page 4 (after line 29), after item 4, insert:* > >> *4A Section 7 (definition of illegally logged )* >> >> *Repeal the definition, substitute:* >> >> *illegally logged, in relation to timber, means authorised for harvest, harvested, processed, or transported in contravention of laws, including laws related to:* >> >>> *(a) the protection of plants;* >>> >>> *(b) the protection of the environment;* >>> >>> *(c) human rights;* >>> >>> *(d) bribery;* >>> >>> *(e) money laundering;* >>> >>> *(f) tax evasion;* >>> >>> *(g) fraud; or* >>> >>> *(h) other financial crimes;* >>> >>> *in the place (whether or not in Australia) where the timber is to be harvested, or was harvested, transported or processed.* > > *(2) Schedule 1, page 13 (after line 3), after item 21, insert:* > >> *21A Subparagraph 14(3)(a)(iii)* >> >> *Omit \"harvested\", substitute \"authorised for harvest, harvested, processed, or transported\".* > > *(3) Schedule 1, page 20 (after line 13), after item 37, insert:* > >> *37A Subparagraph 18(3)(a)(iii)* >> >> *Omit \"harvested\", substitute \"authorised for harvest, harvested, processed, or transported\".* > > *(4) Schedule 1, item 27, page 33 (line 15), omit \"harvested\", substitute \"authorised for harvest, harvested, processed, or transported\".*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 6,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-09/3"
+  },
+  {
+   "key": "federal-senate-9110",
+   "date": "2024-09-09",
+   "house": "senate",
+   "question": "Illegal Logging Prohibition Amendment (Strengthening Measures to Prevent Illegal Timber Trade) Bill 2024 - in Committee - Supplying illegally logged timber",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "member": 6,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-09-09/4"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Illegal Logging Prohibition Amendment (Strengthening Measures to Prevent Illegal Timber Trade) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00084",
+   "assent_date": "2024-09-17"
+  }
+ ]
+}

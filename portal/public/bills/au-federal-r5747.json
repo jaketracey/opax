@@ -1,0 +1,228 @@
+{
+ "key": "au-federal-r5747",
+ "title": "Privacy Amendment (Notifiable Data Breaches) Bill 2016",
+ "short_title": "Privacy Amendment (Notifiable Data Breaches) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-19",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2017-02-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5747_ems_ed12b5bb-d3b3-4a6a-9536-53bb459a00df%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/4983464%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5747%22",
+   "document_date": "2016-10-19",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00012",
+   "document_date": "2017-02-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-4539",
+   "date": "2017-02-13",
+   "house": "senate",
+   "question": "Penny Wong I rise to speak on the Privacy Amendment (Notifiable Data Breaches) Bill 2016on behalf of the opposition. The opposition will be supporting this legislation. We welcome this bill which has been much delayed in its introduction by this government. We support the bill because it is actually a Labor bill. It is nearly identical to a bill that passed the House with bipartisan support some four years ago, but which lapsed at the election in 2013. It has taken this government that long to re-introduce this bill. Really, it ought to have been one of the first things on the Attorney-General's agenda, but, as we know, he has been distracted with a few other things. Let me outline why this bill is important and why we thought fit to introduce it four years ago. As it stands, an individual's personal data can be breached by a government agency, a bank or an online store and there be no requirement that the individual be notified so that they can change their passwords or take other measures to protect themselves. A person might be told tomorrow that their data was hacked four years ago, and that organisation would face no consequences for its failure to notify them at the time. This is the situation that this government and this Attorney-General has let linger thanks to an inexplicable inertia on this important issue. Let us have a look, briefly, at the history. In 2013, Mr Dreyfus, the then Attorney-General, introduced the Privacy Amendment (Privacy Alerts) Bill. That bill, like this one, made it mandatory for regulated entities under the Privacy Act to alert consumers when their personal data had been breached, whether through accident or malice. The 2013 bill followed an extensive report by the Australian Law Reform Commission in 2008 which recommended that the Privacy Act be amended to provide as follows: An agency or organisation is required to notify the Privacy Commissioner and affected individuals when specified personal information has been, or is reasonabl",
+   "stage": "Second reading",
+   "ayes": 11,
+   "noes": 40,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 14,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-02-13/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-335905",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-19",
+   "stage_hint": null,
+   "brief": "The Privacy Amendment (Notifiable Data Breaches) Bill 2016 was moved for a second reading, requiring Privacy Act entities to notify the Australian Information Commissioner and affected individuals of eligible data breaches likely to result in serious harm, with enforcement through existing investigatory powers and civil penalties. The bill cited high-profile breaches such as Ashley Madison and the US Office of Personnel Management, noted 47 US states with mandatory schemes, and drew on the ALRC’s 2008 recommendation and the voluntary scheme’s 107 notifications in 2015-16."
+  },
+  {
+   "slug": "speech-339968",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "Labor supported the Privacy Amendment (Notifiable Data Breaches) Bill 2016, which was originally introduced as Labor's own 2013 bill, and criticised the government for taking over three years to act, citing examples such as the Catch of the Day breach affecting two million customers and Telstra's $10,200 fine for exposing 16,000 customers' data."
+  },
+  {
+   "slug": "speech-339970",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-07",
+   "stage_hint": null,
+   "brief": "The Privacy Amendment (Notifiable Data Breaches) Bill 2016 introduces a mandatory data breach notification scheme requiring Australian government agencies and private sector organisations to notify individuals whose personal information is subject to unauthorised access, disclosure or loss where there is a likely risk of serious harm."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Privacy Amendment (Notifiable Data Breaches) Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00012",
+   "assent_date": "2017-02-22"
+  }
+ ]
+}

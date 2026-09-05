@@ -1,0 +1,502 @@
+{
+ "key": "au-federal-r7057",
+ "title": "Treasury Laws Amendment (Making Multinationals Pay Their Fair Share—Integrity and Transparency) Bill 2023",
+ "short_title": "Treasury Laws Amendment (Making Multinationals Pay Their Fair Share—Integrity and Transparency) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-22",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-04-08",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-12-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-04-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7057_ems_7c4f8fd3-6288-4036-a7ac-cf8d4c14da4b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7057_ems_d93c3ea4-f2b4-4e2a-b51f-0bca60c13dfd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7057%22",
+   "document_date": "2023-06-22",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00023",
+   "document_date": "2024-04-08",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-8281",
+   "date": "2023-08-09",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debate/?id=2023-08-01.125.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). Because this vote was unsuccessful, the usual second reading motion will remain unchanged. The amendment was introduced by Hume MP [Angus Taylor](https://theyvoteforyou.org.au/people/representatives/hume/angus_taylor) (Liberal). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House notes:* > > *(1) the former Coalition government implemented more than a dozen measures to combat multinational tax avoidance including by:* > >> *(a) playing a leading role in the original OECD BEPS project, and committing to the OECD two-pillar solution to multinational tax; and* >> >> *(b) introducing the Multinational Tax Avoidance Law; the Diverted Profits Tax; strengthening the thin capitalisation and transfer pricing rules; doubling penalties for multinational tax avoidance; and establishing the Tax Avoidance Taskforce;* > > *(2) that despite promising to only raise taxes on multinationals at the election, the Labor Government have broken promises to raise taxes on superannuation, on unrealised capital gains, on franking credits, and end small business tax incentives;* > > *(3) that the original form of this Bill, and its last-minute changes, show once again that Labor have an anti-business approach to consultation, regulation and policy to support business;* > > *(4) independent economist Chris Richardson expects that Labor will breach the 23.9% tax-to-GDP cap in their first year in office; and* > > *(5) that higher taxes are not a solution to a cost-of-living crisis and collapsing productivity under Labor\".*",
+   "stage": "Treasury Laws Amendment (Making Multinationals Pay Their Fair Share",
+   "ayes": 55,
+   "noes": 86,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 75
+    },
+    "Liberal": {
+     "ayes": 34,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-08-09/1"
+  },
+  {
+   "key": "federal-senate-8246",
+   "date": "2023-11-08",
+   "house": "senate",
+   "question": "Documents - Treasury; Order for the Production of Documents - Treasury Laws Amendment (Making Multinationals Pay Their Fair Share—Integrity and Transparency) Bill 2023",
+   "stage": "Documents",
+   "ayes": 41,
+   "noes": 19,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-08/2"
+  },
+  {
+   "key": "federal-senate-8597",
+   "date": "2023-12-05",
+   "house": "senate",
+   "question": "The majority voted in favour of an [amendment](https://www.openaustralia.org.au/senate/?gid=2023-12-05.310.3) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This means that the [Government amendment RU100](https://parlinfo.aph.gov.au/parlInfo/download/legislation/amend/r7057_amend_34cf0e02-8153-4ecc-be1e-856a638d70f9/upload_pdf/B23RU100.pdf;fileType=application%2Fpdf) would be referred to the Economics Legislation Committee for [inquiry and report](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Economics/GovAmendTLABMultiTax24). ### Amendment text > *Omit all words after \"That\", substitute:* > > *(a) the Government amendments to the [Treasury Laws Amendment (Making Multinationals Pay Their Fair Share—Integrity and Transparency) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7057) on sheet RU100 be referred to the Economics Legislation Committee for inquiry and report by 5 February 2024; and* > > *(b) further consideration of the bill be made an order of the day for the first sitting day after the committee has presented its report.*",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 17,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-12-05/26"
+  },
+  {
+   "key": "federal-senate-8854",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendment 2383](https://www.openaustralia.org.au/senate/?id=2024-03-27.181.1) introduced by Pauline Hanson's One Nation Party, which means it passed and will now be included in the bill. ### Amendment text > *(1) Schedule 2, item 144, page 63 (line 3), omit \"The amendments\", substitute \"Subject to this Part, the amendments\".* > > *(2) Schedule 2, Part 2, page 63 (after line 17), at the end of the Part, add:* > >> *146 Saving — old law continues to apply to Australian plantation forestry entities* >> >> *(1) Despite the amendments made by Part 1 of this Schedule, the old law continues to apply in relation to assessments for income years starting on or after 1 July 2023 for entities that are Australian plantation forestry entities for a period that is all or part of the income year, as if the amendments had not been made.* >> >> *(2) In this item:* >> >>> *Australian plantation forestry entity, at a particular time, means an entity that solely or predominantly carries on a business, at that time, of establishing and tending trees for felling in Australia.* >>> >>> *old law means the following provisions, as in force immediately before the commencement of this item:* >>> >>>> *(a) Division 820 of the Income Tax Assessment Act 1997;* >>>> >>>> *(b) any other provision of that Act to the extent that it relates to that Division;* >>>> >>>> *(c) any provision in an instrument (whether legislative or administrative) made under that Act to the extent that it relates to that Division.*",
+   "stage": "Treasury Laws Amendment (Making Multinationals Pay Their Fair Share",
+   "ayes": 40,
+   "noes": 20,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/18"
+  },
+  {
+   "key": "federal-senate-8855",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2024-03-27.184.1) introduced by the Victorian Senator [Jane Hume](https://theyvoteforyou.org.au/people/senate/victoria/jane_hume) (Liberal), which means they failed and will not become part of the bill. ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *4. Schedule 3* >> >>> *The day after this Act receives the Royal Assent.* > > *(2) Schedule 2, item 144, page 63 (line 4), omit \"2023\", substitute \"2024\".* > > *(3) Schedule 2, item 144, page 63 (line 8), omit \"2023\", substitute \"2024\".* > > *(4) Page 63 (after line 17), at the end of the Bill, add:* > >> *Schedule 3 — Consultation* >> >> *1 Consultation* >> >> *(1) Before 1 July 2024, the Treasurer must ensure that:* >> >>> *(a) consultation on the amendments made by Schedule 2 to this Act is undertaken:* >>> >>>> *(i) for a period of at least 3 months; and* >>>> >>>> *(ii) with such industry participants as the Treasurer considers appropriate; and* >>> >>> *(b) a report is prepared on the consultation.* >> >> *(2) As soon as practicable after the completion of the report referred to in paragraph (1)(b), the persons who prepared the report must give it to the Treasurer.* >> >> *(3) The Treasurer must cause a copy of the report to be tabled in each House of the Parliament within 15 sitting days of that House after the report is given to the Treasurer.*",
+   "stage": "Treasury Laws Amendment (Making Multinationals Pay Their Fair Share",
+   "ayes": 29,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/19"
+  },
+  {
+   "key": "federal-senate-8856",
+   "date": "2024-03-27",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2024-03-27.186.1) introduced by the Australian Greens, which means it failed and will not be included in the bill. ### Amendment text > *(1) Clause 2, page 2 (at the end of the table), add:* > >> *4. Schedule 3* >> >> *The day after this Act receives the Royal Assent.* > > *(2) Page 63 (after line 17), at the end of the Bill, add:* > >> *Schedule 3 — Petroleum resource rent tax transparency* >> >> *Taxation Administration Act 1953* >> >> *1 Subsection 3E(1)* >> >>> *After \"a year of tax\", insert \"in relation to a petroleum project\".* >> >> *2 Subsection 3E(1)* >> >>> *After \"the year of tax\", insert \"and the petroleum project\".* >> >> *3 Paragraph 3E(3)(b)* >> >>> *After \"the year of tax\" (wherever occurring), insert \"and the petroleum project\".* >> >> *4 At the end of subsection 3E(3)* >> >>> *Add:* >>> >>>> *; (c) the following information, according to information reported to the Commissioner sin the entity's PRRT return for the year of tax and the petroleum project:* >>>> >>>>> *(i) the total assessable receipts derived by the entity for the year of tax and the project;* >>>>> >>>>> *(ii) the total deductible expenditure incurred by the entity for the year of tax and the project;* >>>>> >>>>> *(iii) if the total deductible expenditure mentioned in subparagraph (ii) exceeds the total assessable receipts mentioned in subparagraph (i)—the amount of the excess;* >>>>> >>>>> *(iv) the total of the amounts (if any) transferred by the entity to the project in relation to the year of tax under section 45A of the Petroleum Resource Rent Tax Assessment Act 1987;* >>>>> >>>> *(v) the total of the amounts (if any) transferred by another entity to the project in relation to the project and the year of tax under section 45B of the Petroleum Resource Rent Tax Assessment Act 1987;* >>>>> >>>>> *(vi) the taxable profit of the entity for the year of tax and the project.* >>>>> >>>>> *Note: The",
+   "stage": "Treasury Laws Amendment (Making Multinationals Pay Their Fair Share",
+   "ayes": 17,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 41,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-03-27/20"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Making Multinationals Pay Their Fair Share—Integrity and Transparency) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00023",
+   "assent_date": "2024-04-08"
+  }
+ ]
+}

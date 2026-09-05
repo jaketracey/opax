@@ -1,0 +1,176 @@
+{
+ "key": "au-federal-r6620",
+ "title": "Health Insurance Amendment (Compliance Administration) Bill 2020",
+ "short_title": "Health Insurance Amendment (Compliance Administration) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-29",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6620_ems_1f75a640-48a2-4fea-bfeb-ac5c3f541843%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6620_ems_d27f3f97-5802-485c-b949-d152c11e1dfe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6620%22",
+   "document_date": "2020-10-29",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00150",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-10-29",
+  "sentences": [
+   "The bill would let the Commonwealth recover Medicare payments that were made incorrectly because someone gave false or misleading information.",
+   "It clarifies that such overpayments are debts owed to the Commonwealth under the Health Insurance Act 1973.",
+   "The change supports electronic claiming systems and streamlines how incorrect MBS claims are identified and debts raised."
+  ],
+  "changes": [
+   "Allows recovery of Medicare benefits or payments that were not payable or to which a person was not entitled.",
+   "Clarifies that debts arise when incorrect amounts are paid due to false or misleading information.",
+   "Supports current and future electronic Medicare claiming technologies."
+  ],
+  "affected": "People who receive Medicare benefits or payments and the Commonwealth.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:53Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-400515",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Health Insurance Amendment (Compliance Administration) Bill 2020, which replaces the word \"statement\" with \"information\" in Medicare claims, but criticised the government's nudge letters to GPs as a blunt instrument that creates needless anxiety, noting that only a tiny fraction of providers bill inappropriately while letters were sent to hundreds or thousands of GPs."
+  },
+  {
+   "slug": "speech-400518",
+   "speaker": "The DEPUTY SPEAKER",
+   "party": null,
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-400566",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": "A member raised concerns about the Assistant Minister for Tangney summing up the wrong bill in the House, the second such incident in recent weeks, and asked the Speaker what avenues exist to correct the record and what steps can be taken to ensure ministers speak on the correct bill in future."
+  },
+  {
+   "slug": "speech-400595",
+   "speaker": "Trevor Evans",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-12-09",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Health Insurance Amendment (Compliance Administration) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00150",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

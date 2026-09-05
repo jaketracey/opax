@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5508",
+ "title": "Fairer Paid Parental Leave Bill 2015",
+ "short_title": "Fairer Paid Parental Leave Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-06-25",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2016-04-15",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5508%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5508%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5508%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5508_ems_b75827c4-eee2-4439-b333-2c70c36e26db%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5508%22",
+   "document_date": "2015-06-25",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-06-25",
+  "sentences": [
+   "This bill would change the Paid Parental Leave scheme so government payments go only to parents without enough employer-provided leave.",
+   "From 1 July 2016, a parent's employer-paid parental leave would reduce or cancel their government payment, and from 1 April 2016 employers would no longer be required to pass on government-funded leave to long-term staff.",
+   "Parents with employer payments worth less than the full government rate would get a top-up, and those with equal or more employer pay would get nothing from the scheme."
+  ],
+  "changes": [
+   "It ensures government parental leave payments are targeted to parents who lack sufficient employer-provided leave.",
+   "It removes the requirement for employers to hand over government-funded parental leave pay to eligible long-term employees.",
+   "It reintroduces a measure from a 2014 bill that is before the Senate."
+  ],
+  "affected": "Working parents who receive employer-provided parental leave payments, and businesses that employ eligible long-term workers.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:48:32Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

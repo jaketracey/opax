@@ -1,0 +1,138 @@
+{
+ "key": "au-federal-s1401",
+ "title": "Fair Work Legislation Amendment (Strengthening Protections Against Discrimination) Bill 2023",
+ "short_title": "Fair Work Legislation Amendment (Strengthening Protections Against Discrimination) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-06",
+ "originating_house": "senate",
+ "sponsor": "LAMBIE, Sen Jacqui",
+ "sponsor_party": "Jacqui Lambie Network",
+ "sponsor_person_id": "10830",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-11-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1401%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1401%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1401%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1401%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1401_ems_762fb440-36df-413b-b428-26eecc8a1958%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1401%22",
+   "document_date": "2023-11-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 7,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-06",
+  "sentences": [
+   "The bill would make experiencing family and domestic violence a protected ground under workplace anti-discrimination law.",
+   "It would ban national system employers from taking adverse action, such as reducing hours or demoting, against current or prospective workers because of their experience of family and domestic violence.",
+   "The changes would start the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "Adds 'subjection to family and domestic violence' to the list of protected attributes in the Fair Work Act 2009.",
+   "Prohibits modern awards and enterprise agreements from containing terms that discriminate because of a person's experience of family and domestic violence.",
+   "Requires the Fair Work Commission to consider preventing and eliminating discrimination on this ground when exercising its powers."
+  ],
+  "affected": "National system employers, employees, and prospective employees who have experienced family and domestic violence.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:42:41Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8438",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2023-11-13.121.2) introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal), which means it failed. ### Motion text > *That so much of the standing and sessional orders be suspended as would prevent the order of the day for the consideration of the [Fair Work Legislation Amendment (Strengthening Protections Against Discrimination) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1401) being called on immediately.* Standing and sessional orders are the usual procedural rules of parliament.",
+   "stage": "Business motion",
+   "ayes": 58,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-13/3"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

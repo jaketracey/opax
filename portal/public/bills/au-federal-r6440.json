@@ -1,0 +1,755 @@
+{
+ "key": "au-federal-r6440",
+ "title": "Transport Security Amendment (Serious Crime) Bill 2020",
+ "short_title": "Transport Security Amendment (Serious Crime) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-23",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-06-22",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6440_ems_3ec88f82-8833-45fc-8292-a0e2233f4393%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6440_ems_025ba4e0-7de2-4ffc-aff0-f9a36f0138f3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6440_ems_a8fd917d-712a-4e8b-98e3-3eea5ff67d80%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6440%22",
+   "document_date": "2019-10-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00044",
+   "document_date": "2021-06-22",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2019-10-23",
+  "sentences": [
+   "This bill would add a new purpose to aviation and maritime security laws to stop serious crime at airports, ports, and offshore oil and gas facilities.",
+   "It would let the Australian Criminal Intelligence Commission conduct criminal intelligence checks for security identification card schemes, with reviews in the Administrative Appeals Tribunal.",
+   "Regulations made under the new purpose could set fines of up to 200 penalty units, matching existing penalty levels in the card schemes."
+  ],
+  "changes": [
+   "Creates an extra purpose in the Aviation Transport Security Act 2004 and the Maritime Transport and Offshore Facilities Security Act 2003 to prevent serious crime.",
+   "Allows regulations for that purpose to prescribe penalties of up to 200 penalty units.",
+   "Clarifies the legal basis for background checks under the aviation and maritime Acts.",
+   "Gives the Australian Criminal Intelligence Commission the function of doing criminal intelligence assessments for the card schemes.",
+   "Adds criminal intelligence assessments as a fifth element of background checks under the AusCheck Act 2007.",
+   "Exempts decisions on those assessments from judicial review under the Administrative Decisions (Judicial Review) Act 1977."
+  ],
+  "affected": "People who apply for or renew aviation or maritime security identification cards, and the agencies that run the card schemes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:05Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6625",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with [amendments](https://www.openaustralia.org.au/debates/?id=2020-10-07.130.1) introduced by MP for Ballarat [Catherine King](https://theyvoteforyou.org.au/people/representatives/ballarat/catherine_king) (Labor), which means they failed The question is that the amendments be disagreed to. MP King [explained the amendments](https://www.openaustralia.org.au/debates/?id=2020-10-07.130.1): > *...this bill fails to define 'serious crime' and instead relies on delegated legislation with minimal parliamentary oversight. Labor welcomes the government's indication that they plan to include in the regulations a tiered scheme of crimes in an attempt to get the balance right between protecting our national security and not wrongly excluding a worker from their work. Without having seen those regulations, it is very difficult to determine whether they do in fact do what we think they should do. Labor has repeatedly asked the government to define 'serious crime' and to introduce a definition into the legislation, but the government has consistently said that it won't do that.* ### What does the bill do? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6440): * *prevent the use of aviation and maritime transport or offshore facilities in connection with serious crime;* * *establish a regulatory framework to implement harmonised eligibility criteria for the aviation security identification card (ASIC) and maritime security identification card (MSIC) schemes;* * *clarify and align the legislative basis for undertaking security checking of ASIC and MSIC applicants and holders;* * *provide for regulations to prescribe penalties for offences; and* * *insert an additional severability provision to provide guidance to a court as to Parliament’s intention.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd19",
+   "stage": "Consideration in detail",
+   "ayes": 43,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-07/1"
+  },
+  {
+   "key": "federal-representatives-6626",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/debate/?id=2020-10-07.132.1) introduced by MP For Dickson [Peter Dutton](https://theyvoteforyou.org.au/people/representatives/dickson/peter_dutton) (Liberal). Read more about the amendments in the [supplementary explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr6440_ems_025ba4e0-7de2-4ffc-aff0-f9a36f0138f3%22;rec=0). ### What does the bill do? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6440): * *prevent the use of aviation and maritime transport or offshore facilities in connection with serious crime;* * *establish a regulatory framework to implement harmonised eligibility criteria for the aviation security identification card (ASIC) and maritime security identification card (MSIC) schemes;* * *clarify and align the legislative basis for undertaking security checking of ASIC and MSIC applicants and holders;* * *provide for regulations to prescribe penalties for offences; and* * *insert an additional severability provision to provide guidance to a court as to Parliament’s intention.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd064).",
+   "stage": "Consideration in detail",
+   "ayes": 43,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-07/2"
+  },
+  {
+   "key": "federal-representatives-6627",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-10-07.135.1) to agree with the bill as amended. This means they can now decide whether to pass the bill in the House of Representatives. ### What does the bill do? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6440): * *prevent the use of aviation and maritime transport or offshore facilities in connection with serious crime;* * *establish a regulatory framework to implement harmonised eligibility criteria for the aviation security identification card (ASIC) and maritime security identification card (MSIC) schemes;* * *clarify and align the legislative basis for undertaking security checking of ASIC and MSIC applicants and holders;* * *provide for regulations to prescribe penalties for offences; and* * *insert an additional severability provision to provide guidance to a court as to Parliament’s intention.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd064).",
+   "stage": "Consideration in detail",
+   "ayes": 43,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 7,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 74
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-07/3"
+  },
+  {
+   "key": "federal-senate-6990",
+   "date": "2021-02-22",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-02-22.34.9) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that they can now discuss it in greater detail. ### What is the main idea of this bill? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6440): * *prevent the use of aviation and maritime transport or offshore facilities in connection with serious crime;* * *establish a regulatory framework to implement harmonised eligibility criteria for the aviation security identification card (ASIC) and maritime security identification card (MSIC) schemes;* * *clarify and align the legislative basis for undertaking security checking of ASIC and MSIC applicants and holders;* * *provide for regulations to prescribe penalties for offences; and* * *insert an additional severability provision to provide guidance to a court as to Parliament’s intention.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd064).",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 30,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-22/3"
+  },
+  {
+   "key": "federal-senate-6995",
+   "date": "2021-02-22",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-02-22.163.1) introduced by WA Senator [Glenn Sterle](https://theyvoteforyou.org.au/people/senate/wa/glenn_sterle) (Labor) to refer this [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6440) to the [Rural and Regional Affairs and Transport Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Rural_and_Regional_Affairs_and_Transport), which means it was successful. ### Motion text > *That this bill be referred to the Senate Rural and Regional Affairs and Transport Legislation Committee for inquiry and report by 11 March 2021.*",
+   "stage": "Reference to Committee",
+   "ayes": 34,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-02-22/8"
+  },
+  {
+   "key": "federal-senate-7224",
+   "date": "2021-06-16",
+   "house": "senate",
+   "question": "The majority voted against [amendment (1) on sheet 1117](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Famend%2Fr6440_amend_a07882a7-af46-4fcd-9f09-648a05196efb%22;rec=0), introduced by NSW Senator [Kristina Keneally](https://theyvoteforyou.org.au/people/senate/nsw/kristina_keneally) (Labor), which means they failed. The amendment would have linked the commencement of this bill to Senator Keneally's private member's bill, the [Migration Amendment (New Maritime Crew Visas) Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1277), which proposes amendments to the maritime crew visa. ### What does the bill do? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6440): * *prevent the use of aviation and maritime transport or offshore facilities in connection with serious crime;* * *establish a regulatory framework to implement harmonised eligibility criteria for the aviation security identification card (ASIC) and maritime security identification card (MSIC) schemes;* * *clarify and align the legislative basis for undertaking security checking of ASIC and MSIC applicants and holders;* * *provide for regulations to prescribe penalties for offences; and* * *insert an additional severability provision to provide guidance to a court as to Parliament’s intention.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd064).",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 28,
+    "earliest": 25
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-16/1"
+  },
+  {
+   "key": "federal-senate-7225",
+   "date": "2021-06-16",
+   "house": "senate",
+   "question": "The majority voted against [amendments (1)-(2), (4)-(6) and (8)](https://www.openaustralia.org.au/senate/?gid=2021-06-16.23.1), introduced by NSW Senator [Kristina Keneally](https://theyvoteforyou.org.au/people/senate/nsw/kristina_keneally) (Labor), which means they failed. The amendments related to adding a definition of serious crime and a review of decisions made in security checking. ### What does the bill do? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6440): * *prevent the use of aviation and maritime transport or offshore facilities in connection with serious crime;* * *establish a regulatory framework to implement harmonised eligibility criteria for the aviation security identification card (ASIC) and maritime security identification card (MSIC) schemes;* * *clarify and align the legislative basis for undertaking security checking of ASIC and MSIC applicants and holders;* * *provide for regulations to prescribe penalties for offences; and* * *insert an additional severability provision to provide guidance to a court as to Parliament’s intention.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd064).",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 28,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-16/2"
+  },
+  {
+   "key": "federal-senate-7226",
+   "date": "2021-06-16",
+   "house": "senate",
+   "question": "The majority voted against [amendments (3) and (7) on sheet 1022](https://www.openaustralia.org.au/senate/?gid=2021-06-16.23.1), introduced by NSW Senator [Kristina Keneally](https://theyvoteforyou.org.au/people/senate/nsw/kristina_keneally) (Labor), which means they failed. ### Amendment text > *(3) Schedule 1, page 4 (after line 17), after item 4, insert:* > >> *4A Before Division 5 of Part 3* >> >> *Insert:* >> >> *Division 4B — Renewal of security passes* >> >> *38AD Renewal of security passes for access to certain areas and zones* >> >>> *(1) If the regulations provide for a process to issue a security pass (an ASIC ) to a person for the purposes of accessing certain areas and zones (whether the security pass is known as an aviation security identification card or otherwise), the regulations must comply with the requirements in subsections (2) and (3).* >>> >>> *(2) The regulations must provide that a person who has been issued an ASIC may apply for the renewal of the person’s ASIC before it expires.* >>> >>> *(3) The regulations, in providing for the renewal of an ASIC, must provide:* >>> >>>> *(a) that a decision to renew or refuse to renew an ASIC must be made within 60 days of the decision maker receiving the application for renewal; and* >>>> >>>> *(b) that if the decision maker does not make a decision to renew or refuse to renew within 60 days of receiving the application, then the decision maker is taken to have renewed the ASIC at the end of that period.* > > *(7) Schedule 1, page 7 (after line 12), after item 17, insert:* > >> *17A At the end of Part 6* >> >> *Add:* >> >> *Division 7 — Renewal of security passes* >> >> *113H Renewal of security passes for access to certain zones* >> >>> *(1) If the regulations provide for a process to issue a security pass (an MSIC ) to a person for the purposes of accessing certain areas and zones (whether the security pass is known as a maritime security identification card or otherwise), the regulations must comply",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "earliest": 23,
+    "dated": 26
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-16/3"
+  },
+  {
+   "key": "federal-senate-7227",
+   "date": "2021-06-16",
+   "house": "senate",
+   "question": "Transport Security Amendment (Serious Crime) Bill 2020 - in Committee - Oversight of ACIC",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 25
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 29,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-16/4"
+  },
+  {
+   "key": "federal-senate-7228",
+   "date": "2021-06-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-06-16.33.1) to agree with the bill as amended. This means they can now decide whether to pass the bill in the Senate. ### What does the bill do? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6440): * *prevent the use of aviation and maritime transport or offshore facilities in connection with serious crime;* * *establish a regulatory framework to implement harmonised eligibility criteria for the aviation security identification card (ASIC) and maritime security identification card (MSIC) schemes;* * *clarify and align the legislative basis for undertaking security checking of ASIC and MSIC applicants and holders;* * *provide for regulations to prescribe penalties for offences; and* * *insert an additional severability provision to provide guidance to a court as to Parliament’s intention.* Read more in the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd064).",
+   "stage": "In committee",
+   "ayes": 49,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 27,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-16/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-383840",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-23",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Serious Crime) Bill 2019 will make people convicted of serious offences ineligible for Aviation Security Identification Cards (ASIC) and Maritime Security Identification Cards (MSIC), targeting nearly 300 current cardholders with known criminal links and aiming to prevent organised crime from exploiting airports and seaports."
+  },
+  {
+   "slug": "speech-395600",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The Labor opposition argued the bill is unfit for purpose, citing the lack of a definition for \"serious crime\" and stricter rules for Australian workers than foreign crews. They announced amendments to define serious crime, mandate processing times for security cards, provide avenues of appeal, and require similar background checks for foreign crew, while also criticising the government’s border failures over the Ruby Princess and stranded Australians."
+  },
+  {
+   "slug": "speech-395602",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The Transport Security Amendment (Serious Crime) Bill 2019 will amend aviation and maritime security acts to exclude people with serious criminal convictions or links to organised crime from holding ASIC and MSIC cards, addressing a gap where background checks only considered security threats. The speaker noted that 227 existing cardholders were on the Australian Criminal Intelligence Commission's National Criminal Target List and cited cases where the Administrative Appeals Tribunal granted cards to convicted criminals."
+  },
+  {
+   "slug": "speech-395603",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that activities like posting a Facebook protest, going to the beach, or holding a sign should never be considered serious crimes, while citing child sexual abuse (with a 100% increase during lockdowns reported by the AFP) and denial of medical treatment as actual serious crimes. They supported the Transport Security Amendment (Serious Crime) Bill 2019, noting organised crime costs Australia $47 billion annually, and urged its passage with a Senate committee amendment."
+  },
+  {
+   "slug": "speech-395604",
+   "speaker": "Peter Dutton",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The government argued the Transport Security Amendment (Serious Crime) Bill 2019 would strengthen aviation and maritime security by allowing refusal of ASIC and MSIC applications to those with serious criminal histories. The speaker announced amendments to include criminal intelligence assessments, citing 845 drug-induced deaths in 2018 and $47 billion annual cost of organised crime."
+  },
+  {
+   "slug": "speech-408246",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-15",
+   "stage_hint": null,
+   "brief": "Operation Ironside led to 268 charges, 627 offences, nearly four tonnes of drugs seized and over $51 million in cash confiscated. The government called for passage of the Transport Security Amendment (Serious Crime) Bill to tighten security checks at airports and wharves, noting over 220 workers in secure areas are on national criminal or gangs lists."
+  },
+  {
+   "slug": "speech-408588",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-16",
+   "stage_hint": null,
+   "brief": "The government announced the passage of the Transport Security Amendment (Serious Crime) Bill through the Senate, requiring stricter background checks for workers in secure areas of airports and wharves to prevent organised crime links, while reaffirming its commitment to strong border security."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Transport Security Amendment (Serious Crime) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00044",
+   "assent_date": "2021-06-22"
+  }
+ ]
+}

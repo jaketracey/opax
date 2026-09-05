@@ -1,0 +1,343 @@
+{
+ "key": "au-federal-r7133",
+ "title": "Treasury Laws Amendment (Better Targeted Superannuation Concessions and Other Measures) Bill 2023",
+ "short_title": "Treasury Laws Amendment (Better Targeted Superannuation Concessions and Other Measures) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7133_ems_2d7466e4-4cb5-4ac2-8eb3-442bf6394a43%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7133%22",
+   "document_date": "2023-11-30",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-30",
+  "sentences": [
+   "This bill is part of a package that would cut tax breaks for people with superannuation balances over $3 million.",
+   "The package would apply from 1 July 2025 and was announced in the 2023-2024 Budget.",
+   "The government estimates the measure would raise $950 million in receipts and cost $47.6 million in payments over five years from 2022-23."
+  ],
+  "changes": [
+   "Reduces tax concessions for individuals with total superannuation balances exceeding $3 million.",
+   "Excludes earnings from some constitutionally protected superannuation interests from taxation under the measure.",
+   "Requires a post-implementation review within two years of the measure's start."
+  ],
+  "affected": "Individuals with total superannuation balances above $3 million.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:05:58Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8892",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2024-05-16.158.2) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words: \"the House:* > > *(1) notes that the inclusion of unrealised capital gains in the measurement of earnings will:* > >> *(a) add further complexity, red tape, and costs to the superannuation legislative framework;* >> >> *(b) lead to unintended consequences that contradict the stated objective of the bill;* >> >> *(c) impact small business owners and farmers who hold land and business premises in self-managed super funds;* >> >> *(d) risk substantial liquidity stress and financial stress for members of self-managed super funds;* >> >> *(e) constitute a significant departure from the long-established principles of our tax system; and* > > *(2) calls on the Government to replace the current measurement of earnings with a simplified measurement that reduces uncertainty and the severity of including unrealised capital gains, such as using a deemed rate of return (adjusted for unrealised gains) as a proxy for earnings\".*",
+   "stage": "Second reading",
+   "ayes": 10,
+   "noes": 55,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "dated": 65
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/13"
+  },
+  {
+   "key": "federal-representatives-8893",
+   "date": "2024-05-16",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Better Targeted Superannuation Concessions and Other Measures) Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 75,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 139,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-05-16/14"
+  },
+  {
+   "key": "federal-representatives-9165",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debates/?id=2024-10-09.114.1) introduced by North Sydney MP [Kylea Tink](https://theyvoteforyou.org.au/people/representatives/north_sydney/kylea_tink) (Independent), which means they failed. ### What do the amendments do? Ms Tink [explained that](https://www.openaustralia.org.au/debates/?id=2024-10-09.114.1): > *The amendments I'm moving today would ensure that the large superannuation balance threshold is indexed annually, in line with the consumer price index. As it stands, the $3 million large superannuation balance threshold, established in the Treasury Laws Amendment (Better Targeted Superannuation Concessions and Other Measures) Bill of 2023, is not indexed, leaving the decision of when and if to lift the threshold to a future government at some unknown time. This is simply not consistent with sound long-term superannuation taxation policy. It does not provide sufficient certainty to those with money in super or the super industry, and, if left unaddressed, it will create intergenerational inequities.* ### Amendment text > *(1) Schedule 1, item 15, page 10 (after line 17), after section 296-40, insert:* > >> *296-42 Large superannuation balance threshold* >> >> *The large superannuation balance threshold is:* >> >>> *(a) for the 2025-26 financial year—$3 million; or* >>> >>> *(b) for a later financial year—the amount worked out by indexing annually the amount mentioned in paragraph (a).* >>> >>> *Note 1: Subdivision 960-M shows how to index amounts. However, annual indexation does not necessarily increase the amount of the cap (see section 960-285).* >>> >>> *Note 2: The rounding amount for indexation is $100,000 (see subsection 960-285(7)).* > > *(2) Schedule 1, page 28 (after line 10), after item 17, insert:* > >> *17A Section 960-265 (after table item 10A)* >> >>> *Insert:* >> >> *17B Paragraph 960-285(3)(a)* >> >>> *After \"paragraph (b)\", insert \"or (c)\".* >> >> *17C At the end of sub",
+   "stage": "Consideration in detail",
+   "ayes": 9,
+   "noes": 52,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-09/1"
+  },
+  {
+   "key": "federal-representatives-9166",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Better Targeted Superannuation Concessions and Other Measures) Bill 2023 - Consideration in Detail - Omit schedules 1-3",
+   "stage": "Consideration in detail",
+   "ayes": 60,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 74
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-09/2"
+  },
+  {
+   "key": "federal-representatives-9167",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/debate/?id=2024-10-09.125.1) introduced by Wentworth MP [Allegra Spender](https://theyvoteforyou.org.au/people/representatives/wentworth/allegra_spender) (Independent), which means they failed. ### What do these amendments do? Ms Spender [explained that](https://www.openaustralia.org.au/debates/?id=2024-10-09.114.1): > *... the amendments that I have put forward are, firstly, around allowing a greater time period in which to pay, given that people are being taxed on unrealised gains. Because these gains are unrealised, they relate to assets that have not been sold, or realised, and people may not have the cash to pay this. We should not be forcing people, or pushing people, to be paying tax on income that they haven't earned in a time period that is unreasonable—currently at 84 days.* > > *My second amendment speaks to my concern about the impact on the venture sector and whether the government has adequately assessed that. I have put in my amendment that a review should be done on the impact of this sort of change on the venture and technology sector in particular.* > > *Finally, I'm also calling for this legislation to acknowledge, and to try and give some confidence to, the people the member for North Sydney identified, by saying that this is not going to set a precedent for taxing unrealised gains in other parts of the economy.* ### Amendment text > *(1) Page 3 (after line 8), after clause 3, insert:* > >> *4 Review of Schedule 1* >> >> *(1) The Minister must cause an independent review of Schedule 1 to be conducted as soon as practicable after this Act receives the Royal Assent.* >> >> *(2) The review must include a review of the impact, or potential impact, of Schedule 1 on the startup and high-growth sector.* >> >> *(3) The persons who conduct the review must:* >> >>> *(a) consult with the public in conducting the review; and* >>> >>> *(b) give the Minister a written report of the review",
+   "stage": "Consideration in detail",
+   "ayes": 61,
+   "noes": 74,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 8,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 72
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-09/3"
+  },
+  {
+   "key": "federal-representatives-9168",
+   "date": "2024-10-09",
+   "house": "representatives",
+   "question": "Treasury Laws Amendment (Better Targeted Superannuation Concessions and Other Measures) Bill 2023 - Consideration in Detail - Agree with the bill",
+   "stage": "Consideration in detail",
+   "ayes": 75,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 8
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Labor": {
+     "ayes": 73,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 30
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 14
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-10-09/4"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

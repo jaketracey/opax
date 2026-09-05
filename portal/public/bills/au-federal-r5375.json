@@ -1,0 +1,1177 @@
+{
+ "key": "au-federal-r5375",
+ "title": "Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2015",
+ "short_title": "Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-10-30",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2015-04-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-03-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-04-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5375_ems_1fc1188e-ecfb-4772-9b9d-334dc9ff53a2%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5375_ems_2a6d3f2c-cc1d-4265-85ff-1b515ed4b27c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5375_ems_ac4732e1-5116-4d8f-8de5-0ead3828012c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5375_ems_e6cf11b4-5a4e-41bc-ae27-031e2b90e001%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5375%22",
+   "document_date": "2014-10-30",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00039",
+   "document_date": "2015-04-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2014-10-30",
+  "sentences": [
+   "The bill would force telecommunications companies to keep certain data for law enforcement and national security purposes.",
+   "It sets standard types of data to retain and a minimum retention period, and restricts which agencies can access the data.",
+   "The Commonwealth Ombudsman would oversee compliance, and the scheme must be reviewed by the Parliamentary Joint Committee on Intelligence and Security within three years of starting."
+  ],
+  "changes": [
+   "Standardises the kinds of telecommunications data that service providers must keep.",
+   "Limits which agencies are allowed to access telecommunications data as a 'criminal law enforcement agency'.",
+   "Introduces oversight by the Commonwealth Ombudsman of enforcement agencies' access to data.",
+   "Restricts stored communications warrants to interception agencies and other law enforcement bodies with a demonstrated need."
+  ],
+  "affected": "Telecommunications service providers, law enforcement agencies, and national security agencies are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:00:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3722",
+   "date": "2015-03-19",
+   "house": "representatives",
+   "question": "Bruce Scott The question is that the amendments be agreed to. Malcolm Turnbull We have debated these amendments for some time, and we are now in a position where we are discussing what the definition of a journalist may be. I think we have exhausted the debate. It is important that this legislation be passed. I move: That the question be now put. The DEPUTY SPEAKER (13:43): The question is that the motion be put. The House divided. [13:47] (The Deputy Speaker—Hon. BC Scott) Question agreed to. The DEPUTY SPEAKER (13:53): The question now is that the amendments be agreed to. Question agreed to. Bruce Scott The question now is that this bill as amended by agreed to. _A division having been called and the bells having been rung—_ As there are fewer than five members on the side for the noes in this division, I declare the question resolved in the affirmative in accordance with standing order 127. The names of those members who are in the minority will be recorded in the Votes and Proceedings. Question agreed to, Ms McGowan, Mr Bandt and Mr Wilkie voting no.",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 131
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-03-19/1"
+  },
+  {
+   "key": "federal-senate-3735",
+   "date": "2015-03-24",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 15,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "earliest": 5,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-24/2"
+  },
+  {
+   "key": "federal-senate-3736",
+   "date": "2015-03-24",
+   "house": "senate",
+   "question": "Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2015 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 31,
+   "noes": 15,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 33,
+    "earliest": 5,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-24/3"
+  },
+  {
+   "key": "federal-senate-3741",
+   "date": "2015-03-25",
+   "house": "senate",
+   "question": "Scott Ludlam I have a very quick question for the government and Senator Fierravanti-Wells, who looks as though she might have been thrown in the deep end. Is Senator Fierravanti-Wells aware of whether the Attorney-General will be gracing us with his presence this morning? Concetta Fierravanti-Wells Yes, the Attorney-General is on his way. _(Quorum formed)_ Scott Ludlam I thank the Attorney for joining us. Probably Senator Xenophon will reserve his right to ask general overview questions. I ran through most of mine last night so I am proposing to start working through the amendments. I also offer a note of thanks to the clerks, who probably worked all night to give us the running sheet for a very complicated set of amendments from a few different sources. I now seek leave to move Australian Greens amendments (1) and (4) on sheet 7669 together. Leave granted. I move: (1) Schedule 1, item 1, page 3 (line 14), omit \"specified in or under section 187AA\", substitute \"specified in section 187AA\". (4) Schedule 1, item 1, page 8 (line 1) to page 9 (line 2), omit subsections 187AA(2) to (5), substitute: (2) For the purposes of items 2, 3, 4 and 6 of the table in subsection (1), 2 or more communications that together constitute a single communications session are taken to be a single communication. These amendments are identical to those of Senator Leyonhjelm, so presumably he will add some commentary as well. This debate has been somewhat bogged down from the very beginning in definitions of the kind of data that the government wants telecommunications carriers to collect. Everybody would be well aware that the Attorney did not help his cause at all by not being clear, but that is not a confusion that is isolated to the Attorney-General alone. The discussion has been bogged down in definitions of metadata, which is a phrase that is not even really a term of art in the telecommunications sector. It can mean pretty much what people want it to mean. It is extraordinary, firstly",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 7,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/4"
+  },
+  {
+   "key": "federal-senate-3749",
+   "date": "2015-03-25",
+   "house": "senate",
+   "question": "Scott Ludlam I believe the amendment should be agreed to, so I commend it to the chamber. For the benefit of senators, when the debate was interrupted before question time we were discussing the issue of whether it should be a two-year mandatory data retention period, if it is mandatory at all, or, in conflicting proposals, three months or six months. We had spoken of diminishing returns and the fact that most data is nowhere near two years old in the jurisdictions for which we have information and that we do not have information in Australia; and thus, like so much of the rest of this policy, we are proceeding on the basis of anecdote rather than evidence. I do not propose to repeat myself because we still have a long way to go, so I commend Australian Greens amendment (5) on sheet 7669 to the chamber. Question negatived. David Leyonhjelm I withdraw LDP amendments (5) and (6) on sheet 7661. I move amendment (7) on sheet 7661: (7) Schedule 1, item 1, page 11 (after line 5), after section 187C, insert: 187CA Information or documents must be kept in Australia A service provider must take all reasonable steps to ensure that information or a document that the provider must keep under section 187A is: (a) kept in Australia; and (b) kept by a body incorporated, owned and operated in Australia. The rationale for this amendment is widespread industry disquiet that sensitive, personal information will be stored offshore in jurisdictions with more flexible approaches to privacy and security. My party, the Liberal Democrats, dislikes protectionism of any sort, and it is a sign of how bad this bill is that I have even considered an amendment of this kind. But it probably is in the national interest not to have all our personal data bundled up and stored somewhere else overseas, very likely in China because that is where it is cheaper. It would be a honeypot for not just our own intrusive snoops and bullies but everyone else's as well. Of course, I recognise that corporate owner",
+   "stage": "In committee",
+   "ayes": 13,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/12"
+  },
+  {
+   "key": "federal-senate-3750",
+   "date": "2015-03-25",
+   "house": "senate",
+   "question": "David Leyonhjelm I move Liberal Democratic Party amendment (8) on sheet 7661: (8) Schedule 1, item 1, page 21 (after line 31), after section 187N, insert: 187NA Sunset provision This Part (other than section 187N) ceases to be in force at the end of the third anniversary of the implementation phase for this Part. The rationale for this amendment is to provide the opportunity for more widespread and more public debate and review, particularly in light of the fact that the PJCIS includes no members of the crossbench or Greens. To that end, this amendment carves out from the sunset the bill's review of operation provision section 187(9) by the PJCIS but ensures that if the bill sunsets and comes to be re-enacted, it will be debated by all of us in this place. It is also Liberal Democratic Party policy that, if draconian laws are to be enacted, they be sunsetted. It is part of the liberal tradition that fewer, better-drafted laws be enacted. Forcing parliaments to revisit earlier bad law goes some way towards achieving this, if only by reminding parliament not to produce rubbish laws in the first place. George Brandis The government opposes this amendment. Proposed section 187N provides for quite a detailed scheme for the review of the operation of the relevant part of the act. The review was to be conducted by the Parliamentary Joint Committee on Intelligence and Security. The period by which the review must commence and by which it must be concluded, which are both in the near future, are specified. It is routinely the role of the PJCIS to review the operation of legislation of a national security character, which is what this legislation is. It would be unusual—I am not sure if it would be unprecedented, but it would certainly be unusual—for the review of legislation of this kind to be conducted by any other organ of the parliament other than the PJCIS. Its reports, of course, are public and will be able to be debated in this chamber at the appropriate time. The gove",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/13"
+  },
+  {
+   "key": "federal-senate-3751",
+   "date": "2015-03-25",
+   "house": "senate",
+   "question": "David Leyonhjelm I move LDP amendment (9) on sheet 7661: (9) Schedule 1, page 22 (after line 15), after Part 1, insert: Part 1A—Amendments relating to authorisations _Telecommunications (Interception and Access) Act 1979_ 1AA Section 178 (heading) Repeal the heading, substitute: 178 Authorisations for access to existing information or documents 1AB Subsection 178(3) Repeal the subsection, substitute: (3) The authorised officer must not make the authorisation unless he or she is satisfied that the disclosure is reasonably necessary for the enforcement of a serious contravention. 1AC Section 179 Repeal the section. 1AD Paragraph 186(1)(b) Repeal the paragraph. This amendment is designed to ensure that access to privacy-intrusive telecommunications data is permitted only for serious crimes. The bill was clearly intended with a national security remit: serious crimes. Any extension beyond terrorism and national security should only be to crimes that are in the upper range of seriousness in all Australian jurisdictions, such as child pornography offences. I do not wish to see metadata used to pursue trivialities. That is what happened in the UK, with the RIPA law. The thought of spying on people for their unpaid rates or the heinous crime of comparing petrol prices is ridiculous. That is very likely the main use to which this metadata will be put, unless this amendment is passed. George Brandis We had this debate last night in the early committee stages, and I fundamentally disagree with what Senator Leyonhjelm has said. Senator Leyonhjelm is fearful that the authorities will devote their resources to pursuing relatively trivial or inconsequential offences or regulatory breaches. It is not conceivable, as a matter of common sense, that they would do so. The purpose of this legislation is to enable the capacity of the law enforcement, the national security agencies and, in addition, the principal economic regulators—the ACCC and ASIC—to investigate and apprehend serious c",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 8,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-25/14"
+  },
+  {
+   "key": "federal-senate-3757",
+   "date": "2015-03-26",
+   "house": "senate",
+   "question": "Gavin Marshall The committee is considering the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2015. The question for the before the chair presently is that Senator Leyonhelm's amendments (10), (11), (14), (15), (17) to (25), on sheet 7661 be agreed to. David Leyonhjelm I have spoken on these amendments. They relate to protected class warrants. The intention is, as I said previously, to extend the requirement for a warrant to more than simply journalists. There are others whose data deserves the protection of a warrant regime. They have been well debated and I commend them to the chamber. George Brandis I have already made my contribution last night in response to Senator Leyonhelm's arguments. Scott Ludlam We indicated our support last night. I am also foreshadowing that we will drop a very similar amendment the Australian Greens drafted when we get to it. I am happy to support Senator Leyonhelm's amendments. The CHAIRMAN: We are in continuation from last night so I want to give everybody an opportunity to catch up to where we are. Are there any other speakers on these amendments? The question is that the amendments be agreed to.",
+   "stage": "In committee",
+   "ayes": 14,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 13
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 8,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-26/2"
+  },
+  {
+   "key": "federal-senate-3758",
+   "date": "2015-03-26",
+   "house": "senate",
+   "question": "Scott Ludlam I foreshadowed this amendment last night. In a way, the amendment of Senator Leyonhelm that we just voted on really was our fallback. This is probably the most important amendment that the Australian Greens will move during this debate. It is colloquially known as the get-a-warrant amendment. We strongly believe that in 1979 when this act was passed into law that if we had had the multitude of devices, data types and platforms that we have today, the drafters who were considering the substantial overall of telecommunications interception legislation as they were in 1979 would have looked around the field and said, 'You can tap people's phone, you can read people's email, you can track their movements around the landscape, and you can map of their social networks and find everything about their lives. These things will all be covered by a warrant and what will not be covered by a warrant is simple subscriber data so that agencies can very rapidly establish who owns the handset, who holds a particular prescription for a particular service. And so we would have ended up with the same two-tiered system that we have today, but those invasive forms of data access—whether they be tapping the phone call or reading your location as you move around the place—would have been within the warranted regime. I have no doubt about that at all. What we have seen, quite frankly, is the failure of the law to keep up with the march of technology. We still have a fairly robust warranted regime. Last night, Senator Rhiannon pointed out some of its failings, and we are certainly aware of those. We have a robust warranted regime and I think the number is about 4,700. We do not know how many ASIO applies for because that is done through a different process, but the entire law enforcement and anticorruption community around the country has about 4,700 warrants a year. But, as I have said more times than I care to remember, there are 750-odd thousand applications for warrantless a",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 14
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "earliest": 4,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-26/3"
+  },
+  {
+   "key": "federal-senate-3764",
+   "date": "2015-03-26",
+   "house": "senate",
+   "question": "Gavin Marshall The question is that Senator Xenophon's amendments (4), (5), (6), (8) and (9) on sheet 7672 be agreed to. Nick Xenophon I reiterate and indicate that the amendments I have moved would require the Public Interest Advocate, in addition to having broader powers, to be a contradictor—in other words, to be a genuine devil's advocate in relation to a journalist's information warrant being obtained. A key element of it, which has similarities and parallels with the American system or the American approach to this, is that, as a general rule, there will be consultation with media outlets. The Americans—our closest allies—do not have a problem when seeking journalists' metadata to consult, as a general principle— Cory Bernardi They believe in free speech. Nick Xenophon They believe in free speech, Senator Bernardi. Cory Bernardi And they wouldn't agree to section 18C. Nick Xenophon I am not going to get into a debate about section 18C. I am pleased that Senator Bernardi—without verballing him—is enamoured with the American approach to freedom of speech, which would be consistent with protecting journalists' sources in order that— Senator Bernardi interjecting— Deborah O'Neill Senator Xenophon, I urge you to ignore the interjections of Senator Bernardi. Nick Xenophon Madam Temporary Chair, can I say that your urging is very wise. It is easy to be distracted by my colleague from South Australia. Consideration must be given to this amendment, because our public interest advocates will be flying blind. They will not have access to journalists. They will not be able to speak to journalists or to media organisations to ask, 'What is this about?' as they do in the US, as a general principle, unless it is a matter of an emergency in terms of security and the like, in terms of an imminent risk. They will not be able to do that. There ought to be that level of scrutiny; otherwise, my fear is contained in the words of Philip Dorling, a great investigative journalist, in",
+   "stage": "In committee",
+   "ayes": 15,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 32,
+    "member": 10,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-26/9"
+  },
+  {
+   "key": "federal-senate-3765",
+   "date": "2015-03-26",
+   "house": "senate",
+   "question": "Cory Bernardi The question is that Palmer United Party amendment (1) on sheet 7690 be agreed to. _(Quorum formed)_ David Leyonhjelm I rise simply to indicate my support for Senator Wang's amendment (1) on sheet 7690. It is a relatively mild amendment. I must say I take issue with Senator Wang's suggestion that this is the only aspect of the bill that requires fixing. I think there is a great deal more that requires fixing and that there are much bigger issues than this one. But, if this amendment were to be adopted, it would at least improve the bill in a marginal fashion. I endorse the amendment. Jacinta Collins I remind those listening that Senator Wang's amendment would provide for the notification of journalists after the fact that a warrant has been issued in relation to their telecommunications data. This bill already reflects protections for journalists arising out of the joint committee's considerations and recommendations and is implementing the warrant regime for journalists that Labor argued for and achieved in the other place. We believe that those amendments to the bill already provide ample oversight of access to the telecommunications data of journalists. The bill in its amended form provides that the IGIS, the Ombudsman and the committee itself will be notified when a journalist's data is accessed. These bodies are well placed to make inquiries and to ascertain whether this access was indeed appropriate. Labor appreciates that Senator Wang has been concerned, as I indeed mentioned that Labor was, that the way in which this bill has proceeded has not brought the public with it, and we appreciate his efforts to deal with this aspect, but we think the arrangements as reflected in the bill now are satisfactory. Nick Xenophon I was just being told by Senator Leyonhjelm that I am too polite, which is probably true. I will try and mend my ways, Senator Leyonhjelm. I indicate that I do support Senator Wang's amendment. I think it does make an improvement. I",
+   "stage": "In committee",
+   "ayes": 16,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 44,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-26/10"
+  },
+  {
+   "key": "federal-senate-3766",
+   "date": "2015-03-26",
+   "house": "senate",
+   "question": "This division was for whether or not to accept [Nick Xenophon’s](https://theyvoteforyou.org.au/people/senate/sa/nick_xenophon) motion to amend the [Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2015](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5375). [Xenophon summarised the amendment in Parliament](http://www.openaustralia.org.au/senate/?gid=2015-03-26.236.1): > This amendment addresses issues relating to disclosures of information by journalists, through amendments to the Australian Security Intelligence Organisation Act 1979, the Crimes Act 1914 and the Criminal Code Act 1995. These amendments address changes to these acts made by the previous bills in this tranche of legislation, primarily the National Security Legislation Amendment Act (No. 1) 2014. > > Make no mistake about it, these issues go to the heart of press freedom in this country in relation to the ability of investigative journalists to do their work. These bills insert into these acts new offences relating to the disclosure of information relating to a special intelligence operation, as well as for publishing advertisements or items of news that contain information about recruitment of people to armed forces in a foreign country. I want to make it clear that, in relation to any publication of information in respect of a special intelligence operation that could endanger the lives of those involved in the operation or other lives directly as a result of that disclosure of information, I do not oppose the imposition of a penalty. If we are talking about endangering lives—if, for instance, there is an ASIS or ASIO officer whose life is put in real danger by the disclosure of their identity—then that is a serious matter. But we are talking about a whole range of other circumstances where there can be no such consideration; where there is no question of any lives being endangered; and where, in fact, what is being endangered",
+   "stage": "In committee",
+   "ayes": 17,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 43,
+    "member": 11,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-26/11"
+  },
+  {
+   "key": "federal-senate-3767",
+   "date": "2015-03-26",
+   "house": "senate",
+   "question": "Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2015 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 43,
+   "noes": 16,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 42,
+    "member": 12,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-03-26/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-307955",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "Labor supported the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014 after securing amendments including mandatory data breach notification, encryption, a warrant regime for journalists’ data, dataset defined in legislation, and expanded oversight by the Ombudsman and Inspector-General of Intelligence and Security. Labor also committed to introducing reforms for stronger parliamentary oversight of intelligence and security agencies."
+  },
+  {
+   "slug": "speech-307956",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014 is vital for national security, citing that metadata is used in 100% of cybercrime investigations, 90% of counterterrorism and child protection cases, and 80% of serious organised crime investigations. The bill would reduce agencies with metadata access from around 80 to about 20, provide oversight by the Ombudsman, Privacy Commissioner, and Inspector-General of Intelligence and Security, and the government would cover reasonable upfront costs, estimated at less than 1% of the telecommunications sector's revenue."
+  },
+  {
+   "slug": "speech-307957",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the original Data Retention Bill gave too much power to the Attorney-General and lacked privacy protections, and supported 38 committee amendments including embedding metadata definitions in legislation, requiring warrants for journalists' data, and providing oversight resources. They noted that major telcos Telstra, Optus and Vodafone have no current plans to reduce data retention, and that the bill’s main effect would be consistency rather than preventing a \"going dark\" scenario."
+  },
+  {
+   "slug": "speech-307958",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014 is essential for national security, claiming that existing metadata access is inadequate and that commercial interests are undermining data retention. He cited threats from terrorism and organised crime, referenced half a million metadata requests, and criticised media and tech firms like Wikipedia co-founder Jimmy Wales for opposing the bill on privacy grounds."
+  },
+  {
+   "slug": "speech-307959",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014, noting that Minister Malcolm Turnbull had changed his stance from opposing data retention in opposition to introducing the bill in government. The speaker detailed 38 unanimous recommendations from the Parliamentary Joint Committee on Intelligence and Security, including specifying the data set in legislation, limiting access to listed law enforcement agencies, prohibiting use for civil litigation, and requiring encryption and a mandatory data breach notification scheme."
+  },
+  {
+   "slug": "speech-307961",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued the Data Retention Bill is necessary to address gaps in law enforcement's ability to investigate serious crimes like child exploitation and terrorism, as changing technology has reduced data availability. The bill requires telecommunications providers to retain metadata for two years, excludes content like web browsing history and passwords, and includes 39 bipartisan recommendations to limit access to around 20 agencies, with government support for cost contributions and oversight."
+  },
+  {
+   "slug": "speech-307962",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's rushed and politically motivated process for introducing the data retention bill, arguing it bypassed proper community engagement. They noted that Labor's amendments placed the datasets in legislation, limited the number of authorised agencies from over 80 to 20, gave consumers access to their metadata, restricted use for civil proceedings, and required data-breach notifications."
+  },
+  {
+   "slug": "speech-307968",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014, as amended by the Parliamentary Joint Committee on Intelligence and Security’s 38 recommendations, strikes a necessary balance by standardising metadata retention, limiting access to 12 listed agencies (down from over 80), requiring encryption and mandatory data breach notifications, and adding oversight by the Commonwealth Ombudsman and PJCIS, while also requiring a warrant for journalists’ metadata."
+  },
+  {
+   "slug": "speech-307970",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014 is a key anti-terrorism measure, noting that over 25 countries have similar laws and that the Parliamentary Joint Committee on Intelligence and Security made 39 unanimous recommendations on the bill. He criticised the member for Perth for undermining bipartisan support, cited recent terrorist attacks (Martin Place siege, Charlie Hebdo, Copenhagen shootings, Endeavour Hills attack), and stated that ASIO is investigating roughly 400 high-priority cases."
+  },
+  {
+   "slug": "speech-307995",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the data retention bill is vital for security, citing that metadata was used in 92% of counter-terrorism investigations, and announced the bill requires ISPs to retain metadata for two years with safeguards including a warrant for journalist metadata."
+  },
+  {
+   "slug": "speech-307996",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the current system allows over half a million warrantless telecommunications data accesses annually by a wide range of agencies including the RSPCA, and that the amended bill introduces safeguards such as a defined dataset, restricted agency access, a warrant requirement for journalists' data, encryption, customer access rights, and a mandatory review within four years."
+  },
+  {
+   "slug": "speech-307998",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014 is a bad law that treats all Australians as suspects, requires no warrant for metadata access, and will only catch unsophisticated criminals while infringing on privacy. They moved an amendment to delay the bill until a review addresses civil litigants' access to data, data destruction requirements, and impacts on journalism."
+  },
+  {
+   "slug": "speech-308001",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the data retention bill, while improved by amendments, remains flawed, citing concerns over costs (estimated at $189–319 million), the two-year retention period, and journalist protections, and stressed the need for ongoing parliamentary oversight."
+  },
+  {
+   "slug": "speech-308003",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker opposed the mandatory two-year metadata retention bill, arguing it was an unprecedented extension of state power and a step toward a police state, noting that security agencies accessed metadata 290,358 times in 2011-12 and 319,874 times in 2012-13 without warrants, and called for warrant requirements and stronger parliamentary oversight."
+  },
+  {
+   "slug": "speech-308004",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The bill standardises metadata retention by requiring telecommunications companies and internet service providers to retain specified classes of metadata for two years, without granting new powers to access metadata or expanding the types of data accessible. The government supports all 39 recommendations from the Parliamentary Joint Committee on Intelligence and Security, including specifying the dataset and agencies in primary legislation and increasing oversight and privacy protections."
+  },
+  {
+   "slug": "speech-308005",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that the mandatory data retention bill poses serious risks to privacy, media freedom, and free expression, noting that over 80 agencies can already access metadata without a warrant, and that the bill lacks adequate safeguards, proportionality, and evidence of necessity—despite some improvements from committee amendments, significant concerns remain about cost ($400 million), security, oversight, and the potential for misuse against whistleblowers and journalists."
+  },
+  {
+   "slug": "speech-308006",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker endorsed the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014, arguing that mandatory two-year metadata retention is essential for investigating terrorism, child exploitation and organised crime, and noted the bill introduces new warrant protections for journalists' metadata. He also proposed making it a criminal offence to share or retweet social media posts from prescribed terrorist organisations such as Daesh, al-Nusra or Hamas."
+  },
+  {
+   "slug": "speech-308007",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014 subject to amendments, including onshore data storage, government funding, journalist and whistleblower protections, and prohibiting civil litigation use, noting that over half a million metadata access applications were made in the previous year under an unregulated system."
+  },
+  {
+   "slug": "speech-308008",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued for passing the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014, stating it would require telecom providers to retain metadata for two years without web-browsing history or content, and included 38 committee recommendations to strengthen oversight and safeguards, such as additional funding for the Commonwealth Ombudsman and a warrant requirement for accessing journalist source data. He cited national security threats, including 90 Australians fighting in Iraq and Syria and 30 returned, and the use of metadata in the Operation Pendennis terrorism investigation."
+  },
+  {
+   "slug": "speech-308009",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government's handling of the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014, arguing it was initially \"shambolic and unpassable\" and required Labor's insistence for proper review and 38 committee recommendations to become supportable. They noted warrantless data accesses rose from 330,000 in 2012-13 to 500,000 in 2013-14, and credited Labor's push for improved regulation, including applying the Privacy Act, requiring encrypted storage, limiting warrantless access to a narrower set of agencies, increasing Ombudsman oversight, and securing journalist protections from the Prime Minister."
+  },
+  {
+   "slug": "speech-308010",
+   "speaker": "Steve Irons",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The member argued the bill does not expand law enforcement access to metadata, does not allow warrantless phone tapping or email reading, and excludes web browsing history, while mandating two-year retention of existing metadata types. The bill has bipartisan support following a committee report with 39 recommendations."
+  },
+  {
+   "slug": "speech-308178",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014, which mandates that telecommunications providers retain metadata for two years to assist law enforcement and national security agencies, while explicitly excluding content and internet browsing, and includes oversight by the Commonwealth Ombudsman and a parliamentary review after three years."
+  },
+  {
+   "slug": "speech-308179",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Telecommunications (Interception and Access) Amendment (Data Retention) Bill 2014, arguing it regulates the current unregulated access to metadata—over 500,000 applications annually by 80+ agencies—and balances security with rights. Key amendments secured by Labor include requiring a warrant for accessing journalists' metadata, mandating onshore data storage, encryption, a data breach notification scheme, and expanded parliamentary oversight."
+  },
+  {
+   "slug": "speech-308180",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-03-18",
+   "stage_hint": null,
+   "brief": "The speaker argued that metadata is not content and is essential for investigating serious crime, noting that 85-90% of recent serious crime and terrorism investigations used metadata, and that the bill reduces the number of bodies with access from 80 to 20. They asserted that the legislation includes parliamentary oversight, protects privacy proportionally, and does not limit press freedom or compromise legal privilege."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications (Interception and Access) Amendment (Data Retention) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00039",
+   "assent_date": "2015-04-13"
+  }
+ ]
+}

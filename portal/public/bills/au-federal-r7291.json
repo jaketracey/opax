@@ -1,0 +1,489 @@
+{
+ "key": "au-federal-r7291",
+ "title": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2024",
+ "short_title": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2024",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2024-11-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2024-12-04",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7291_ems_44b9ed66-a732-424b-a49d-f7a04e0d92da%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10053221%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7291%22",
+   "document_date": "2024-11-21",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00106",
+   "document_date": "2024-12-04",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9252",
+   "date": "2024-11-26",
+   "house": "representatives",
+   "question": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Bill 2024 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 44,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 40,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 56,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-11-26/2"
+  },
+  {
+   "key": "federal-senate-10491",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now deal with the Migration Amendment Bill 2024 and two other bills, starting with the second reading amendments. The question is that the Pauline Hanson's One Nation amendment on sheet 2619 be agreed to. _Pauline Hanson's One Nation's circulated amendment_ _in respect of the_ _Migration Amendment_ _(Removal and Other Measures)_ _Bill 2024_ At the end of the motion, add \", but the Senate notes that this bill does not: (a) solve the problem of removing non-citizens from immigration detention and deporting them or removing non-citizens who have no valid reason for remaining in Australia; or (b) actually enforce deportation, it only swaps detention centres for jail\".",
+   "stage": "Second reading",
+   "ayes": 3,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 3,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/53"
+  },
+  {
+   "key": "federal-senate-10492",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now deal with the second reading amendment circulated by Senator Thorpe on sheet 2500. The question is that the amendment on sheet 2500 be agreed to. _Senator Thorpe's amendment__in respect of the_ _Migration Amendment_ _(Removal and Other Measures)_ _Bill 2024_ Omit all words after \"That\", substitute \"the bill be withdrawn and the Senate notes that the bill: (a) raises significant human rights concerns, including breaking Australia's human rights obligations as a signatory to the 1951 Refugee Convention and its 1967 Protocol to adhere to international standards in the protection of asylum seekers and refugees; (b) was not subject to a proper consultation process, with key stakeholders and experts from lived experience refugee communities not consulted; (c) criminalises refugees rather than looking at long-term strategies and solutions to address the underlying structural causes; and (d) gives the Government power to impose punitive measures on countries, which could erode diplomatic ties and weakens Australia's foreign policy relations and stability globally\". Question negatived. David Pocock by leave—I withdraw the amendment on sheet 2495. Andrew McLachlan The question is that Senator David Pocock's second reading amendment on sheet 3168 be agreed to. _Senator David Pocock's amendment_ _in respect of the_ _Migration Amendment_ _(Removal and Other Measures)_ _Bill 2024_ At the end of the motion, add \", but the Senate notes that: (a) the separation of powers established by the Australian Constitution is fundamental to the protection of Australia's democracy, and (b) the executive government cannot exercise Chapter III judicial power, including to impose punishment\".",
+   "stage": "Second reading",
+   "ayes": 14,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 29,
+    "member": 5,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/54"
+  },
+  {
+   "key": "federal-senate-10493",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question is that the Australian Greens second reading amendment on sheet 3228 be agreed to. _Australian_ _Greens_ _'_ _circulated amendment_ _in respect of_ _the Migration Amendment Bill 2024—_ At the end of the motion, add \", but the Senate notes that: (a) this bill will be part of a brutal package of bills that will be one of the most extreme changes in migration policy since White Australia; (b) this bill and related bills will result in families being torn apart, communities being separated, and serious damage to Australia as a multicultural country; and (c) this bill should have never been proposed, and Australia is a worse place because it was\".",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 26,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 16
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/55"
+  },
+  {
+   "key": "federal-senate-10494",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question now is that these bills now be read a second time.",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/56"
+  },
+  {
+   "key": "federal-senate-10495",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan I will now deal with the Committee of the Whole amendments to the Migration Amendment (Removal and Other Measures) Bill 2024, starting with amendments circulated. Katy Gallagher I table an addendum to the explanatory memorandum relating to the Migration Amendment Bill 2024. The addendum responds to matters raised by the Scrutiny of Bills Committee. And I table a supplementary explanatory memorandum relating to the government amendments to the Migration Amendment (Removal and Other Measures) Bill 2024. Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/57"
+  },
+  {
+   "key": "federal-senate-10496",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Andrew McLachlan The question now is that the remaining stages of the bills be agreed to and the bills be now passed.",
+   "stage": "Third reading",
+   "ayes": 26,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/58"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Migration Amendment (Prohibiting Items in Immigration Detention Facilities) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00106",
+   "assent_date": "2024-12-04"
+  }
+ ]
+}

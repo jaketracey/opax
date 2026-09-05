@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6981",
+ "title": "Transparent and Quality Public Appointments Bill 2023",
+ "short_title": "Transparent and Quality Public Appointments Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-03-06",
+ "originating_house": "representatives",
+ "sponsor": "SCAMPS, Sophie, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10989",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-09-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6981%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-06",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6981%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-09-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6981%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6981_ems_96deadf5-0c46-4d09-872a-fb42282bc3fb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6981%22",
+   "document_date": "2023-03-06",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-03-06",
+  "sentences": [
+   "The bill would set up a new process for filling senior federal public roles to make them more open and trustworthy.",
+   "It would create a Public Appointments Commissioner and Independent Selection Panels that advertise vacancies, interview candidates and send a shortlist to the minister.",
+   "The panels must shortlist at least three people, advertise for 10 business days in three places, and consider diversity when assessing candidates."
+  ],
+  "changes": [
+   "Establishes Independent Selection Panels in each department, chaired by the Public Appointments Commissioner and including the department secretary.",
+   "Requires the minister to table a certification statement for most appointments within seven days.",
+   "Creates extra rules for significant integrity officer appointments, including a former superior court judge on the panel and a parliamentary committee report before appointment.",
+   "Sets up a Parliamentary Joint Committee on Appointments that cannot have more than half government members and must have a non-government chair.",
+   "Lets the commissioner issue guidelines and report annually on appointment processes.",
+   "Allows the minister to choose any candidate from the panel's shortlist, but not someone the panel did not shortlist."
+  ],
+  "affected": "All major Commonwealth public appointments made by ministers, including those to significant integrity officer roles.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:59Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

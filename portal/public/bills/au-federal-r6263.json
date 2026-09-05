@@ -1,0 +1,339 @@
+{
+ "key": "au-federal-r6263",
+ "title": "Export Finance and Insurance Corporation Amendment (Support for Infrastructure Financing) Bill 2019",
+ "short_title": "Export Finance and Insurance Corporation Amendment (Support for Infrastructure Financing) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Foreign Affairs and Trade",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6263_ems_57f609b5-1d40-45d0-a6aa-16a353f2afde%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6263%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00033",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-02-13",
+  "sentences": [
+   "The bill would let the Export Finance and Insurance Corporation finance more overseas infrastructure projects that benefit Australia.",
+   "It would give Efic a new power to back projects based on an Australian benefit test and raise its callable capital by $1 billion.",
+   "Efic could also operate under the trading name Export Finance Australia."
+  ],
+  "changes": [
+   "Increases Efic's callable capital by $1 billion.",
+   "Grants Efic a new overseas infrastructure financing power.",
+   "Allows Efic to use the trading name Export Finance Australia."
+  ],
+  "affected": "The Export Finance and Insurance Corporation and Australian businesses involved in regional infrastructure projects.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:21:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5723",
+   "date": "2019-04-03",
+   "house": "senate",
+   "question": "The majority voted in favour of the main idea of the bill, which means the Senate can now discuss it in more detail. In parliamentary jargon, they voted to read the bill [for a second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What does the bill do? The bill [was introduced to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6263): > *expand the ability of the [Export Finance and Insurance Corporation](https://en.wikipedia.org/wiki/Export_Finance_and_Insurance_Corporation) to finance infrastructure projects by increasing its [callable capital](https://dictionary.cambridge.org/dictionary/english/callable-capital) and granting it a new overseas infrastructure financing power.*",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 14,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-04-03/11"
+  },
+  {
+   "key": "federal-senate-5724",
+   "date": "2019-04-03",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-04-03.217.1) to pass the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6263) in the Senate. In parliamentary jargon, they voted to read the bill [for a third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). Since the bill was already passed in the House of Representatives, it will now become law. ### What does this bill do? The bill was introduced to: > *expand the ability of the [Export Finance and Insurance Corporation](https://en.wikipedia.org/wiki/Export_Finance_and_Insurance_Corporation) to finance infrastructure projects by increasing its callable capital and granting it a new overseas infrastructure financing power.*",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 12,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 22,
+    "member": 14,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-04-03/12"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-375937",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The opposition supported the Export Finance and Insurance Corporation Amendment (Support for Infrastructure Financing) Bill 2019, which provides Efic with an extra $1 billion in callable capital, renames it Export Finance Australia, and introduces an Australian benefits test for loans funding Pacific infrastructure; the bill was referred to a Senate inquiry reporting by 26 March 2019. The speech noted bipartisan backing, citing Bill Shorten's proposed Pacific infrastructure investment bank and the government's $2 billion Australian Infrastructure Financing Facility for the Pacific, and suggested examining the US BUILD Act and UK CDC Group as alternative models."
+  },
+  {
+   "slug": "speech-376171",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The bill provides the Export Finance and Insurance Corporation with an additional $1 billion in capital for commercial infrastructure loans in the Pacific, subject to an Australian benefit test. The speaker also criticised the coalition government for neglecting Pacific relations, particularly through climate change inaction and $11 billion in aid cuts."
+  },
+  {
+   "slug": "speech-376172",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that Australia should support Pacific infrastructure through the Export Finance and Insurance Corporation Amendment Bill 2019, providing an additional $1 billion in callable capital for loans on a commercial basis, to boost regional prosperity, security, and economic integration while also benefiting Australian exporters like those in Tasmania."
+  },
+  {
+   "slug": "speech-376173",
+   "speaker": "Justine Keay",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Export Finance and Insurance Corporation Amendment Bill is welcome but overdue, and criticised the government for failing to take the Pacific seriously, citing the Prime Minister's absence from the September Pacific Islands Forum, Environment Minister Melissa Price's reported \"chequebook\" comment to former Kiribati president Anote Tong, and the agriculture visa debacle, while supporting the Seasonal Worker Program and calling for a credible climate change policy."
+  },
+  {
+   "slug": "speech-376177",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the Export Finance and Insurance Corporation Amendment (Support for Infrastructure Financing) Bill 2019, which renames Efic to Export Finance Australia and provides an extra $1 billion in callable capital for infrastructure financing in the Pacific, including East Timor, with a new Australian benefits test replacing the previous one-third Australian content requirement. The speaker noted bipartisan agreement on Pacific funding, referenced the opposition leader’s October 2018 announcement and the Prime Minister’s subsequent similar announcement, and called for Senate committee scrutiny to address concerns about project quality and unintended consequences."
+  },
+  {
+   "slug": "speech-376178",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker expressed concerns about the bill's $1 billion increase in callable capital for Efic and the lack of accompanying policy frameworks, noted Labor's prior proposal for a government-backed infrastructure investment bank, and criticised the government for cutting $11 billion in development assistance over five years."
+  },
+  {
+   "slug": "speech-376179",
+   "speaker": "Mark Coulton",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The Export Finance and Insurance Corporation Amendment (Support for Infrastructure Financing) Bill 2019 received bipartisan support to enhance Australia's infrastructure investment in the Pacific, with Efic to operate under the trading name Export Finance Australia."
+  },
+  {
+   "slug": "speech-376180",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The Greens moved an amendment to prohibit the Export Finance and Insurance Corporation (Efic) from funding or facilitating thermal coal mining and export on a commercial scale, including projects like the Adani coalmine, and criticised the government for secretly altering Efic's mandate in 2017 to allow coal funding."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Export Finance and Insurance Corporation Amendment (Support for Infrastructure Financing) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00033",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

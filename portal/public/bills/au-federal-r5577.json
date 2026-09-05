@@ -1,0 +1,245 @@
+{
+ "key": "au-federal-r5577",
+ "title": "Labor 2013-14 Budget Savings (Measures No. 2) Bill 2015",
+ "short_title": "Labor 2013-14 Budget Savings (Measures No. 2) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-11-26",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-12-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-12-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-12-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5577_ems_be516817-fcba-4e4e-b748-b49b3d28c5c0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5577_ems_5267e002-d8fc-4f82-bd7b-02954995593d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5577_ems_9be86d5a-0a50-40e9-adae-8b715d5ce3bd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5577%22",
+   "document_date": "2015-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00169",
+   "document_date": "2015-12-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2015-11-26",
+  "sentences": [
+   "The bill would replace a grant for students with a loan that must be repaid.",
+   "It would let students choose to take out loans worth the same as the current grant, repaid through the tax system like other study debts.",
+   "Repayment of the new loan would only start after the student's existing Higher Education Loan Programme debt is cleared."
+  ],
+  "changes": [
+   "Replaces the student start-up scholarship with a voluntary income-contingent loan.",
+   "Sets a maximum of two loans per year, each equal in value to the current scholarship amount.",
+   "Defers repayment of the new loan until the student's Higher Education Loan Programme debt is fully repaid."
+  ],
+  "affected": "Students who currently receive the student start-up scholarship.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:51:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4011",
+   "date": "2015-12-01",
+   "house": "representatives",
+   "question": "The majority agreed with the main idea of the bill. In parliamentary jargon, they agreed to give the bill a [second reading](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that the House can now discuss the bill in more detail. ### Bill's main idea The main idea of the bill is to undo some of the measures that haven't yet begun but were introduced under the previous Labor Government's 2013-14 Budget. That is, it repeals all the parts of the [Clean Energy (Income Tax Rates Amendments) Act 2011](https://www.comlaw.gov.au/Details/C2011A00150) and the [Clean Energy (Tax Laws Amendments) Act 2011](https://www.comlaw.gov.au/Details/C2011A00159) that were meant to begin at a future date. The bill doesn't repeal any parts of those two Acts that are already in operation. ### What exactly does the bill do? According to the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1415a/15bd026), the bill will: * \"*repeal an increase in the nominal tax-free threshold from $18,200 in 2014–15 to $19,400 in 2015–16* * *maintain the second personal marginal tax rate at 32.5 per cent rather than increase it to 33 per cent from 2015–16* * *maintain the maximum value of the low income tax offset (**LITO**) at $445 rather than change the maximum value of the LITO to $300 from 2015–16 and* * *maintain the threshold below which a person may receive LITO at a taxable income of $66,667 and the withdrawal rate at 1.5 per cent, rather than the income threshold increasing to $67,000 and the withdrawal rate falling to 1 per cent from 2015–16.*\"",
+   "stage": "Second reading",
+   "ayes": 77,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 48
+    },
+    "Liberal": {
+     "ayes": 61,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 128
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2015-12-01/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-325051",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "Labor will oppose the bill at second reading but support it after government amendments remove the efficiency dividend and interest charge measures, while backing the conversion of student start-up scholarships to income-contingent loans and the removal of the HECS-HELP discount and voluntary repayment bonus, yielding $1.1 billion in budget savings."
+  },
+  {
+   "slug": "speech-325053",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker supported converting student start-up scholarships into income-contingent loans (saving $920 million) and removing the HECS-HELP upfront payment discount and voluntary repayment bonus (saving $200 million), but opposed the efficiency dividend for higher education funding and imposing interest charges on debts like Abstudy and Austudy. The speaker argued these measures were originally proposed to fund the Gonski needs-based school funding model, which the government cut by $28 billion, and that the bill’s other measures represent an ideological attack on education, including introducing $100,000 university degrees."
+  },
+  {
+   "slug": "speech-325054",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Turnbull-Truss coalition government is a superior financial manager compared to the previous Labor government, citing a reduction in the budget deficit from $48 billion to $7 billion, a drop in unemployment from 6.2% to 5.9%, and 231,702 new jobs created. The speaker supported the Labor 2013-14 Budget Savings (Measures No. 2) Bill 2015, which includes an efficiency dividend for higher education grants and interest charges on unpaid Centrelink debts, and criticized Labor for wasteful spending and a lack of infrastructure projects in Western Australia."
+  },
+  {
+   "slug": "speech-325055",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speech criticised the bill for adding $6,000 in average student debt and proposed fairer revenue measures, including ending the $2 billion diesel fuel rebate for miners, winding back superannuation tax concessions, or introducing a millionaire’s tax rate."
+  },
+  {
+   "slug": "speech-325056",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-12-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor's 2013-14 Budget Savings Bill is needed to address Labor's $52 billion budget black hole, and criticised the Greens and Labor for blocking $17.2 billion in savings measures, including $2.1 billion in changes to student start-up scholarships and $1.2 billion in higher education efficiency dividends."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Labor 2013-14 Budget Savings (Measures No. 2) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00169",
+   "assent_date": "2015-12-11"
+  }
+ ]
+}

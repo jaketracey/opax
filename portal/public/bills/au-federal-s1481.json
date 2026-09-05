@@ -1,0 +1,92 @@
+{
+ "key": "au-federal-s1481",
+ "title": "Unlocking Supply of Family Homes Bill 2025",
+ "short_title": "Unlocking Supply of Family Homes Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-11-26",
+ "originating_house": "senate",
+ "sponsor": "HUME, Sen Jane",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10853",
+ "portfolio": null,
+ "status": "before_parliament",
+ "status_as_of": "2026-08-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1481%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1481_ems_bc6e0665-8328-43f5-b668-7786e5342cbe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1481%22",
+   "document_date": "2025-11-26",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-11-26",
+  "sentences": [
+   "The bill would let people put more of their home sale proceeds into superannuation and start doing so at a younger age.",
+   "It changes the Income Tax Assessment Act 1997 to lower the eligible age, lengthen the contribution window, and raise the maximum amount that can be contributed.",
+   "The minimum age would drop from 55 to 50, the period to make a contribution after settlement would grow from 90 days to 1 year, and the cap would rise from $300,000 to $500,000."
+  ],
+  "changes": [
+   "Lowers the minimum age for making a downsizer contribution from 55 to 50.",
+   "Extends the time allowed after settlement to make the contribution from 90 days to 1 year.",
+   "Raises the maximum downsizer contribution from $300,000 to $500,000."
+  ],
+  "affected": "Older Australians who sell their family home and want to contribute the proceeds to superannuation.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:20Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-1199122",
+   "speaker": "Wendy Askew",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-11-26",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205103",
+   "speaker": "Jane Hume",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-08-12",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

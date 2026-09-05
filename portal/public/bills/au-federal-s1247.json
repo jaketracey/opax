@@ -1,0 +1,86 @@
+{
+ "key": "au-federal-s1247",
+ "title": "Telecommunications Amendment (Repairing Assistance and Access) Bill 2019",
+ "short_title": "Telecommunications Amendment (Repairing Assistance and Access) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-12-04",
+ "originating_house": "senate",
+ "sponsor": "KENEALLY, Sen Kristina",
+ "sponsor_party": "ALP",
+ "sponsor_person_id": "10906",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-12-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1247%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-02-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1247%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1247%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1247_ems_1372513f-e89f-420e-a463-54c0e84349d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1247_ems_f415fdb9-1a32-412d-aaed-5d2999a5211c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1247%22",
+   "document_date": "2019-12-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-12-04",
+  "sentences": [
+   "This bill would amend the Telecommunications Act 1997 to implement recommendations from a parliamentary inquiry and add a judicial authorisation requirement to address concerns about compatibility with the US CLOUD Act.",
+   "It would require an eligible judge to approve the issuing or varying of technical assistance requests, technical assistance notices and technical capability notices, and set conditions for that approval.",
+   "The bill would also remove the Home Affairs Minister's power to edit or delete information in reports prepared by the Commonwealth Ombudsman."
+  ],
+  "changes": [
+   "Clarify what actions designated communications providers cannot be asked or required to do under technical assistance requests, notices or capability notices.",
+   "Require the AFP Commissioner to not approve a technical assistance notice from a state or territory interception agency unless satisfied the requirements are reasonable, proportionate, practicable and technically feasible.",
+   "Remove the Home Affairs Minister's ability to edit or delete information in Commonwealth Ombudsman reports.",
+   "Introduce a judicial authorisation requirement for eligible judges to approve the giving or varying of technical assistance requests, notices and capability notices."
+  ],
+  "affected": "Designated communications providers, the AFP Commissioner, the Minister for Home Affairs, the Commonwealth Ombudsman, and eligible judges.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:36:21Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

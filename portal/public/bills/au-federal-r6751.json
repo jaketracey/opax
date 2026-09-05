@@ -1,0 +1,443 @@
+{
+ "key": "au-federal-r6751",
+ "title": "Defence Legislation Amendment (Discipline Reform) Bill 2021",
+ "short_title": "Defence Legislation Amendment (Discipline Reform) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-08-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2021-12-13",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-08-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-12-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6751_ems_457f952c-7011-474e-b1d3-e4185a39eabb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6751_ems_a77606c8-0d71-435a-a68e-44cfb5194cfc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6751_ems_b991324b-c447-4e82-a399-05a96d6a94d0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6751%22",
+   "document_date": "2021-08-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00133",
+   "document_date": "2021-12-13",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-08-12",
+  "sentences": [
+   "The bill would change the military discipline system for the Australian Defence Force.",
+   "It would expand the disciplinary infringement scheme for minor breaches, remove one level of summary authority, and create new service offences.",
+   "The new offences include failure to perform duty, cyber-bullying, and failure to notify a change in circumstances affecting a benefit or allowance."
+  ],
+  "changes": [
+   "Expands the disciplinary infringement scheme to deal with minor breaches of military discipline more effectively.",
+   "Removes the subordinate summary authority to simplify the enforcement of minor disciplinary issues.",
+   "Introduces new service offences for failure to perform duty, cyber-bullying, and failure to notify a change in circumstances."
+  ],
+  "affected": "Members of the Australian Defence Force and those administering military discipline.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7552",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-12-01.184.8) to agree with the bill's main idea. In parliamentary jargon, they voted to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means they can now discuss it in more detail. ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6751), the bill was introduced to: * *expand the operation of the disciplinary infringement scheme to provide a means of dealing with minor breaches of military discipline;* * *remove the subordinate summary authority and correct a number of anomalies with regard to the respective jurisdiction of discipline officers and summary authorities, and between the different types of summary authority, in relation to the type of breach of military discipline, the rank of defence members with which each can deal, and the powers and punishments available to each level of authority; and* * *establish new service offences for failure to perform duty or carry out an activity, cyber-bullying, failure to comply with removal order (in relation to material on social media that constitutes cyber-bullying) and failure to comply with requirement to notify change in circumstances (in relation to the receipt of a benefit or allowance).* Read more about the bill in the parliamentary library's [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd033).",
+   "stage": "Second reading",
+   "ayes": 26,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 6,
+    "earliest": 14,
+    "dated": 15
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/8"
+  },
+  {
+   "key": "federal-senate-7553",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?id=2021-12-01.186.1) introduced by NSW Senator [Marise Payne](https://theyvoteforyou.org.au/people/senate/nsw/marise_payne) (Liberal), which means it failed. It concerned the cyber-bullying service offence. Senator Payne [explained that](https://www.openaustralia.org.au/senate/?gid=2021-12-01.186.2): > *The purpose of this amendment is to insert the term 'in all the circumstances' and to remove the word 'offensive' from the new cyberbullying offence set out in clause 2 of schedule 3 of the bill. A cyberbullying offence will apply when a defence member has used a social media service or relevant electronic service in a way that a reasonable person would regard in all the circumstances as threatening, intimidating, harassing or humiliating another person.* ### Amendment text > *(1) Schedule 3, item 2, page 48 (line 2), omit \"as offensive or\", substitute \"in all the circumstances\".* ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd033), the purpose of the bill is \"*to improve and simplify the operation of the military discipline system by:* * *removing the subordinate summary authority and restructuring the summary authorities to simplify the process for dealing with minor disciplinary issues* * *expanding the disciplinary infringement scheme to deal more effectively with minor breaches of discipline* * *introducing new service offences in relation to the failure to perform a duty or carry out an activity, cyber-bullying and failure to notify change in circumstances particularly with regard to receipt of benefits and allowances.*\"",
+   "stage": "In committee",
+   "ayes": 19,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 18,
+    "dated": 14
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/9"
+  },
+  {
+   "key": "federal-senate-7554",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2021-12-01.206.3) that the bill remain as it is. In parliamentary jargon, they voted that the bill \"*stand as printed*\". Because this vote was successful, the Senate can now decide whether they want to [pass the bill](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). ### What does the bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd033), the purpose of the bill is \"*to improve and simplify the operation of the military discipline system by:* * *removing the subordinate summary authority and restructuring the summary authorities to simplify the process for dealing with minor disciplinary issues* * *expanding the disciplinary infringement scheme to deal more effectively with minor breaches of discipline* * *introducing new service offences in relation to the failure to perform a duty or carry out an activity, cyber-bullying and failure to notify change in circumstances particularly with regard to receipt of benefits and allowances.*\"",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 17,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/10"
+  },
+  {
+   "key": "federal-senate-7555",
+   "date": "2021-12-01",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2021-12-01.208.1) to pass the bill. In parliamentary jargon, they voted to read the bill for a [third time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). Because the bill had already passed in the House of Representatives, it can now become law. ### What does the bill do? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6751), the bill was introduced to: * *expand the operation of the disciplinary infringement scheme to provide a means of dealing with minor breaches of military discipline;* * *remove the subordinate summary authority and correct a number of anomalies with regard to the respective jurisdiction of discipline officers and summary authorities, and between the different types of summary authority, in relation to the type of breach of military discipline, the rank of defence members with which each can deal, and the powers and punishments available to each level of authority; and* * *establish new service offences for failure to perform duty or carry out an activity, cyber-bullying, failure to comply with removal order (in relation to material on social media that constitutes cyber-bullying) and failure to comply with requirement to notify change in circumstances (in relation to the receipt of a benefit or allowance).* Read more about the bill in the parliamentary library's [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2122a/22bd033).",
+   "stage": "Third reading",
+   "ayes": 31,
+   "noes": 9,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 6
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 7,
+    "earliest": 17,
+    "dated": 16
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-12-01/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-411333",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-12",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (Discipline Reform) Bill 2021 was introduced to reform the military discipline system, including expanding the disciplinary infringement scheme with a new senior discipline officer role, removing the subordinate summary authority, and adding new service offences for cyberbullying, receipt of a benefit or allowance, and failure to perform a duty."
+  },
+  {
+   "slug": "speech-412422",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (Discipline Reform) Bill 2021 introduces a three-tier disciplinary system to streamline minor breaches via infringement notices, reduce delays, and improve mental health outcomes for ADF personnel, while also addressing cyberbullying as a new offence."
+  },
+  {
+   "slug": "speech-412423",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker cautiously welcomed the Defence Legislation Amendment (Discipline Reform) Bill 2021, which expands the disciplinary infringement scheme and introduces new offences including cyberbullying, but criticised insufficient consultation and announced Labor would refer the bill to a Senate committee inquiry, reserving final position until the inquiry reports."
+  },
+  {
+   "slug": "speech-412425",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-08-30",
+   "stage_hint": null,
+   "brief": "The speaker expressed condolences for two soldiers who died near Townsville and supported the Defence Legislation Amendment (Discipline Reform) Bill 2021, arguing it would streamline handling of minor disciplinary matters while preserving members' rights. They also criticised the Prime Minister for using the Australian national flag as a face mask during COVID and backed referring the bill to a Senate committee for scrutiny by 14 October."
+  },
+  {
+   "slug": "speech-412668",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Defence Legislation Amendment (Discipline Reform) Bill 2021 will provide commanders with better tools to manage disciplinary matters efficiently and fairly, introducing new service offences such as cyberbullying to maintain morale and operational capability in the ADF."
+  },
+  {
+   "slug": "speech-412669",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker supported the Defence Legislation Amendment (Discipline Reform) Bill 2021, arguing it modernises the military justice system by introducing cyberbullying as a specific offence and improving efficiency for lower-level disciplinary processes. The speaker also paid tribute to ADF personnel involved in the Afghanistan withdrawal and the 41 fallen Australian service members."
+  },
+  {
+   "slug": "speech-412670",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (Discipline Reform) Bill 2021 was argued to be necessary for modernising military discipline, enabling faster resolution of workplace issues and adapting to changing societal expectations and technology."
+  },
+  {
+   "slug": "speech-412671",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker acknowledged the 70th anniversary of the ANZUS treaty and referenced recent events at Hamid Karzai International Airport while addressing the Defence Legislation Amendment (Discipline Reform) Bill 2021."
+  },
+  {
+   "slug": "speech-412795",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The speaker acknowledged the 70th anniversary of the ANZUS treaty and the loss of 13 US personnel at Hamid Karzai International Airport to ISIS-K, and expressed support for the Defence Legislation Amendment (Discipline Reform) Bill 2021, which aims to simplify the military discipline system, reduce delays, and empower commanders to address poor behaviour quickly."
+  },
+  {
+   "slug": "speech-412796",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The Defence Legislation Amendment (Discipline Reform) Bill 2021 was commended to the House, reforming military discipline under the Defence Force Discipline Act 1982 by allowing minor breaches to be managed as disciplinary infringements and introducing a new cyberbullying service offence for the Australian Defence Force."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Legislation Amendment (Discipline Reform) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00133",
+   "assent_date": "2021-12-13"
+  }
+ ]
+}

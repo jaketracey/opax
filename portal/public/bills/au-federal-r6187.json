@@ -1,0 +1,351 @@
+{
+ "key": "au-federal-r6187",
+ "title": "Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018",
+ "short_title": "Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6187_ems_7de05fea-93d9-4e6c-89fd-82235d415a74%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6187_ems_f868e434-a3b9-4a04-84a6-460827d28dfc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6187%22",
+   "document_date": "2018-09-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00044",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-20",
+  "sentences": [
+   "The bill would change company law to improve how unpaid wages and other employee entitlements are recovered when a business goes broke.",
+   "It would expand criminal offences to cover reckless actions that avoid paying entitlements, create a civil penalty with a reasonable person test, and let the Australian Tax Office, the Department of Jobs and Small Business, and the Fair Work Ombudsman seek compensation.",
+   "A court or the Australian Securities and Investments Commission could disqualify directors or officers for up to five years if, within the past seven years, two or more companies had minimal or no return on a Fair Entitlements Guarantee advance."
+  ],
+  "changes": [
+   "New criminal and civil penalties target transactions that avoid or reduce employee entitlement recovery, including those by company officers or others involved.",
+   "Liquidators and certain agencies can seek court orders for related entities to contribute to unpaid entitlements when it is just and equitable and the entity benefited from the employees' labour.",
+   "Directors and officers with a history of corporate contraventions and minimal Fair Entitlements Guarantee returns can be disqualified by a court or the Australian Securities and Investments Commission."
+  ],
+  "affected": "Employees, company directors and officers, liquidators, the Australian Tax Office, the Department of Jobs and Small Business, the Fair Work Ombudsman, and entities in corporate groups.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:22:51Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5448",
+   "date": "2018-10-24",
+   "house": "representatives",
+   "question": "The majority voted against a motion introduced by the Labor MP [Brendan O'Connor](https://theyvoteforyou.org.au/people/representatives/gorton/brendan_o'connor) (Gorton), which means it failed. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > *\"whilst not declining to give the bill a second reading, the House notes that:* > *(1) this Government has previously tried to cut the Fair Entitlements Guarantee scheme and has no real commitment to protecting employee entitlements;* > *(2) in May 2017 Labor proposed a suite of measures to combat [illegal phoenix activity](https://www.ato.gov.au/General/The-fight-against-tax-crime/Our-focus/Illegal-phoenix-activity/); and* > *(3) under this Government wages are stagnant, underemployment is stubbornly high, worker exploitation is rife, and work is increasingly precarious.\"*",
+   "stage": "Second reading",
+   "ayes": 67,
+   "noes": 73,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2018-10-24/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-371450",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "Labor supported the Corporations Amendment Bill 2018, which increases penalties for companies dodging employee entitlements and extends liability to related entities, but moved an amendment criticising the government's record on wages and worker protections. The opposition announced plans to seek Senate amendments granting unions standing to pursue compensation for employees they represent."
+  },
+  {
+   "slug": "speech-371454",
+   "speaker": "Bert Van Manen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 will deter and penalise directors who avoid employee entitlement obligations, noting $2.8 billion has been paid to over 203,000 workers under the Fair Entitlements Guarantee since 2001 and the scheme’s annual cost tripled from $70 million (2005–2009) to $235 million (2014–2018)."
+  },
+  {
+   "slug": "speech-371455",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment Bill 2018 for increasing penalties and introducing civil penalties against illegal phoenixing, but criticised the government for previously attempting to cut the Fair Entitlements Guarantee scheme and called for requiring large listed firms to report the ratio of CEO pay to median worker pay."
+  },
+  {
+   "slug": "speech-371456",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018, arguing it would better protect employee entitlements and taxpayers by introducing stronger penalties, civil penalties, contribution orders, and expanded enforcement powers, citing a tripling of average annual Fair Entitlements Guarantee scheme costs from $70.7 million to $235.3 million."
+  },
+  {
+   "slug": "speech-371458",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker strongly supported the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018, arguing it ensures employers meet obligations for unpaid wages, annual leave, long service leave, payment in lieu of notice, and redundancy pay, and prevents phoenixing. They criticised the \"Marxist member for Melbourne\" for opposing the government's efforts."
+  },
+  {
+   "slug": "speech-371461",
+   "speaker": "Susan Lamb",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 was supported as a repurposed Labor policy, with the speaker noting zero successful criminal or civil recovery actions since 2000 and rising Fair Entitlements Guarantee costs from $70.7 million to $235.3 million, and calling for amendments to allow registered organisations to commence civil proceedings."
+  },
+  {
+   "slug": "speech-371463",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bill strengthens protections for employee entitlements when companies become insolvent, but criticised the omission of unions' standing to bring proceedings on behalf of workers, which would make enforcement more effective. The speaker also welcomed the change from an intent to a recklessness threshold for arrangements to avoid paying entitlements, and noted the need for a director identification number to combat phoenixing."
+  },
+  {
+   "slug": "speech-371464",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-22",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 and a shadow minister’s amendment, arguing it contains sensible reforms to deter companies and directors from avoiding employee entitlement liabilities. They noted the Fair Entitlements Guarantee scheme's annual costs tripled from $70.7 million (2005-2009) to $235.3 million (2014-2018), criticised the government for attempting to abolish the scheme in 2014, and questioned the exclusion of trade unions from the bill, attributing it to the government’s anti-union stance dating back to Work Choices."
+  },
+  {
+   "slug": "speech-371802",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 was supported, along with the amendment moved by the member for Gorton to give registered organisations standing to commence civil proceedings. The speech detailed increased penalties for phoenixing—up to $945,000 for individuals and $9.45 million for corporations—and noted average annual FEG scheme costs rose from $70.7 million to $235.3 million across four-year periods."
+  },
+  {
+   "slug": "speech-371803",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker welcomed the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 as good reform but argued the government’s real motive was saving taxpayer money rather than protecting vulnerable workers, citing cases like Swan Cleaning and the Bendigo Marketplace cleaners. They urged the government to adopt Labor’s broader anti-phoenixing proposals and noted the bill increases fines, introduces a new civil penalty, extends liability to related entities, and gives regulators standing to recover funds."
+  },
+  {
+   "slug": "speech-371804",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018, which increases penalties and expands liability for avoiding employee entitlements, noting that the average annual cost of the Fair Entitlements Guarantee scheme rose from $70.7 million to $235.3 million, but criticised the government for past cuts and inadequate enforcement resources."
+  },
+  {
+   "slug": "speech-371805",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 as a modest but overdue step, while arguing that under the Abbott‑Turnbull‑Morrison government wages growth has been at a historic low of 1.9%, underemployment for those aged 15–24 has nearly doubled to 22%, and the cost of the Fair Entitlements Guarantee scheme has tripled to $235.3 million over four years. They also noted that the former member for Fairfax still owes Queensland Nickel workers unpaid entitlements and reiterated Labor’s commitment to restoring penalty rates within 100 days if elected."
+  },
+  {
+   "slug": "speech-371808",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker argued the bill strengthens protections for employee entitlements by adopting Labor policies to tackle phoenixing and director abuse, and noted Fair Work Ombudsman audits recovered over $20,000 in unpaid wages in Darwin and $374,000 for transport drivers."
+  },
+  {
+   "slug": "speech-371943",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 and moved a second reading amendment to include up to 13 weeks of unpaid superannuation in the Fair Entitlements Guarantee, citing $2.85 billion in unpaid super each year."
+  },
+  {
+   "slug": "speech-371946",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speech supported the Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 and the member for Mayo's superannuation amendment, condemning successive governments, ASIC, banks and fund managers as incompetent or insecure. It cited unpaid-worker and supplier cases including Clive Palmer's nickel plant, Kagara Zinc, a Mount Isa contractor, and a sugar mill sold for $2 million, and argued for returning to a 60 per cent government-securities rule for superannuation."
+  },
+  {
+   "slug": "speech-371947",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The speaker supported the amendment to the Corporations Amendment Bill 2018, arguing it strengthens protections for employee entitlements by targeting phoenixing activities, introducing new criminal and civil penalties, and extending powers to ASIC, the ATO, and the Fair Work Ombudsman. They noted Fair Entitlements Guarantee payments rose from $70.7 million (2005–2009) to $253 million (2014–2018), and raised concerns about liquidators charging unreasonable fees and selling assets below market value, citing a South Australian company owed $1.7 million."
+  },
+  {
+   "slug": "speech-371969",
+   "speaker": "Darren Chester",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-10-24",
+   "stage_hint": null,
+   "brief": "The Corporations Amendment (Strengthening Protections for Employee Entitlements) Bill 2018 amends the Corporations Act to penalise directors who avoid employee entitlement liabilities in insolvency, enable courts to make contribution orders against related entities that unfairly benefited, and strengthen ASIC’s power to disqualify directors with a track record of corporate contraventions and misuse of the Fair Entitlements Guarantee scheme."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Corporations Amendment (Strengthening Protections for Employee Entitlements) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00044",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

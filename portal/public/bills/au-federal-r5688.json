@@ -1,0 +1,315 @@
+{
+ "key": "au-federal-r5688",
+ "title": "Migration Amendment (Family Violence and Other Measures) Bill 2016",
+ "short_title": "Migration Amendment (Family Violence and Other Measures) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2018-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-10-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-10-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-12-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5688_ems_5d16012a-632e-4774-bf7e-c97b4e6032d9%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5688_ems_5155e468-30dc-4dc3-b41f-805a937c89ce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5688%22",
+   "document_date": "2016-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00162",
+   "document_date": "2018-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-09-01",
+  "sentences": [
+   "This bill is part of a package that would set up a sponsorship system for family visas under the Migration Act.",
+   "The system would require sponsors to be assessed and approved, impose duties on them, and allow penalties and information sharing.",
+   "The explanatory memorandum describes the existing work visa sponsorship framework but does not specify the start date or all amendments."
+  ],
+  "changes": [
+   "Creates a sponsorship framework for the family visa program.",
+   "Requires assessment and approval of sponsors.",
+   "Imposes obligations on sponsors with penalties for breaches."
+  ],
+  "affected": "Sponsors and applicants in the sponsored family visa program.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:24:27Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5550",
+   "date": "2018-11-27",
+   "house": "senate",
+   "question": "The majority voted to agree with the main idea of the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5688), which means they can now discuss the bill in more detail. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd021): > *The purpose of the Migration Amendment (Family Violence and Other Measures) Bill 2016 (the Bill) is to amend the Migration Act 1958 (Cth) (the Act) to introduce a sponsorship framework for the sponsored family visa program. The proposed changes will:* > * *separate sponsorship assessment from the visa application process* > * *require the approval of persons as family sponsors before any relevant visa applications are made* > * *impose statutory obligations on persons who are or were approved as family sponsors and provide for enforceable sanctions if such obligations are not satisfied* > * *allow the Minister to refuse a sponsorship application and cancel and/or bar a family sponsor where inappropriate use of the program or serious offences are detected, especially those involving violence and* > * *improve the sharing of personal information between parties to the application and the program more generally.*",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 20,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-27/10"
+  },
+  {
+   "key": "federal-senate-5551",
+   "date": "2018-11-27",
+   "house": "senate",
+   "question": "The majority voted in favour of [government amendments](https://www.openaustralia.org.au/senate/?gid=2018-11-27.212.2), which means they'll be included in the bill. Liberal Senator [Linda Reynolds](https://theyvoteforyou.org.au/people/senate/wa/linda_reynolds) (WA) [explains that](https://www.openaustralia.org.au/senate/?gid=2018-11-27.212.2): > \"*On 21 June 2016, the government made a commitment to introduce a new sponsored temporary visa for parents of Australian children. This new visa arrangement will allow parents to visit their Australian children without imposing an additional burden on Australia's healthcare system. In order to implement this new sponsored visa, there needs to be an assessable sponsorship framework for family sponsored visas. The Migration Amendment (Family Violence and Other Measures) Bill 2016 will amend the Migration Act 1958 to introduce this framework. When the bill was first introduced, the framework was intended to apply to the partner program first and the rest of the family program later. The sponsorship arrangements for the new parent visa will now be introduced first. To ensure that the sponsorship framework covers the requirements for the new parent visa, as well as all family sponsored visas, the bill requires government amendments.* > *To ensure that the new parent visa does not place any additional burden on Australia's healthcare system, the Australian child will be a financial guarantor for their parents' health costs. This amendment will allow a legal bond arrangement for approved family sponsors so that the obligation of liability for outstanding public health costs can be enforceable by a relevant health service provider.*\" ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd021): > *The purpose of the Migration Amendment (Family Violence and Other Measures) Bill 2016 (the Bill) is to amend the Migration Act 1958 (Cth) (the Act) to intr",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 17,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-11-27/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-332944",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-09-01",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Family Violence and Other Measures) Bill 2016 introduces an assessable sponsorship framework for family sponsored visas, requiring sponsors to be assessed and approved before a visa application can proceed, with character checks shared with applicants. The bill aims to protect vulnerable visa applicants from domestic violence by allowing refusal or cancellation of sponsorship for sponsors with violent histories, initially applying to partner visas."
+  },
+  {
+   "slug": "speech-334448",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "Labor supported the Migration Amendment (Family Violence and Other Measures) Bill 2016, which introduces an assessable sponsorship framework for family visas, allowing refusal or cancellation of sponsors with a history of family violence. The party urged the government to create a new temporary visa with work rights for people on temporary visas fleeing domestic violence."
+  },
+  {
+   "slug": "speech-334450",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Family Violence and Other Measures) Bill 2016 strengthens the Migration Act to reduce family violence, including requiring pre-approval of sponsors for family stream visa applications and allowing character check results to be shared with the sponsored person. The amendments support the second action plan of the National Plan to Reduce Violence against Women and their Children 2010-2022."
+  },
+  {
+   "slug": "speech-373136",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-11-28",
+   "stage_hint": null,
+   "brief": "Labor opposed the amendments to the Migration Amendment (Family Violence and Other Measures) Bill 2016, arguing they assign financial responsibility for health costs to sponsored family visa holders with no guarantee the debt recovery function would not extend beyond parent visas, and that the government broke its election promise by failing to protect children and migrant communities."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Family Violence and Other Measures) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00162",
+   "assent_date": "2018-12-10"
+  }
+ ]
+}

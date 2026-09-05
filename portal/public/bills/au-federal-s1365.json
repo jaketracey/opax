@@ -1,0 +1,473 @@
+{
+ "key": "au-federal-s1365",
+ "title": "Migration Amendment (Aggregate Sentences) Bill 2023",
+ "short_title": "Migration Amendment (Aggregate Sentences) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-02-07",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2023-02-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-02-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1365_ems_c5b9c57a-b485-49fb-b163-48325064c626%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1365%22",
+   "document_date": "2023-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00001",
+   "document_date": "2023-02-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-02-07",
+  "sentences": [
+   "This bill would change the Migration Act so that a single prison sentence imposed for multiple offences counts the same as a sentence for one offence in all decisions under the Act.",
+   "It does this by clarifying that aggregate sentences—one term of imprisonment for several crimes—are treated consistently, overriding a court ruling that said such sentences did not count as a 'substantial criminal record'.",
+   "The government says any person receiving an aggregate sentence of 12 months or more would fail the character test, and the bill also validates past decisions that might have been invalid due to the court ruling."
+  ],
+  "changes": [
+   "Ensures aggregate sentences are treated the same as single-offence sentences under the Migration Act and Regulations.",
+   "Validates past visa decisions and actions that may have been invalid after the Federal Court's decision in Pearson.",
+   "Allows affected non-citizens to pursue or continue review and revocation avenues after validation."
+  ],
+  "affected": "Non-citizens with aggregate criminal sentences, visa decision-makers, and the government's immigration detention and removal processes.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7944",
+   "date": "2023-02-08",
+   "house": "senate",
+   "question": "Migration Amendment (Aggregate Sentences) Bill 2023 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 8,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-02-08/1"
+  },
+  {
+   "key": "federal-senate-7945",
+   "date": "2023-02-08",
+   "house": "senate",
+   "question": "The majority voted against [opposition amendment (1) on sheet 1807](https://www.openaustralia.org.au/senate/?id=2023-02-08.27.1), which means it failed. This amendment would have granted the minister additional powers to cancel visas. ### What did the amendment do? Victorian Senator [James Paterson](https://theyvoteforyou.org.au/people/senate/victoria/james_paterson) (Liberal), who introduced the amendment, [explained that](https://www.openaustralia.org.au/senate/?id=2023-02-08.27.1): > *... we believe this is also an opportunity to even further extend the protections that Australians have against people on visas who commit violent offences. Consistent with the bill that was debated in the House in February last year, the Migration Amendment (Strengthening the Character Test) Bill 2021, introduced by the former government and supported at the time by the then Labor opposition, we believe that the minister should have additional powers. It will not be compulsory for the minister to exercise these powers; it will be up to the judgement of the minister. But it will widen the scope of the minister's power to protect Australians from people who commit very serious crimes but receive shorter sentences than are currently captured by the act.*",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "earliest": 5,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-02-08/2"
+  },
+  {
+   "key": "federal-representatives-7948",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "question": "The majority voted in favour of *disagreeing* with an [amendment](https://www.openaustralia.org.au/debate/?id=2023-02-13.120.1) introduced by Wannon MP [Dan Tehan](https://theyvoteforyou.org.au/people/representatives/wannon/dan_tehan) (Liberal), which means it failed. ### What does this amendment do? Mr Tehan [explained that](https://www.openaustralia.org.au/debate/?id=2023-02-13.120.1): > *This amendment is a very sensible amendment. It gives the minister the ability to act in instances of domestic violence, sexual assault, murder, illegal possession of firearms. It is a very sensible amendment.* See [his contribution](https://www.openaustralia.org.au/debate/?id=2023-02-13.120.1) for more information.",
+   "stage": "Consideration in detail",
+   "ayes": 88,
+   "noes": 57,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 74,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 13
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-13/1"
+  },
+  {
+   "key": "federal-representatives-7949",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "question": "Migration Amendment (Aggregate Sentences) Bill 2023 - Consideration in Detail - Exception",
+   "stage": "Consideration in detail",
+   "ayes": 55,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 43,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 67
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-13/2"
+  },
+  {
+   "key": "federal-representatives-7950",
+   "date": "2023-02-13",
+   "house": "representatives",
+   "question": "Migration Amendment (Aggregate Sentences) Bill 2023 - Consideration in Detail - Agree with the bill",
+   "stage": "Consideration in detail",
+   "ayes": 55,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 45,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 67
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-02-13/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827107",
+   "speaker": "Anthony Chisholm",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-827113",
+   "speaker": "Murray Watt",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-07",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Aggregate Sentences) Bill 2023 clarifies that aggregate sentences of 12 months or more count as a single sentence for the character test under the Migration Act, responding to the Federal Court ruling in *Pearson v Minister for Home Affairs* that created inconsistencies in visa cancellation for non-citizens with multiple offences. The bill also retrospectively validates past cancellation decisions that were invalidated by the ruling."
+  },
+  {
+   "slug": "speech-827247",
+   "speaker": "Jenny McAllister",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-08",
+   "stage_hint": null,
+   "brief": "The speaker moved to suspend standing order provisions (paragraphs 5 to 8 of standing order 111) for the Migration Amendment (Aggregate Sentences) Bill 2023, allowing it to be considered during the current sittings; the motion was agreed to."
+  },
+  {
+   "slug": "speech-827248",
+   "speaker": "Jenny McAllister",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-08",
+   "stage_hint": null,
+   "brief": "The Greens opposed a motion to postpone intervening business until after consideration of the Migration Amendment (Aggregate Sentences) Bill 2023. The motion was agreed to."
+  },
+  {
+   "slug": "speech-827249",
+   "speaker": "James Paterson",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2023-02-08",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-827430",
+   "speaker": "Jess Walsh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-09",
+   "stage_hint": null,
+   "brief": "The committee rejected amendments by Senators Lambie and Pocock to the Migration Amendment (Aggregate Sentences) Bill 2023, and passed the bill without changes."
+  },
+  {
+   "slug": "speech-827515",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-13",
+   "stage_hint": null,
+   "brief": "The government introduced the Migration Amendment (Aggregate Sentences) Bill 2023 to restore the ability to count aggregate sentences toward the character test for visa cancellation, following a Federal Court ruling in *Pearson v Minister for Home Affairs*. The opposition supported the bill but proposed amendments to add new grounds for visa cancellation, including for domestic violence and weapons offences, while a crossbench member opposed the bill's blanket retrospective application, warning it risks indefinite detention for minor or youth offences."
+  },
+  {
+   "slug": "speech-827565",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2023-02-13",
+   "stage_hint": null,
+   "brief": "The government introduced the Migration Amendment (Aggregate Sentences) Bill 2023 to clarify that aggregate prison sentences for multiple offences count as a substantial criminal record under the Migration Act, responding to the Federal Court's Pearson decision. The opposition supported the bill and also backed amendments to strengthen the character test for non-citizens convicted of serious offences."
+  },
+  {
+   "slug": "speech-827566",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2023-02-13",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Aggregate Sentences) Bill 2023 should be strengthened by adding designated offences including violence, sexual assault, breach of"
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Aggregate Sentences) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00001",
+   "assent_date": "2023-02-16"
+  }
+ ]
+}

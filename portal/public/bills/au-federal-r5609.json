@@ -1,0 +1,331 @@
+{
+ "key": "au-federal-r5609",
+ "title": "Narcotic Drugs Amendment Bill 2016",
+ "short_title": "Narcotic Drugs Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-02-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2016-02-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-02-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-02-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5609_ems_a4f2c955-4290-43f5-985e-f08636e6154d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5609%22",
+   "document_date": "2016-02-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00012",
+   "document_date": "2016-02-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-02-10",
+  "sentences": [
+   "The bill would allow cannabis to be grown in Australia for medical use and let patients obtain medicinal cannabis.",
+   "It creates a licensing scheme with two types of licences, a strict 'fit and proper person' test, and a permit system to control production.",
+   "The Secretary of the Department of Health could order the destruction of cannabis produced under a licence."
+  ],
+  "changes": [
+   "Allows cannabis cultivation in Australia for medicinal and related scientific purposes.",
+   "Establishes a licensing scheme with two licence types, a 'fit and proper person' test, and a permit system.",
+   "Updates manufacturing provisions to mirror the cannabis licence scheme.",
+   "Confers decision-making powers on the Secretary instead of the Minister.",
+   "Introduces a cost-recovery scheme to fund administration of the licensing scheme."
+  ],
+  "affected": "Australian patients in need of medicinal cannabis, cannabis growers, manufacturers, and the Department of Health.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:49:30Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-327580",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-10",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 was moved to establish a national licensing scheme for the controlled cultivation of cannabis for medicinal and scientific purposes, addressing the lack of a legal local supply chain for raw cannabis material. The bill creates two types of cultivation licences (for medicinal production and research), requires applicants to be 'fit and proper persons' with secure facilities, and maintains oversight by the Department of Health, while keeping manufacturing and product registration under the Therapeutic Goods Act."
+  },
+  {
+   "slug": "speech-328527",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Labor Party supports the Narcotic Drugs Amendment Bill 2016, which establishes a licensing scheme for medicinal cannabis cultivation and manufacture, and will refer it for a brief Senate inquiry to avoid unintended consequences. The speaker argued for nationally consistent laws, citing the cases of Ben Oakley and Lucy Haslam’s son Dan, and emphasised that the bill maintains existing TGA pathways while introducing strict fit-and-proper-person tests for licensees."
+  },
+  {
+   "slug": "speech-328528",
+   "speaker": "Andrew Nikolic",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 was argued to be sensible, enlightened and humane policy that legalises medicinal cannabis for terminally ill patients under strict medical prescription, while maintaining prohibition on non-medicinal use. The speaker noted bipartisan support, including from Labor and Tasmanian Premier Will Hodgman, and criticised the Greens' proposal to decriminalise methamphetamine as irresponsible."
+  },
+  {
+   "slug": "speech-328529",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Narcotic Drugs Amendment Bill 2016, arguing that only the Commonwealth can establish a national scheme for legal, safe and regulated access to medicinal cannabis. The bill aims to ease suffering for patients like three-year-old Abbey, who uses cannabis oil for seizures, and to prevent a patchwork of state-based access, while clarifying it does not decriminalise recreational use."
+  },
+  {
+   "slug": "speech-328704",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Narcotic Drugs Amendment Bill 2016 to enable regulated cultivation of cannabis for medicinal and research purposes in Australia, ensuring safe, legal supply under doctor supervision and preventing diversion, citing that 75% of people supported clinical trials and 69% supported legislative change in a 2013 survey."
+  },
+  {
+   "slug": "speech-328707",
+   "speaker": "Melissa Parke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Narcotic Drugs Amendment Bill 2016 to legalise cannabis cultivation for medicinal or scientific purposes, calling the current prohibition \"absurd\" and citing patients like Lucy and Daniel Haslam and Ben Oakley. They urged faster federal-state cooperation, rescheduling cannabis from Schedule 9 to Schedule 8, and an independent advisory panel, noting studies that medicinal cannabis could reduce opioid deaths by 25%."
+  },
+  {
+   "slug": "speech-328708",
+   "speaker": "Luke Howarth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Narcotic Drugs Amendment Bill 2016 would provide a safe, legal, and reliable supply of medicinal cannabis products for patients with chronic conditions, while maintaining strict regulation and not legalising recreational use. The speaker named constituents Noel Neville, Mr. Squire, and Mr. Austin, and thanked Health Minister Sussan Ley for her advocacy."
+  },
+  {
+   "slug": "speech-328709",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Narcotic Drugs Amendment Bill 2016, which permits licensing of medicinal cannabis growers, and highlighted the story of constituent Ben Oakley, whose Stiff Person Syndrome improved with medicinal cannabis oil. The bill has bipartisan support to regulate cultivation and production, complementing state schemes."
+  },
+  {
+   "slug": "speech-328710",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 establishes a national licensing scheme for the controlled cultivation of cannabis for medicinal and scientific purposes, including $3.5 million in NSW clinical trials for children with severe epilepsy, while maintaining prohibitions on recreational use."
+  },
+  {
+   "slug": "speech-328711",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that Labor supports the Narcotic Drugs Amendment Bill 2016 to establish a national, legal supply chain for medicinal cannabis, citing community stories like a Tweed family whose son’s seizures were reduced by cannabis oil, and noting concerns about cost and potential patchwork of state schemes."
+  },
+  {
+   "slug": "speech-328712",
+   "speaker": "Brett Whiteley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 was argued to enable the cultivation of cannabis for medicinal purposes in Australia, ensuring a legal and regulated supply for patients with chronic conditions while maintaining strict controls and compliance with international obligations. The speaker cited constituents Natalie Daley, who uses cannabis oil for adrenal gland carcinoma, and April Tognoni, a child with myoclonic epilepsy whose seizures reduced from 1,000 to six per day after using cannabis oil."
+  },
+  {
+   "slug": "speech-328713",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 establishes a legislative framework for licensed medicinal cannabis cultivation and supply in Australia, requiring strict security, fit-and-proper person tests, and penalties to prevent diversion, citing 53,404 border detections and 66,684 cannabis-related arrests in 2013–14."
+  },
+  {
+   "slug": "speech-328714",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker argued the Narcotic Drugs Amendment Bill 2016 would enable a safe, legal local supply of medicinal cannabis by introducing cultivation licences with a 'fit and proper' test and updated penalties, noting 69% of Australians supported medicinal cannabis use in the 2013 National Drug Strategy Household Survey."
+  },
+  {
+   "slug": "speech-328715",
+   "speaker": "Warren Entsch",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Narcotic Drugs Amendment Bill 2016, arguing it would allow patients to legally access safe medical cannabis products like tinctures, oils, and vaporisable raw product through clinical trials or authorised prescribers, initially focusing on childhood epilepsy, chemotherapy nausea, HIV treatment, and palliative care. They highlighted personal stories, including their late brother-in-law Joel Garrett and families like the Haslams, and thanked advocates and Minister Sussan Ley for introducing the bill."
+  },
+  {
+   "slug": "speech-328716",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Turnbull government's Narcotic Drugs Amendment Bill 2016 allows the cultivation of cannabis for medicinal purposes under a national scheme with two types of licences (medicinal production and research), while maintaining compliance with international treaty obligations and emphasising that recreational marijuana is not being legalised."
+  },
+  {
+   "slug": "speech-328717",
+   "speaker": "Wyatt Roy",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 creates a nationally consistent licensing scheme for the controlled cultivation of medicinal cannabis, aiming to provide safe, legal patient access while preventing diversion to illicit use and meeting Australia's international obligations under the Single Convention on Narcotic Drugs 1961."
+  },
+  {
+   "slug": "speech-328718",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The speaker supported the Narcotic Drugs Amendment Bill 2016 to create two licensing streams for legal medicinal cannabis cultivation and research in Australia, with strict conditions to prevent diversion to illegal use, while noting bipartisan support and the need for scientific evidence."
+  },
+  {
+   "slug": "speech-328719",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The member for Robertson supported the Narcotic Drugs Amendment Bill 2016, arguing it would provide safe, legal, and reliable access to medicinal cannabis for patients under strict medical supervision. They cited the cases of Michael’s daughter Katelyn (catastrophic epilepsy), Brendan’s daughter (sphincter of Oddi dysfunction), and Clare’s husband (melanoma) as examples of those who could benefit."
+  },
+  {
+   "slug": "speech-328720",
+   "speaker": "Teresa Gambaro",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 creates a nationally consistent licensing scheme for the controlled cultivation of cannabis for medicinal or scientific purposes, with the Commonwealth regulating all aspects to ensure safety, legality and reliability while preventing diversion to illicit use. The bill introduces a fit-and-proper-persons test for licensees, requires a lawful supply pathway to patients, and initially focuses on domestic supply with exports to be addressed later."
+  },
+  {
+   "slug": "speech-328721",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 establishes a legal framework for cultivating cannabis in Australia, allowing patients with debilitating conditions to access medicinal cannabis by prescription from 2017 while keeping non-medicinal use illegal. The speaker cited advocates Lucy Haslam, Professor David Penington, and Dr Richard Di Natale, and argued that fears of leakage to illicit markets are unfounded, referencing Australia's experience with poppy cultivation."
+  },
+  {
+   "slug": "speech-328723",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-02-23",
+   "stage_hint": null,
+   "brief": "The Narcotic Drugs Amendment Bill 2016 will enable legally cultivated Australian cannabis for medicinal products, down‑schedule cannabis for therapeutic use to schedule 8, and establish an advisory council for implementation. The speaker also noted ongoing clinical trials and bipartisan support."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Narcotic Drugs Amendment Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00012",
+   "assent_date": "2016-02-29"
+  }
+ ]
+}

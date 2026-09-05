@@ -1,0 +1,274 @@
+{
+ "key": "au-federal-s1459",
+ "title": "Universities Accord (National Higher Education Code to Prevent and Respond to Gender-based Violence) Bill 2025",
+ "short_title": "Universities Accord (National Higher Education Code to Prevent and Respond to Gender-based Violence) Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-23",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Education",
+ "status": "passed",
+ "status_as_of": "2025-08-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-08-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1459_ems_d4a841bf-2c4a-4662-8fcb-b3dedfdd284b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1459%22",
+   "document_date": "2025-07-23",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00034",
+   "document_date": "2025-08-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2025-07-23",
+  "sentences": [
+   "This bill is part of a package that creates a new regulatory framework to reduce gender-based violence in higher education and hold providers accountable.",
+   "The bill would let the minister make a National Code setting standards for safety, prevention, response and governance, enforced by a new specialist unit in the Department of Education.",
+   "The Secretary could publicly disclose a provider's compliance record and share information with other regulators."
+  ],
+  "changes": [
+   "Establishes a standalone regulatory framework for preventing and responding to gender-based violence in higher education.",
+   "Gives the minister power to create a National Code as a legislative instrument.",
+   "Creates a specialist gender-based violence unit within the Department of Education.",
+   "Gives the Secretary monitoring, investigation and enforcement powers including compliance notices and civil penalties.",
+   "Allows the Secretary to disclose compliance information publicly.",
+   "Requires annual reporting on the unit's operations to Parliament."
+  ],
+  "affected": "Higher education providers, their staff and students, and the Department of Education.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:03:16Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-9673",
+   "date": "2025-07-31",
+   "house": "senate",
+   "question": "The majority voted against an amendment to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). This amendment was introduced by Tasmanian Senator [Jonathon Duniam](https://theyvoteforyou.org.au/people/senate/tasmania/jonathon_duniam) (Liberal). ### Amendment text > *At the end of the motion, add \", but the Senate urges the Government to establish an additional National Higher Education Code to Prevent and Respond to Anti-Semitism, which:* > > *(a) makes it clear to all higher education students, staff and providers that everyone on a higher education campus has a right to be safe;* > > *(b) imposes on universities a range of obligations concerning student and staff safety which is very important given the alarming increase in anti-Semitic incidents on university campuses since 7 October 2023; and* > > *(c) ensures that higher education providers must comply with recommendations of the National Student Ombudsman concerning the National Higher Education Code to Prevent and Respond to Anti-Semitism\".*",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-07-31/5"
+  },
+  {
+   "key": "federal-representatives-9682",
+   "date": "2025-08-25",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/debates/?id=2025-08-25.124.2) to the usual second reading amendment, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by Berowra MP [Julian Leeser](https://theyvoteforyou.org.au/people/representatives/berowra/julian_leeser) (Liberal). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House urges the Government to establish an additional National Higher Education Code to Prevent and Respond to Antisemitism, which:* > >> *(1) makes it clear to all higher education students, staff and providers that everyone on a higher education campus has a right to be safe;* >> >> *(2) imposes on universities a range of obligations concerning student and staff safety which is very important given the alarming increase in antisemitic incidents on university campuses since 7 October 2023; and* >> >> *(3) ensures that higher education providers must comply with recommendations of the National Student Ombudsman concerning the National Higher Education Code to Prevent and Respond to Antisemitism\".*",
+   "stage": "Second reading",
+   "ayes": 46,
+   "noes": 87,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 86
+    },
+    "Liberal": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-08-25/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195247",
+   "speaker": "Katy Gallagher",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195561",
+   "speaker": "Jonathon Duniam",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-28",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1195636",
+   "speaker": "Leah Blyth",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2025-07-29",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Universities Accord (National Higher Education Code to Prevent and Respond to Gender-based Violence) Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00034",
+   "assent_date": "2025-08-28"
+  }
+ ]
+}

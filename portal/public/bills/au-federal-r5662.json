@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r5662",
+ "title": "National Cancer Screening Register Bill 2016",
+ "short_title": "National Cancer Screening Register Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2016-05-05",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2016-05-09",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-05-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5662%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-05-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5662%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5662%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5662_ems_3ba72f24-f973-4404-be4d-40afebd17d4b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5662%22",
+   "document_date": "2016-05-05",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-332327",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-05",
+   "stage_hint": null,
+   "brief": "The National Cancer Screening Register Bill 2016 establishes a national register to support the renewed National Cervical Screening Program (introducing five-yearly HPV testing from May 2017) and the expanded National Bowel Cancer Screening Program (offering biennial screening to Australians aged 50–74 by 2020). The register will consolidate data from eight state and territory cervical registers and the paper-based bowel register, enabling data migration, mandatory reporting, and integration with My Health Record to improve screening rates and reduce cancer deaths."
+  },
+  {
+   "slug": "speech-332328",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-05-05",
+   "stage_hint": null,
+   "brief": "The bill establishes the National Cancer Screening Register for cervical and bowel cancer, authorising data collection, migration from state and territory registers, and amendments to the Australian Immunisation Register Act 2015, Australian Institute of Health and Welfare Act 1987, and Health Insurance Act 1973 to share Medicare, HPV vaccination, and death index data. Civil penalties for mandatory reporting non-compliance commence 1 May 2018, with a 12-month grace period."
+  }
+ ],
+ "acts": []
+}

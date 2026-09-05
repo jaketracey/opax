@@ -1,0 +1,326 @@
+{
+ "key": "au-federal-r5736",
+ "title": "Criminal Code Amendment (War Crimes) Bill 2016",
+ "short_title": "Criminal Code Amendment (War Crimes) Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-10-12",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Attorney-General",
+ "status": "passed",
+ "status_as_of": "2016-12-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-10-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-12-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-12-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5736_ems_73251af8-f937-4534-8dd8-ba98099a2399%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5736%22",
+   "document_date": "2016-10-12",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00097",
+   "document_date": "2016-12-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 11,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-10-12",
+  "sentences": [
+   "The bill would change Australian war crimes law to match international rules on who counts as a civilian in non-international conflicts.",
+   "It would remove criminal liability for causing incidental death or injury to members of organised armed groups, except those who are hors de combat.",
+   "The amendments cover sections 268.70, 268.71 and 268.72 of the Criminal Code and retain the existing mental element of recklessness."
+  ],
+  "changes": [
+   "Clarify that war crimes offences do not apply to members of organised armed groups.",
+   "Extend hors de combat protections to members of organised armed groups.",
+   "Align Australian domestic law with international humanitarian law on targeting in non-international armed conflicts."
+  ],
+  "affected": "Members of organised armed groups, civilians and perpetrators of war crimes in non-international armed conflicts.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:11:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4497",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "Criminal Code Amendment (War Crimes) Bill 2016 - Second Reading - More scrutiny",
+   "stage": "Second reading",
+   "ayes": 8,
+   "noes": 39,
+   "outcome": "negative",
+   "party_splits": {
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 30,
+    "member": 10,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/5"
+  },
+  {
+   "key": "federal-senate-4498",
+   "date": "2016-12-01",
+   "house": "senate",
+   "question": "The majority [voted in favour](http://www.openaustralia.org.au/senate/?id=2016-12-01.83.1) of passing the [bill](http://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r5736) in the Senate. In parliamentary jargon, they voted to read it [for a third time](http://www.peo.gov.au/learning/fact-sheets/making-a-law.html). Because the bill has already been passed in the House of Representatives, it will now become law. ### What does this bill do? According to the [bills digest](http://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1617a/17bd043), the bill: > *... proposes to amend the war crimes offences ... to address some anomalies in the treatment of acts done in the course of a ‘non‑international armed conflict’ with the requirements of international humanitarian law (IHL). These anomalies ... are said to limit the capability of the Australian Defence Force (ADF) to undertake international security operations, and may expose members of the ADF to domestic criminal liability despite acting in compliance with the requirements of IHL.* ### Why didn't the Greens support the bill? Only the senators from the Australian Greens Party voted against this bill. Tasmanian Greens Senator Nick McKim explained why during his [second reading speech](http://www.openaustralia.org.au/senate/?gid=2016-12-01.73.1). Here's part of what he said: > *I think all of us in this chamber would agree it is vitally important to make sure we are all on the same page on what constitutes a war crime in this changing environment and to make sure that our understanding is aligned with international law. Unfortunately, as we have seen so often, the government has fluffed this legislation. In particular, the Attorney-General has fluffed it, which is unsurprising, given his record of political fluffing. In seeking to provide clarity for the ADF, the government has, as it often does, gone too far. Backed by the ALP, it is proposing to weaken safeguards tha",
+   "stage": "Third reading",
+   "ayes": 58,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 42,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-12-01/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-334853",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-10-12",
+   "stage_hint": null,
+   "brief": "The bill amends the Criminal Code to allow the Australian Defence Force to target members of organised armed groups, such as Daesh, with lethal force in non-international armed conflict, aligning domestic law with international humanitarian law and clarifying that such members are not protected as civilians."
+  },
+  {
+   "slug": "speech-338408",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "Labor supported the Criminal Code Amendment (War Crimes) Bill 2016, which updates Australian domestic law to align with international humanitarian law by clarifying that war crimes offences do not apply to members of organised armed groups such as ISIL, providing legal certainty for Australian Defence Force personnel. The speech noted the bill was scrutinised by the Parliamentary Joint Committee on Intelligence and Security and emphasised Labor’s bipartisan approach to national security legislation."
+  },
+  {
+   "slug": "speech-338409",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (War Crimes) Bill 2016 aligns Australian domestic law with international law to allow ADF personnel to target members of organised armed groups like Daesh in non-international armed conflicts without facing war crimes liability. The bill was reviewed and recommended by the Parliamentary Joint Committee on Intelligence and Security, with the Prime Minister's full support."
+  },
+  {
+   "slug": "speech-338411",
+   "speaker": "Chris Crewther",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (War Crimes) Bill 2016 aligns Australian domestic law with international humanitarian law by distinguishing between civilians and organised armed groups such as Daesh, and by clarifying the proportionality principle, to protect ADF personnel from legal uncertainty; the speaker thanked Michael Sukkar, Minister Dutton and Major Rob Marlow for their work on the bill."
+  },
+  {
+   "slug": "speech-338412",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Criminal Code Amendment (War Crimes) Bill 2016 would align Australia's domestic war crimes laws with international humanitarian law by excluding criminal liability for targeting organised armed groups such as Daesh, thereby protecting Australian Defence Force personnel operating in modern conflicts."
+  },
+  {
+   "slug": "speech-338413",
+   "speaker": "Gai Brodtmann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The Criminal Code Amendment (War Crimes) Bill 2016 updates Australian domestic law to align with international law on the treatment of members of organised armed groups in non-international armed conflicts. The speech also called for prosecuting sexual violence committed by Australians fighting with Daesh as war crimes, citing the \"Prosecute, don't perpetrate\" campaign and noting that systematic rape is a crime against humanity and genocide."
+  },
+  {
+   "slug": "speech-338414",
+   "speaker": "Michael Keenan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-23",
+   "stage_hint": null,
+   "brief": "The government argued the Criminal Code Amendment (War Crimes) Bill 2016 ensures the Australian Defence Force can legally conduct targeted operations against groups like Daesh while protecting personnel from legal ramifications. The bill received bipartisan support and was reviewed by the Parliamentary Joint Committee on Intelligence and Security."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Criminal Code Amendment (War Crimes) Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00097",
+   "assent_date": "2016-12-07"
+  }
+ ]
+}

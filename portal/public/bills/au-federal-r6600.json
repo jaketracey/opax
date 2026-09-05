@@ -1,0 +1,148 @@
+{
+ "key": "au-federal-r6600",
+ "title": "Bankruptcy (Estate Charges) Amendment (Norfolk Island) Bill 2020",
+ "short_title": "Bankruptcy (Estate Charges) Amendment (Norfolk Island) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-10-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Infrastructure, Transport, Regional Development and Communications",
+ "status": "passed",
+ "status_as_of": "2020-12-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-12-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6601_ems_5882d021-d1df-4fb4-acf0-2adcb900aab5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6601_ems_0c270dd3-6da9-48d7-b642-6dfa14df49a3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6600%22",
+   "document_date": "2020-10-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00149",
+   "document_date": "2020-12-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-395430",
+   "speaker": "Dan Tehan",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The Bankruptcy (Estate Charges) Amendment (Norfolk Island) Bill extends the 1997 Act to Norfolk Island, ensuring consistent estate charges and equal treatment for bankruptcies there as in the rest of Australia."
+  },
+  {
+   "slug": "speech-400511",
+   "speaker": "Jason Clare",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "Labor supported the Territories Legislation Amendment Bill 2020 and the Bankruptcy (Estate Charges) Amendment (Norfolk Island) Bill, arguing they ensure consistent Commonwealth support and law application for external territories. Labor moved a second reading amendment urging proper consultation with community stakeholders and the legal profession, including the Law Association of Norfolk Island and the Law Council of Australia."
+  },
+  {
+   "slug": "speech-400513",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-08",
+   "stage_hint": null,
+   "brief": "The speaker argued the Territories Legislation Amendment Bill and associated bankruptcy bill would align Norfolk Island and other territories with mainland Australia on governance, legal frameworks, and services. The speaker noted the bills extend national company and bankruptcy laws to Norfolk Island, improve privacy rights and review opportunities for residents, and ensure easier access to future government support packages."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Bankruptcy (Estate Charges) Amendment (Norfolk Island) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00149",
+   "assent_date": "2020-12-17"
+  }
+ ]
+}

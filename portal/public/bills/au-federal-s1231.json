@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1231",
+ "title": "Customs Amendment (Safer Cladding) Bill 2019",
+ "short_title": "Customs Amendment (Safer Cladding) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-10",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1231%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1231%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1231%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1231_ems_e8a601a4-1b1c-4eba-8105-82a49b77ae01%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1231%22",
+   "document_date": "2019-09-10",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-10",
+  "sentences": [
+   "This bill would make it illegal to bring certain cladding materials into the country.",
+   "It adds a new section to the Customs Act 1901 that classifies these panels as banned goods under existing import regulations.",
+   "The ban would take effect the day after the law receives royal assent, and panels already in Australia would not be affected."
+  ],
+  "changes": [
+   "It introduces a new rule that stops the importation of cladding panels with a polyethylene core.",
+   "It makes these panels prohibited imports under the Customs (Prohibited Imports) Regulations 1956.",
+   "It sets the start date for the ban as the day after royal assent."
+  ],
+  "affected": "Importers of building cladding panels and businesses that supply aluminium composite materials.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:14:52Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

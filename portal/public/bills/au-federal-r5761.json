@@ -1,0 +1,366 @@
+{
+ "key": "au-federal-r5761",
+ "title": "Superannuation (Excess Transfer Balance Tax) Imposition Bill 2016",
+ "short_title": "Superannuation (Excess Transfer Balance Tax) Imposition Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-09",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2016-11-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-22",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2016-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2016-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5761_ems_afecbe07-cf13-4a02-8857-484b5c09fcbd%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5761%22",
+   "document_date": "2016-11-09",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2016A00080",
+   "document_date": "2016-11-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-09",
+  "sentences": [
+   "The bill sets a legal goal for Australia's superannuation system: to supply retirement income that replaces or adds to the age pension.",
+   "Any future superannuation laws and regulations would have to be checked against this goal and any subsidiary goals set by regulation.",
+   "The bill also makes changes to the Legislation Act 2003 to support this objective framework."
+  ],
+  "changes": [
+   "The bill writes into law a primary objective for the superannuation system.",
+   "The bill allows subsidiary objectives to be set by regulation.",
+   "The bill requires future superannuation bills and regulations to include a compatibility statement.",
+   "The bill makes consequential amendments to the Legislation Act 2003."
+  ],
+  "affected": "Future superannuation policymakers and the superannuation industry are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:05Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4421",
+   "date": "2016-11-23",
+   "house": "senate",
+   "question": "Mathias Cormann I move: That these bills be now read a second time. I seek leave to have the second reading speech incorporated in _Hansard_. Leave granted. _The speech read as follows—_ TREASURY LAWS AMENDMENT (FAIR AND SUSTAINABLE SUPERANNUATION) BILL 2016 SUPERANNUATION (EXCESS TRANSFER BALANCE TAX) IMPOSITION BILL 2016 These Bills implement the Government's election commitment to improve the fairness, sustainability, flexibility and integrity of the superannuation system. We want superannuation to keep working for all Australians in their retirement as we move through the twenty-first century and grapple with some key challenges, including the ageing of our population and the need to return the Budget to surplus. The measures in these Bills also reduce the extent to which the superannuation system can be used for tax minimisation and estate planning. But the changes recognise that in a modern economy, working patterns are changing across the population and over the course of people's lives. That's why our reforms will allow the system to work more flexibly for Australians; it will reflect their changing work-life patterns, particularly for those whose work patterns and incomes vary over time. While some measures place limits on the amount of contributions that can be made to superannuation or amounts that will receive tax-free earnings status, at the same time these measures target the tax concessions to ensure they are fairer and more fiscally sustainable. A key change to ensure the sustainability of the superannuation system is the introduction of the transfer balance cap, which is contained in Schedule 1 to the Fair and Sustainable Superannuation Bill. This introduces a $1.6 million cap on the total amount of superannuation savings that can be transferred from an 'accumulation account', where earnings are concessionally taxed, to a 'retirement account', where earnings are tax-free. Importantly, the cap only limits the amount that can be transferred into the t",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 45,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 33,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-23/1"
+  },
+  {
+   "key": "federal-senate-4422",
+   "date": "2016-11-23",
+   "house": "senate",
+   "question": "Katy Gallagher by leave—In relation to the Treasury Laws Amendment (Fair and Sustainable Superannuation) Bill 2016, I move opposition amendments (1) to (4) on sheet 7980: (1) Schedule 2, item 15, page 61 (lines 5 and 6), omit the item, substitute: 15 Section 293-1 Omit \"$300,000\", substitute \"$200,000\". (2) Schedule 2, item 17, page 61 (lines 9 and 10), omit the item, substitute: 17 Section 293-10 Omit \"$300,000\", substitute \"$200,000\". (3) Schedule 2, item 18, page 61 (lines 11 and 12), omit the item, substitute: 18 Subsections 293-20(1), 293-155(1) and 293-200(1) Omit \"$300,000\", substitute \"$200,000\". (4) Schedule 2, item 19, page 61 (lines 14 and 15), omit the item, substitute: 19 Subsection 133-15(1) in Schedule 1 (note) Omit \"$300,000\", substitute \"$200,000\". We also oppose schedules 3 to 6 in the following terms: (5) Schedule 3, item 2, page 63 (line 20) to page 65 (line 2), subsections 292-85(3) to (6) to be opposed. (6) Schedule 5, page 77 (line 1) to page 78 (line 29), Schedule 5 to be opposed. (7) Schedule 6, page 79 (line 1) to page 80 (line 25), Schedule 6 to be opposed. With regard to senators having the opportunity to consider these amendments, I acknowledge that they were circulated quite late this morning. I would say, however, that these amendments go directly to the position that the Labor Party announced publicly when we considered the revised government bills, once they had been released. I would like to draw senators' attention to item (5): Schedule 3, item 2, page 63 (line 20) to page 65 (line 2), subsections 292-85(3) to (6) to be opposed. Item (5) relates to non-concessional contributions. There is an error in that item. The item as drafted seeks to oppose subsections 292-85(3) to (6). I would like to amend that amendment to reflect opposition to subsection 292-85(2)(a). That is a fault of ours. I am sorry if that is not very clear. Taken as a group, these amendments implement Labor's position, which seeks to lower the higher income superann",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-23/2"
+  },
+  {
+   "key": "federal-senate-4423",
+   "date": "2016-11-23",
+   "house": "senate",
+   "question": "Sue Lines The question now is that schedules 5 and 6 stand as printed.",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 38,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2016-11-23/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-338003",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-22",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Superannuation (Objective) Bill 2016 and related bills modernise the retirement income system by enshrining a clear objective for superannuation, improving flexibility for workers like the example of Sarah, and removing the 10 per cent rule to benefit over 800,000 Australians. The bills also introduce an unused concessional cap carry-forward from 1 July 2018, expected to help around 230,000 people in 2019-20, and are available to anyone with a balance under $500,000."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Superannuation (Excess Transfer Balance Tax) Imposition Act 2016",
+   "frl_uri": "https://www.legislation.gov.au/C2016A00080",
+   "assent_date": "2016-11-29"
+  }
+ ]
+}

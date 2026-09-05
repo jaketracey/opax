@@ -1,0 +1,431 @@
+{
+ "key": "au-federal-r5222",
+ "title": "Social Services and Other Legislation Amendment (Seniors Health Card and Other Measures) Bill 2014",
+ "short_title": "Social Services and Other Legislation Amendment (Seniors Health Card and Other Measures) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-03-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2014-09-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-03-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-09-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5222_ems_e2901d89-5e90-41d9-8f10-0c9b5d18cf8b%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5222%22",
+   "document_date": "2014-03-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00098",
+   "document_date": "2014-09-11",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-03-27",
+  "sentences": [
+   "The bill would link the income cut-offs for the Commonwealth Seniors Health Card to inflation each year.",
+   "It would do this by automatically raising the taxable income limits every September 20, starting in 2014, based on the Consumer Price Index.",
+   "The bill also aligns Student Assistance Act 1973 appeal rules with social security law and makes minor technical changes to several social services portfolio Acts after the September 2013 machinery of government changes."
+  ],
+  "changes": [
+   "Introduces annual indexation of income thresholds for the Commonwealth Seniors Health Card.",
+   "Aligns Student Assistance Act review provisions with those in social security laws.",
+   "Makes minor technical amendments to social services portfolio Acts following machinery of government changes.",
+   "Clarifies and expands the Secretary's delegation powers under the Aged Care Act 1997."
+  ],
+  "affected": "Seniors eligible for the Commonwealth Seniors Health Card, and agencies and bodies administering social services, veterans' affairs, student assistance and aged care legislation.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:08:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3521",
+   "date": "2014-07-17",
+   "house": "representatives",
+   "question": "Jill Hall It is a pleasure to follow the member for Lyons because it was interesting to hear his contribution to this debate, a contribution that I found quite phenomenal when he talked about this particular piece of legislation. The legislation leads to the indexation of thresholds. That will occur annually and is aimed to start on 20 September this year. That indexation is going to be based on the consumer price index. The member for Lyons was very keen to celebrate this legislation and talked about how this will extend benefits to seniors who are now ineligible. He talked about the Pharmaceutical Benefits Scheme. He talked about 'bulk-billing by GPs'—those were the words he used. I felt that it was really important that I raise that issue in connection with this debate, coming off the words that he used. This budget has been debated and discussed in this House, throughout every media outlet in Australia and certainly in my electorate. In this budget there is a move to end bulk-billing and to force those people going to visit a doctor to pay a GP tax. On the one hand, we have the member for Lyons celebrating the fact that 1,020 seniors in his electorate will be eligible to go and see bulk-billing GPs with their card; on the other hand, he stands up in this parliament and supports a GP tax and the fact that the Abbott government in this place is seeking to end bulk-billing as we know it today and force people to pay co-payments. Those seniors that he believes will be able to access bulk-billing will be accessing a second-class form of bulk-billing. That is what he is arguing for. The other issue he touched on was the PBS. It was only last night that we passed legislation in this House to increase co-payments paid by people when they have their prescriptions filled, be they concessional or be they for people who pay the full amount for their prescriptions. I found that contribution from the member for Lyons somewhat convoluted and it showed a lack of understanding o",
+   "stage": "Second reading",
+   "ayes": 81,
+   "noes": 46,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 45
+    },
+    "Liberal": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 127
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-17/3"
+  },
+  {
+   "key": "federal-senate-3405",
+   "date": "2014-09-01",
+   "house": "senate",
+   "question": "Claire Moore As I said in my remarks in the second reading debate, we are keen in this bill to split the element to do with the seniors health card from the other machinery of government issues. We oppose the seniors health card supplement in schedule 1 but we remain supportive of the rest of the bill. So I move our amendment (2) on sheet 7549: (2) Schedule 1, page 6 (line 1) to page 7 (line 26), to be opposed. Mitch Fifield I would like to make clear, for the benefit of colleagues, that if this amendment were successful it would, in effect, see the gutting of this bill. It would see the thresholds not indexed, as is the intent of the legislation. I think it is important that colleagues are clear on that. As is the perversity of the wording of motions in this place, in order to support the bill as it stands, colleagues need to vote yes. Colleagues who wish to support the opposition's proposition would vote no. If colleagues want the bill to stand as printed they will need to vote yes. Rachel Siewert Just to be clear, as I articulated in my contribution in the second reading debate, we will be voting no because we do not think this particular measure is appropriate at this time. We will be voting no. Cory Bernardi The question is that schedule 1 stand as printed. Bill agreed to. Bill reported without amendments; report adopted.",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 51,
+    "member": 11,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-01/2"
+  },
+  {
+   "key": "federal-senate-3406",
+   "date": "2014-09-01",
+   "house": "senate",
+   "question": "Mitch Fifield I move: That this bill be now read a third time. Stephen Parry The question is that the bill be now read a third time. _A division having been called and the bells being rung—_ Before I proceed to the division, the television screens have been indicating that this is a quorum and not a division. I feel as though there is a fair representation in the chamber but, if any senator wants me to call the division again, I will. As there has been no request or indication from the whips, we will proceed to the division. Bill read a third time.",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Family First": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 20
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 49,
+    "member": 11,
+    "earliest": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2014-09-01/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-295006",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295196",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295197",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295198",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295200",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295207",
+   "speaker": "Eric Hutchinson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295208",
+   "speaker": "Christopher Pyne",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295222",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295224",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295225",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295228",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-295231",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-17",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Social Services and Other Legislation Amendment (Seniors Health Card and Other Measures) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00098",
+   "assent_date": "2014-09-11"
+  }
+ ]
+}

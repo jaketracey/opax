@@ -1,0 +1,485 @@
+{
+ "key": "au-federal-r6876",
+ "title": "Treasury Laws Amendment (Electric Car Discount) Bill 2022",
+ "short_title": "Treasury Laws Amendment (Electric Car Discount) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2022-12-12",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-11-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-12-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6876_ems_443febc8-829d-40af-a901-03438a006af6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6876%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00086",
+   "document_date": "2022-12-12",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 6,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-07-27",
+  "sentences": [
+   "This bill would make electric cars cheaper for employees by removing fringe benefits tax on them.",
+   "It changes the fringe benefits tax law to exempt zero or low emissions vehicles used for private purposes, as long as the car's first retail price does not exceed the fuel-efficient luxury car tax limit.",
+   "The exemption applies to benefits provided from 1 July 2022 for eligible cars first owned and used on or after that date, with a review after three years."
+  ],
+  "changes": [
+   "Exempts zero or low emissions cars from fringe benefits tax.",
+   "Limits the exemption to cars below the fuel-efficient luxury car tax threshold.",
+   "Applies the change to benefits from 1 July 2022 for eligible cars first held and used on or after that date.",
+   "Requires a review of the amendment after three years."
+  ],
+  "affected": "Employers providing zero or low emissions cars for private use by employees.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:38:36Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7876",
+   "date": "2022-11-24",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-24.69.3) introduced by West Australian Senator [Dean Smith](https://theyvoteforyou.org.au/people/senate/wa/dean_smith) (Liberal), which means it failed. ### What are second reading amendments? Second reading amendments like these don't make legal changes themselves, but instead represent the will of the Senate. They add words to the usual second reading motion, which is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\", which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that:* > >> *(i) with this policy the Government has failed to:* >> >>> *(A) establish clear criteria and metrics of success for the policy,* >>> >>> *(B) ensure the expenditure is temporary, proportionate, and linked to tangible productivity gains,* >>> >>> *(C) quantify any benefit of the policy to electric vehicle uptake, to emissions reduction, or the budget bottom line,* >>> >>> *(D) tangibly address the biggest constraint on electric vehicle uptake, which is supply and infrastructure, and* >>> >>> *(E) consult with business and civil society on policy design,* >> >> *(ii) the legislation does not address the core supply issues of electric vehicles, and will not substantially close the consequent cost gap between electric vehicles and non-electric vehicles,* >> >> *(iii) the Coalition supports increased uptake of low and zero emissions vehicles and the Coalition government's focus was on enabling consumer choice when it comes to new vehicle and fuel technologies, and* >> >> *(iv) the Coalition is focused on partnering with industry to support the uptake of new vehicle technologies and creating the necessary enabling environment to support uptake, which includes helpin",
+   "stage": "Second reading",
+   "ayes": 23,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 30,
+    "dated": 16,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-24/6"
+  },
+  {
+   "key": "federal-senate-7877",
+   "date": "2022-11-24",
+   "house": "senate",
+   "question": "The majority voted against a [second reading amendment](https://www.openaustralia.org.au/senate/?gid=2022-11-24.191.1) introduced by Queensland Senator [Gerard Rennick](https://theyvoteforyou.org.au/people/senate/queensland/gerard_rennick) (Liberal), which means it failed. ### What are second reading amendments? Second reading amendments like these don't make legal changes themselves, but instead represent the will of the Senate. They add words to the usual second reading motion, which is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\", which is parliamentary jargon for agreeing with the main idea of the bill. ### Motion text > *At the end of the motion, add \", but the Senate:* > > *(a) notes that with this policy the Government has failed to:* > >> *(i) consider the need to dispose of EV car batteries in an environmentally safe manner,* >> >> *(ii) address the hazardous by-products of redundant EV car batteries and ensure that toxic substances do not leach into the environment,* >> >> *(iii) consider the costs of recycling EV car batteries,* >> >> *(iv) introduce regulatory standards or criteria for recycled EV car batteries to be re-sold to the public,* > > *(b) calls on the Government to outline a plan for EV battery recycling and consider other proposals to cover the costs of recycling and disposal of EV car batteries*",
+   "stage": "Second reading",
+   "ayes": 24,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "earliest": 30,
+    "dated": 15,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-11-24/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-422265",
+   "speaker": "Angus Taylor",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The coalition opposed the Treasury Laws Amendment (Electric Car Discount) Bill 2022, arguing it will cost over $2 billion over a decade without sunset clause, quantified emissions reduction, or defined success metrics, and proposed instead investing in EV infrastructure and consumer choice, citing their Future Fuels and Vehicles Strategy which aimed for 8 million tonnes CO2 reduction by 2035 and 1,000 public fast-charging stations."
+  },
+  {
+   "slug": "speech-422267",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-422469",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Electric Car Discount) Bill is a small, welcome step but far too timid, calling on the government to instead pursue far bolder policies including fuel efficiency standards, universal charging infrastructure, and a more ambitious emissions target than 43% by 2030. They noted that transport accounts for 17% of Australia’s carbon footprint and that if just 10% of light vehicles provided vehicle‑to‑grid power, it could supply nearly three times the overnight capacity of Snowy 2.0."
+  },
+  {
+   "slug": "speech-422471",
+   "speaker": "Monique Ryan",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker commended the Treasury Laws Amendment (Electric Car Discount) Bill 2022 for removing the 5% import tariff and 47% fringe benefits tax on some electric vehicles, but argued these are only small steps and urged the government to immediately introduce robust fuel efficiency standards equivalent to global best practice, set EV sales targets, and coordinate fleet procurement and charging infrastructure rollout. The speaker noted that only 2,000 vehicle owners would benefit in the first year under the FBT scheme, and cited modelling that fuel efficiency standards would save average car users $237–$519 per year and reduce Australia’s 57 million tonnes of passenger vehicle emissions, while addressing supply constraints that have made Australia a “dumping ground” for inefficient vehicles."
+  },
+  {
+   "slug": "speech-422473",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treasury Laws Amendment (Electric Car Discount) Bill 2022 to reduce electric vehicle costs through tax concessions, noting Australia has one of the worst EV adoption rates in the developed world and citing two-year wait times for Toyota and Hyundai EVs. They criticised former Prime Minister Scott Morrison and other Coalition figures for past anti-EV statements, and referenced $5.5 billion spent not building a submarine."
+  },
+  {
+   "slug": "speech-422475",
+   "speaker": "Sophie Scamps",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Electric Car Discount) Bill 2022 is a necessary first step to increase electric vehicle uptake by removing fringe benefits tax on new EVs, but called for plug-in hybrids to be excluded from the bill and for additional policies like fuel efficiency standards to address supply issues. The speaker noted that transport accounts for nearly 20% of Australia’s emissions, which have risen 14% since 2005, and that business buyers represent over 40% of new light vehicle sales but only 487 EVs were acquired by fleets in 2020."
+  },
+  {
+   "slug": "speech-422477",
+   "speaker": "Kylea Tink",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Electric Car Discount) Bill 2022 to boost electric vehicle uptake and cut transport emissions, but will move an amendment to extend the fringe benefits tax exemption to imported second-hand EVs manufactured from 1 January 2020, citing sizeable second-hand markets in Japan and the UK."
+  },
+  {
+   "slug": "speech-422478",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Treasury Laws Amendment (Electric Car Discount) Bill 2022, which exempts eligible electric cars from fringe benefits tax to make them more affordable, and criticised the opposition for lacking policy and shutting down Australia's automotive industry."
+  },
+  {
+   "slug": "speech-422480",
+   "speaker": "Henry Pike",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The MP opposed the Treasury Laws Amendment (Electric Car Discount) Bill 2022, arguing it is costly and ineffective, citing projections of $2.3 billion over a decade, negligible emissions reduction, and benefits skewed to higher-income earners. They urged a vote against the bill, advocating instead for targeted infrastructure investment and cost-of-living relief."
+  },
+  {
+   "slug": "speech-422481",
+   "speaker": "Andrew Keith Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Treasury Laws Amendment (Electric Car Discount) Bill 2022 would lower electric vehicle costs, citing running costs of $4 per 100 km versus $14 for petrol, and noted Australia has only eight low-emission vehicles under $60,000 compared to 26 in the UK. They criticised the Coalition for opposing the bill, claiming the party previously said electric vehicles would \"end the weekend,\" and highlighted government plans for a National Electric Vehicle Strategy, a national charging network, and a 75% low-emissions target for the Commonwealth fleet by 2025."
+  },
+  {
+   "slug": "speech-422483",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Albanese government’s Treasury Laws Amendment (Electric Car Discount) Bill 2022 provides a fringe benefits tax exemption for employer-provided electric vehicles to increase uptake, reduce transport emissions, and lower costs; the MP also criticised opposition figures Scott Morrison and the Deputy Leader for spreading misinformation about electric vehicles, noting Australia’s EV market share is only 1.5% compared to 17% in the UK and 85% in Norway."
+  },
+  {
+   "slug": "speech-422485",
+   "speaker": "Adam Paul Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Electric Car Discount) Bill 2022 is only a small step that primarily benefits salary-packagers, leases and corporate fleets, not everyday buyers. The Greens argued for mandatory fuel efficiency standards starting at 105g/km and ratcheting to zero by 2030, a ban on new petrol and diesel vehicle sales by 2030, $2 billion for a publicly owned fast-charging network, a $10,000 subsidy for first EV purchases funded by redirecting fossil fuel subsidies and cancelling stage 3 tax cuts, and $1.2 billion to support EV manufacturing in Australia."
+  },
+  {
+   "slug": "speech-422491",
+   "speaker": "Allegra Spender",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Electric Car Discount) Bill 2022 was supported as a small but insufficient step, with arguments that Australia must urgently introduce fuel efficiency standards, invest heavily in charging infrastructure, and offer stronger financial incentives to boost EV uptake. Specific references included transport making up 19% of Australia's emissions, EVs being only 2% of new car sales versus 86% in Norway, a fuel stockpile of just 32 days, and a call for action citing former Defence Force Chief Chris Barry."
+  },
+  {
+   "slug": "speech-422495",
+   "speaker": "Nola Bethwyn Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Electric Car Discount) Bill 2022, arguing it was poorly designed with no consultation, would cost taxpayers $2.3 billion over a decade, and would have negligible emissions reductions while primarily benefiting high-income earners rather than rural and regional areas."
+  },
+  {
+   "slug": "speech-422496",
+   "speaker": "Colin Boyce",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Treasury Laws Amendment (Electric Car Discount) Bill 2022, arguing it disadvantages rural and regional Australians due to electric vehicles' limited range, long charging times, and lack of suitability for work or long-distance travel, while benefiting high-income earners and providing negligible emissions reductions. They highlighted that the government has not quantified the policy's costs, infrastructure needs, or emission impacts."
+  },
+  {
+   "slug": "speech-422498",
+   "speaker": "Dai Le",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2022-09-07",
+   "stage_hint": null,
+   "brief": "The member supported the Treasury Laws Amendment (Electric Car Discount) Bill 2022 and an amendment to include hybrid electric vehicles, arguing the current exemption only benefits high-income earners and leaves out low-income communities like Fowler, where electric vehicles cost $15,000–$20,000 more than petrol or diesel cars and energy prices in New South Wales rose up to 18.3 percent."
+  },
+  {
+   "slug": "speech-422534",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The speaker moved to adjourn debate on the Treasury Laws Amendment (Electric Car Discount) Bill 2022 until a later hour to allow the electric vehicle bill to be completed first."
+  },
+  {
+   "slug": "speech-422694",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treasury Laws Amendment (Electric Car Discount) Bill 2022, which would exempt employer-provided battery electric, hydrogen fuel cell and plug-in hybrid cars from fringe benefits tax if first made available on or after 1 July 2022 and with a retail price below $84,916, and announced the government's commitment to reducing transport emissions and investing in 117 fast-charging stations."
+  },
+  {
+   "slug": "speech-422704",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The member for Forde argued the Treasury Laws Amendment (Electric Car Discount) Bill 2022 would not benefit low-income earners in his electorate, who cannot afford electric vehicles and would face higher fuel costs after the fuel excise discount ends. He also questioned the need for subsidies, noting major improvements in vehicle emissions over recent decades."
+  },
+  {
+   "slug": "speech-422708",
+   "speaker": "Luke Gosling",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The speaker announced the Treasury Laws Amendment (Electric Car Discount) Bill 2022, which exempts eligible electric cars from fringe benefits tax, and criticised fuel retailers in the Northern Territory for price gouging."
+  },
+  {
+   "slug": "speech-422709",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-08",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment (Electric Car Discount) Bill 2022 provides a fringe benefits tax exemption for eligible electric cars, implementing an election commitment to reduce costs and boost EV uptake. The exemption applies from 1 July 2022 to battery electric, hydrogen fuel cell, and plug-in hybrid cars below the luxury car tax threshold, with a review after three years."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Electric Car Discount) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00086",
+   "assent_date": "2022-12-12"
+  }
+ ]
+}

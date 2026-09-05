@@ -1,0 +1,368 @@
+{
+ "key": "au-federal-r6701",
+ "title": "Financial Regulator Assessment Authority Bill 2021",
+ "short_title": "Financial Regulator Assessment Authority Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2021-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "other",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6701_ems_1d3a15e8-09c1-4070-bab0-6774760e9821%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6701%22",
+   "document_date": "2021-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00063",
+   "document_date": "2021-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-13",
+  "sentences": [
+   "This bill is part of a package that implements recommendations from the Financial Services Royal Commission to create a new body that regularly reviews the performance of APRA and ASIC.",
+   "The bill establishes the Authority, sets out how its members are chosen and how it makes decisions, and requires APRA and ASIC to hand over information when asked.",
+   "It also makes it a criminal offence to use or share protected information given to the Authority without authorisation."
+  ],
+  "changes": [
+   "Creates the Financial Regulator Assessment Authority.",
+   "Requires APRA and ASIC to cooperate and provide information to the Authority.",
+   "Sets out appointment and decision-making rules for the Authority.",
+   "Makes unauthorised use or disclosure of protected information a criminal offence."
+  ],
+  "affected": "APRA, ASIC, and anyone who handles protected information provided to the Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7161",
+   "date": "2021-05-26",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-05-26.32.4) \"*that the words proposed to be omitted stand part of the question.*\" In other words, they voted to keep the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) unchanged. A second reading motion is \"*that the bill be read a second time,*\" which is parliamentary jargon for agreeing with the main idea of the bill.",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 68,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-05-26/4"
+  },
+  {
+   "key": "federal-senate-7300",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?id=2021-06-22.294.1) to keep clause 23 in the bill. In parliamentary jargon, they voted against a motion \"*that clause 23 stand as printed*\". This means that clause 23 will now be removed from the bill, which will then return to the House of Representatives for them to decide whether they agree with its removal. This division is closely related to the amendments voted on in the [next division](https://theyvoteforyou.org.au/divisions/senate/2021-06-22/33). ### What is clause 23? > *23 Departmental member* > > *(1) The Departmental member is:* > >> *(a) the person nominated by the Secretary under subsection (2); or* >> >> *(b) if there is no such nomination—the Secretary.* > > *(2) The Secretary may, in writing, nominate an SES employee in the Department (other than a staff member) to be the Departmental member.* > > *(3) The office of Departmental member is not a public office for the purposes of the Remuneration Tribunal Act 1973 .*",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 23,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/32"
+  },
+  {
+   "key": "federal-senate-7301",
+   "date": "2021-06-22",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendments](https://www.openaustralia.org.au/senate/?gid=2021-06-22.296.1) introduced by the Australian Greens Party, which means they were successful. The bill, with these amendments, will now be sent back to the House of Representatives for their consideration. ### What do these amendments do? Tasmanian Senator [Nick McKim](https://theyvoteforyou.org.au/people/senate/tasmania/nick_mckim) (Greens) tried to get permission to explain what these amendments were about, but [he was refused](https://www.openaustralia.org.au/senate/?gid=2021-06-22.294.2), which makes it much harder for us. Looking at the wording of the amendments, it seems their purpose is to remove the concepts of \"appointed member\" and \"departmental member\" from the bill and replace them with the more general term \"member\". The [original bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;db=LEGISLATION;id=legislation%2Fbills%2Fr6701_first-reps%2F0001;query=Id%3A%22legislation%2Fbills%2Fr6701_first-reps%2F0000%22;rec=0) included the following definitions for these terms: * **appointed member** means a member other than the Departmental member. * **member** means a member of the Authority and includes the Chair and the Departmental member. * **Departmental member**: see section 23. Section 23 was: > *(1) The Departmental member is:* > >> *(a) the person nominated by the Secretary under subsection (2); or* >> >> *(b) if there is no such nomination—the Secretary.* > > *(2) The Secretary may, in writing, nominate an SES employee in the Department (other than a staff member) to be the Departmental member.* > > *(3) The office of Departmental member is not a public office for the purposes of the Remuneration Tribunal Act 1973 .* So it appears that the purpose of this amendment is to ensure that the powers given to members in this bill can be performed by any \"*member of the Authority and includes the Chair and the Departmental member*\" as opposed to having to",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "dated": 22,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-22/33"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-406910",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "A second reading amendment was moved, criticising the government for taking too long to address financial misconduct after the royal commission, noting that the Financial Regulator Assessment Authority should have been established eight years ago. The speech cited David Murray's warnings, 10,000 submissions to the royal commission, and criticised the government's 27 votes against oversight and the handling of responsible lending laws."
+  },
+  {
+   "slug": "speech-406920",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued the Financial Regulator Assessment Authority Bill 2021 will implement Hayne Royal Commission recommendations by establishing an independent authority to assess the effectiveness of APRA and ASIC. The Morrison government committed to acting on all 76 royal commission recommendations, with the authority to conduct biennial reviews and provide strategic insights to improve regulator performance."
+  },
+  {
+   "slug": "speech-406921",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The bill implements recommendations 6.13 and 6.14 of the financial services royal commission by establishing a new authority for biennial reviews of ASIC and APRA, but the speaker criticised the government for ignoring recommendation No. 1 on responsible lending laws and for past funding cuts to ASIC that weakened its enforcement capacity."
+  },
+  {
+   "slug": "speech-406922",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Financial Regulator Assessment Authority Bill 2021, arguing it provides necessary additional oversight of regulators such as ASIC and APRA and is part of the government's response to the Hayne royal commission’s 76 recommendations (54 directed to government, 12 to regulators, 10 to industry)."
+  },
+  {
+   "slug": "speech-406923",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker supported the Financial Regulator Assessment Authority Bill 2021 as a royal commission recommendation, but criticised the government for a minimalist approach and lack of political will, contrasting Labor's past committee work—such as 21 reports in three years under Bernie Ripoll—with the current government's failure to conduct serious oversight."
+  },
+  {
+   "slug": "speech-406927",
+   "speaker": "George Christensen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Financial Regulator Assessment Authority Bill 2021 but criticised ASIC and APRA for focusing on climate change and “wokeness” instead of their core regulatory duties, citing a January report that ASIC conducted climate-related surveillance of five major listed companies."
+  },
+  {
+   "slug": "speech-406928",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The opposition supported the Financial Regulator Assessment Authority Bill 2021 as a minimalist response to the Hayne royal commission but criticised the government for implementing barely a third of the commission’s recommendations. The speaker also accused the chair of the House Economics Committee of biased focus on industry super funds, neglecting systemic issues from the royal commission."
+  },
+  {
+   "slug": "speech-406932",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Financial Regulator Assessment Authority Bill 2021, which implements royal commission recommendations 6.13 and 6.14 by creating an independent body to assess the effectiveness and capability of ASIC and APRA."
+  },
+  {
+   "slug": "speech-406933",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-05-26",
+   "stage_hint": null,
+   "brief": "The Financial Regulator Assessment Authority Bill 2021 establishes an authority to assess the effectiveness and capability of ASIC and APRA, with a companion bill ensuring confidential information can flow between regulators and the authority, as part of the government’s response to the Financial Services Royal Commission."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Financial Regulator Assessment Authority Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00063",
+   "assent_date": "2021-06-29"
+  }
+ ]
+}

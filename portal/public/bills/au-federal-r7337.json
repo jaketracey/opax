@@ -1,0 +1,506 @@
+{
+ "key": "au-federal-r7337",
+ "title": "Defence Housing Australia Amendment Bill 2025",
+ "short_title": "Defence Housing Australia Amendment Bill 2025",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2025-07-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Defence",
+ "status": "passed",
+ "status_as_of": "2025-08-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2025-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2025-08-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2025-08-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7337_ems_b71873bb-9f7c-4fc1-8a6f-6300d8ba8895%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/10417870%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7337%22",
+   "document_date": "2025-07-24",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2025A00036",
+   "document_date": "2025-08-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-9654",
+   "date": "2025-07-30",
+   "house": "representatives",
+   "question": "Defence Housing Australia Amendment Bill 2025 - Report from Federation Chamber - Increase defence expenditure",
+   "stage": "Report from Federation Chamber",
+   "ayes": 39,
+   "noes": 93,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 6
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 85
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 12,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 129,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2025-07-30/2"
+  },
+  {
+   "key": "federal-senate-9683",
+   "date": "2025-08-25",
+   "house": "senate",
+   "question": "Defence Housing Australia Amendment Bill 2025 - Second Reading - Increase defence expenditure",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 53,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-25/1"
+  },
+  {
+   "key": "federal-senate-9684",
+   "date": "2025-08-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-08-25.18.1) to the usual second reading amendment, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment was introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens) and would have added the following words: > *At the end of the motion, add \", but the Senate notes that the explanatory memorandum to this bill claims that the amendments in the bill have no financial impact\".*",
+   "stage": "Second reading",
+   "ayes": 16,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-25/2"
+  },
+  {
+   "key": "federal-senate-9685",
+   "date": "2025-08-25",
+   "house": "senate",
+   "question": "Defence Housing Australia Amendment Bill 2025 - Second Reading - Priority to Australians and transparency",
+   "stage": "Second reading",
+   "ayes": 38,
+   "noes": 23,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 55,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-25/3"
+  },
+  {
+   "key": "federal-senate-9686",
+   "date": "2025-08-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2025-08-25.23.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill a second time. This means the bill can now be considered in detail. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd007), which is a document created by the parliamentary library: > *Australia is hosting an increasing number of foreign military personnel as a result of expanding defence cooperation with allies.* > > *Key initiatives include Submarine Rotational Force-West (SRF-West), the US Force Posture Initiatives, the Australia-Japan Reciprocal Access Agreement, and the Australia – Singapore Military Training Initiative.* > > *The Bill will amend the Defence Housing Australia Act 1987 to expand Defence Housing Australia’s (DHA) main function to include the ability to provide housing and housing-related services to foreign government and defence personnel, and philanthropic organisations assisting the Australian Defence Force, to meet Defence’s current and future operational requirements.* > > *At the time of writing, the Bill had not been referred to or reported on by any parliamentary committees.*",
+   "stage": "Second reading",
+   "ayes": 30,
+   "noes": 10,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-25/4"
+  },
+  {
+   "key": "federal-senate-9687",
+   "date": "2025-08-25",
+   "house": "senate",
+   "question": "The majority voted against an [amendment](https://www.openaustralia.org.au/senate/?gid=2025-08-25.88.1) introduced by NSW Senator [David Shoebridge](https://theyvoteforyou.org.au/people/senate/nsw/david_shoebridge) (Greens), which means it failed. Senator Shoebridge explained that the amendment would have \"*remove[d] from the bill the ability for Defence Housing to build housing for US and UK troops, for Israeli defence contractors, for employees of Lockheed Martin.*\" ### Amendment text > *(1) Schedule 1, item 1, page 3 (lines 10 to 12), omit the definition of government.* > > *(2) Schedule 1, item 1, page 3 (lines 13 to 21), omit the definition of government body.* > > *(3) Schedule 1, item 1, page 3 (lines 22 and 23), omit the definition of military organisation.* > > *(4) Schedule 1, items 3 and 4, page 3 (line 30) to page 4 (line 21), omit the items, substitute:* > >> *3 After paragraph 5(1)(d)* >> >> *Insert:* >> >>> *and (e) accredited representatives of registered charities and their families;*",
+   "stage": "In committee",
+   "ayes": 11,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-25/5"
+  },
+  {
+   "key": "federal-senate-9696",
+   "date": "2025-08-25",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2025-08-25.239.1) to pass the bill in the Senate. In parliamentary jargon, they voted to read the bill a third time. Since the bill has already passed in the House of the Representatives, it will now become law. ### What does this bill do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2526/26bd007), which is a document created by the parliamentary library: > *Australia is hosting an increasing number of foreign military personnel as a result of expanding defence cooperation with allies.* > > *Key initiatives include Submarine Rotational Force-West (SRF-West), the US Force Posture Initiatives, the Australia-Japan Reciprocal Access Agreement, and the Australia – Singapore Military Training Initiative.* > > *The Bill will amend the Defence Housing Australia Act 1987 to expand Defence Housing Australia’s (DHA) main function to include the ability to provide housing and housing-related services to foreign government and defence personnel, and philanthropic organisations assisting the Australian Defence Force, to meet Defence’s current and future operational requirements.* > > *At the time of writing, the Bill had not been referred to or reported on by any parliamentary committees.*",
+   "stage": "Third reading",
+   "ayes": 29,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2025-08-25/14"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1195697",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1196026",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2025-07-31",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Defence Housing Australia Amendment Act 2025",
+   "frl_uri": "https://www.legislation.gov.au/C2025A00036",
+   "assent_date": "2025-08-28"
+  }
+ ]
+}

@@ -1,0 +1,1266 @@
+{
+ "key": "au-federal-r6348",
+ "title": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019",
+ "short_title": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industrial Relations",
+ "status": "lapsed",
+ "status_as_of": "2019-11-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6348_ems_706b7539-cf60-4d59-a8b3-165193f13031%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6348_ems_2b89779f-6e55-4989-8a55-95882379b1eb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6348%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would tighten rules on unions and employer groups after a royal commission found misconduct.",
+   "It would let the Federal Court ban officials from office and cancel an organisation's registration for serious breaches.",
+   "New rules would also block a merger that is not in the public interest."
+  ],
+  "changes": [
+   "Include serious criminal offences as a ground for automatic disqualification from office.",
+   "Empower the Federal Court to disqualify officials who repeatedly break industrial laws or are not fit and proper.",
+   "Create an offence for a disqualified person to still act as an official.",
+   "Allow the Federal Court to cancel registration for unlawful conduct or serious criminal offences.",
+   "Expand the Federal Court's power to appoint an administrator to fix governance problems.",
+   "Introduce a public interest test for amalgamations, considering each organisation's compliance record among other things."
+  ],
+  "affected": "Registered employee and employer organisations and their officials.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:13Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5817",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "question": "The majority voted against a motion introduced by Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor), which means it failed. Had this motion succeeded, the bill would have been rejected. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"the House:* > > *(1) declines to give the bill a [second reading](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html); and* > > *(2) notes that:* > >> *(a) this Government has not proposed legislation to deal with important workplace relations matters, such as wage theft, flat lining wages growth, or deaths in the workplace;* >> >> *(b) this bill and the Act it seeks to amend represent an inconsistent approach by the Government to responding to Royal Commissions; and* >> >> *(c) the Government's entire approach to workplace relations laws is to attack workers' organisations with the specific intention of weakening the capacity of those organisations to combat wage theft, achieve wage growth, and ensure that workplaces are safe\".*",
+   "stage": "Second reading",
+   "ayes": 66,
+   "noes": 77,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Labor": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-31/1"
+  },
+  {
+   "key": "federal-representatives-5818",
+   "date": "2019-07-31",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that they can now discuss it in greater detail. ### What is the bill's main idea? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6348): * *include certain serious criminal offences as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime in relation to registered organisations;* * *establish an offence for a disqualified person to continue to act as an official or in a way that influences the affairs of an organisation;* * *allow the Federal Court to disqualify officials from holding office in certain circumstances or if they are otherwise not a fit and proper person;* * *allow the Federal Court to cancel the registration of an organisation on a range of grounds;* * *expand the grounds on which the Federal Court may order remedial action to deal with governance issues in an organisation;* * *expressly provide that the Federal Court may appoint an administrator to an organisation or part of an organisation as part of a remedial scheme;* * *introduce a public interest test for amalgamations of registered organisations; and* * *make minor and technical amendments.*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 63
+    },
+    "Liberal": {
+     "ayes": 47,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-07-31/2"
+  },
+  {
+   "key": "federal-senate-6037",
+   "date": "2019-11-26",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2019-11-26.165.1) introduced by WA Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal), which means it passed. ### Motion text > *That—* > > *(a) the routine of business for the remainder of today shall be:* > >> *(i) consideration of the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, second reading speeches only,* >> >> *(ii) if a division is called after 7.20 pm, the division shall be taken on the next day of sitting, and* >> >> *(iii) the Senate shall adjourn without debate after the conclusion of the second reading debate, or at 9 pm, or after a motion for the adjournment is moved by a minister, whichever is the earlier; and* > > *(b) on Wednesday, 27 November 2019:* > >> *(i) the routine of business from 7.20 pm shall be consideration of the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, second reading speeches only, and* >> >> *(ii) if a division is called after 7.20 pm, the division shall be taken on the next day of sitting, and* >> >> *(iii) the Senate shall adjourn without debate after the conclusion of the second reading debate, or at midnight, or after a motion for the adjournment is moved by a minister, whichever is the earlier.*",
+   "stage": "Business motion",
+   "ayes": 39,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 30,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 33,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-26/8"
+  },
+  {
+   "key": "federal-senate-6074",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2019-11-28.12.1) introduced by WA Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal), which means it succeeded. ### Motion text > *That a motion to provide for the consideration of the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 may be moved immediately and determined without amendment or debate, namely:* > > *That—* > > *(1) the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 be called on immediately and have precedence over all other business, except as follows:* > >> *(a) at 11.45 am:* >> >>> *(i) the giving of notices of motion,* >>> >>> *(ii) tabling and consideration of the Selection of Bills Committee report, and* >>> >>> *(iii) placing of business;* >> >> *(b) at 2 pm, questions, followed by* >> >> *(c) consideration of the notices of motion proposing the disallowance of the Quality of Care Amendment (Minimising the Use of Restraints) Principles 2019 standing in the names of the Chair of the Standing Committee on Regulations and Ordinances (Senator Fierravanti-Wells) and Senator McKim, for not more than 30 minutes, and the question on the motions shall then be put.* > > *(2) If consideration of the bill listed in paragraph (1) is not completed by 4.30 pm, the questions on all remaining stages shall then be put.* > > *(3) Paragraph (2) shall operate as a limitation of debate under standing order 142.* > > *(4) Divisions may take place after 4.30 pm for the purposes of the bill only and after conclusion of consideration of the bill, the Senate shall return to the routine of business.*",
+   "stage": "Business motion",
+   "ayes": 39,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 33,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/3"
+  },
+  {
+   "key": "federal-senate-6075",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2019-11-28.15.1) introduced by WA Senator [Mathias Cormann](https://theyvoteforyou.org.au/people/senate/wa/mathias_cormann) (Liberal), which means it succeeded. ### Motion text > *That—* > > *(1) the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 be called on immediately and have precedence over all other business, except as follows:* > >> *(a) at 11.45 am:* >> >>> *(i) the giving of notices of motion,* >>> >>> *(ii) tabling and consideration of the Selection of Bills Committee report, and* >>> >>> *(iii) placing of business;* >> >> *(b) at 2 pm, questions, followed by* >> >> *(c) consideration of the notices of motion proposing the disallowance of the Quality of Care Amendment (Minimising the Use of Restraints) Principles 2019 standing in the names of the Chair of the Standing Committee on Regulations and Ordinances (Senator Fierravanti-Wells) and Senator McKim, for not more than 30 minutes, and the question on the motions shall then be put.* > > *(2) If consideration of the bill listed in paragraph (1) is not completed by 4.30 pm, the questions on all remaining stages shall then be put.* > > *(3) Paragraph (2) shall operate as a limitation of debate under standing order 142.* > > *(4) Divisions may take place after 4.30 pm for the purposes of the bill only and after conclusion of consideration of the bill, the Senate shall return to the routine of business.*",
+   "stage": "Business motion",
+   "ayes": 39,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 33,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/4"
+  },
+  {
+   "key": "federal-senate-6076",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2019-11-28.17.2) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that they can now discuss it in greater detail. ### What is the bill's main idea? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6348): * *include certain serious criminal offences as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime in relation to registered organisations;* * *establish an offence for a disqualified person to continue to act as an official or in a way that influences the affairs of an organisation;* * *allow the Federal Court to disqualify officials from holding office in certain circumstances or if they are otherwise not a fit and proper person;* * *allow the Federal Court to cancel the registration of an organisation on a range of grounds;* * *expand the grounds on which the Federal Court may order remedial action to deal with governance issues in an organisation;* * *expressly provide that the Federal Court may appoint an administrator to an organisation or part of an organisation as part of a remedial scheme;* * *introduce a public interest test for amalgamations of registered organisations; and* * *make minor and technical amendments.*",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 33,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Liberal": {
+     "ayes": 29,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 33,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/5"
+  },
+  {
+   "key": "federal-senate-6077",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The majority voted against amendments introduced by the Australian Greens, which means they failed. ### Motion text > *(1) Amendment (9), item 11, paragraph 223(1)(a), omit \"a designated finding within the meaning of paragraph 9C(1)(a) (criminal) is made\", substitute \"2 or more designated findings within the meaning of paragraph 9C(1)(a) (criminal) are made\".* > > *(2) Amendment (9), item 11, omit subparagraph 223(1)(b)(i), substitute:* > >> *(i) 2 or more designated findings within the meaning of paragraph 9C(1)(b) (civil) have been made against any organisation within the last 7 years in relation to conduct engaged in while the person is an officer of the organisation; and* > > *(3) Amendment (9), item 11, subparagraph 223(1)(b)(ii), omit \"least 180 penalty units\", substitute \"least 210 penalty units\".* > > *(4) Amendment (11), item 11, omit paragraph 223(3A)(a), substitute:* > >> *(a) 2 or more designated findings within the meaning of paragraph 9C(1)(b) (civil) have been made against any organisation within the last 7 years in relation to conduct engaged in while the person is an officer of the organisation; and* > > *(5) Amendment (11), item 11, paragraph 223(3A)(b), omit \"least 900 penalty units\", substitute \"least 1,100 penalty units\".* > > *(6) Amendment (11), item 11, after subsection 223(3A), insert:* > >> *(3B) For the purposes of paragraph (3)(c) or (3A)(c), in determining whether a person failed to take reasonable steps to prevent the conduct mentioned in paragraph (3)(a) or (3A)(a), regard must be had to the office held by the person in the organisation when the conduct occurred.* ### What is the bill's main idea? The bill was [introduced in order to](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd057): * *include serious criminal offences punishable by five or more years’ imprisonment as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime which prohibits a person from acting",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 30,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/6"
+  },
+  {
+   "key": "federal-senate-6078",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping item 6 of schedule 3 unchanged after the Australian Greens moved for it to be opposed. ### Motion text > *6 After paragraph 343B(2)(h)* > > *Insert:* > >> *(ha) subsection 323(1);* ### What is the bill's main idea? The bill was [introduced in order to](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd057): * *include serious criminal offences punishable by five or more years’ imprisonment as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime which prohibits a person from acting as an official of a registered organisation* * *allow the Federal Court to disqualify officials from holding office where they have:* > * *contravened a range of industrial laws* > * *are found in contempt of court in relation to industrial laws or certain other circumstances* > * *repeatedly fail to stop their organisation from breaking the law or* > * *are otherwise not a fit and proper person to hold office in a registered organisation* * *make it an offence for a person to continue to act as an official or in a way that influences the affairs of an organisation once disqualified* * *allow the Federal Court to deregister an organisation (or make alternative orders) where there is:* > * *unlawful or otherwise improper conduct of the affairs of the organisation* > * *serious criminal offences committed by the organisation* > * *repeated breaches of a range of industrial laws by its members or* > * *the taking of obstructive unprotected industrial action by a substantial number of members* * *allow applications to be made to the Federal Court for alternative orders, including suspending the rights and privileges of an organisation, an individual or a branch or division of an organisation, instead of making an order deregistering an organisation.* * *expand the grounds on which the Federal Court may order remedial action to deal with governance issues in an organisation and expre",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 30,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/7"
+  },
+  {
+   "key": "federal-senate-6079",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The majority voted against an Australian Greens' motion, which means it failed. ### Motion text > *(1) Clause 2, page 2 (table item 1), omit the table item, substitute:* > >> *A single day to be fixed by Proclamation.* >> >> *1. The whole of this Act* >> >> *A Proclamation must not specify a day that occurs before the day a resolution of the Senate is made that affirms that an Act has commenced which has the effect of establishing a National Integrity Commission.* ### What is the bill's main idea? The bill was [introduced in order to](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd057): * *include serious criminal offences punishable by five or more years’ imprisonment as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime which prohibits a person from acting as an official of a registered organisation* * *allow the Federal Court to disqualify officials from holding office where they have:* > * *contravened a range of industrial laws* > * *are found in contempt of court in relation to industrial laws or certain other circumstances* > * *repeatedly fail to stop their organisation from breaking the law or* > * *are otherwise not a fit and proper person to hold office in a registered organisation* * *make it an offence for a person to continue to act as an official or in a way that influences the affairs of an organisation once disqualified* * *allow the Federal Court to deregister an organisation (or make alternative orders) where there is:* > * *unlawful or otherwise improper conduct of the affairs of the organisation* > * *serious criminal offences committed by the organisation* > * *repeated breaches of a range of industrial laws by its members or* > * *the taking of obstructive unprotected industrial action by a substantial number of members* * *allow applications to be made to the Federal Court for alternative orders, including suspending the rights and privileges of an organisation, an",
+   "stage": "In committee",
+   "ayes": 32,
+   "noes": 36,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 30,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/8"
+  },
+  {
+   "key": "federal-senate-6080",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The majority voted in favour of keeping item 9 of schedule 2, and schedules 3 and 4, as amended, unchanged. The question was put after the Jacqui Lambie Network moved for those schedules to be opposed. ### What do these schedules do? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd057): * *Item 9 of Schedule 1 amends the bill so that a person who has been convicted of a prescribed offence as defined in section 212 is not eligible to be a candidate for election to, or to hold an office in, an organisation under subsection 215(1).* * *Schedule 3 deals with the administration of dysfunctional registered organisations and* * *Schedule 4 proposes a public interest test for amalgamations of registered organisations.* ### What is the bill's main idea? The bill was [introduced in order to](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd057): * *include serious criminal offences punishable by five or more years’ imprisonment as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime which prohibits a person from acting as an official of a registered organisation* * *allow the Federal Court to disqualify officials from holding office where they have:* > * *contravened a range of industrial laws* > * *are found in contempt of court in relation to industrial laws or certain other circumstances* > * *repeatedly fail to stop their organisation from breaking the law or* > * *are otherwise not a fit and proper person to hold office in a registered organisation* * *make it an offence for a person to continue to act as an official or in a way that influences the affairs of an organisation once disqualified* * *allow the Federal Court to deregister an organisation (or make alternative orders) where there is:* > * *unlawful or otherwise improper conduct of the affairs of the organisation* > * *serious criminal offences committed by the organisation* >",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 30,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/9"
+  },
+  {
+   "key": "federal-senate-6081",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The majority voted against [amendments](https://www.openaustralia.org.au/senate/?gid=2019-11-28.143.1) introduced by Tasmanian Senator [Jacqui Lanbie](https://theyvoteforyou.org.au/people/senate/tasmania/jacqui_lambie), which means they failed. ### What is the bill's main idea? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6348): * *include certain serious criminal offences as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime in relation to registered organisations;* * *establish an offence for a disqualified person to continue to act as an official or in a way that influences the affairs of an organisation;* * *allow the Federal Court to disqualify officials from holding office in certain circumstances or if they are otherwise not a fit and proper person;* * *allow the Federal Court to cancel the registration of an organisation on a range of grounds;* * *expand the grounds on which the Federal Court may order remedial action to deal with governance issues in an organisation;* * *expressly provide that the Federal Court may appoint an administrator to an organisation or part of an organisation as part of a remedial scheme;* * *introduce a public interest test for amalgamations of registered organisations; and* * *make minor and technical amendments.*",
+   "stage": "In committee",
+   "ayes": 33,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 30,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/10"
+  },
+  {
+   "key": "federal-senate-6082",
+   "date": "2019-11-28",
+   "house": "senate",
+   "question": "The same number of senators voted for and against agreeing with the [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6348) as amended during the [committee stage](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/), meaning that the bill failed because it wasn't supported by a majority. ### What is the bill's main idea? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6348): * *include certain serious criminal offences as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime in relation to registered organisations;* * *establish an offence for a disqualified person to continue to act as an official or in a way that influences the affairs of an organisation;* * *allow the Federal Court to disqualify officials from holding office in certain circumstances or if they are otherwise not a fit and proper person;* * *allow the Federal Court to cancel the registration of an organisation on a range of grounds;* * *expand the grounds on which the Federal Court may order remedial action to deal with governance issues in an organisation;* * *expressly provide that the Federal Court may appoint an administrator to an organisation or part of an organisation as part of a remedial scheme;* * *introduce a public interest test for amalgamations of registered organisations; and* * *make minor and technical amendments.*",
+   "stage": "In committee",
+   "ayes": 34,
+   "noes": 34,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 30,
+    "earliest": 24
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-11-28/11"
+  },
+  {
+   "key": "federal-representatives-6145",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 - Second Reading - Put the question",
+   "stage": "Second reading",
+   "ayes": 74,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-05/6"
+  },
+  {
+   "key": "federal-representatives-6146",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2019-12-05.42.1) to agree with the main idea of the bill. In parliamentary jargon, they voted to read the bill for a [second time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). This means that they can now discuss it in greater detail. ### What is the bill's main idea? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6348): * *include certain serious criminal offences as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime in relation to registered organisations;* * *establish an offence for a disqualified person to continue to act as an official or in a way that influences the affairs of an organisation;* * *allow the Federal Court to disqualify officials from holding office in certain circumstances or if they are otherwise not a fit and proper person;* * *allow the Federal Court to cancel the registration of an organisation on a range of grounds;* * *expand the grounds on which the Federal Court may order remedial action to deal with governance issues in an organisation;* * *expressly provide that the Federal Court may appoint an administrator to an organisation or part of an organisation as part of a remedial scheme;* * *introduce a public interest test for amalgamations of registered organisations; and* * *make minor and technical amendments.*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 61
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 139
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-05/7"
+  },
+  {
+   "key": "federal-representatives-6147",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2019-12-05.44.8): > *That the question be now put.* In other words, they voted to stop this current debate and vote on the question immediately.",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-05/8"
+  },
+  {
+   "key": "federal-representatives-6148",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 - Third Reading - Suspend usual rules to let a vote happen",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-05/9"
+  },
+  {
+   "key": "federal-representatives-6149",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "question": "Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 - Third Reading - Put the question",
+   "stage": "Third reading",
+   "ayes": 74,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-05/10"
+  },
+  {
+   "key": "federal-representatives-6150",
+   "date": "2019-12-05",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2019-12-05.52.1) to pass the bill in the House. In parliamentary jargon, they voted to read the bill for a [third time](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html). ### What is the bill's main idea? The bill was [introduced in order to](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r6348): * *include certain serious criminal offences as a new category of ‘prescribed offence’ for the purposes of the automatic disqualification regime in relation to registered organisations;* * *establish an offence for a disqualified person to continue to act as an official or in a way that influences the affairs of an organisation;* * *allow the Federal Court to disqualify officials from holding office in certain circumstances or if they are otherwise not a fit and proper person;* * *allow the Federal Court to cancel the registration of an organisation on a range of grounds;* * *expand the grounds on which the Federal Court may order remedial action to deal with governance issues in an organisation;* * *expressly provide that the Federal Court may appoint an administrator to an organisation or part of an organisation as part of a remedial scheme;* * *introduce a public interest test for amalgamations of registered organisations; and* * *make minor and technical amendments.*",
+   "stage": "Third reading",
+   "ayes": 76,
+   "noes": 65,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 21,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 62
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 140
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-12-05/11"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-378881",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The speaker moved to reject the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, arguing it attacks unions instead of addressing wage theft, stagnant wages (growing eight times slower than profits), and over 200 workplace deaths per year, and that its provisions—allowing any person of sufficient interest to disqualify officials or deregister unions—would be weaponised by employers like Liberal donor Gerry Hanssen."
+  },
+  {
+   "slug": "speech-378889",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, which would expand grounds for disqualifying union officials and make it a criminal offence for disqualified persons to hold office. The speaker cited the CFMMEU as having been fined over $16 million, with over 2,000 breaches and 74 representatives before the courts, and described alleged union intimidation and thuggery, including the physical assault of a volunteer."
+  },
+  {
+   "slug": "speech-378891",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government is not anti-union but opposes unions that break the law, specifically targeting the CFMMEU for over 2,000 incidents of law-breaking and $16 million in fines. He supported the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, which would make it easier for the Federal Court to deregister organisations like the CFMMEU and disqualify officials convicted of serious offences or repeated industrial law breaches."
+  },
+  {
+   "slug": "speech-378892",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 is an attack on unions and workers, violating human rights and international law, and would further suppress wages—citing a 50‑year low in workers’ share of income, penalty rate cuts costing some workers up to $26,000, and total losses of $2.9 billion."
+  },
+  {
+   "slug": "speech-378894",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, arguing it is an obsessive government attack on unions that would suppress wages, violate international labour rights, and undermine democratic representation. They noted the bill goes beyond the Heydon royal commission recommendations, is largely unchanged from a 2017 version, and contrasts with the government's failure to establish a national anticorruption commission."
+  },
+  {
+   "slug": "speech-378895",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The speaker argued the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 is needed to tackle illegal behaviour by unions and employer organisations, citing CFMMEU official John Setka’s 59 convictions and union intimidation during the Boothby election campaign. The bill would give courts greater powers to disqualify officials, cancel registrations, and enforce accountability for law-breaking organisations."
+  },
+  {
+   "slug": "speech-378896",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, arguing it allows employers or others to deregister unions and disqualify officials via a fit-and-proper-person test. He cited the government's $45 million royal commission into unions as a political attack, defended unions' role in securing wages and conditions, and referenced the Health Services Union's industrial dispute over hospital safety and ACTU president Michele O'Neil's opposition to the bill."
+  },
+  {
+   "slug": "speech-378897",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-29",
+   "stage_hint": null,
+   "brief": "Wage theft is compared to robbery, with examples including Michael Hill's estimated $25 million in underpayments and 7-Eleven's \"slavery-like\" conditions; the speaker criticises the government for prioritising the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 over addressing wage theft and worker exploitation."
+  },
+  {
+   "slug": "speech-379237",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 is a union-bashing bill that would allow employers and interested parties to seek deregistration of unions, citing examples like the Australian Nursing and Midwifery Federation's past industrial action for nurse-patient ratios in Victoria and potential applications by figures like Gerry Hanssen or George Calombaris. The speaker also highlighted wage theft, exploitation of migrant farmworkers earning as little as $4.80 per hour, and stagnant wages, while criticising the government for not targeting corporate misconduct or the banking sector."
+  },
+  {
+   "slug": "speech-379238",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 was argued to enforce the rule of law in the workplace by penalising unlawful conduct by unions and employer groups. The speaker cited findings from the Heydon royal commission, including abuse of right-of-entry, coercion, extortion and blackmail, and claimed that unlawful industrial action increases infrastructure costs by 30–78% compared to other countries, with the CFMMEU accumulating $16.4 million in fines since 2004. The bill introduces automatic disqualification from office for officials convicted of offences carrying a five-year prison term, expands court powers to disqualify unfit officers, allows the Fair Work Commission to apply a public interest test to union mergers, and enables court-appointed administrators for dysfunctional organisations."
+  },
+  {
+   "slug": "speech-379239",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The member argued that the Liberal Party lectures unions on integrity while facing its own issues, citing the member for Hume under investigation for alleged illegal poisoning of grasslands and record water payments linked to a Cayman Islands entity."
+  },
+  {
+   "slug": "speech-379252",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, stating that the people of Goldstein expect union representatives to be law-abiding. They criticised the opposition's post-election behaviour, describing it as following the seven stages of grief, and referenced the opposition's shifting stance on $387 billion in tax cuts."
+  },
+  {
+   "slug": "speech-379255",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "Centre Alliance gave qualified support to the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 but raised concerns about the ministerial power to deregister unions, arguing safeguards are needed to prevent political exploitation, and noted that unions are not the only organisations requiring legislative accountability."
+  },
+  {
+   "slug": "speech-379256",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 is a broken promise and an attack on unions, not the Commonwealth Integrity Commission legislation promised by Prime Minister Morrison. They listed Labor’s alternative policies—including a tradie pay guarantee, a $7 million litigation fund, director identification numbers, increased penalties for phoenix activity, and naming and shaming tax offenders—and noted that median household income fell by almost $500 in 2017 according to the HILDA Survey."
+  },
+  {
+   "slug": "speech-379261",
+   "speaker": "Anthony Albanese",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, citing the death of German backpacker Marianka Heumann in a Perth construction site fall and the subsequent exclusion of CFMEU organisers by Liberal Party donor Gerry Hanssen, who was fined $62,000. He argued the bill is an anti-union obsession that ignores employer misconduct, wage theft, and stagnant wages, and defended his position on John Setka as respecting unions' democratic independence."
+  },
+  {
+   "slug": "speech-379262",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019 is an unjustified attack on unions, citing 190 annual workplace deaths, the Ark Tribe case, and widespread business exploitation, and claimed the bill allows disqualification for minor technical breaches, prevents amalgamations, and goes beyond the Heydon royal commission's recommendations."
+  },
+  {
+   "slug": "speech-379263",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Fair Work (Registered Organisations) Amendment (Ensuring Integrity) Bill 2019, arguing it unfairly targets unions and will harm workers, citing that unionised workplaces pay men 12% more and women 18% more, and that one-third of employers underpay superannuation entitlements by $3.5 billion annually. They criticised the government for not pursuing wage theft or bank misconduct with similar harshness, referencing Liberal Party member Gerry Hanssen’s “blind hatred” of unions and the bill’s association with Peter Reith and John Howard."
+  },
+  {
+   "slug": "speech-379264",
+   "speaker": "Bob Katter",
+   "party": "Katter's Australian Party",
+   "state": "federal",
+   "date": "2019-07-31",
+   "stage_hint": null,
+   "brief": "The speaker argued that the CFMMEU is the only organisation fighting against the import of overseas workers that undermines Australian pay and conditions, citing that one in every two new jobs created since 2013 has gone to a temporary visa holder. He also recounted his personal experience of dangerous work conditions at Mount Isa Mines and a union that sided with bosses, leading him to join the CFMEU."
+  }
+ ],
+ "acts": []
+}

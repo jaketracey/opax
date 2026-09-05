@@ -1,0 +1,440 @@
+{
+ "key": "au-federal-r6723",
+ "title": "Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021",
+ "short_title": "Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "passed",
+ "status_as_of": "2021-06-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-06-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-06-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6723_ems_58a9ddcb-ea86-44bc-be84-7b993d0db968%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6723%22",
+   "document_date": "2021-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00057",
+   "document_date": "2021-06-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-05-27",
+  "sentences": [
+   "This bill makes urgent changes to aged care laws in response to a royal commission and a review of restraint rules.",
+   "It defines restrictive practices in line with disability sector rules, and gives the Aged Care Quality and Safety Commissioner more powers to act against providers who breach those rules.",
+   "The bill also allows the department secretary to review how home care is delivered and managed, and begins the first stage of reforms from the royal commission's final report."
+  ],
+  "changes": [
+   "Strengthens protections against the unregulated use of restrictive practices in aged care.",
+   "Expands the commissioner's ability to respond to breaches of provider responsibilities on restrictive practices.",
+   "Allows the secretary to conduct assurance reviews of home care arrangements."
+  ],
+  "affected": "Approved providers of aged care, care recipients, and home care providers and users.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-7248",
+   "date": "2021-06-21",
+   "house": "representatives",
+   "question": "The majority voted in favour of a motion to *disagree* with an [amendment](https://www.openaustralia.org.au/debate/?id=2021-06-21.129.8) to the usual second reading motion, which is \"*that the bill be [read a second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/)*\" (parliamentary jargon for agreeing with the main idea of the bill). This means the amendment failed. It was introduced by Cooper MP [Ged Kearney](https://theyvoteforyou.org.au/people/representatives/cooper/ged_kearney) (Labor). ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes the:* > >> *(a) systemic, ongoing failures in Australia's aged care system as evidenced by the Royal Commission into Aged Care Quality and Safety, including, but not limited to, the use of restrictive practices and restraints in aged care;* >> >> *(b) inadequacy of the Government's response to the Royal Commission into Aged Care Quality and Safety, including delayed and diminished legislative action on key issues and recommendations; and* >> >> *(c) Government's failures in protecting aged care residents and workers due to their poor management of COVID-19 outbreaks in residential aged care; and* > > *(2) calls on the Government to explain, as a matter of urgency, their plan to fully vaccinate aged care residents and workers.\"*",
+   "stage": "Second reading",
+   "ayes": 76,
+   "noes": 62,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-06-21/7"
+  },
+  {
+   "key": "federal-senate-7334",
+   "date": "2021-06-24",
+   "house": "senate",
+   "question": "Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 - Second Reading - Vaccinate aged care workers",
+   "stage": "Second reading",
+   "ayes": 28,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 10,
+    "dated": 24,
+    "earliest": 21
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-06-24/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-409098",
+   "speaker": "Ged Kearney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "Labor supported the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 but moved a second reading amendment arguing the government’s response to the Royal Commission into Aged Care Quality and Safety was inadequate, citing failures on restrictive practices, workforce reforms, and the COVID-19 vaccine rollout for aged care residents and workers."
+  },
+  {
+   "slug": "speech-409100",
+   "speaker": "Katrina Allen",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The Morrison government announced the first stage of its five-pillar aged-care reform plan in response to the royal commission, including $7.5 billion for 80,000 new home-care packages, $3.9 billion over four years for frontline care, $231 million for increased audits and regulation, and mandated 200 minutes of daily care for residential aged-care residents."
+  },
+  {
+   "slug": "speech-409203",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued the government's response to the aged care royal commission is a squandered opportunity, citing systemic failures such as constituents dying while waiting for home care packages, over 100,000 packages needed, and $3.2 billion given to providers with no strings attached. They highlighted that the government cut $1.7 billion when the current Prime Minister was Treasurer, axed the dementia and workforce supplements, and shuffled funding for home care packages without new money, while the royal commission found neglect, malnourishment in two-thirds of residents, and excessive use of restrictive practices."
+  },
+  {
+   "slug": "speech-409204",
+   "speaker": "Patrick Conaghan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 is a necessary first step in a five-year reform agenda, introducing a new definition of restrictive practices, home-care assurance reviews, and $17.7 billion in funding, including $6.5 billion for 80,000 additional home-care packages and $135 million for registered nurse retention bonuses."
+  },
+  {
+   "slug": "speech-409205",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The Morrison government's aged-care bill implements only three of the royal commission's 148 recommendations, ignoring key issues such as wages, 24/7 registered nurse staffing, and sustainable funding, while 80,000 additional home-care packages are insufficient for a waiting list of over 100,000; the government has also refused to address funding for future growth or the findings of neglect including 68% of residents malnourished."
+  },
+  {
+   "slug": "speech-409206",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The bill introduces three measures: higher consent standards for restrictive practices, replacing the Aged Care Financing Authority with an advisory body, and a home-care quality assurance program. The speaker also noted $17.7 billion in aged-care funding and concerns about staff moving to higher-paid NDIS work."
+  },
+  {
+   "slug": "speech-409207",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021, noting the royal commission's interim report *Neglect* condemned many governments for failing older Australians, and yielded to the member for Grayndler."
+  },
+  {
+   "slug": "speech-409209",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The Morrison government's Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 was supported, with a record $17.7 billion investment and reforms addressing royal commission recommendations on restrictive practices and workforce training, while the Labor Party was criticised for lacking a costed plan and proposing tax increases."
+  },
+  {
+   "slug": "speech-409210",
+   "speaker": "Kate Thwaites",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued the aged-care system is in crisis due to eight years of coalition government neglect, citing $1.7 billion in cuts, nearly 11,000 deaths of people waiting for home care, 685 COVID-19 deaths in aged care, and a disappointing response to the royal commission’s 148 recommendations—including no wage improvements for workers, no 24/7 nurse requirement, and a failure to clear a home-care waiting list of 100,000 people."
+  },
+  {
+   "slug": "speech-409211",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The government announced $17.7 billion in aged care funding over five years in response to the Royal Commission, with the first reform bill strengthening rules on restrictive practices, introducing home-care assurance reviews, and abolishing the Aged Care Financing Authority. The bill also gives the Aged Care Quality and Safety Commissioner new powers to issue notices and civil penalties for noncompliance, while the government outlined five reform pillars including 80,000 additional home-care packages and a new Aged Care Act to be drafted within two years."
+  },
+  {
+   "slug": "speech-409212",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 is a small step but insufficient, criticising the government's $17.7 billion aged care plan for lacking transparency and failing to address workforce shortages, with 366,000 current workers and an estimated need for one million direct care workers by 2050, while 100,000 Australians remain on the home-care waitlist."
+  },
+  {
+   "slug": "speech-409213",
+   "speaker": "Anika Wells",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government’s Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021, which aims to restrict restraints in aged care, is a small and delayed step after 112 days, and criticised the government for providing only one-third of the funding recommended by the royal commission, failing to guarantee 24/7 nurses, clear the home-care waitlist (where 26,000 people died), or ensure public funds improve care rather than go to shareholders."
+  },
+  {
+   "slug": "speech-409214",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's Aged Care and Other Legislation Amendment Bill 2021 fails to address the systemic neglect in aged care, citing a $3.2 billion commitment with no accountability or transparency. They highlighted 67 COVID-19 deaths in their electorate of Lalor, low wages of $21.09 per hour for aged-care workers, and the government's refusal to implement royal commission recommendations like 24/7 registered nurses and staffing ratios."
+  },
+  {
+   "slug": "speech-409216",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government cut $1.7 billion from aged care, mismanaged the system and vaccine rollout—citing 44 deaths at St Basil’s in Wills and less than 10% of aged-care workers fully vaccinated—and announced that a future Labor government will guarantee minimum staffing levels and proper long-term funding."
+  },
+  {
+   "slug": "speech-409217",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's response to the Royal Commission into Aged Care Quality and Safety has been inadequate, citing failures including widespread chemical restraint (22% of residents on antipsychotics, 90% of prescriptions not justified), poor COVID-19 management, and a backlog of 97,000 people waiting for home-care packages. The speaker supported the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 but criticised the government for neglecting older Australians and failing to implement key recommendations."
+  },
+  {
+   "slug": "speech-409218",
+   "speaker": "Meryl Swanson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The government has failed to act on the Royal Commission into Aged Care's findings, illustrated by the neglect of Quentin, an aged care resident with early-onset dementia left in soiled sheets and showered with cold water, and the speaker called for immediate action including higher wages for carers, who are paid only $21 an hour."
+  },
+  {
+   "slug": "speech-409220",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The member supported the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021, which restricts chemical restraints in aged care, while criticising the government for rejecting the royal commission's recommendation for independent expert approval of restrictive practices. They also called for minimum staffing levels, a registered nurse on duty at all times, higher wages for nurses and carers, a comprehensive workforce plan, and urgent vaccination of residents and staff, citing community survey examples of neglect."
+  },
+  {
+   "slug": "speech-409221",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The Labor Party supported the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 but moved a second reading amendment, arguing the government’s response fails to fund 24-hour nurses or tie funding to accountability, and does not address widespread neglect and profit-making at the expense of residents."
+  },
+  {
+   "slug": "speech-409222",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 but argued the Morrison government, particularly Prime Minister Scott Morrison, is responsible for years of neglect in aged care, citing funding cuts, low wages for workers, failure to implement key royal commission recommendations, and the need for 700,000 additional workers by 2050."
+  },
+  {
+   "slug": "speech-409223",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The bill includes measures to restrict restrictive practices, introduce home-care assurance reviews, and abolish the Aged Care Financing Authority. The speaker urged amending the definition of restrictive practices to explicitly include chemical restraints, clearing the home-care waitlist (over 100,000 people) by December 2021, and addressing age discrimination in disability care for those over 65 (recommendation 72)."
+  },
+  {
+   "slug": "speech-409224",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 introduces restrictive practices limitations and home-care assurance reviews. They also called for a 35- to 40-bed high-care residential facility in Bright co-funded by state and federal governments and supported a parliamentary committee to oversee royal commission recommendations."
+  },
+  {
+   "slug": "speech-409225",
+   "speaker": "Elizabeth Coker",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The speaker supported the Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Bill 2021 as a first step but argued it falls short of addressing systemic failures, citing the royal commission's finding of neglect and inaction by the Morrison government. Specific criticisms included the government's rejection of 24/7 registered nurse requirements, lack of transparency, and failure to address the vaccine rollout, with only three percent of the population fully vaccinated."
+  },
+  {
+   "slug": "speech-409226",
+   "speaker": "Luke Howarth",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-06-21",
+   "stage_hint": null,
+   "brief": "The bill introduces limitations on the use of restraints (renamed restrictive practices) in aged care, expands the Aged Care Quality and Safety Commissioner’s enforcement powers, establishes annual risk-based assurance reviews for home-care providers, and replaces the Aged Care Financing Authority with an advisory group from July 2021."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Aged Care and Other Legislation Amendment (Royal Commission Response No. 1) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00057",
+   "assent_date": "2021-06-28"
+  }
+ ]
+}

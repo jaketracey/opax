@@ -1,0 +1,154 @@
+{
+ "key": "au-federal-r6285",
+ "title": "Treatment Benefits (Special Access) (Consequential Amendments and Transitional Provisions) Bill 2019",
+ "short_title": "Treatment Benefits (Special Access) (Consequential Amendments and Transitional Provisions) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2019-04-05",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-02-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-04-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-04-05",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6285_ems_b9667af3-8129-4ac7-8f34-3dcbcbff47ec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6285%22",
+   "document_date": "2019-02-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00042",
+   "document_date": "2019-04-05",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-375095",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-02-14",
+   "stage_hint": null,
+   "brief": "The Treatment Benefits (Special Access) (Consequential Amendments and Transitional Provisions) Bill 2019 amends related acts to allow civilian surgical and medical team members to receive medical treatment and pharmaceutical supplements under the Treatment Benefits (Special Access) Act 2019, and ensures they transition smoothly from the Safety, Rehabilitation and Compensation Act 1988 while exempting them from income tax on travel expenses and pharmaceutical benefits."
+  },
+  {
+   "slug": "speech-375935",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Treatment Benefits (Special Access) Bill 2019, which extends gold card health coverage to approximately 240 doctors, 210 nurses, and other civilian medical staff who served in Vietnam from 1964 to 1972, and urged the government to reject the Productivity Commission's recommendation to dismantle the Department of Veterans' Affairs."
+  },
+  {
+   "slug": "speech-376162",
+   "speaker": "Nicolle Flint",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-02-20",
+   "stage_hint": null,
+   "brief": "The Treatment Benefits (Special Access) Bill 2019 and related bill extend Department of Veterans' Affairs gold card health benefits to surviving civilian surgical and medical team members who served in Vietnam alongside the ADF, benefiting about 200 people from 1 July 2019. The speaker highlighted the service of nurses like Helen Taplin and Betty Lockwood, and noted the legislation provides recognition and medical treatment for any condition, including mental health support."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treatment Benefits (Special Access) (Consequential Amendments and Transitional Provisions) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00042",
+   "assent_date": "2019-04-05"
+  }
+ ]
+}

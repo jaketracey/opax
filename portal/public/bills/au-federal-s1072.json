@@ -1,0 +1,292 @@
+{
+ "key": "au-federal-s1072",
+ "title": "Australian Nuclear Science and Technology Organisation Amendment Bill 2017",
+ "short_title": "Australian Nuclear Science and Technology Organisation Amendment Bill 2017",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2017-06-20",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry, Innovation and Science",
+ "status": "passed",
+ "status_as_of": "2017-09-18",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-06-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-08-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-08-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-09-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-09-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-09-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1072_ems_c85024a1-e11e-47c0-8ce9-da1cb0bc6f4d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1072%22",
+   "document_date": "2017-06-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00109",
+   "document_date": "2017-09-18",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2017-06-20",
+  "sentences": [
+   "The bill would give the Australian Nuclear Science and Technology Organisation more freedom to use its assets for science and training.",
+   "It would let ANSTO create an Innovation Precinct at its Lucas Heights site and possibly other similar hubs elsewhere.",
+   "The planned precinct would include facilities for graduates, start-ups, and technology businesses, though the bill does not specify a start date or funding."
+  ],
+  "changes": [
+   "Widen ANSTO's powers to use its property and resources for innovation and training.",
+   "Allow ANSTO to set up innovation precincts at its campuses.",
+   "Support collaboration between ANSTO, industry, universities, and researchers."
+  ],
+  "affected": "ANSTO, industry, universities, researchers, and government stakeholders.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:34:39Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-4864",
+   "date": "2017-08-14",
+   "house": "senate",
+   "question": "The majority voted in favour of agreeing with the bill's main idea. In parliamentary jargon, they voted to read it a second time. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1718a/18bd014) (a document put together by the parliamentary library): > *The purpose of the Australian Nuclear Science and Technology Organisation Amendment Bill 2017 (the Bill) is to amend the Australian Nuclear Science and Technology Organisation Act 1987 (the ANSTO Act) to provide greater flexibility to the Australian Nuclear Science and Technology Organisation (ANSTO), in the use of its property, facilities and resources. In particular, the Government has indicated that the Bill will support the establishment of an ‘Innovation Precinct’ at ANSTO’s Lucas Heights site.*",
+   "stage": "Second reading",
+   "ayes": 39,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 25,
+    "member": 14,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-08-14/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-353916",
+   "speaker": "Steve Ciobo",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The Australian Nuclear Science and Technology Organisation Amendment Bill 2017 gives ANSTO flexibility to establish an innovation precinct at its Lucas Heights campus and potentially other sites, with components including a graduate institute, innovation incubator, and technology park to boost collaboration between industry, universities, and researchers."
+  },
+  {
+   "slug": "speech-353917",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued that the ANSTO Amendment Bill 2017 is necessary to remove restrictions on ANSTO's ability to share knowledge, facilities and property with non-nuclear entities, allowing expansion of the Lucas Heights innovation precinct and a graduate institute for up to 400 students. The speaker noted ANSTO delivers 10,000 patient doses of nuclear medicines weekly to over 250 hospitals and supported the bill as a way to improve Australia's poor public-private research collaboration."
+  },
+  {
+   "slug": "speech-353918",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-354172",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the ANSTO Amendment Bill and noted that the Australian Synchrotron in Notting Hill was a Brumby Labor government initiative that preempted the Howard government's plan to place it in Queensland."
+  },
+  {
+   "slug": "speech-354174",
+   "speaker": "Ted O'Brien",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker argued in favour of the Australian Nuclear Science and Technology Organisation Amendment Bill 2017, which would give ANSTO legislative flexibility to create an innovation precinct at Lucas Heights comprising a graduate institute, innovation incubator and technology park. He noted that around one-third of all medical procedures involve nuclear science and that Australia’s OPAL reactor is becoming a major global supplier of nuclear medicines."
+  },
+  {
+   "slug": "speech-354175",
+   "speaker": "Mike Freelander",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The speaker supported the Australian Nuclear Science and Technology Organisation Amendment Bill 2017, arguing it would expand ANSTO's operations, research, and training, and enable it to produce nearly 30% of the world's molybdenum-99, addressing looming global shortages of medical isotopes."
+  },
+  {
+   "slug": "speech-354176",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The member for Hughes backed the ANSTO Amendment Bill 2017, saying it would allow an innovation precinct at Lucas Heights and create research jobs. He also argued for nuclear power, citing a planned increase in isotope production from 550,000 to 10 million annually and criticising the Renewable Energy Target."
+  },
+  {
+   "slug": "speech-354179",
+   "speaker": "Michael McCormack",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2017-09-13",
+   "stage_hint": null,
+   "brief": "The Australian Nuclear Science and Technology Organisation Amendment Bill 2017 was supported, allowing ANSTO to establish innovation precincts at its Lucas Heights campus and other sites to foster collaboration with industry, universities, and researchers, while restricting land use to science, innovation, and technology purposes."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Australian Nuclear Science and Technology Organisation Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00109",
+   "assent_date": "2017-09-18"
+  }
+ ]
+}

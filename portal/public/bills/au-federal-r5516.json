@@ -1,0 +1,246 @@
+{
+ "key": "au-federal-r5516",
+ "title": "Register of Foreign Ownership of Agricultural Land Bill 2015",
+ "short_title": "Register of Foreign Ownership of Agricultural Land Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-08-20",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-11-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5516_ems_c6365802-f024-43c2-9f5a-ce08c6a40d6a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5516%22",
+   "document_date": "2015-08-20",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00151",
+   "document_date": "2015-11-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-08-20",
+  "sentences": [
+   "This bill is one of a three-bill package that would create a new register of foreign-owned agricultural land in Australia.",
+   "The Commissioner of Taxation would run the register, which would hold details of foreign persons' interests in agricultural land, with a public statistical part that does not identify individuals.",
+   "The register defines agricultural land as land in Australia used or reasonably usable for a primary production business under the ITAA 1997, and the Commissioner must give the Minister an annual report on the register's operation."
+  ],
+  "changes": [
+   "Establishes a Register of Foreign Ownership of Agricultural Land to be administered by the Commissioner.",
+   "Requires the Commissioner to publish the statistical part of the Register online.",
+   "Requires the Commissioner to give the Minister an annual report on the Act's operation, including statistics from the basic part of the Register.",
+   "Makes the Act a taxation law under the TAA 1953, so existing confidentiality rules in that Act apply."
+  ],
+  "affected": "Foreign persons who hold interests in agricultural land in Australia, the Commissioner of Taxation, and the Minister.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:53:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-317035",
+   "speaker": "Joe Hockey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-08-20",
+   "stage_hint": null,
+   "brief": "The Register of Foreign Ownership of Agricultural Land Bill 2015 establishes a register of foreign-owned agricultural land, administered by the Australian Taxation Office, requiring existing holdings to be registered by 31 December 2015 and new interests within 30 days. The register will collect data on property location, size, and interest size, with plans to expand using state and territory land titles data."
+  },
+  {
+   "slug": "speech-319068",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government strongly supports foreign investment but needs to know where it is and ensure it serves Australia's national interest. They highlighted that the Foreign Acquisitions and Takeovers Legislation Amendment Bill 2015 overhauls four-decade-old rules, increases criminal penalties from $90,000 to $135,000 for individuals, gives the ATO responsibility for regulating residential real estate investment, and lowers screening thresholds for agricultural investments."
+  },
+  {
+   "slug": "speech-319069",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "From 1 March, the screening threshold for foreign agricultural investment was lowered from $252 million to a cumulative $15 million, with a $55 million threshold for agribusiness from 1 December 2015; the Foreign Acquisition and Takeovers Fees Imposition Bill will introduce fees estimated to raise $735 million over the forward estimates, and a Register of Foreign Ownership of Agricultural Land, run by the ATO, will begin publishing aggregated data in the first half of 2016, with an amnesty period for compliance and six illegally held properties already subject to mandatory divestment."
+  },
+  {
+   "slug": "speech-319087",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker supported the three foreign investment bills, which introduce fees on applications to shift administrative costs from taxpayers, increase penalties for noncompliance, lower the agricultural land screening threshold to $15 million, and strengthen ATO enforcement, but expressed concern about applying different screening thresholds for investors from different countries."
+  },
+  {
+   "slug": "speech-319090",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker argued that the bills strengthen regulation of foreign investment in agricultural land, agribusiness and residential real estate, introducing a register for acquisitions over $15 million, FIRB review for agribusiness purchases over $55 million, higher penalties and application fees expected to net $620 million, and raising the substantial interest threshold from 15% to 20%."
+  },
+  {
+   "slug": "speech-319091",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speech argued that the government's foreign investment bills are insufficient to fix housing affordability, criticised the demonisation of foreign and Asian-Australian buyers, and noted that foreign investment is essential for the economy and agricultural sector. The speaker cited Reserve Bank data showing foreign residential purchases are about two per cent of transactions and accused the government of xenophobic rhetoric."
+  },
+  {
+   "slug": "speech-319280",
+   "speaker": "Lucy Wicks",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The member for Robertson supported the Foreign Acquisitions and Takeovers amendment bills, which tighten foreign investment rules with stricter penalties, lower agricultural screening thresholds, a register of foreign ownership, and $47.5 million for ATO enforcement—reporting over 500 foreign-owned residential properties under investigation and supporting the China-Australia Free Trade Agreement for local jobs."
+  },
+  {
+   "slug": "speech-319281",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The minister argued that the Foreign Acquisitions and Takeovers bills modernise the foreign investment regime and fulfil an election commitment, while praising the China-Australia Free Trade Agreement as the best deal either country has made, opening a market of 1.35 billion people."
+  },
+  {
+   "slug": "speech-319285",
+   "speaker": "Sharman Stone",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The speaker supported three bills to strengthen Australia's foreign investment framework, including lowering the agricultural land screening threshold to $15 million (with higher thresholds for US, New Zealand and Chilean investors), establishing a register of foreign-owned agricultural land, and increasing penalties for non-compliance. The bills also introduce application fees and transfer residential real estate regulation to the Australian Taxation Office, with $47.5 million allocated for compliance."
+  },
+  {
+   "slug": "speech-319286",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The member argued in favour of the Foreign Acquisitions and Takeovers bills, citing examples of beneficial foreign investment in his electorate including New Forests' purchase of a mill at Tarpeena and Hassad Australia's acquisition of Telopea Downs, and welcomed new thresholds lowering the Foreign Investment Review Board referral for agricultural land from $252 million to a cumulative $15 million, with a $55 million threshold for agribusinesses."
+  },
+  {
+   "slug": "speech-319288",
+   "speaker": "Karen Andrews",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The member supported the foreign investment package, citing reduced screening thresholds of $15 million for agricultural land and $55 million for agribusiness, plus a new foreign ownership register from 1 July 2015. They also defended the China-Australia free trade agreement, noting Chinese property investment on the Gold Coast totalled $148 million in 2013–14, and criticised federal Labor's opposition to it."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Register of Foreign Ownership of Water or Agricultural Land Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00151",
+   "assent_date": "2015-11-25"
+  }
+ ]
+}

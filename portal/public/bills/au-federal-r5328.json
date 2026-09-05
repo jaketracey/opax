@@ -1,0 +1,272 @@
+{
+ "key": "au-federal-r5328",
+ "title": "Customs Amendment (Korea-Australia Free Trade Agreement Implementation) Bill 2014",
+ "short_title": "Customs Amendment (Korea-Australia Free Trade Agreement Implementation) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2014-10-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-09-23",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "other",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-09-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-09-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2014-10-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2014-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5328_ems_15bb5949-b23d-465e-85a4-2246106cf0e6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5328%22",
+   "document_date": "2014-09-04",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2014A00113",
+   "document_date": "2014-10-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-09-04",
+  "sentences": [
+   "This bill changes customs rules so goods from Korea can receive lower duties under a trade deal.",
+   "It sets tests for when products count as originating in Korea and puts duties on exporters and producers who seek the preferential rate.",
+   "The new rules start on the later of 1 December 2014 or the day the agreement begins for Australia."
+  ],
+  "changes": [
+   "The bill creates rules of origin for Korean goods imported into Australia.",
+   "It requires exporters of Australian goods to Korea and producers of those goods to meet obligations for preferential duty claims.",
+   "It amends the Customs Act 1901 to enable preferential rates of customs duty for qualifying goods."
+  ],
+  "affected": "Exporters and producers of Australian goods sent to Korea, and importers of Korean goods into Australia, are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:24Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-296985",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-296986",
+   "speaker": "Scott Morrison",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-04",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297803",
+   "speaker": "Jim Chalmers",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297806",
+   "speaker": "Philip Ruddock",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-23",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-297869",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298125",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298127",
+   "speaker": "John Cobb",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298132",
+   "speaker": "Nickolas Varvaris",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298136",
+   "speaker": "Rick Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298369",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298372",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298375",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-25",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Amendment (Korea-Australia Free Trade Agreement Implementation) Act 2014",
+   "frl_uri": "https://www.legislation.gov.au/C2014A00113",
+   "assent_date": "2014-10-21"
+  }
+ ]
+}

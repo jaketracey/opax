@@ -1,0 +1,228 @@
+{
+ "key": "au-federal-r6757",
+ "title": "Customs Tariff Amendment (Regional Comprehensive Economic Partnership Agreement Implementation) Bill 2021",
+ "short_title": "Customs Tariff Amendment (Regional Comprehensive Economic Partnership Agreement Implementation) Bill 2021",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2021-09-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2021-10-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-09-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-10-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-10-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6757_ems_e9de653e-af46-4c0a-9954-19bdcaa9f659%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6757%22",
+   "document_date": "2021-09-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00113",
+   "document_date": "2021-10-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2021-09-01",
+  "sentences": [
+   "This bill would change the Customs Tariff Act to put the Regional Comprehensive Economic Partnership Agreement into effect.",
+   "Goods that meet the new rules of origin would get a 'Free' customs duty rate, with some goods listed in a new schedule having rates that reduce to zero over up to 19 years.",
+   "The bill would also keep excise-equivalent duties on certain alcohol, tobacco and petroleum products and maintain concessional rates for some goods."
+  ],
+  "changes": [
+   "Provides a 'Free' rate of customs duty for RCEP originating goods from the Agreement's entry into force for Australia.",
+   "Inserts a new Schedule 14 that sets phasing rates for certain goods, reducing to 'Free' by the 19th calendar year after entry into force.",
+   "Maintains customs duty rates on certain alcohol, tobacco and petroleum products equal to excise duty on locally made equivalents.",
+   "Amends Schedule 4 to keep customs duty rates for certain RCEP originating goods under concessional items."
+  ],
+  "affected": "Importers of goods from parties to the Regional Comprehensive Economic Partnership Agreement.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:15:35Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-412644",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-09-01",
+   "stage_hint": null,
+   "brief": "The Customs Tariff Amendment (Regional Comprehensive Economic Partnership Agreement Implementation) Bill 2021 implements Australia's import tariff commitments under the RCEP by inserting a new schedule of duty rates, eliminating duties for most originating goods over time, and retaining customs duty on excise equivalent goods such as fuel, alcohol, tobacco and petroleum products."
+  },
+  {
+   "slug": "speech-413459",
+   "speaker": "Madeleine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "Labor supported the RCEP implementation bills while moving a second reading amendment calling for transparency in trade negotiations, no labour market testing waivers, and targeted sanctions against Myanmar's military regime, and confirmed that the agreement does not undermine Australian workers, public services, or domestic laws."
+  },
+  {
+   "slug": "speech-413461",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Regional Comprehensive Economic Partnership (RCEP) offers limited new market access, providing only 94% of existing tariff-free coverage even when fully matured, and lacks commitments on environmental protection, workers' rights, and human rights. They noted that Australia has five separate trade agreements with Malaysia, that no independent economic analysis of the RCEP was provided, and that a reservation was lodged for child care but not aged care, raising concerns about future regulation."
+  },
+  {
+   "slug": "speech-413462",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The speaker supported the Customs Amendment and Customs Tariff Amendment bills implementing the RCEP agreement, arguing it builds confidence for Australian exporters in Asia, particularly small- to medium-sized businesses. They noted the agreement adds little for large firms already in bilateral deals but creates new opportunities for SMEs, citing local exporters like Frosty Boy, Teys abattoirs, and BlockTexx, and named 15 participating countries including Brunei, Cambodia, Indonesia, Malaysia, Myanmar, the Philippines, Singapore, Thailand, Vietnam, Laos, China, Japan, New Zealand, and South Korea."
+  },
+  {
+   "slug": "speech-413464",
+   "speaker": "Damian Drum",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2021-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the RCEP agreement will lower tariffs and provide favourable arrangements for Australian exporters, particularly in agriculture and food processing. They highlighted the importance of a rules-based trade order to protect exporters, noted the loss of manufacturing industries like motor vehicles and wool processing, and expressed hope for future trade deals, including with the European Union."
+  },
+  {
+   "slug": "speech-413532",
+   "speaker": "Tony Pasin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued in support of the Customs Amendment and Customs Tariff Amendment bills to implement the Regional Comprehensive Economic Partnership Agreement (RCEP), a free trade agreement with 14 Indo-Pacific nations covering 30% of global GDP and population. He noted the agreement's benefits for his electorate of Barker, particularly for food manufacturing and digital services, and paid tribute to former MP Bert Kelly for his historic advocacy of free trade."
+  },
+  {
+   "slug": "speech-413536",
+   "speaker": "Craig Kelly",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-413537",
+   "speaker": "Angie Bell",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Customs Amendment and Customs Tariff Amendment bills, implementing the Regional Comprehensive Economic Partnership (RCEP) with 14 Indo-Pacific nations, will boost trade, lower prices for consumers, and aid pandemic recovery with no cost to customs duty receipts. The speaker also thanked the trade minister for a $1.2 billion tourism package and half-price airfares, and criticised the Queensland Premier for border closures costing Gold Coast tourism $1 billion."
+  },
+  {
+   "slug": "speech-413538",
+   "speaker": "Jason Wood",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-10-20",
+   "stage_hint": null,
+   "brief": "The Regional Comprehensive Economic Partnership Agreement, signed by Australia and 14 other countries in November 2020, required amendments to the Customs Act and Customs Tariff Act to implement preferential trade rules and create new opportunities for Australian exporters across the Indo-Pacific."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Customs Tariff Amendment (Regional Comprehensive Economic Partnership Agreement Implementation) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00113",
+   "assent_date": "2021-10-25"
+  }
+ ]
+}

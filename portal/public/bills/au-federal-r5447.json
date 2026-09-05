@@ -1,0 +1,155 @@
+{
+ "key": "au-federal-r5447",
+ "title": "Tax and Superannuation Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2015",
+ "short_title": "Tax and Superannuation Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-05-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2015-06-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-05-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-06-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5447_ems_25e12d1a-eb40-4721-b89f-fb260ee18696%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5447%22",
+   "document_date": "2015-05-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00069",
+   "document_date": "2015-06-25",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-05-27",
+  "sentences": [
+   "The bill would raise several income thresholds that determine whether someone pays the Medicare levy, Medicare levy surcharge, or both.",
+   "It would increase the low-income threshold for individuals, families, and for single seniors and pensioners who qualify for a tax offset, matching changes in the consumer price index for the 2014-15 income year.",
+   "The changes would keep people who were exempt from the levy in 2013-14 exempt in 2014-15 if their income rose at or below the CPI."
+  ],
+  "changes": [
+   "Increases the Medicare levy low-income thresholds for individuals, families and the dependent child component.",
+   "Increases the Medicare levy low-income threshold for single seniors and pensioners eligible for the tax offset.",
+   "Increases the Medicare levy surcharge low-income threshold."
+  ],
+  "affected": "Low-income individuals, families, seniors and pensioners.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:13:27Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-312232",
+   "speaker": "Josh Frydenberg",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-06-04",
+   "stage_hint": null,
+   "brief": "The Tax and Superannuation Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Bill 2015 increases Medicare levy low-income thresholds for 2014-15 and future years, with singles exempt below $20,896, single seniors and pensioners below $33,044, families below $35,261 plus $3,238 per child, and senior couples below $46,000 (unchanged). The threshold for senior couples was not raised as it remains sufficient."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Tax and Superannuation Laws Amendment (Medicare Levy and Medicare Levy Surcharge) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00069",
+   "assent_date": "2015-06-25"
+  }
+ ]
+}

@@ -1,0 +1,85 @@
+{
+ "key": "au-federal-r6269",
+ "title": "National Disability Insurance Scheme Amendment (Worker Screening Database) Bill 2019",
+ "short_title": "National Disability Insurance Scheme Amendment (Worker Screening Database) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Families and Social Services",
+ "status": "lapsed",
+ "status_as_of": "2019-04-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6269%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6269%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-04-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6269%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6269_ems_d6028f13-3eab-4745-837e-f43147ede861%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6269%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-376584",
+   "speaker": "Linda Burney",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to the National Disability Insurance Scheme Amendment (Worker Screening Database) Bill 2019, noting longstanding calls for a royal commission into violence against people with disability and demanding that a majority of commissioners have lived experience of disability and at least one be Aboriginal or Torres Strait Islander. The speaker also criticised the government for NDIS underspend, delays, and a staffing cap that has hindered the scheme's rollout."
+  },
+  {
+   "slug": "speech-376587",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-04-02",
+   "stage_hint": null,
+   "brief": "The National Disability Insurance Scheme Amendment (Worker Screening Database) Bill 2019 establishes a national database to record NDIS worker screening checks, ensuring workers cleared do not pose an unacceptable risk of harm to participants. The Morrison government argued the database supports nationally consistent screening to protect people with disability from abuse, violence, neglect and exploitation."
+  }
+ ],
+ "acts": []
+}

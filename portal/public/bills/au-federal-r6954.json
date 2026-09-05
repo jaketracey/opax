@@ -1,0 +1,264 @@
+{
+ "key": "au-federal-r6954",
+ "title": "Work Health and Safety Amendment Bill 2022",
+ "short_title": "Work Health and Safety Amendment Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-12-01",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Employment and Workplace Relations",
+ "status": "passed",
+ "status_as_of": "2023-03-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-12-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-02-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-03-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6954_ems_53a14644-9724-4922-9dc8-c7d9f870fbec%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6954%22",
+   "document_date": "2022-12-01",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00009",
+   "document_date": "2023-03-21",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2022-12-01",
+  "sentences": [
+   "The bill would update the Commonwealth's work health and safety law to match recent changes to the national model law.",
+   "It would make several technical amendments, including adding negligence as a fault element for the most serious offence and giving health and safety representatives the right to choose their training course.",
+   "The bill would also allow Comcare to share information with other regulators and extend the deadline to request a prosecution for certain offences from 12 months to 18 months."
+  ],
+  "changes": [
+   "Adds negligence as a fault element for the Category 1 offence.",
+   "Gives health and safety representatives the right to choose their training course.",
+   "Extends the deadline to request a prosecution for a Category 1 or 2 offence from 12 months to 18 months.",
+   "Prohibits contracts of insurance covering liability for monetary penalties under the WHS Act.",
+   "Creates a new offence for officers of bodies corporate that breach the insurance prohibition.",
+   "Clarifies that Comcare may share information with other regulators."
+  ],
+  "affected": "Work health and safety regulators, employers, workers, health and safety representatives, and officers of bodies corporate.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:07:15Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-7994",
+   "date": "2023-03-09",
+   "house": "senate",
+   "question": "Work Health and Safety Amendment Bill 2022 - in Committee - Prohibiting COVID-19 vaccine discrimination",
+   "stage": "In committee",
+   "ayes": 5,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "LNP": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 31,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-03-09/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-827335",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-02-09",
+   "stage_hint": null,
+   "brief": "The Work Health and Safety Amendment Bill 2022 introduces gross negligence as a fault element for category 1 offences, extends the deadline for requesting prosecutions from 12 to 18 months, and prohibits insurance for work health and safety fines, implementing recommendations from the Boland review and agreements from the May 2021 work health and safety ministers meeting."
+  },
+  {
+   "slug": "speech-827336",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-827421",
+   "speaker": "Carina Garland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2023-02-09",
+   "stage_hint": null,
+   "brief": "The Work Health and Safety Amendment Bill 2022 implements recommendations from the Boland review, including adding negligence as a fault element for serious offences and prohibiting insurance for work health and safety fines. The speaker also highlighted the ongoing issue of silicosis from engineered stone and called for a ban."
+  },
+  {
+   "slug": "speech-828316",
+   "speaker": "Michaelia Cash",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2023-03-08",
+   "stage_hint": null,
+   "brief": "The Work Health and Safety Amendment Bill 2022 implements the first tranche of Boland review recommendations, including introducing gross negligence as a fault element for category 1 offences, banning insurance for work health and safety fines, extending the deadline for prosecution requests from 12 to 18 months, and clarifying health and safety representatives’ right to choose training. The Greens called for an urgent ban on high-silica manufactured stone due to silicosis deaths, while One Nation opposed the bill over its reversal of the onus of proof."
+  },
+  {
+   "slug": "speech-828434",
+   "speaker": "Malcolm Roberts",
+   "party": "One Nation",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-828436",
+   "speaker": "Ralph Babet",
+   "party": "United Australia Party",
+   "state": "federal",
+   "date": "2023-03-09",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Work Health and Safety Amendment Bill 2022 fails to address risks from mandated mRNA vaccines, citing myocarditis rates 6–28 times higher in males aged 16–24 after vaccination than after COVID infection, while supporting the bill’s changes to add gross negligence as a fault element for category 1 offences and prohibit insurance for work health and safety penalties."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Work Health and Safety Amendment Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00009",
+   "assent_date": "2023-03-21"
+  }
+ ]
+}

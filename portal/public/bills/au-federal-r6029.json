@@ -1,0 +1,445 @@
+{
+ "key": "au-federal-r6029",
+ "title": "Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Bill 2018",
+ "short_title": "Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-02-07",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2018-10-03",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-02-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-05-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-06-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2018-09-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "other",
+   "date": "2018-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2018-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2018-10-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6029_ems_c9bb9622-facf-4784-a3bb-1f361f388305%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6029_ems_6c6b775f-70b8-45c6-9bb7-e9ba2b086a11%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6029_ems_d204868f-ac52-47e0-be9c-67b5ccb98cdb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6029%22",
+   "document_date": "2018-02-07",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2018A00121",
+   "document_date": "2018-10-03",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2018-02-07",
+  "sentences": [
+   "The bill would make it a crime to make, sell, own or use devices that hide sales from the tax office.",
+   "Strict liability offences would apply, with penalties similar to those for promoting tax avoidance schemes.",
+   "Defences would be available for conduct aimed at preventing tax evasion or enforcing tax law."
+  ],
+  "changes": [
+   "Creates new offences for making, distributing, possessing or using sales suppression tools.",
+   "Applies strict liability to these offences.",
+   "Sets penalties comparable to those for promoting tax exploitation schemes.",
+   "Provides offence-specific defences for legitimate purposes."
+  ],
+  "affected": "Entities with Australian tax obligations and anyone involved in producing, distributing, possessing or using electronic sales suppression tools.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:30:43Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5421",
+   "date": "2018-09-17",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2018-09-17.19.2) introduced by Greens Senator [Peter Whish-Wilson](https://theyvoteforyou.org.au/people/senate/tasmania/peter_whish-wilson), which means the words below will be added to the usual [second reading motion](https://www.peo.gov.au/learning/fact-sheets/making-a-law.html) \"that the bill be read a second time\" (which is parliamentary jargon for \"that the main idea of the bill be agreed to\"). ### Motion text > *At the end of the motion, add \"but the Senate:* > *(a) notes that:* >> *(i) the explanatory memorandum to the Anti-Money Laundering and Counter-Terrorism Financing Bill 2006 forecast a second tranche of legislation that would regulate real estate agents, jewellers, and a range of non-financial transactions provided by accountants and lawyers,* >> *(ii) in April 2016, the Government released the statutory review of the Anti-Money Laundering and Counter-Terrorism Financing Act 2006 that contained a recommendation for the Government to develop options for regulating lawyers, conveyancers, accountants, high-value dealers, real estate agents and trust and company service providers under the Act,* >> *(iii) the Government commenced consultation on the regulation of lawyers, conveyancers, accountants, high-value dealers, real estate agents and trust and company service providers under the Act, and submissions to this consultation closed in January 2017,* >> *(iv) the Financial Action Task Force's April 2015 Mutual Evaluation Report on Australia's measures to combat money laundering and terrorist financing stated that Australia is an attractive destination for foreign proceeds of crime, particularly corruption-related proceeds flowing into real estate, and* >> *(v) the December 2017 OECD Phase 4 Report on Australia's implementation of the OECD Anti-Bribery Convention recommended that Australia address the risk that the real estate sector could be used to launder the proceed",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 20,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 17,
+    "dated": 35,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-17/2"
+  },
+  {
+   "key": "federal-senate-5422",
+   "date": "2018-09-17",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Bill 2018 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 38,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 22
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 19,
+    "dated": 38,
+    "earliest": 11
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-17/3"
+  },
+  {
+   "key": "federal-senate-5424",
+   "date": "2018-09-17",
+   "house": "senate",
+   "question": "Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Bill 2018 - in Committee - Put the question",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 34,
+    "member": 16,
+    "earliest": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2018-09-17/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-363871",
+   "speaker": "Andrew Gee",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Bill 2018, arguing the black economy costs Australia an estimated $25 billion. The bill extends taxable payments reporting to courier and cleaning industries, creating offences for electronic sales suppression tools, and is expected to contribute $132 million to government revenue."
+  },
+  {
+   "slug": "speech-363872",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued for the urgent introduction of a unique Director Identification Number for all company directors to combat phoenixing and the black economy, which costs at least $25 billion annually, and criticised the Turnbull government for delaying action and prioritising tax cuts for large businesses."
+  },
+  {
+   "slug": "speech-363873",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The bill targets electronic sales suppression tools and extends taxable payments reporting to the courier and cleaning industries to combat the black economy, estimated at 1.5% of GDP ($25 billion), ensuring all contribute fairly to a just tax system."
+  },
+  {
+   "slug": "speech-363874",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Bill 2018 aims to crack down on the black economy, with the government expecting revenue from these measures to help bring the budget back into surplus by 2019. The speaker criticised the government for providing $17 billion in tax cuts to banks and cutting funding to enforcement agencies like ASIC, the AFP, and the Commonwealth Director of Public Prosecutions, while Labor has committed $25 million to a special task force to pursue misconduct revealed by the banking royal commission."
+  },
+  {
+   "slug": "speech-363875",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker supported the bill’s ban on electronic sales suppression tools and new third-party reporting requirements for courier and cleaning industries. He also argued for lower corporate tax rates, citing that past reductions by Paul Keating and Peter Costello increased tax revenue as a percentage of GDP."
+  },
+  {
+   "slug": "speech-363876",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The speaker argued the Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Bill 2018 is needed to combat Australia's estimated $50 billion black economy, which costs $10 billion annually in lost tax revenue. The bill criminalises sale-suppression technology and extends taxable payments reporting to cleaning and courier businesses, with the Turnbull government projecting a net gain of $4.6 billion from these measures."
+  },
+  {
+   "slug": "speech-363877",
+   "speaker": "Kelly O'Dwyer",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2018-05-30",
+   "stage_hint": null,
+   "brief": "The government's bill bans the manufacture, distribution, possession, sale and use of sale suppression technology, and requires courier and cleaning businesses to report payments to contractors to the Australian Taxation Office, as part of measures to counter the black economy."
+  },
+  {
+   "slug": "speech-369670",
+   "speaker": "Andrew Leigh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2018-09-18",
+   "stage_hint": null,
+   "brief": "Labor supported the Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Bill 2018 and secured a review two years after royal assent, arguing the government had run out of legislation and was filibustering in the Senate. The speaker criticised the government for lacking a legislative agenda on issues like penalty rates, aged care, health and education."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (Black Economy Taskforce Measures No. 1) Act 2018",
+   "frl_uri": "https://www.legislation.gov.au/C2018A00121",
+   "assent_date": "2018-10-03"
+  }
+ ]
+}

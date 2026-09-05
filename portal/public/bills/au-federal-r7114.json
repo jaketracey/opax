@@ -1,0 +1,614 @@
+{
+ "key": "au-federal-r7114",
+ "title": "Migration Amendment (Bridging Visa Conditions) Bill 2023",
+ "short_title": "Migration Amendment (Bridging Visa Conditions) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "passed",
+ "status_as_of": "2023-11-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "other",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-11-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7114_ems_78ddce5e-0329-4111-958d-7da135dd3666%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7114_ems_bb7b1d94-e868-45d1-9e69-ea2530ac37f0%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7114%22",
+   "document_date": "2023-11-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00093",
+   "document_date": "2023-11-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 2,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-16",
+  "sentences": [
+   "The bill would impose new visa conditions on certain non-citizens who cannot be removed from Australia and are not in immigration detention, following a High Court decision.",
+   "It would amend the Migration Act and Migration Regulations to add mandatory reporting, notification and monitoring obligations to bridging visas granted to this group.",
+   "New criminal offences would apply to serious breaches of those conditions, because visa cancellation is not an effective deterrent for this cohort."
+  ],
+  "changes": [
+   "Adds new mandatory visa conditions to bridging visas for the NZYQ-affected cohort.",
+   "Creates criminal offences for failing to comply with certain reporting and notification requirements.",
+   "Replaces existing bridging visas for the cohort with new ones carrying stronger conditions."
+  ],
+  "affected": "Non-citizens in the NZYQ-affected cohort who hold or are granted a bridging visa.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:40:57Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10300",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "question": "Andrew Giles I move: That the amendments be agreed to. This morning I introduced into the House, in response to the NZYQ High Court decision, legislation proposing urgent amendments to the Migration Act and its regulations to provide for the effective management of noncitizens required to be released by reason of the decision of the court. From the moment the High Court handed down its decision we've been implementing measures to keep the Australian community safe. Tonight, these amendments take a further step forward in that regard. The safety of the Australian community has always been and always will be an absolute priority for the Australian government. While the Commonwealth argued that the previous detention settings were constitutionally valid, the High Court's decision required the release of the plaintiff in that case and similarly affected people in immigration detention. This decision has, of course, significant implications for immigration compliance and for the community safety obligations of the government, to which this bill responds, noting that we still await reasons from the court and noting that further work will be required to be done in this regard. Community protection is of course a fundamental priority, and the measures included in the bill are fundamental to providing the legislative framework to support this outcome, and the work of the Senate, which I'll go to in a moment, is critical in that regard. I say to all members: the safety of the community was at the forefront of consideration in bringing this bill, as amended, to the House. I say, too, that the Australian community expects that noncitizens who do not meet the requirements for migration to Australia will not undertake activities or engage in further offending that harm the community and could prejudice the Australian government's ability to facilitate their removal from Australia. Of course, as publicly reported, the caseload includes certain individuals with very serious crimina",
+   "stage": "Consideration of Senate message",
+   "ayes": 106,
+   "noes": 8,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 5
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 58,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 113,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-16/7"
+  },
+  {
+   "key": "federal-representatives-8477",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "question": "The majority voted in favour of an [amended motion](https://www.openaustralia.org.au/debates/?id=2023-11-16.9.2) moved by Watson MP [Tony Burke](https://theyvoteforyou.org.au/people/representatives/watson/tony_burke) (Labor) and amended by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal). This means debate on the [Migration Amendment (Bridging Visa Conditions) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7114) will resume immediately. ### Amended motion text > *That so much of the standing and sessional orders be suspended as would prevent:* > > *(1) debate on the second reading resuming immediately with the Leader of the Opposition and the Member for Wannon to each speak for up to 10 minutes, and the time limit for all other Members speaking being 5 minutes.* > > *(2) the second reading debate continuing for no longer than 1 hour, after which the bill being passed through all its stages without delay.* Standing and sessional orders are the usual procedural rules of parliament.",
+   "stage": "Business motion",
+   "ayes": 75,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 7
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 72,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 136,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2023-11-16/4"
+  },
+  {
+   "key": "federal-senate-8484",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-11-16.164.14) to agree with the main idea of the bill, which is known as giving the bill a second reading. Because this vote was successful, our senators can now consider the bill in greater detail. ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/r7114), this bill was introduced: > *in response to the High Court’s judgement in NZYQ v Minister for Immigration, Citizenship and Multicultural Affairs & Anor (S28/2023) to provide for certain conditions to be placed on bridging visas granted to non-citizens released from immigration detention.* According to the [explanatory memorandum](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/display.w3p;query=Id%3A%22legislation%2Fems%2Fr7114_ems_78ddce5e-0329-4111-958d-7da135dd3666%22;rec=0) (which is a political document prepared by the Government): > *The Bill will establish new criminal offence provisions, in relation to certain conduct by non-citizens in the NZYQ affected cohort [i.e., Non-citizens released from immigration detention following the High Court judgment on 8 November 2023 in NZYQ] that constitutes a serious breach of visa conditions, relating to the failure to comply with certain requirements to notify, report to the Minister or the Department, where required to do so under certain mandatory conditions imposed on the BVR [i.e., Subclass 070 (Bridging (Removal Pending)) visa]. These offences are vital to ensuring that non-citizens in the NZYQ-affected cohort remain appropriately engaged with the Department and the Australian Border Force, and cooperate in arrangements to facilitate their removal from Australia.* > > *The new offence provisions that would provide a proportionate response in order to effect re-engagement of the non-citizen with the Department. Attempt",
+   "stage": "Second reading",
+   "ayes": 32,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 38,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/5"
+  },
+  {
+   "key": "federal-senate-8485",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?gid=2023-11-16.265.1): > *That the committee report progress.*",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 13,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 37,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/6"
+  },
+  {
+   "key": "federal-senate-8492",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a motion introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it was successful. This means the vote on whether to pass the [Migration Amendment (Bridging Visa Conditions) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7114) can be had immediately. ### Motion text > *That the order agreed to earlier today, relating to the consideration of the Migration Amendment (Bridging Visa Conditions) Bill 2023, be amended to provide that the questions on all remaining stages of the bill be put immediately, including any circulated amendments.*",
+   "stage": "Business motion",
+   "ayes": 30,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/13"
+  },
+  {
+   "key": "federal-senate-8493",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted in favour of Government amendment (1) on [sheet QN100](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7114), which means it will now become part of the bill. ### Amendment text > *(1) Schedule 1, item 4, page 5 (after line 19), after paragraph 76B(1)(d), insert:* > >> *Note: Section 4K of the Crimes Act 1914, which deals with continuing and multiple offences, applies to this offence.*",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/14"
+  },
+  {
+   "key": "federal-senate-8494",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted in favour of Government amendments (2) to (9) on [sheet QN100](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7114), which means they will now become part of the bill. ### Amendment text > *(2) Schedule 1, item 4, page 5 (lines 25 to 27), omit subsection 76B(3).* > > *(3) Schedule 1, item 4, page 8 (after line 6), after paragraph 76D(4)(c), insert:* > >> *Note: Section 4K of the Crimes Act 1914, which deals with continuing and multiple offences, applies to this offence.* > > *(4) Schedule 1, item 4, page 8 (lines 8 to 10), omit subsection 76D(5).* > > *(5) Schedule 1, item 4, page 9 (lines 14 to 25), omit subsection 76E(4), substitute:* > >> *(4) The Minister must grant the non-citizen another Subclass 070 (Bridging (Removal Pending)) visa (the second visa), under a prescribed provision of the regulations, that is not subject to any one or more of the conditions prescribed for the purposes of paragraph (1)(a) if:* >> >>> *(a) the non-citizen makes representations in accordance with the invitation; and* >>> >>> *(b) the Minister is satisfied that the non-citizen does not pose a risk to the community.* > > *(6) Schedule 2, item 7, page 13 (line 4), omit \"and 8619\", substitute \", 8619, 8622 and 8623\".* > > *(7) Schedule 2, item 8, page 13 (lines 10 to 15), omit subclauses 070.612A(1) and (2), substitute:* > >> *(1) If subclause (3) applies to the visa, condition 8620 must be imposed unless the Minister is satisfied that the holder does not pose a risk to the community.* >> >> *(2) If subclause (3) applies to the visa, condition 8621 must be imposed unless the Minister is satisfied that the holder does not pose a risk to the community.* >> >> *(2A) A condition imposed under subclause (1) or (2) is in addition to any other condition imposed by another provision of this Division.* > > *(8) Schedule 2, item 8, page 13 (after line 21), after clause 070.612A, insert:* > >> *070.612B* >> >> *If the holder ha",
+   "stage": "In committee",
+   "ayes": 31,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/15"
+  },
+  {
+   "key": "federal-senate-8495",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted in favour of the opposition amendment on [sheet 2216](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7114), which means it failed. ### Amendment text > *(1) Schedule 1, item 4, page 8 (after line 23), after section 76D, insert:* > >> *76DA Mandatory 1 year imprisonment for offences* >> >>> *If a person is convicted of an offence against section 76B, 76C or 76D, the court must impose a sentence of imprisonment of at least 1 year.* > > *(2) Schedule 1, item 6, page 10 (line 8), after \"76D\", insert \", 76DA\". *",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 12,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/16"
+  },
+  {
+   "key": "federal-senate-8496",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted against the [amendments](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7114) on sheet 2214 and sheet 2215 introduced by ACT Senator [David Pocock](https://theyvoteforyou.org.au/people/senate/act/david_pocock) (Independent), which means they failed. They would have introduced [sunset provisions](https://en.wikipedia.org/wiki/Sunset_provision) into the bill. ### Motion text *SHEET 2214* > *(1) Schedule 1, page 10 (after line 10), at the end of the Schedule, add:* > >> *7 Sunset of amendments* >> >>> *The amendments of the Migration Act 1958 made by this Schedule cease to be in force at the start of the day after end of the period of 6 months beginning on the day this Act receives the Royal Assent.* > > *(2) Schedule 2, item 14, page 18 (after line 13), at the end of Part 126, add:* > >> *12602 Sunset of amendments* >> >>> *The amendments of these Regulations made by Part 1 of Schedule 2 to the Migration Amendment (Bridging Visa Conditions) Act 2023 cease to be in force at the start of the day after the end of the period of 6 months beginning on the day that Act receives the Royal Assent.* *SHEET 2215* > *(1) Schedule 1, page 10 (after line 10), at the end of the Schedule, add:* > >> *7 Sunset of amendments* >> >>> *The amendments of the Migration Act 1958 made by this Schedule cease to be in force at the start of the day after end of the period of 12 months beginning on the day this Act receives the Royal Assent.* > > *(2) Schedule 2, item 14, page 18 (after line 13), at the end of Part 126, add:* > >> *12602 Sunset of amendments* >> >>> *The amendments of these Regulations made by Part 1 of Schedule 2 to the Migration Amendment (Bridging Visa Conditions) Act 2023 cease to be in force at the start of the day after the end of the period of 12 months beginning on the day that Act receives the Royal Assent.*",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 35,
+    "member": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/17"
+  },
+  {
+   "key": "federal-senate-8497",
+   "date": "2023-11-16",
+   "house": "senate",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/senate/?id=2023-11-16.280.1) \"*that the remaining stages of [the bill](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r7114) be agreed to and the bill be now passed.*\" ### What does this bill do? The bill [has the effect](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd2324a/24bd38) of: > *providing for the grant of bridging visas (specifically Subclass 070 (Bridging (Removal Pending)) Visa R (BVR)) to non-citizens released from immigration detention with certain monitoring conditions placed on them. A person commits an offence if they breach a relevant condition. New conditions and the provisions under which they must or may be imposed were inserted into the Migration Regulations 1994.*",
+   "stage": "Third reading",
+   "ayes": 36,
+   "noes": 11,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 40,
+    "member": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-11-16/18"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Migration Amendment (Bridging Visa Conditions) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00093",
+   "assent_date": "2023-11-17"
+  }
+ ]
+}

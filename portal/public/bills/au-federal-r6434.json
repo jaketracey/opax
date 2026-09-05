@@ -1,0 +1,76 @@
+{
+ "key": "au-federal-r6434",
+ "title": "Commonwealth Electoral Amendment (Lowering Voting Age and Increasing Voter Participation) Bill 2019",
+ "short_title": "Commonwealth Electoral Amendment (Lowering Voting Age and Increasing Voter Participation) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-10-21",
+ "originating_house": "representatives",
+ "sponsor": "BANDT, Adam, MP",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10734",
+ "portfolio": "(s) BANDT, Adam, MP",
+ "status": "lapsed",
+ "status_as_of": "2020-08-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6434%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6434%22"
+  },
+  {
+   "stage": "other",
+   "date": "2020-08-25",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6434%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6434_ems_e220c421-f0c7-4604-9f98-7833cca1bd20%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6434%22",
+   "document_date": "2019-10-21",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 11,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-10-21",
+  "sentences": [
+   "The bill would let 16‑ and 17‑year‑olds vote in federal elections and referendums.",
+   "It would lower the minimum voting age to 16 while keeping compulsory voting and the right to stand for office at 18, and allow 14‑ and 15‑year‑olds to enrol in advance.",
+   "Eligible Australians who are not on the roll or whose details are wrong could enrol or fix their address at a polling place on election day and cast a provisional vote."
+  ],
+  "changes": [
+   "The voting age in federal elections and referendums is reduced from 18 to 16.",
+   "People aged 14 and 15 can be added to the electoral roll before they turn 16.",
+   "The Electoral Commissioner must include 16‑ and 17‑year‑olds on the certified list of voters for referendums.",
+   "Penalty notices will not be issued to 16‑ and 17‑year‑olds who do not vote in referendums.",
+   "Voters not on the roll or at the wrong address can enrol or update their details at a polling centre on election day.",
+   "Those who enrol or update on election day will be treated as enrolled and able to cast a provisional vote."
+  ],
+  "affected": "Australians aged 16 and 17, 14‑ and 15‑year‑olds, and eligible voters not on the roll or at the correct address.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:06:11Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

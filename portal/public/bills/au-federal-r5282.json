@@ -1,0 +1,661 @@
+{
+ "key": "au-federal-r5282",
+ "title": "National Health Amendment (Pharmaceutical Benefits) Bill 2014",
+ "short_title": "National Health Amendment (Pharmaceutical Benefits) Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-06-18",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Health",
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-06-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-07-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5282_ems_cfce9948-10ca-4bb6-8c38-64fe82ed8c9c%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5282%22",
+   "document_date": "2014-06-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-06-18",
+  "sentences": [
+   "This bill would make patients pay more for their medicines under two government schemes.",
+   "It does this by raising the amount patients must pay towards each prescription and the spending limits that trigger lower charges.",
+   "For concessional patients, the number of prescriptions needed to reach the lower-charge limit would rise by two each year from 2015 to 2018."
+  ],
+  "changes": [
+   "Patient payments for each prescription would increase by 80 cents for concessional patients and $5.00 for general patients from 1 January 2015.",
+   "The spending threshold that lowers charges would rise by two prescriptions each year for concessional patients and by 10 per cent each year for general patients from 2015 to 2018.",
+   "These increases would be on top of the usual yearly price adjustment tied to the Consumer Price Index."
+  ],
+  "affected": "Patients who receive medicines subsidised through the Pharmaceutical Benefits Scheme or the Repatriation Pharmaceutical Benefits Scheme.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:06:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-3345",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "question": "National Health Amendment (Pharmaceutical Benefits) Bill 2014 — Second Reading — Put the question (to read a second time)",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-16/1"
+  },
+  {
+   "key": "federal-representatives-3346",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "question": "National Health Amendment (Pharmaceutical Benefits) Bill 2014 — Second Reading — Read a second time",
+   "stage": "Second reading",
+   "ayes": 82,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 51
+    },
+    "Liberal": {
+     "ayes": 66,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-16/2"
+  },
+  {
+   "key": "federal-representatives-3347",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "question": "National Health Amendment (Pharmaceutical Benefits) Bill 2014 — Consideration in Detail — Put the question (to agree to the bill)",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-16/3"
+  },
+  {
+   "key": "federal-representatives-3348",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "question": "National Health Amendment (Pharmaceutical Benefits) Bill 2014 — Consideration in Detail — Agree to the bill",
+   "stage": "Consideration in detail",
+   "ayes": 80,
+   "noes": 56,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 52
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 136
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-16/4"
+  },
+  {
+   "key": "federal-representatives-3349",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "question": "National Health Amendment (Pharmaceutical Benefits) Bill 2014 — Third Reading — Put the question (to suspend standing orders)",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-16/5"
+  },
+  {
+   "key": "federal-representatives-3350",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "question": "National Health Amendment (Pharmaceutical Benefits) Bill 2014 — Third Reading — Suspend standing and sessional orders",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-16/6"
+  },
+  {
+   "key": "federal-representatives-3351",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "question": "National Health Amendment (Pharmaceutical Benefits) Bill 2014 — Third Reading — Put the question (to read a third time)",
+   "stage": "Third reading",
+   "ayes": 80,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 64,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-16/7"
+  },
+  {
+   "key": "federal-representatives-3352",
+   "date": "2014-07-16",
+   "house": "representatives",
+   "question": "National Health Amendment (Pharmaceutical Benefits) Bill 2014 — Third Reading — Read a third time",
+   "stage": "Third reading",
+   "ayes": 79,
+   "noes": 54,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 50
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 15,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-07-16/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-291928",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-06-18",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294650",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294651",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294652",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294655",
+   "speaker": "David Gillespie",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294657",
+   "speaker": "Andrew Laming",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294660",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294662",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294663",
+   "speaker": "Shayne Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294664",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294665",
+   "speaker": "Warren Snowdon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294668",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-15",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294706",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294708",
+   "speaker": "Bernie Ripoll",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294709",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294714",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294717",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294718",
+   "speaker": "Amanda Rishworth",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294719",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294877",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294879",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294881",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294883",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-294886",
+   "speaker": "Stephen Jones",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-07-16",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

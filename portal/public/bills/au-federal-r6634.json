@@ -1,0 +1,240 @@
+{
+ "key": "au-federal-r6634",
+ "title": "Telecommunications Amendment (Infrastructure in New Developments) Bill 2020",
+ "short_title": "Telecommunications Amendment (Infrastructure in New Developments) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-12-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications, Cyber Safety and the Arts",
+ "status": "passed",
+ "status_as_of": "2021-02-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2021-02-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2021-02-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6634_ems_7774b716-4295-4e28-877d-153003a188c3%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6634%22",
+   "document_date": "2020-12-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2021A00007",
+   "document_date": "2021-02-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-12-03",
+  "sentences": [
+   "This bill would require all developers of new housing estates and apartment blocks to install basic infrastructure for fibre-optic cable connections.",
+   "It would extend current rules that apply only to incorporated developers to also cover unincorporated developers, and clarify what counts as a functional fibre-ready facility.",
+   "The definition of 'functional fibre-ready facility' would be added to the Telecommunications Act 1997 to ensure the infrastructure is technically usable for optical fibre lines."
+  ],
+  "changes": [
+   "The bill extends the prohibition on selling or leasing a building lot or unit without fibre-ready facilities to unincorporated developers.",
+   "It inserts a new definition of 'functional fibre-ready facility' into Part 20A of the Act.",
+   "The amendment applies to all types of developers, including those that are not constitutional corporations."
+  ],
+  "affected": "Developers of new housing lots and building units.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:12:28Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-6905",
+   "date": "2021-02-04",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2021-02-04.14.4) that the usual [second reading motion](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/) remain unchanged. The usual second reading motion is *that the bill be read a second time*, which is parliamentary jargon for agreeing with the main idea of the bill. This vote occurred after Greenway MP [Michelle Rowland](https://theyvoteforyou.org.au/people/representatives/greenway/michelle_rowland) (Labor) introduced the proposed amendment below. ### Proposed amendment > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) that despite the Coalition's promise to deliver a second-rate NBN for $29.5 billion, the cost is now forecast to be $57 billion;* >> >> *(b) despite the Coalition promising every Australian would have access to a minimum NBN speed of 25 megabits per second by 2016, up to 238,000 premises in 2021 still cannot get this minimum speed;* >> >> *(c) the shambles that is the deployment of HFC technology; and* >> >> *(d) that after spending seven years and $51 billion on the NBN, the Coalition Government has begun an embarrassing backflip from copper to fibre; and* > > *(2) calls on the Coalition Government to reign in its technological incompetence across every aspect of the NBN.\"*",
+   "stage": "Second reading",
+   "ayes": 64,
+   "noes": 55,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 15,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 53
+    },
+    "Liberal": {
+     "ayes": 35,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 118
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2021-02-04/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-399720",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-12-03",
+   "stage_hint": null,
+   "brief": "The Telecommunications Amendment (Infrastructure in New Developments) Bill 2020 extends the existing requirement for developers to install fibre-ready pit and pipe infrastructure to unincorporated developers, with penalties enforced by the Australian Communications and Media Authority. It also clarifies that facilities must be functional, citing that up to 3,000 premises per year are sold without such infrastructure and retrofitting costs homebuyers about $2,100 compared to $600–800 during construction."
+  },
+  {
+   "slug": "speech-401566",
+   "speaker": "Michelle Rowland",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-04",
+   "stage_hint": null,
+   "brief": "Labor will support the Telecommunications Amendment (Infrastructure in New Developments) Bill 2020, which extends fibre-ready duct installation requirements and penalties to unincorporated developers. The opposition also criticised the Coalition's NBN rollout, noting the cost has risen from a promised $29.5 billion to a forecast $57 billion, and that up to 238,000 premises still cannot access the minimum 25 Mbps speed."
+  },
+  {
+   "slug": "speech-401570",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2021-02-04",
+   "stage_hint": null,
+   "brief": "The speaker supported the Telecommunications Amendment (Infrastructure in New Developments) Bill 2020, which requires unincorporated developers to install fibre-ready facilities, noting that 3,000 premises are sold or leased annually without telecom pits and pipes. They also highlighted ongoing issues with telecommunications resilience in bushfire-prone areas, including the need for longer mobile tower battery life and upgrades to degraded copper networks."
+  },
+  {
+   "slug": "speech-401571",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-04",
+   "stage_hint": null,
+   "brief": "The bill requiring pit and pipe in new developments was supported, with the cost cited as $600–800 at construction versus $2,100 later. The government's NBN implementation was criticised for ignoring that principle, leading to tens of billions in extra costs and leaving many outer-suburban and regional households digitally isolated."
+  },
+  {
+   "slug": "speech-401572",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2021-02-04",
+   "stage_hint": null,
+   "brief": "The bill extends mandatory fibre-ready pit-and-pipe infrastructure requirements from incorporated to unincorporated developers, affecting an estimated 3,000 new homes per year that currently lack NBN connections. The speaker cited a constituent who waited six months for connection and criticised the government's seven-year delay in addressing the issue."
+  },
+  {
+   "slug": "speech-401586",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2021-02-04",
+   "stage_hint": null,
+   "brief": "The Telecommunications Amendment (Infrastructure in New Developments) Bill 2020 extends existing pit-and-pipe requirements from incorporated developers to unincorporated developers, addressing that up to 3,000 premises per year are sold or leased without such infrastructure."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Telecommunications Amendment (Infrastructure in New Developments) Act 2021",
+   "frl_uri": "https://www.legislation.gov.au/C2021A00007",
+   "assent_date": "2021-02-16"
+  }
+ ]
+}

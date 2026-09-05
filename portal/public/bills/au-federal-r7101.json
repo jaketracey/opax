@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-r7101",
+ "title": "Commonwealth Electoral Amendment (Voter Protections in Political Advertising) Bill 2023",
+ "short_title": "Commonwealth Electoral Amendment (Voter Protections in Political Advertising) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-13",
+ "originating_house": "representatives",
+ "sponsor": "STEGGALL, Zali, MP",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10941",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2024-07-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7101%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7101%22"
+  },
+  {
+   "stage": "other",
+   "date": "2024-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7101%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7101_ems_875c1e73-ae89-424a-a9c8-289c95077158%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7101%22",
+   "document_date": "2023-11-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-13",
+  "sentences": [
+   "This bill is part of a package of two bills that would change the Commonwealth Electoral Act 1918 to ban misleading or deceptive content in elections and referendums.",
+   "The Electoral Commissioner could investigate breaches, order retractions, and take complaints to court, and people could also report breaches but courts could dismiss applications that are frivolous or vexatious.",
+   "Individuals who break the law could be fined up to 50 penalty units, and companies up to 250 penalty units."
+  ],
+  "changes": [
+   "The bill bans electoral or referendum material containing factually false or deceptive statements.",
+   "The bill bans pretending to be someone else or falsely attributing material to a person, candidate, or party.",
+   "The bill extends protections from the moment of casting a vote to the earlier stage of forming voting preferences."
+  ],
+  "affected": "Voters, candidates, political parties, campaigners, and bodies corporate are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

@@ -1,0 +1,762 @@
+{
+ "key": "au-federal-r5755",
+ "title": "Interactive Gambling Amendment Bill 2016",
+ "short_title": "Interactive Gambling Amendment Bill 2016",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2016-11-10",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Communications and the Arts",
+ "status": "passed",
+ "status_as_of": "2017-08-16",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2016-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-02-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2017-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2017-03-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-03-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-06-22",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "other",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2017-08-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2017-08-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5755_ems_ac9d20e9-6795-4e88-81b0-b926cfc5f211%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5755_ems_03753b24-76a1-4db5-a26c-f932830b62a6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5755%22",
+   "document_date": "2016-11-10",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2017A00085",
+   "document_date": "2017-08-16",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2016-11-10",
+  "sentences": [
+   "The bill would change the Interactive Gambling Act 2001 to target illegal offshore wagering.",
+   "It would give the Australian Communications and Media Authority new powers to enforce a licensing requirement and impose civil penalties.",
+   "The bill would ban 'click-to-call' in-play betting services, where a customer places a bet during a sport without speaking to a human operator."
+  ],
+  "changes": [
+   "Clarifies the types of gambling services the Act applies to, distinguishing prohibited from regulated services.",
+   "Creates a civil penalty and enforcement regime for the ACMA.",
+   "Bans click-to-call in-play betting services.",
+   "Allows the ACMA to share information with the Department of Immigration and Border Protection and foreign regulators.",
+   "Simplifies complaints handling and investigation processes.",
+   "Establishes a register of eligible regulated interactive gambling services."
+  ],
+  "affected": "Offshore wagering providers, Australian wagering, hospitality and sporting industries, problem gamblers, consumers, and the Australian Communications and Media Authority.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:23:18Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-4519",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "question": "Interactive Gambling Amendment Bill 2016 - Second Reading - Phase out ads relating to betting or gambling",
+   "stage": "Second reading",
+   "ayes": 72,
+   "noes": 76,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 58
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 16
+    }
+   },
+   "party_coverage": {
+    "dated": 146
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-08/3"
+  },
+  {
+   "key": "federal-representatives-4520",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "question": "Andrew Wilkie by leave—I move amendments (1) to (4), as circulated in my name, together: (1) Schedule 1, item 9, page 6 (line 7), omit the definition of place-based betting service in section 4. (2) Schedule 1, item 23, page 8 (lines 6 to 8), omit the item. (3) Schedule 1, item 27, page 12 (lines 11 to 35), omit section 8BA. (4) Schedule 1, item 28, page 13 (line 24), omit paragraph 8E(1)(d). I have already spoken at some length about the bill in its entirety and I will speak only briefly about these amendments. I would like to take the opportunity to say to the minister again: I applaud the government for moving on reform of online gambling. It is way over time—it should have been done before this by previous governments—but the main thing is that it is being done now, so that is good. I find this bill broadly appealing. There is one deficiency in it, which is the substantive nature of the amendments and which I will speak to. I am sure the minister is already aware of it. I have already, in my speech earlier today, acknowledged the fact that the government—again, to be commended—is intending to move another bill later in the year to provide consumer protection measures. I just hope that that is not very far away and I hope it covers all of the things that we are not covering today. I agree with the Labor opposition that really, by today, we should be talking about a permanent ban on the advertising of gambling during any G-rated television time—including sports broadcasts, when so many children are watching a great clash, watching their sporting heroes do battle on the field. It is a time when children are very, very vulnerable to watching and learning from this sort of advertising, so it is a missed opportunity not to do that. Mr Speaker, through you, I say to the minister: when you do get to the next bill, please take every opportunity to address a whole range of things. I know the member for Mayo, in moving her amendments, shortly will talk about the need for a",
+   "stage": "Consideration in detail",
+   "ayes": 5,
+   "noes": 83,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 28
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 42
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 12
+    }
+   },
+   "party_coverage": {
+    "dated": 87
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-08/4"
+  },
+  {
+   "key": "federal-representatives-4521",
+   "date": "2017-02-08",
+   "house": "representatives",
+   "question": "Tony Smith The question now is that the bill be agreed to. Long debate text truncated.",
+   "stage": "Consideration in detail",
+   "ayes": 5,
+   "noes": 67,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 3,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 71
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2017-02-08/5"
+  },
+  {
+   "key": "federal-senate-4619",
+   "date": "2017-03-20",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 37,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 40,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-20/4"
+  },
+  {
+   "key": "federal-senate-4620",
+   "date": "2017-03-20",
+   "house": "senate",
+   "question": "Nick Xenophon I have a number of questions for the minister before amendments are dealt with. I make reference, perhaps as a reference point, to the Senate Environment and Communications Legislation Committee's report on this bill. The minister's second reading speech on the bill explained: The review— the O'Farrell review, as it is known, into the Interactive Gambling Act— found that the amount of money being spent on illegal wagering services could be as high as $400 million annually with a further $100 million in lost taxation revenue and product fees. There does not seem to be any firm view on the amount of money actually lost. Some figures you hear are $500 million and other figures go much higher than that. Does the Commonwealth have the ability to be more specific about these figures? For instance, if it obtained the cooperation of banks in terms of other mechanisms of measuring the amount that goes offshore—because presumably most of these transactions are occurring using credit cards and other discernible transactions—surely there ought to be some way of measuring more accurately the extent of the problem of these illegal offshore gambling sites. Mitch Fifield You have indicated the sorts of ranges that are spoken of when talking about these dollar amounts. Obviously, there is always a capacity for greater specificity in these things, but you raise some potential avenues for that. Nick Xenophon At least you did not talk about programmatic specificity! Senator Dastyari interjecting— Senator Dastyari is familiar with who I am referring to. Has the government considered measures to more accurately measure the amount of money that goes to illegal wagering services? For instance, has the government inquired of the banks or financial institutions to determine by virtue of the merchant numbers for these illegal, overseas, online gambling operations, to determine the amount lost in that way? Has an effort been made? Has anyone in the Commonwealth, whether it be ACM",
+   "stage": "In committee",
+   "ayes": 36,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 41,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-20/5"
+  },
+  {
+   "key": "federal-senate-4621",
+   "date": "2017-03-21",
+   "house": "senate",
+   "question": "Long debate text truncated.",
+   "stage": "In committee",
+   "ayes": 12,
+   "noes": 44,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 16
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 16,
+    "dated": 33,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-21/1"
+  },
+  {
+   "key": "federal-senate-4622",
+   "date": "2017-03-21",
+   "house": "senate",
+   "question": "Nick Xenophon I move Nick Xenophon Team amendment (24) on sheet 8038: (24) Schedule 1, page 36 (after line 19), after item 143, insert: 143A After section 69A Insert: 69B Minister must mandate blocking illegal overseas gambling websites The Minister must, within 6 months after the commencement of this section, make a legislative instrument requiring internet service providers to block access to illegal overseas gambling websites. I excised this amendment because of a request from the Australian Greens, and I respect that request. This amendment says that the minister must within six months after the commencement of this section make a legislative instrument requiring internet service providers to block access to illegal overseas gambling websites. This is something that I know is contentious, but if you want this to work it can work. We know from just one company, Netsweeper of Canada, that I met with and that have given submissions to inquiries in relation to this that you can have internet content filtering categorisation, web threat management solutions and services that allow organisations to manage internet access and activity. This can be used for gambling. This can be used to ensure that these illegal overseas online gambling sites cannot be easily accessed. Netsweeper is not 100 per cent perfect, but my understanding is that it ends up filtering well over 95 per cent of these sites. It makes it very difficult for these sites to be accessed. We know from the Australian Bankers Association that they can track the merchant numbers, or they have a pretty good idea of what the merchant numbers are, of these unauthorised online casinos. We do not know exactly how much is lost to these casinos, but it is in the hundreds of millions of dollars. If we are going to be fair dinkum about tackling illegal online casinos this is the way to do it. This has merit and will be effective. It is enough of a battle to deal with the legal online bookmakers here in Australia, with",
+   "stage": "In committee",
+   "ayes": 6,
+   "noes": 46,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 17
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 32,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-21/2"
+  },
+  {
+   "key": "federal-senate-4623",
+   "date": "2017-03-21",
+   "house": "senate",
+   "question": "Pauline Hanson by leave—I move Pauline Hanson's One Nation amendments (1) and (2) on sheet 8093: (1) Schedule 1, item 26, page 11 (after line 13), at the end of paragraph 8A(5) (c), add: (vi) a service relating to betting on the outcome of a lottery; (2) Schedule 1, page 13 (after line 15), after item 27, insert: 27A At the end of subsection 8D(2) Add: ; or (c) betting on the outcome of a lottery. My amendments are about a service related to betting on the outcome of a lottery. We have a foreign investor in Australia by the name of Lottoland, who bought a licence in the Northern Territory for $550,000. They are actually allowing people to bet on the outcome of a lottery anywhere in the world. They pay no tax. They are here in Australia. They do not employ a lot of people; they employ about six people. They are providing a service that is detrimental to 4½ thousand newsagents around this country who rely on lottery tickets being sold and who are struggling. So here we have a foreign company in Australia, possibly taking hundreds of thousands of dollars, if not millions of dollars, out of the country in unpaid taxes. I also raised this in light of the government moving a bill in this house to address multinationals not paying their taxes in Australia. I think this has been on the table since almost 20 years ago when, I can remember, I raised the topic of multinationals not paying their taxes in Australia. This would be a good reason for the government to support my amendment to shut down one foreign multinational company working here in Australia and to stop the demise of 4½ thousand newsagents who are losing business because of this. If they are fair dinkum about clamping down on multinationals in Australia—in this case not employing a lot of Australians—taking money out of the country by not paying taxes here, then I expect the government and the opposition to support my amendments. Mitch Fifield I thank Senator Hanson and her office for taking the government throug",
+   "stage": "In committee",
+   "ayes": 18,
+   "noes": 30,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 14,
+    "dated": 27,
+    "earliest": 7
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2017-03-21/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-337430",
+   "speaker": "Alan Tudge",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2016-11-10",
+   "stage_hint": null,
+   "brief": "The Interactive Gambling Amendment Bill was introduced as the first stage of implementing 18 of the 19 recommendations from the 2015 illegal offshore wagering review, aiming to strengthen enforcement against illegal online gambling by clarifying licensing requirements, banning 'click to call' in-play betting, and empowering the ACMA with civil penalties, infringement notices, and a public register of licensed Australian wagering services."
+  },
+  {
+   "slug": "speech-340353",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "Labor supported the Interactive Gambling Amendment Bill 2016 as a first step to curb illegal offshore gambling, citing $1.4 billion in annual online losses and 800,000 active wagering accounts by 2014. The party moved a second reading amendment calling for a transition plan to phase out gambling advertising during live sports broadcasts, and criticised the government for not banning credit betting."
+  },
+  {
+   "slug": "speech-340356",
+   "speaker": "Nola Marino",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The Interactive Gambling Amendment Bill 2016 strengthens enforcement against illegal offshore gambling operators, including their Australian-based agents and affiliates, and introduces a civil penalty regime enforced by the Australian Communications and Media Authority. The bill responds to a review led by Barry O'Farrell, noting that Australians spent $2.4 billion on online gambling in 2014 and up to $400 million annually on illegal wagering, with the aim of reducing harm and protecting consumers, racing industries, and tax revenue."
+  },
+  {
+   "slug": "speech-340357",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "Labor announced a second reading amendment to the Interactive Gambling Amendment Bill 2016, calling for a transition plan to phase out betting odds promotion and gambling commercials during live sports broadcasts, citing a 251% increase in gambling ads since 2013 and that three in four children aged 8–16 could recall a sports betting brand."
+  },
+  {
+   "slug": "speech-340358",
+   "speaker": "Rowan Ramsey",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The Interactive Gambling Amendment Bill 2016 aims to curb illegal international online gambling, which siphons $400 million annually from Australia and threatens the regulated racing industry that supports 250,000 jobs. The government adopted 18 of Barry O'Farrell's 19 recommendations, citing that online problem gambling rates are three times higher than other forms and that the sector is growing at 15 per cent per year."
+  },
+  {
+   "slug": "speech-340359",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Interactive Gambling Amendment Bill 2016 and the Franklin amendment, citing rapid growth in online wagering accounts (200,000 to 800,000, 2004–2014) and Australians' highest per-adult gambling losses globally, while calling for a transition plan to phase out gambling ads during live sports to protect children and vulnerable people."
+  },
+  {
+   "slug": "speech-340360",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The Interactive Gambling Amendment Bill 2016 implements key recommendations from a review led by Barry O'Farrell, including cracking down on illegal offshore gambling, prohibiting click-to-call in-play betting, and establishing a national consumer protection framework. The bill empowers ACMA with civil penalties and introduces measures such as a movement alert list for offending company directors, targeting an estimated $64–400 million annually lost to illegal offshore sites."
+  },
+  {
+   "slug": "speech-340364",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The Labor MP argued for a transition plan to phase out gambling advertising during live sports broadcasts to prevent children from associating gambling with sport, and supported the Interactive Gambling Amendment Bill to address illegal offshore online gambling, noting that $140 million is spent annually on gambling ads and problem gambling affects around 90,000 Australians."
+  },
+  {
+   "slug": "speech-340493",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The Interactive Gambling Amendment Bill 2016 will prohibit 'click to call' in-play betting, strengthen enforcement against illegal offshore gambling, and empower ACMA, with the speaker supporting an amendment to phase out gambling advertising during live sports broadcasts, citing that 75% of children view gambling as normal and 80% of respondents back restrictions."
+  },
+  {
+   "slug": "speech-340494",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-02-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Interactive Gambling Amendment Bill 2016 and an amendment to phase out betting odds promotions during live sports broadcasts, citing concerns over children being exposed to gambling ads, such as an eight-year-old quoting odds. The bill introduces civil penalties enforced by ACMA, prohibits click-to-call in-play betting, and establishes a register of legitimate gambling services."
+  },
+  {
+   "slug": "speech-349913",
+   "speaker": "Julie Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "Labor supported the Interactive Gambling Amendment Bill 2016, including a ban on credit betting and a $30 million turnover threshold for trackside bookmaker exemptions, and urged the government to prevent other operators from exploiting loopholes."
+  },
+  {
+   "slug": "speech-350049",
+   "speaker": "Michael Sukkar",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2017-06-21",
+   "stage_hint": null,
+   "brief": "The minister inadvertently failed to table the supplementary explanatory memorandum during debate on the Interactive Gambling Amendment Bill 2016; the speaker then presented the document for the information of members, covering government amendments already agreed to by the House."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Interactive Gambling Amendment Act 2017",
+   "frl_uri": "https://www.legislation.gov.au/C2017A00085",
+   "assent_date": "2017-08-16"
+  }
+ ]
+}

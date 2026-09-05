@@ -1,0 +1,103 @@
+{
+ "key": "au-federal-s994",
+ "title": "Criminal Code Amendment (Animal Protection) Bill 2015",
+ "short_title": "Criminal Code Amendment (Animal Protection) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2015-02-11",
+ "originating_house": "senate",
+ "sponsor": "BACK, Sen Chris",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": null,
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s994%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-02-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s994%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s994%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s994%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-05-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s994%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-08-31",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s994%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s994%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s994_ems_1cfe13db-9ba4-49c0-b4e0-97e1cca114ce%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s994_ems_f06ad805-c095-42e8-bf0c-6a742986f94e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s994%22",
+   "document_date": "2015-02-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-02-11",
+  "sentences": [
+   "This bill aims to stop delays in reporting deliberate cruelty to animals.",
+   "It creates new federal offences, including failing to report such cruelty within one business day and interfering with lawful animal enterprises.",
+   "Penalties for these offences include fines and imprisonment."
+  ],
+  "changes": [
+   "Creates an offence of failing to report malicious cruelty to animals to authorities within one business day.",
+   "Creates an offence of interfering with lawful animal enterprises through property damage or threats.",
+   "Defines malicious cruelty to animals in the bill."
+  ],
+  "affected": "People who record or witness malicious cruelty to animals and those involved in lawful animal enterprises.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:59:06Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

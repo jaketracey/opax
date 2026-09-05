@@ -1,0 +1,74 @@
+{
+ "key": "au-federal-s1145",
+ "title": "Commonwealth Places and Services (Facial Recognition) Bill 2018",
+ "short_title": "Commonwealth Places and Services (Facial Recognition) Bill 2018",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2018-09-11",
+ "originating_house": "senate",
+ "sponsor": "BERNARDI, Sen Cory",
+ "sponsor_party": "Independent Members",
+ "sponsor_person_id": "10038",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1145%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-09-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1145%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1145%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1145_ems_56cb237b-086c-4aae-b835-48383de755f8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1145%22",
+   "document_date": "2018-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-09-11",
+  "sentences": [
+   "The bill would ban face coverings in certain Commonwealth areas and territories, including public spaces in the ACT and NT.",
+   "It would create exceptions for situations where covering the face is legally allowed under set conditions.",
+   "The law would start the day after it receives royal assent."
+  ],
+  "changes": [
+   "The bill prohibits face coverings in public places in the ACT and NT.",
+   "It bans face coverings when people collect Commonwealth social services.",
+   "It bans face coverings at citizenship ceremonies.",
+   "It sets out defences for lawful face coverings in prescribed situations."
+  ],
+  "affected": "People in Commonwealth places and territories, especially those in the ACT and NT, recipients of Commonwealth social services, and participants in citizenship ceremonies.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:25:56Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

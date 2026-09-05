@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s987",
+ "title": "Regulator of Medicinal Cannabis Bill 2014",
+ "short_title": "Regulator of Medicinal Cannabis Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-11-27",
+ "originating_house": "senate",
+ "sponsor": "DI NATALE, Sen Richard",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10755",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2016-04-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s987%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-11-27",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s987%22"
+  },
+  {
+   "stage": "other",
+   "date": "2016-04-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s987%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s987_ems_c8ebba75-32ee-4174-85e4-f749d8e8b3d8%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s987%22",
+   "document_date": "2014-11-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2014-11-27",
+  "sentences": [
+   "The bill would create a national regulator for medicinal cannabis.",
+   "The Regulator of Medicinal Cannabis would approve products for a register and make rules for licensing production, use, and trade.",
+   "The Act would apply only in states and territories that choose to participate."
+  ],
+  "changes": [
+   "Establishes the Regulator of Medicinal Cannabis to perform functions under the Single Convention on Narcotic Drugs.",
+   "Allows the Regulator to approve medicinal cannabis products for a register, exempting them from the Therapeutic Goods Act 1989.",
+   "Gives the Regulator power to make licensing rules and monitor compliance."
+  ],
+  "affected": "States and territories that enter into an arrangement with the Commonwealth, and producers, users, and importers or exporters of medicinal cannabis.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:03:00Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

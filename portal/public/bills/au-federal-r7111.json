@@ -1,0 +1,241 @@
+{
+ "key": "au-federal-r7111",
+ "title": "Superannuation (Objective) Bill 2023",
+ "short_title": "Superannuation (Objective) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-11-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2024-12-10",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-28",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-02-29",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2024-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-03-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2024-11-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2024-12-10",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7111_ems_722b4c68-be1c-4a79-8a70-846d08649bee%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7111%22",
+   "document_date": "2023-11-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2024A00129",
+   "document_date": "2024-12-10",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-11-16",
+  "sentences": [
+   "The bill would write the goal of superannuation into law.",
+   "Future superannuation legislation would need a statement showing it matches this goal, unless an exception applies.",
+   "The law would start 28 days after it receives Royal Assent."
+  ],
+  "changes": [
+   "The bill would set a single purpose for superannuation.",
+   "Policymakers would have to check proposed superannuation laws against that purpose.",
+   "Explanatory materials for superannuation bills and regulations would include a compatibility statement."
+  ],
+  "affected": "Policymakers and anyone involved in making Commonwealth superannuation legislation would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:06:17Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-8758",
+   "date": "2024-03-19",
+   "house": "representatives",
+   "question": "The majority voted against an [amendment](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansardr/27611/&sid=0000) to the usual second reading motion, which is \"*that the bill be read a second time*\" (parliamentary jargon for agreeing with the main idea of the bill). The amendment would have added the text below. ### Amendment text > *That all words after \"That\" be omitted with a view to substituting the following words:* > > *\"whilst not declining to give the bill a second reading, the House:* > > *(1) notes:* > >> *(a) the former Government delivered major reforms to superannuation that supported better member outcomes, better performance, and transparent governance, and that were driven by the clear understanding that superannuation is Australians' money;* >> >> *(b) the Prime Minister and the Treasurer promised no changes to superannuation prior to the election and the Prime Minister promised 'no major changes' to superannuation in February 2023, but have since broken that promise by introducing a new superannuation tax on unrealised capital gains, which is a world first wealth tax that will hurt farmers and family businesses and force Australians to pay tax on money they have not earned; and* >> >> *(c) that the Government's failure to index their new superannuation tax means up to two million young Australians earning average wages today will face a wealth tax, according to analysis of Treasury modelling published in The Australian; and* > > *(2) calls on the Government to abandon its broken promise on taxing superannuation\".*",
+   "stage": "Second reading",
+   "ayes": 62,
+   "noes": 81,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "Independent": {
+     "ayes": 6,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 75
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 14,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 141,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2024-03-19/1"
+  },
+  {
+   "key": "federal-senate-10480",
+   "date": "2024-11-28",
+   "house": "senate",
+   "question": "Sue Lines PRESIDENT (): I will now deal with the Superannuation (Objective) Bill 2023. I will deal with the second reading amendment circulated by the opposition. The question is that the opposition amendment on sheet 2863 be agreed to. _Opposition's circulated amendment—_ At the end of the motion, add \", but the Senate: (a) notes that: (i) the former Government delivered major reforms to superannuation that supported better member outcomes, better performance and transparent governance, and were driven by the clear understanding that superannuation is Australians' money, (ii) the Prime Minister and the Treasurer promised no changes to superannuation prior to the election and the Prime Minister promised 'no major changes' to superannuation in February 2023, but have since broken that promise by introducing a new superannuation tax on unrealised capital gains, which is an unprecedented tax on unrealised capital gains that will hurt farmers and family businesses and force Australians to pay tax on money they have not earned, (iii) the Government's failure to index their new superannuation tax means up to 2 million young Australians earning average wages today will face this doubled super tax; and (b) calls on the Government to abandon its broken promise on taxing superannuation\". Question negatived. The question is that this bill be now read a second time. Question agreed to. Bill read a second time. I shall now deal with Committee of the Whole amendments circulated by Senator David Pocock. The question is that the Senator David Pocock amendments on sheet 2507 be agreed to. _Senator David Pocock's amendments—_ (1) Clause 4, page 3 (after line 21), after the definition of _objective of superannuation_, insert: _registrable superannuation entity_ has the same meaning as in the _Superannuation Industry (Supervision) Act 1993_. (2) Clause 6, page 4 (after line 21), after subclause (3), insert: (3A) Without limiting subsection (3), a statement of compatibility must include",
+   "stage": "Second reading",
+   "ayes": 5,
+   "noes": 31,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 15
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 28,
+    "member": 4,
+    "earliest": 4
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2024-11-28/42"
+  }
+ ],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Superannuation (Objective) Act 2024",
+   "frl_uri": "https://www.legislation.gov.au/C2024A00129",
+   "assent_date": "2024-12-10"
+  }
+ ]
+}

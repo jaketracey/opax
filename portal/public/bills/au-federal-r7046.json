@@ -1,0 +1,147 @@
+{
+ "key": "au-federal-r7046",
+ "title": "Treasury Laws Amendment (2023 Law Improvement Package No. 1) Bill 2023",
+ "short_title": "Treasury Laws Amendment (2023 Law Improvement Package No. 1) Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-06-14",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2023-09-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-14",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-06-21",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-08-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-08-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2023-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2023-09-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2023-09-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7046_ems_0684f7a1-edbe-4f2f-90e0-d2858a4dae58%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7046%22",
+   "document_date": "2023-06-14",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2023A00076",
+   "document_date": "2023-09-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-06-14",
+  "sentences": [
+   "The bill would make minor and technical changes to simplify and improve the navigability of corporations law.",
+   "It would implement recommendations from the Australian Law Reform Commission's review, including unfreezing the application of the Acts Interpretation Act to the Corporations Act and ASIC Act, and creating a single glossary for defined terms.",
+   "The bill would commence 30 days after receiving Royal Assent, but only after the Treasury Laws Amendment (Modernising Business Communications and Other Measures) Act 2023 has already commenced."
+  ],
+  "changes": [
+   "Unfreeze the application of the Acts Interpretation Act to the Corporations Act and ASIC Act.",
+   "Create a single glossary for all defined terms in the Corporations Act.",
+   "Repeal redundant definitions.",
+   "Address unclear or incorrect provisions.",
+   "Simplify unnecessarily complex provisions."
+  ],
+  "affected": "Entities subject to the Corporations Act and ASIC Act, including businesses and regulators.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:09:41Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": [
+  {
+   "title": "Treasury Laws Amendment (2023 Law Improvement Package No. 1) Act 2023",
+   "frl_uri": "https://www.legislation.gov.au/C2023A00076",
+   "assent_date": "2023-09-20"
+  }
+ ]
+}

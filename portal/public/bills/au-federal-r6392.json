@@ -1,0 +1,297 @@
+{
+ "key": "au-federal-r6392",
+ "title": "Emergency Response Fund (Consequential Amendments) Bill 2019",
+ "short_title": "Emergency Response Fund (Consequential Amendments) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "passed",
+ "status_as_of": "2019-10-28",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2019-10-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6392_ems_768209c5-81ea-421c-b80d-6533b5c78c3d%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6392%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2019A00091",
+   "document_date": "2019-10-28",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 12,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-09-11",
+  "sentences": [
+   "This bill updates other laws so that a new disaster-relief fund can work when it starts.",
+   "It gives the Future Fund Board extra duties to run the new fund and lets money be shared between several funds to cover common costs.",
+   "The bill also repeals the law that set up an earlier fund, the Education Investment Fund, whose last commitment was announced in July 2013."
+  ],
+  "changes": [
+   "Extends the Future Fund Board's responsibilities to manage the new Emergency Response Fund.",
+   "Allows transfers between the new fund and other funds to split shared expenses fairly.",
+   "Repeals the NBF Act to close the Education Investment Fund."
+  ],
+  "affected": "The Future Fund Board and the operators of the ATSILSFF, COAG Reform Fund, DCAF, FDF, Future Fund and MRFF are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T02:11:21Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5943",
+   "date": "2019-10-17",
+   "house": "senate",
+   "question": "Emergency Response Fund (Consequential Amendments) Bill 2019 - in Committee - The Education Investment Fund",
+   "stage": "In committee",
+   "ayes": 41,
+   "noes": 7,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 7
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 20,
+    "earliest": 20,
+    "member": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-10-17/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-380400",
+   "speaker": "David Littleproud",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-11",
+   "stage_hint": null,
+   "brief": "The Emergency Response Fund (Consequential Amendments) Bill 2019 was introduced to amend related legislation to establish the Emergency Response Fund, including abolishing the Education Investment Fund."
+  },
+  {
+   "slug": "speech-381390",
+   "speaker": "Tanya Plibersek",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "Labor opposed the Emergency Response Fund bills because they fund disaster response by abolishing the $4 billion Education Investment Fund, pitting the two priorities against each other, and because the bills provide only $150 million per year for disaster activities—short of the Productivity Commission's recommended $200 million for resilience."
+  },
+  {
+   "slug": "speech-381393",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker announced the Emergency Response Fund Bill 2019, establishing a $4 billion fund managed by the Future Fund Board of Guardians, with up to $150 million per year for natural disaster recovery and prevention, and criticised a previous Labor speaker for spending most of their time on education rather than emergency services."
+  },
+  {
+   "slug": "speech-381396",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Emergency Response Fund Bill 2019 and related bill establish a $4 billion fund to provide sustainable, rapid funding for natural disaster response and recovery, criticising Labor for playing politics and for past failure to budget for disasters, which led to a levy. The fund aims to reduce bureaucracy and speed up rebuilding of infrastructure and support for communities, drawing on the speaker's experience with the 2011 Brisbane floods."
+  },
+  {
+   "slug": "speech-381397",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Emergency Response Fund bills while criticising the opposition for pitting disaster funding against education investment and for previously describing Victorian firefighters as \"union thugs.\" They emphasised the need to get the bills right for fire- and flood-prone communities like the Blue Mountains and Hawkesbury."
+  },
+  {
+   "slug": "speech-381399",
+   "speaker": "Julian Leeser",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The Emergency Response Fund bills were argued to provide crucial support for communities recovering from natural disasters, with the speaker noting that 21 areas in New South Wales are listed as bushfire danger zones and the bushfire danger period has been brought forward in 74 local government areas, including two in the Berowra electorate. The speaker also highlighted that the Berowra hailstorms had a larger clean-up bill than the entire Townsville storms, with 23,000 volunteer hours given over nine days, 1,395 SES jobs responded to, 450 SES personnel deployed, and 2,000 tarps used."
+  },
+  {
+   "slug": "speech-381535",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Emergency Response Fund bills are a deceptive attempt to abolish the $3.9 billion Education Investment Fund, which has gone unspent for six years, and criticized the government for cutting education funding while claiming to support disaster relief, noting the fund’s design flaws such as only funding post-disaster resilience and a $150 million annual cap."
+  },
+  {
+   "slug": "speech-381536",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Emergency Response Fund Bill 2019, which establishes a $4 billion fund with annual distributions of up to $150 million for natural disaster recovery and resilience, but raised concerns about the source of funds from the dormant Education Investment Fund and the need for greater allocation to preventive measures."
+  },
+  {
+   "slug": "speech-381537",
+   "speaker": "Zali Steggall",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker supported the Emergency Response Fund bills but criticised the government for diverting funds from the Education Investment Fund, and argued that climate change is worsening natural disasters, citing specific events and economic costs, while calling for more ambitious emissions reduction targets."
+  },
+  {
+   "slug": "speech-381538",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government should not fund the Emergency Response Fund by abolishing the Education Investment Fund, as both are needed, and expressed disappointment that the government is pitting university infrastructure against disaster recovery, noting that the Bendigo campus of La Trobe University and other regional universities would lose funding. Labor will move amendments to support both funds."
+  },
+  {
+   "slug": "speech-381539",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-17",
+   "stage_hint": null,
+   "brief": "The government argued for the Emergency Response Fund Bill, which establishes a $4 billion fund managed by the Future Fund Board of Guardians, providing up to $150 million annually for natural disaster response and recovery. Uncommitted funds from the Education Investment Fund will be redirected to this new fund, with the government noting $17.7 billion in university sector investment in 2019."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Emergency Response Fund (Consequential Amendments) Act 2019",
+   "frl_uri": "https://www.legislation.gov.au/C2019A00091",
+   "assent_date": "2019-10-28"
+  }
+ ]
+}

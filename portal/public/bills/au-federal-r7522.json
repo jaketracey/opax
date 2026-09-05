@@ -1,0 +1,372 @@
+{
+ "key": "au-federal-r7522",
+ "title": "Cash Distribution Framework Bill 2026",
+ "short_title": "Cash Distribution Framework Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-07-02",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Treasury",
+ "status": "passed",
+ "status_as_of": "2026-08-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-08-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2026-08-26",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7522_ems_2a9137f9-86ca-42b7-9eb2-6b7d993a312e%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7522_ems_94cbe8d1-8b77-4036-8f19-8384fca17f00%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7522_ems_5aa9ad89-4835-4a7c-806c-b72a9bfb24dc%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7522%22",
+   "document_date": "2026-07-02",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2026A00068",
+   "document_date": "2026-08-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "revised",
+  "as_of": "2026-08-26",
+  "sentences": [
+   "This bill creates rules for companies that distribute cash in Australia so that cash remains available for people who need it.",
+   "The Australian Competition and Consumer Commission and the Reserve Bank of Australia would run the new system, including crisis management powers for the RBA.",
+   "The explanatory memorandum says the bill gives the RBA power to deal with crises in cash distribution and sets up dispute resolution and service standards, but does not give start dates or thresholds."
+  ],
+  "changes": [
+   "Creates a legislative framework for cash distribution services.",
+   "Introduces a crisis management and resolution regime for critical cash distribution services.",
+   "Gives the ACCC information gathering and enforcement powers.",
+   "Gives the RBA new crisis readiness and resolution powers.",
+   "Sets up a designation process for cash distribution services.",
+   "Provides for oversight of service agreements and access agreements."
+  ],
+  "affected": "Companies and organisations that distribute cash in Australia.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-04T23:04:12Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-10599",
+   "date": "2026-08-12",
+   "house": "representatives",
+   "question": "Sharon Claydon The question is that the amendment moved by the member for Calare be agreed to. _A division having been called and the bells having been rung—_ As there are fewer than seven members on the side for the ayes in this division, I declare the question negatived in accordance with standing order 127. The names of those members who are in the minority will be recorded in the _Votes and Proceedings_. Question negatived. Milton Dick The question is that the amendment moved by the honourable member for Page be agreed to.",
+   "stage": "Bill",
+   "ayes": 40,
+   "noes": 83,
+   "outcome": "negative",
+   "party_splits": {
+    "Independent": {
+     "ayes": 7,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 83
+    },
+    "Liberal": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 123
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-08-12/2"
+  },
+  {
+   "key": "federal-representatives-10622",
+   "date": "2026-08-20",
+   "house": "representatives",
+   "question": "A modest majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2026-08-20.126.2) introduced by Senator [Daniel Mulino](https://theyvoteforyou.org.au/people/representatives/fraser/daniel_mulino) (Labor), which means it was successful. ### Motion text > That the amendment be agreed to.",
+   "stage": "Consideration of Senate message",
+   "ayes": 84,
+   "noes": 34,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 4,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 9
+    },
+    "Labor": {
+     "ayes": 79,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 15
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 118
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-08-20/4"
+  },
+  {
+   "key": "federal-senate-10730",
+   "date": "2026-08-20",
+   "house": "senate",
+   "question": "Sue Lines I further remind senators that the order which was passed in the chamber earlier in the week allows for question time to start at a later time. I'll begin with the second reading amendment moved by Senator Canavan to the Cash Distribution Framework Bill 2026. The question is that the amendment on sheet 3969 be agreed to. Question agreed to. Original question agreed to. Bills read a second time. I will now deal with the committee-of-the-whole amendment circulated by the Australian Greens. The question is that the amendment to the Cash Distribution Framework Bill 2026 on sheet 3967 be agreed to. _Australian Greens' circulated amendment—_ (1) Page 164 (after line 4), after Subdivision A, insert: Subdivision AA — Protections for employees 162A Powers must not be exercised to lessen employee entitlements The Reserve Bank must not take action in accordance with this Part in relation to a designated entity if: (a) the action would result in the entitlements of an employee of the designated entity being less beneficial than they were immediately before the action was taken; or (b) each of the following are satisfied: (i) there is an employee (the _current employee_) of the designated entity immediately before the action is taken; (ii) the action would result in the engagement of a person (the _new employee_) to perform the same, or substantially the same, work as that performed by the current employee; (iii) the entitlements of the new employee would be less beneficial than the entitlements of the current employee.",
+   "stage": "Limitation of debate",
+   "ayes": 34,
+   "noes": 26,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 50,
+    "member": 10
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2026-08-20/18"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1204658",
+   "speaker": "Daniel Mulino",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204755",
+   "speaker": "Tony Sheldon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-07-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205006",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-12",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205466",
+   "speaker": "Tim Ayres",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205474",
+   "speaker": "Matthew Canavan",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2026-08-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1205921",
+   "speaker": "Sue Lines",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-08-20",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": [
+  {
+   "title": "Cash Distribution Framework Act 2026",
+   "frl_uri": "https://www.legislation.gov.au/C2026A00068",
+   "assent_date": "2026-08-26"
+  }
+ ]
+}

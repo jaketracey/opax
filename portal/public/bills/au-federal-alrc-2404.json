@@ -1,0 +1,316 @@
+{
+ "key": "au-federal-alrc-2404",
+ "title": "Public Governance, Performance and Accountability Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-05-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance and Deregulation",
+ "status": "passed",
+ "status_as_of": "2013-06-29",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-05-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-16",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-19",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-06-28",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-06-29",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00123",
+   "document_date": "2013-06-29",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1115",
+   "date": "2013-06-17",
+   "house": "representatives",
+   "question": "Long debate text truncated.",
+   "stage": "Second reading",
+   "ayes": 73,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 67,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 57
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 143
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-06-17/1"
+  },
+  {
+   "key": "federal-senate-2431",
+   "date": "2013-06-28",
+   "house": "senate",
+   "question": "Arthur Sinodinos It is a pleasure to give this speech while you are in the chair, Madam Acting Deputy President. There are some of us who hope you may in fact return at some stage. Trish Crossin Thank you. Arthur Sinodinos The Public Governance, Performance and Accountability Bill 2013 proposes to replace the existing model for Commonwealth financial management established through the Financial Management and Accountability Act 1987—the FMA Act—and the Commonwealth Authorities and Companies Act 1997—the CAC Act. It would consolidate under one piece of legislation the governance, performance and accountability requirements for the Commonwealth and relevant entities, which are covered currently under both the FMA and CAC acts. The bill would introduce a new framework for the finances of the Commonwealth, impacting on some 195 entities and around 300,000 individuals who work with them. So this is not a reform to be taken lightly or a reform to be driven by undue haste. Yet, in the dying days of this parliament—for the benefit of those in the gallery—we are being asked to approve a complex bill on which we are provided with a framework but no rules as to how the bill will actually impact, in practice, on the operation of Commonwealth entities. We are talking about entities that cover the management and accountability for revenue and expenses of over $350 billion—that is your money, taxpayers' money—as well as assets of over $390 billion, which are your assets, and liabilities of over $640 billion—liabilities that we have rung up in your name. This type of reform is precisely the sort of reform that should be covered by a new parliament regardless of its colour or stripe. Most appropriately, this bill has been subject to an inquiry by the Joint Committee of Public Accounts and Audit. Two fundamental concerns have been identified: the lack of detail as to how the new financial framework would actually be applied, and the unnecessary haste with which it is being brought be",
+   "stage": "Second reading",
+   "ayes": 34,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "earliest": 1,
+    "member": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-06-28/6"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-272379",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-272547",
+   "speaker": "Anna Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823365",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823446",
+   "speaker": "Anne McEwen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-16",
+   "stage_hint": null,
+   "brief": "The Selection of Bills Committee report recommended referring the Australian Jobs Bill 2013, Export Market Development Grants Amendment Bill 2013, Private Health Insurance Legislation Amendment (Base Premium) Bill 2013, and Public Governance, Performance and Accountability Bill 2013 to specific committees for inquiry by June 2013, and recommended not referring several other bills including the DisabilityCare Australia Fund Bill 2013 and related tax bills; the report was adopted."
+  },
+  {
+   "slug": "speech-275824",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275825",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-275827",
+   "speaker": "David Bradbury",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-276111",
+   "speaker": "Robert Oakeshott",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824197",
+   "speaker": "Andrew Robb",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-17",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-824595",
+   "speaker": "Kate Lundy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-06-19",
+   "stage_hint": null,
+   "brief": "A revised explanatory memorandum for the Public Governance, Performance and Accountability Bill 2013 was tabled, with the bill to be listed separately on the Notice Paper after the second reading debate is adjourned. The bill and related bills were read a first time together without formalities."
+  },
+  {
+   "slug": "speech-825309",
+   "speaker": "Arthur Sinodinos",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-06-28",
+   "stage_hint": null,
+   "brief": "The coalition opposed the Public Governance, Performance and Accountability Bill 2013, arguing it was being rushed through parliament without the necessary detail or consultation, despite the Auditor-General and other officials recommending more time. The speaker supported the bill’s principles but opposed its passage, warning that key rules had not been drafted and that haste risked mismanagement of over $350 billion in revenue and $640 billion in liabilities."
+  },
+  {
+   "slug": "speech-825310",
+   "speaker": "John Hogg",
+   "party": "PRES",
+   "state": "federal",
+   "date": "2013-06-28",
+   "stage_hint": null,
+   "brief": "The Public Governance, Performance and Accountability Bill 2013 passed its third reading."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Public Governance, Performance and Accountability Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00123",
+   "assent_date": "2013-06-29"
+  }
+ ]
+}

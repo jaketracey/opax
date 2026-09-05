@@ -1,0 +1,79 @@
+{
+ "key": "au-federal-s1396",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Expanding the Water Trigger) Bill 2023 [No. 2]",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Expanding the Water Trigger) Bill 2023 [No. 2]",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-10-18",
+ "originating_house": "senate",
+ "sponsor": "HANSON-YOUNG, Sen Sarah",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10711",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2025-07-21",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-18",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1396%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-11-16",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1396%22"
+  },
+  {
+   "stage": "other",
+   "date": "2025-07-21",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1396%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1396_ems_4f72b724-7052-4843-8892-5bb6af3d79fe%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1396%22",
+   "document_date": "2023-10-18",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-10-18",
+  "sentences": [
+   "This bill would require the federal environment minister to assess how all types of unconventional gas projects affect water resources.",
+   "It would expand the existing 'water trigger' in the Environment Protection and Biodiversity Conservation Act 1999 to cover shale gas and similar developments, not just coal seam gas and large coal mines.",
+   "The change would start the day after the bill receives royal assent."
+  ],
+  "changes": [
+   "The bill would make unconventional gas developments subject to the same water impact assessment as coal seam gas and large coal mines.",
+   "It would give the Commonwealth more oversight of water-related environmental effects from these projects.",
+   "It would provide stronger protections for rivers, aquifers, wetlands and communities that depend on them."
+  ],
+  "affected": "Companies and proponents of unconventional gas developments, the federal environment minister, and communities reliant on water resources.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

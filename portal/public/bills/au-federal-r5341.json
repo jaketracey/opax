@@ -1,0 +1,355 @@
+{
+ "key": "au-federal-r5341",
+ "title": "Automotive Transformation Scheme Amendment Bill 2014",
+ "short_title": "Automotive Transformation Scheme Amendment Bill 2014",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2014-09-24",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industry",
+ "status": "lapsed",
+ "status_as_of": "2015-03-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-09-30",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2014-10-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  },
+  {
+   "stage": "other",
+   "date": "2015-03-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5341_ems_2d85a2aa-f5eb-4ecb-8fe7-c93f03186420%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5341%22",
+   "document_date": "2014-09-24",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-3460",
+   "date": "2014-10-02",
+   "house": "representatives",
+   "question": "Rob Mitchell Today I rise to talk about the Automotive Transformation Scheme Amendment Bill 2014, which is going to have huge impacts across the state I come from, Victoria, particularly in the northern suburbs with the closure of Ford, Holden and Toyota. This government comes in with this mantra that the age of entitlement is over, so it is pulling funding from the automotive industry, which will spell disaster for many people in manufacturing and automotive sectors and for the supply chains that supply the three manufacturers in this country. What we have heard over the last couple of days is the government saying: 'It's all good. They've got to stand on their own two feet. They've got to look after themselves and, if they're not competitive, we shouldn't be supporting them.' They say that subsidies are outdated and we should not be subsidising industry, but at the same time they pump billions of dollars a year into the mining industry subsidies. Wherever you look across the country, there are subsidies in a whole range of things: banking, child care, private health insurance—all these things are subsidised by taxpayers because they are important to our country. We are one of only 13 countries around the world that manufacture our own cars, and our own cars are of a very high standard. I remember growing up as a kid near the Ford factory, seeing the new models roll out and seeing the improvements that each model made in safety and comfort, all these things that happened over time. Today's modern car has just about everything you want bar a coffee machine. It is the development work that has been done by workers in this country who put together these motor vehicles. I can remember the Prime Minister's exact words from before the election. I will quote him: I want to see car-making survive in this country, not just survive but flourish. That was what now Prime Minister Abbott said on 21 August 2013. He wanted to make it flourish. So what does he do? He pulls the mon",
+   "stage": "Second reading",
+   "ayes": 78,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 49
+    },
+    "Liberal": {
+     "ayes": 63,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 13,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 130
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2014-10-02/1"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-298620",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298621",
+   "speaker": "Bob Baldwin",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298622",
+   "speaker": "Kate Ellis",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298631",
+   "speaker": "George Christensen",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298636",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-09-30",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298720",
+   "speaker": "Paul Fletcher",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298721",
+   "speaker": "Nick Champion",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298728",
+   "speaker": "Tim Watts",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298729",
+   "speaker": "Sarah Henderson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298730",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298916",
+   "speaker": "Catherine King",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298917",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298918",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298919",
+   "speaker": "Lisa Chesters",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298920",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298922",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298923",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298924",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298931",
+   "speaker": "Sharon Bird",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-298934",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-01",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299010",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299012",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299013",
+   "speaker": "Craig Kelly",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-299018",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2014-10-02",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

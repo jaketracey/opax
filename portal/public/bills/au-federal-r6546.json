@@ -1,0 +1,456 @@
+{
+ "key": "au-federal-r6546",
+ "title": "Services Australia Governance Amendment Bill 2020",
+ "short_title": "Services Australia Governance Amendment Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "passed",
+ "status_as_of": "2020-11-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-07",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-08",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6546_ems_d815f6fd-c146-429d-a0f5-1715feac8377%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6546%22",
+   "document_date": "2020-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00104",
+   "document_date": "2020-11-20",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6659",
+   "date": "2020-10-20",
+   "house": "representatives",
+   "question": "The majority voted in favour of keeping the question unchanged. In parliamentary jargon, they voted *that the words proposed to be omitted stand part of the question.* This vote was put after the motion below was introduced. The original motion was \"*That this bill be now read a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/),*\" which is the same as agreeing with the main idea of the bill. ### Motion text > *That all words after \"That\" be omitted with a view to substituting the following words: \"whilst not declining to give the bill a second reading, the House calls on the Government to:* > > *(1) abolish the \"ASL offset rule\", which has the effect of capping average staffing levels within Services Australia;* > > *(2) stop the excessive use of consultancy firms and contractors to outsource important government services including Centrelink; and* > > *(3) recognise that the staffing cap is a false economy that undermines the quality of government services, especially those delivered by Services Australia\".*",
+   "stage": "Second reading",
+   "ayes": 54,
+   "noes": 44,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 11,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 43
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 8,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 97
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-10-20/5"
+  },
+  {
+   "key": "federal-senate-6726",
+   "date": "2020-11-12",
+   "house": "senate",
+   "question": "Services Australia Governance Amendment Bill 2020 - Second Reading - Staffing caps and privatisation",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 14,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 9,
+    "dated": 22,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-12/10"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-391033",
+   "speaker": "Stuart Robert",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-05-13",
+   "stage_hint": null,
+   "brief": "The Services Australia Governance Amendment Bill 2020 updates legislative references to the new executive agency and its CEO, consolidates the roles of Chief Executive Centrelink, Chief Executive Medicare and Child Support Registrar under the CEO, and prohibits false use of the name \"Services Australia.\" The bill also requires compliance with limitations on subdelegation of powers, with the aim of sharpening accountability and service delivery."
+  },
+  {
+   "slug": "speech-395615",
+   "speaker": "Emma McBride",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Services Australia Governance Amendment Bill 2020 fails to address the arbitrary staffing cap, which forces overreliance on labour hire and consultants, and called for the cap to be abolished, along with an end to excessive outsourcing and recognition that the cap undermines service quality. The speaker also criticised the government's robodebt scheme and urged proper investment in the public service."
+  },
+  {
+   "slug": "speech-395617",
+   "speaker": "Celia Hammond",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The Services Australia Governance Amendment Bill 2020 makes technical and administrative changes to legislation to correctly refer to Services Australia and the Department of Social Services, protect the name from unauthorised use, and operate retrospectively from 1 February 2020. During the COVID-19 pandemic, Services Australia processed over 1.7 million JobSeeker claims in 55 days, delivered more than $21.2 billion in additional payments, and answered calls about 15 minutes faster than the previous year."
+  },
+  {
+   "slug": "speech-395618",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-07",
+   "stage_hint": null,
+   "brief": "The speaker supported the Services Australia Governance Amendment Bill 2020 but criticised the government's arbitrary staffing caps and underfunding of Centrelink services, noting that 33,000 local workers in the Richmond electorate will be worse off and over $30 million will be removed from the North Coast economy every fortnight due to JobKeeper cuts."
+  },
+  {
+   "slug": "speech-395675",
+   "speaker": "Justine Elliot",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that JobKeeper cuts from 28 September 2020 left many local businesses and workers without support or with reduced payments, while JobSeeker and youth allowance claims surged—over 14,000 North Coast locals now on JobSeeker and youth allowance recipients in Richmond up 169%. They criticised the government for lacking a concrete recovery plan, failing to permanently raise the JobSeeker base rate from $40/day, cutting 114 public sector jobs in Richmond, closing three Centrelink offices in Tweed Heads, and mismanaging the robodebt scheme requiring over $700 million in refunds."
+  },
+  {
+   "slug": "speech-395677",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The Services Australia Governance Amendment Bill 2020 is supported but fails to address the core issue of an arbitrary staffing cap that has led to 5,000 frontline workers being cut over six years, forcing the government to hire 5,000 new workers and redeploy 7,000 others during the pandemic to process nearly a million new claims."
+  },
+  {
+   "slug": "speech-395678",
+   "speaker": "Milton Dick",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker criticised the government for cutting 5,000 Services Australia jobs and using staffing caps that forced reliance on consultants, arguing these policies worsened service delivery during the Morrison recession and the COVID-19 pandemic. They noted that 1.9 million intention-to-claim forms and 1.3 million JobSeeker claims were processed in record time, while warning that thousands in the electorate of Oxley faced a support \"cliff\" in March 2021."
+  },
+  {
+   "slug": "speech-395682",
+   "speaker": "Patrick Gorman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The MP opposed the Services Australia Governance Amendment Bill 2020, citing government failures including robodebt, budget cuts, and poor service delivery, and pointed to 6.5 million busy signals, uncertainty over JobSeeker payments, a 113% university fee increase for Austudy recipients, and the threatened Morley Centrelink. The MP also raised a constituent's pension application delayed by a lapsed Centrelink PO Box, and thanked Centrelink staff and the outgoing City of Perth commissioners."
+  },
+  {
+   "slug": "speech-395693",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Services Australia Governance Amendment Bill 2020 fails to address the arbitrary staffing cap on the Australian Public Service, which has led to service deterioration, cost blowouts on consultancies, and over 19,000 job cuts since 2013. They called for the cap to be scrapped, citing 1.5 million unanswered calls, a five-month claim delay for a constituent named Jo, and the government's \"robodebt\" scheme as evidence of systemic failure."
+  },
+  {
+   "slug": "speech-395720",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "In the debate on the Services Australia Governance Amendment Bill 2020, the speaker argued the focus should be on servicing the most vulnerable Australians, dismissing opposition grievances about possible seat losses after redistribution as irrelevant."
+  },
+  {
+   "slug": "speech-395721",
+   "speaker": "Jason Falinski",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker argued for the Services Australia Governance Amendment Bill 2020, citing $21.2 billion in additional payments, 1.7 million JobSeeker claims, $12.4 billion in coronavirus supplement, $9 billion to seven million lower income Australians, and $14.9 million in pandemic leave payments. The bill makes textual amendments to legislation, protects the name 'Services Australia', and streamlines governance by making the CEO of Services Australia also the chief executive of Centrelink, Medicare, and child support registrar."
+  },
+  {
+   "slug": "speech-395723",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Services Australia Governance Amendment Bill 2020, praising staff for processing 800,000 new JobSeeker claims during the pandemic and criticising government cuts, including the removal of 5,000 frontline workers over six years and a temporary staffing cap lift of 3,500."
+  },
+  {
+   "slug": "speech-395724",
+   "speaker": "Julian Hill",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Services Australia Governance Amendment Bill 2020 as a structural reform but argued it fails to address the core issue of insufficient permanent, skilled staff due to the government’s Average Staffing Level cap and privatisation-by-stealth, noting 46 million unanswered Centrelink calls last year and that the APS had more employees in 1992 than in 2019 despite a 46% population increase."
+  },
+  {
+   "slug": "speech-395835",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker argued the Services Australia Governance Amendment Bill 2020 is a rebranding exercise and condemned the government's handling of Services Australia, citing the minister's \"my bad\" response to Centrelink call failures, the robodebt scandal affecting 377,000 people with $721 million in refunds, and staffing cuts that caused delays. They also urged extending JobKeeper to its previous level to avoid repeat scenes of people queuing outside Centrelink."
+  },
+  {
+   "slug": "speech-395841",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Services Australia Governance Amendment Bill 2020 and the opposition's amendment, arguing that Centrelink and other government agencies are understaffed, underresourced and over-outsourced, citing specific figures such as 5,000 outsourced ATO call centre positions and nearly 40% outsourced staff in the Department of Infrastructure. They criticised the government's \"reckless haste to go online,\" demonisation of welfare recipients, and the ongoing robodebt fiasco, and called for proper resourcing, an end to outsourcing, and leadership from the top."
+  },
+  {
+   "slug": "speech-395843",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker supported the Services Australia Governance Amendment Bill 2020 but argued it fails to address core problems, criticising Minister Robert for blaming hackers for myGov failures, spending over $2,000 per month on home internet while the JobSeeker rate was $40 per day, and planning to close Centrelink offices during the pandemic."
+  },
+  {
+   "slug": "speech-395845",
+   "speaker": "Sharon Claydon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "Supported the Services Australia Governance Amendment Bill 2020 and the member for Dobell’s amendment to abolish the ASL offset rule, stop excessive use of contractors, and recognise the staffing cap as a false economy; also opposed Centrelink office closures in Newcastle, presenting a community petition with 3,458 signatures."
+  },
+  {
+   "slug": "speech-395848",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-08",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Services Australia Governance Amendment Bill 2020 is superficial window-dressing and cost-cutting, not genuine service improvement, and that the Morrison government’s real motive is to bury failures like robodebt, the COVID app, and data breaches. They noted 19,000 public service staff have been cut since 2013, questioned how many of the 5,000 promised reinstatements have occurred and in what capacity, and cited a three-year Centrelink case in their Makin electorate as evidence of underresourced services."
+  },
+  {
+   "slug": "speech-395937",
+   "speaker": "Bill Shorten",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that while Labor supports the Services Australia Governance Amendment Bill 2020, the government's cap on permanent employees harms services, and strongly criticised the robodebt scheme as unlawful and immoral, noting 470,000 wrongly issued debts worth at least $721 million and calling for a royal commission into its origins."
+  },
+  {
+   "slug": "speech-395938",
+   "speaker": "Peta Murphy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the government's renaming of Centrelink, Medicare and the Child Support Agency to Services Australia is a superficial attempt to distract from failures like robodebt, underfunding of the public service, and poor service delivery. They highlighted that the Mornington Centrelink office closure was reversed only after community pressure, and noted that in their electorate of Dunkley, unemployment benefit recipients doubled to about 10,000 between March and May 2020, while the government has spent over $2 billion on outside contractors and ignored the Thodey report's recommendations."
+  },
+  {
+   "slug": "speech-395939",
+   "speaker": "Clare O'Neil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government neglected Services Australia through underfunding and staffing caps, condemned the $300 per fortnight cuts to JobSeeker and JobKeeper as a scandal harming Victorians still in lockdown, and criticised the robodebt scheme for unlawfully taking $1.5 billion from Australians, calling for a royal commission."
+  },
+  {
+   "slug": "speech-395941",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that Services Australia was under-resourced and overly reliant on labour hire, with too few permanent staff to handle surges in demand, and criticised the Coalition government for undervaluing the agency. They highlighted frontline workers' frustrations with constraints that prevent them from showing compassion and tailoring solutions to individual client needs, citing issues like inconsistent information, pension delays, and robodebts."
+  },
+  {
+   "slug": "speech-396098",
+   "speaker": "Susan Templeman",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-19",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Services Australia Governance Amendment Bill 2020 fails to address an arbitrary staffing cap that forces over-reliance on labour hire instead of permanent workers, and criticised the government for not increasing capacity despite predictable demand, citing 6.5 million busy signals and 1.5 million unanswered calls during COVID. They also raised concerns about potential closure of service centres in Windsor, Springwood and Katoomba, and called for removing the staffing cap to allow permanent recruitment."
+  },
+  {
+   "slug": "speech-396404",
+   "speaker": "Josh Wilson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-10-20",
+   "stage_hint": null,
+   "brief": "The speaker supported the second reading amendment to the Services Australia Governance Amendment Bill and argued that while the bill's administrative changes are unobjectionable, the Coalition government's broader approach undermines the social safety net through policies like robodebt, pension freezes, and Public Service cuts, citing a 14% reduction in Department of Human Services staff in Western Australia from 7,500 in 2013 to 6,500 last year."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Services Australia Governance Amendment Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00104",
+   "assent_date": "2020-11-20"
+  }
+ ]
+}

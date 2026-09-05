@@ -1,0 +1,139 @@
+{
+ "key": "au-federal-s1395",
+ "title": "Australian Capital Territory Dangerous Drugs Bill 2023",
+ "short_title": "Australian Capital Territory Dangerous Drugs Bill 2023",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2023-09-14",
+ "originating_house": "senate",
+ "sponsor": "CASH, Sen Michaelia",
+ "sponsor_party": "Liberal Party of Australia",
+ "sponsor_person_id": "10707",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2023-10-19",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-09-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2023-10-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1395%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1395_ems_76201f80-f9ba-4ef2-9e99-6a0113901e88%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1395%22",
+   "document_date": "2023-09-14",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2023-09-14",
+  "sentences": [
+   "The bill would restore standard drug enforcement and diversion programs in the Australian Capital Territory.",
+   "It would cancel the 2022 ACT law that changed how small amounts of drugs are treated, so old offence rules and penalties apply again.",
+   "The bill would start the day after it receives Royal Assent and would not affect anything done before that date."
+  ],
+  "changes": [
+   "The bill would stop the Drugs of Dependence (Personal Use) Amendment Act 2022 (ACT) from having any effect.",
+   "It would keep the existing offence provisions from the Drugs of Dependence Act 1989 (ACT), without different treatment for small quantities of drugs.",
+   "The bill would prevent the use of simple drug offence notices for substances listed in tables 6.1 and 6.2 of the Drugs of Dependence Regulation 2009 (ACT)."
+  ],
+  "affected": "ACT families, police, pharmacists and the general community are affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:08:07Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-8413",
+   "date": "2023-10-19",
+   "house": "senate",
+   "question": "Australian Capital Territory Dangerous Drugs Bill 2023 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 27,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 11
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "One Nation": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 52,
+    "member": 5,
+    "earliest": 3
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2023-10-19/1"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

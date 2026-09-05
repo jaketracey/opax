@@ -1,0 +1,195 @@
+{
+ "key": "au-federal-s1283",
+ "title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Benefit to Australia) Bill 2020",
+ "short_title": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Benefit to Australia) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2020-12-08",
+ "originating_house": "senate",
+ "sponsor": "HANSON, Sen Pauline",
+ "sponsor_party": "Pauline Hanson&#39;s One Nation",
+ "sponsor_person_id": "10280",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-09-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-12-08",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-03-15",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-08-03",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1283_ems_3550870b-2edd-44f3-9548-59db48f28650%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1283%22",
+   "document_date": "2020-12-08",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-7753",
+   "date": "2022-09-26",
+   "house": "senate",
+   "question": "Offshore Petroleum and Greenhouse Gas Storage Amendment (Benefit to Australia) Bill 2020 - Second Reading - Cth royality, subsidies, and costs",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 35,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 1,
+     "noes": 19
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 24,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-26/1"
+  },
+  {
+   "key": "federal-senate-7754",
+   "date": "2022-09-26",
+   "house": "senate",
+   "question": "The majority voted [against the main idea of the bill](https://www.openaustralia.org.au/senate/?gid=2022-09-26.13.1), which means it won't be considered any further. In parliamentary jargon, they voted against giving it a [second reading](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). ### What is the bill's main idea? According to the [bill homepage](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1283), the bill: > *Amends the Offshore Petroleum and Greenhouse Gas Storage Act 2006 to broaden the objects clause of the Act to require the National Offshore Petroleum Titles Administrator and the National Offshore Petroleum Safety and Environmental Management Authority to take into account the benefit to the Australian community when granting new leases or renewing existing leases.* It was proposed by Queensland Senator [Pauline Hanson](https://theyvoteforyou.org.au/people/senate/queensland/pauline_hanson) (One Nation). To read more about the bill and the arguments for and against it, see [the debate](https://www.openaustralia.org.au/senate/?id=2022-09-26.5.2).",
+   "stage": "Second reading",
+   "ayes": 6,
+   "noes": 42,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 2,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 8
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 1,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 18,
+    "earliest": 25,
+    "member": 5
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2022-09-26/2"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

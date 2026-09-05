@@ -1,0 +1,565 @@
+{
+ "key": "au-federal-alrc-2374",
+ "title": "Referendum (Machinery Provisions) Amendment Bill 2013",
+ "short_title": null,
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 43,
+ "introduced": "2013-03-21",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Special Minister of State",
+ "status": "passed",
+ "status_as_of": "2013-05-17",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-03-21",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "url": null
+  },
+  {
+   "stage": "introduced",
+   "date": "2013-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "second_reading",
+   "date": "2013-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "committee",
+   "date": "2013-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "third_reading",
+   "date": "2013-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "passed",
+   "date": "2013-05-15",
+   "house": "senate",
+   "url": null
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2013-05-17",
+   "house": "Assent",
+   "url": null
+  }
+ ],
+ "sources": [
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2013A00034",
+   "document_date": "2013-05-17",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-1080",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "question": "Bronwyn Bishop I move amendment (1) circulated in my name: (1) Clause 4, page 2 (lines 6 to 14), omit the clause. This relates to clause 4 of the bill, which suspends the subsection of the act that places a cap on the expenditure that the government may make with regard to the holding of a referendum—which we now know, in fact, is to be held. In supporting the proposal that we should remain with simply the yes/no case being properly prepared and posted to each elector—which will be the subject of the second amendment proposing that it goes to electors and not to households—I refer to the fact that the Electoral Commission pointed out that, if there were not sufficient time for the preparation of additional material to be put together, the risks that would be invoked because of the short time frame between now and the holding of the referendum could include the following. I read from their submission dated 1 January 2013: Should the AEC not commence preparation of the referendum campaign components until 1 March— and I point out that we are now at 14 May. One of the risks referred to is: … elevated potential for criticism by stakeholders, interest groups or the wider public (during the campaign or afterwards) if they perceive that the campaign advertising: The submission referred to: In other words, the Electoral Commission itself has said that that this short time frame that is now available for the preparation of material for a referendum on 14 September is going to pose risks as to whether or not it is seen by the Australian people to be properly conducted. This, of course, would only be compounded by the fact that not every elector is to receive a copy of the pamphlet individually. The Special Minister of State and the Attorney-General pointed out that in 1999, when we had a stand-alone referendum, this clause was suspended. But, of course, at that stage it was a stand-alone referendum, not one held concurrently with an election, and therefore the confusion eleme",
+   "stage": "Consideration in detail",
+   "ayes": 65,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 53,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 135
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-14/1"
+  },
+  {
+   "key": "federal-representatives-1081",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "question": "Bronwyn Bishop I move opposition amendment (2): (2) Schedule 1, items 1 to 3, page 3 (lines 4 to 21), omit the items. The amendment removes those sections from the bill which would enable the yes-no case to be sent to households— Honourable Members Honourable members interjecting— Anna Burke Order! The member for Mackellar has the call. Bronwyn Bishop It would mean that the yes-no case could be sent to households, as distinct from electors. As I said in my second reading speech, we believe that it is imperative that the concept of an elector is fundamental to the proper carrying out of an election and, indeed, of a referendum. So we believe that it is vitally important that this provision be removed so that we may return to the situation of the 1984 act, whereby every elector would receive the yes-no case. It would also prevent the Electoral Commissioner from making decisions about which address he may deem the fit one to send material to. As I pointed out in my second reading speech, with regard to emails, there is no available email register. There is no proper knowledge of which people have email addresses and which do not. At this stage, for 2013—it may be different in the future—we should maintain the position of posting, not sending, the yes-no case to every elector as an individual. Anna Burke The question is that the amendment be agreed to. The question now is that this bill be agreed to.",
+   "stage": "Consideration in detail",
+   "ayes": 68,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 4
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 55,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 11,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-14/2"
+  },
+  {
+   "key": "federal-representatives-1082",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "question": "No motion text available",
+   "stage": "Consideration in detail",
+   "ayes": 71,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-14/3"
+  },
+  {
+   "key": "federal-representatives-1083",
+   "date": "2013-05-14",
+   "house": "representatives",
+   "question": "Mark Dreyfus by leave—I move: That this bill be now read a third time. Anna Burke The question is that the bill be now read a third time. Sitting suspended from 18:25 to 19:30",
+   "stage": "Third reading",
+   "ayes": 71,
+   "noes": 67,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 5,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 65,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 55
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 11
+    }
+   },
+   "party_coverage": {
+    "dated": 138
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2013-05-14/4"
+  },
+  {
+   "key": "federal-senate-2394",
+   "date": "2013-05-15",
+   "house": "senate",
+   "question": "Jacinta Collins I move: That this bill may proceed without formalities and be now read a first time. Stephen Parry Senator Ryan, you can ask to have a question split or divided because there is no provision for you to speak in the first reading. If you want to speak on the motion that the bill proceed without formality, there are two parts to that question and you can ask for that question to be divided. The question will be divided. The first question will be that the bill proceed without formality. John Hogg The question now is that the bill be now read a first time. Senator Macdonald, I am going to give you the call.",
+   "stage": "Bill",
+   "ayes": 34,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 60,
+    "member": 2,
+    "earliest": 1
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/1"
+  },
+  {
+   "key": "federal-senate-2397",
+   "date": "2013-05-15",
+   "house": "senate",
+   "question": "Jacinta Collins I commend the Referendum (Machinery Provisions) Amendment Bill 2013 to the Senate. Trish Crossin The question is then that the second reading of the Referendum (Machinery Provisions) Amendment Bill 2013 be agreed to.",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    }
+   },
+   "party_coverage": {
+    "member": 2,
+    "dated": 60,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/4"
+  },
+  {
+   "key": "federal-senate-2398",
+   "date": "2013-05-15",
+   "house": "senate",
+   "question": "Stephen Parry The Committee is considering clause 4, amendment (1) on sheet 7384. Senator Rhiannon, you were seeking the call earlier. Do you wish to seek the call again? Lee Rhiannon Yes, Mr Chairman. Could you please explain what just happened? I have never seen that process. The CHAIRMAN: Certainly. The government has just moved for an extension of time to consider this bill, I presume in the anticipation of completing the bill before we rise this evening. To do that we had to move out of committee stage, and now we have moved back into committee. That is how I get my exercise for the day! So we are back to where we were? The CHAIRMAN: Exactly, we are back to where we were but we had to go through that formality, otherwise the debate would have expired at 6.50pm. Thank you for the explanation, Mr Chairman. I was interested in the comments made earlier, particularly by Senator Ryan. I am not doubting his passion and his interest in the constitution, but what we have here tonight is a whole number of excuses being used. There are heavy spoiler tactics going on around this important legislation. We have heard many comments being made—concerns about the constitution, the need for good process, the need for a commitment to ensure the machinery really works. But when you listen closely to what has been said, and when you remember how it played out today—initially there was only one speaker from the coalition and one from the Labor government, because this was supposed to be noncontroversial legislation—there was clearly an agenda going on. Yes, anybody can come in here and speak. It is one of the wonderful things about our parliaments in Australia. As Senator Ryan said, all of his party members—like all of us—are entitled to their opinion. But what we saw today in so many of the comments from the coalition was very worrying for a party that states that there is bipartisan support for this bill. We are starting to see various guerrilla tactics going on here—throwing bom",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 24,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 5
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 2,
+    "dated": 59,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/5"
+  },
+  {
+   "key": "federal-senate-2399",
+   "date": "2013-05-15",
+   "house": "senate",
+   "question": "Scott Ryan In reference to the amendment we have just dealt with, I have been informed that Senator Wong referred to that amount of money as the LGA grant a few minutes ago on television. I am not sure if that provides any extra clarity for the government to be able to give answers. I am led to believe, although I was not a witness to it, that Senator Wong also conceded on air that equal funding should be given to proponents and opponents. I am not a witness to that and I am happy to be corrected, but that is the message I have received, which I thought might inform the house of, given the debate we just had. The opposition oppose schedule 1 in the following terms: (2) Schedule 1, items 1 to 3, page 3 (lines 4 to 21), items TO BE OPPOSED. This amendment concerns the distribution of what is simply known as the yes/no booklet. This booklet has a history in this country and this booklet is a century old. It was conceived in 1912 to inform electors of the arguments for the yes and the no cases in amending our constitution. I cannot understand why on earth the people on the other side of this chamber and their Green allies are so desperate to stop the booklet going to each elector. I have never heard such a contrived excuse as saving money from this government when it just voted to spend $10 million on an advertising campaign. I notice that Senator Rhiannon said that the combination of these two measures improved the budget. Only the Greens could say that saving four and spending 10 improves the budget. This booklet is prepared by a majority of the people who voted yes in the parliament and by a majority of those who voted no in the parliament. It gets mailed to every elector, and I think it is fair to say that we all, maybe, open mail that looks more official rather than something that might come in a plastic envelope and says, 'To the householder'. The government stood up here and preached about the need for information to voters and how an advertising campaign was so",
+   "stage": "In committee",
+   "ayes": 35,
+   "noes": 31,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 61,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/6"
+  },
+  {
+   "key": "federal-senate-2400",
+   "date": "2013-05-15",
+   "house": "senate",
+   "question": "Jacinta Collins I move: That this bill be now read a third time. John Hogg The question is that this bill be now read a third time.",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 30,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 25,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 24
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 4
+    },
+    "PRES": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 3,
+    "dated": 60,
+    "earliest": 2
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2013-05-15/7"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-271902",
+   "speaker": "Bronwyn Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-271903",
+   "speaker": "Mark Dreyfus",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823126",
+   "speaker": "Bronwyn Bishop",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2013-05-14",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-823352",
+   "speaker": "Jacinta Collins",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2013-05-15",
+   "stage_hint": null,
+   "brief": "The speaker commended the Referendum (Machinery Provisions) Amendment Bill 2013 to the Senate."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Referendum (Machinery Provisions) Amendment Act 2013",
+   "frl_uri": "https://www.legislation.gov.au/C2013A00034",
+   "assent_date": "2013-05-17"
+  }
+ ]
+}

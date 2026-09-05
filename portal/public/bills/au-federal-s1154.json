@@ -1,0 +1,715 @@
+{
+ "key": "au-federal-s1154",
+ "title": "National Integrity Commission Bill 2018 (No. 2)",
+ "short_title": "National Integrity Commission Bill 2018 (No. 2)",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2018-11-29",
+ "originating_house": "senate",
+ "sponsor": "WATERS, Sen Larissa",
+ "sponsor_party": "Australian Greens",
+ "sponsor_person_id": "10764",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-04-11",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2018-11-29",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-08-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-04-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1154_ems_f8550d3e-0bc3-4996-905a-e731872b5c82%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1154%22",
+   "document_date": "2018-11-29",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2018-11-29",
+  "sentences": [
+   "This bill would create an independent anti-corruption body for the Commonwealth, called the Australian National Integrity Commission.",
+   "The Commission would have Royal Commission powers to investigate corruption involving federal politicians and the public sector, and could hold public hearings where in the public interest.",
+   "The bill limits corruption investigations to conduct within the last ten years and initially excludes federal judges, with a review process for their later inclusion."
+  ],
+  "changes": [
+   "Establishes the Australian National Integrity Commission as an independent anti-corruption agency.",
+   "Gives the Commission Royal Commission powers to investigate and hold public inquiries into corruption.",
+   "Creates a Whistleblower Protection Commissioner within the Commission.",
+   "Limits investigations to corrupt conduct occurring in the past ten years.",
+   "Excludes federal judges from the Commission's jurisdiction initially, with a review process for their inclusion.",
+   "Requires mandatory reporting of corruption by public officials and agency heads."
+  ],
+  "affected": "Federal politicians, the federal public sector, private sector businesses, whistleblowers, and Commonwealth agency heads would be affected.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:16:29Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-5844",
+   "date": "2019-09-09",
+   "house": "senate",
+   "question": "National Integrity Commission Bill 2018 (No. 2) - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 35,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 30,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-09/1"
+  },
+  {
+   "key": "federal-senate-5845",
+   "date": "2019-09-09",
+   "house": "senate",
+   "question": "National Integrity Commission Bill 2018 (No. 2) - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 35,
+   "noes": 32,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 23,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 27
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 30,
+    "earliest": 22
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-09-09/2"
+  },
+  {
+   "key": "federal-representatives-5861",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "question": "National Integrity Commission Bill 2018 (No. 2) - First Reading - Speed things along",
+   "stage": "First Reading",
+   "ayes": 75,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-10/11"
+  },
+  {
+   "key": "federal-representatives-5862",
+   "date": "2019-09-10",
+   "house": "representatives",
+   "question": "National Integrity Commission Bill 2018 (No. 2) - First Reading - Consider second reading tomorrow",
+   "stage": "First Reading",
+   "ayes": 75,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 44,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 144
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-10/12"
+  },
+  {
+   "key": "federal-senate-6195",
+   "date": "2020-02-10",
+   "house": "senate",
+   "question": "Motions - National Integrity Commission Bill 2018 (No. 2) - Send to House of Representatives",
+   "stage": "Motion",
+   "ayes": 33,
+   "noes": 29,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 23
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 24,
+    "earliest": 23
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-02-10/6"
+  },
+  {
+   "key": "federal-representatives-6199",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "question": "National Integrity Commission Bill 2018 (No. 2) - Consideration of Senate Message - Speed things along",
+   "stage": "Consideration of Senate message",
+   "ayes": 73,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-11/2"
+  },
+  {
+   "key": "federal-representatives-6200",
+   "date": "2020-02-11",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debates/?id=2020-02-11.5.1) introduced by Gippsland MP [Darren Chester](https://theyvoteforyou.org.au/people/representatives/gippsland/darren_chester) (Nationals), which means it passed. The motion was: > *That consideration of the message be made an order of the day for the next sitting.*",
+   "stage": "Consideration of Senate message",
+   "ayes": 73,
+   "noes": 70,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 20,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 64
+    },
+    "Liberal": {
+     "ayes": 42,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 142
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-02-11/3"
+  },
+  {
+   "key": "federal-senate-6385",
+   "date": "2020-06-15",
+   "house": "senate",
+   "question": "Motions - National Integrity Commission Bill 2018 (No. 2) - Seek House consent to deal with bill this month",
+   "stage": "Motion",
+   "ayes": 30,
+   "noes": 27,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 25,
+    "earliest": 20
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-06-15/6"
+  },
+  {
+   "key": "federal-representatives-6393",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "question": "Resolutions of the Senate - National Integrity Commission Bill 2018 (No. 2); Consideration of Senate Message - Speed things along",
+   "stage": "Resolutions of the Senate",
+   "ayes": 57,
+   "noes": 51,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 46
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 107
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-16/1"
+  },
+  {
+   "key": "federal-representatives-6394",
+   "date": "2020-06-16",
+   "house": "representatives",
+   "question": "The majority voted in favour of a [motion](https://www.openaustralia.org.au/debate/?id=2020-06-16.9.1) \"*That the message be considered at the next sitting.*\" The \"message\" in this case was one from the Senate which, among other things: > *(b) calls on the Federal Government to bring on the [National Integrity Commission Bill 2018 (No. 2)](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1154) in the House for a vote in the June 2020 sittings. The Senate requests the concurrence of the House of Representatives in this resolution.* In other words, while the majority of the Senate was seeking to speed up consideration of the National Integrity Commission Bill 2018 (No. 2), the majority of the House of Representatives wanted to delay it. ### Senate message text > *The Senate transmits to the House of Representatives the following resolution which was agreed to by the Senate this day:* > > *That the Senate—* > > *(a) notes that:* > >> *(i) the Senate passed the Australian Greens' National Integrity Commission Bill 2018 (No. 2) on 9 September 2019 to establish a federal corruption watchdog with broad remit to investigate allegations of corruption and misconduct, and to ensure strong, independent oversight of the actions of parliamentarians;* >> >> *(ii) the National Integrity Commission Bill 2018 (No. 2) was sent to the House of Representatives for debate on 10 September 2019, but has yet to be debated;* >> >> *(iii) on 10 February 2020, the Senate resolved to call on the House to vote on the National Integrity Commission Bill 2018 (No. 2);* >> >> *(iv) the Government ignored this call and has prevented all attempts to debate and vote on the National Integrity Commission Bill 2018 (No. 2) in the House;* >> >> *(v) public consultation on the Commonwealth Integrity Commission model proposed by the Government ended nearly eighteen months ago, but the Government has yet to introduce legislation to establish an integrity commiss",
+   "stage": "Resolutions of the Senate",
+   "ayes": 57,
+   "noes": 52,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "LNP": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 47
+    },
+    "Liberal": {
+     "ayes": 31,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 108
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-06-16/2"
+  },
+  {
+   "key": "federal-senate-6686",
+   "date": "2020-11-09",
+   "house": "senate",
+   "question": "Motions - National Integrity Commission Bill 2018 (No. 2) - Anti-corruption body",
+   "stage": "Motion",
+   "ayes": 28,
+   "noes": 25,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 16,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 11,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-09/2"
+  },
+  {
+   "key": "federal-senate-7472",
+   "date": "2021-10-21",
+   "house": "senate",
+   "question": "Motions - National Integrity Commission - National Integrity Commission Bill 2018 (No. 2)",
+   "stage": "Motion",
+   "ayes": 24,
+   "noes": 24,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 17,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 11,
+    "earliest": 19,
+    "dated": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-21/6"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

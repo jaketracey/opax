@@ -1,0 +1,205 @@
+{
+ "key": "au-federal-s1178",
+ "title": "Telecommunications and Other Legislation Amendment (Miscellaneous Amendments) Bill 2019",
+ "short_title": "Telecommunications and Other Legislation Amendment (Miscellaneous Amendments) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 45,
+ "introduced": "2019-02-13",
+ "originating_house": "senate",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Home Affairs",
+ "status": "lapsed",
+ "status_as_of": "2019-07-01",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-13",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1178%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1178%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2019-02-14",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1178%22"
+  },
+  {
+   "stage": "other",
+   "date": "2019-07-01",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1178%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1178_ems_901f7fc6-2e60-4fd8-9845-d39ad4370316%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "digest",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billsdgs/6581692%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1178%22",
+   "document_date": "2019-02-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-senate-5681",
+   "date": "2019-02-14",
+   "house": "senate",
+   "question": "The majority voted against a [motion](https://www.openaustralia.org.au/senate/?gid=2019-02-14.14.7) introduced by WA Senator [Jordon Steele-John](https://theyvoteforyou.org.au/people/senate/wa/jordon_steele-john) (Greens), which means it failed. ### Motion text > *At the end of the motion, add:* > *\", and the bill be referred to the [Legal and Constitutional Affairs Legislation Committee](https://www.aph.gov.au/Parliamentary_Business/Committees/Senate/Legal_and_Constitutional_Affairs) for inquiry and report by 2 April 2019.\"* ### What does this bill do? The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1178) was introduced to: * *speed up the mandated review of the operation, effectiveness and implications of the Telecommunications and Other Legislation Amendment (Assistance and Access) Act 2018 by requiring that it take place before the end of the 18 month period beginning on the day the Act received Royal Assent; and* * *extend the definition of 'interception agency' to include the [Australian Commission for Law Enforcement Integrity](https://en.wikipedia.org/wiki/Australian_Commission_for_Law_Enforcement_Integrity), the [Independent Commission Against Corruption of New South Wales](https://en.wikipedia.org/wiki/Independent_Commission_Against_Corruption_(New_South_Wales)), the [New South Wales Crime Commission](https://en.wikipedia.org/wiki/New_South_Wales_Crime_Commission), the [Law Enforcement Conduct Commission of New South Wales](https://www.lecc.nsw.gov.au/what-we-do/who-we-are-and-what-we-value/who-we-are-and-what-we-value), the [Independent Broad-based Anti-corruption Commission of Victoria](https://en.wikipedia.org/wiki/Independent_Broad-based_Anti-corruption_Commission), the [Crime and Corruption Commission of Queensland](https://en.wikipedia.org/wiki/Crime_and_Corruption_Commission), the [Independent Commissioner Against Corruption (SA)](https://en.wikipedia.org/wiki/Independent_Commissioner_Against",
+   "stage": "Second reading",
+   "ayes": 12,
+   "noes": 28,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 10
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 12
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 17,
+    "earliest": 8
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-02-14/2"
+  },
+  {
+   "key": "federal-senate-5682",
+   "date": "2019-02-14",
+   "house": "senate",
+   "question": "The majority voted in favour of [amendment (1) on sheet 8642](https://www.openaustralia.org.au/senate/?id=2019-02-14.22.1), which was introduced by NSW Senate [Jenny McAllister](https://theyvoteforyou.org.au/people/senate/nsw/jenny_mcallister) (ALP). ### What does this amendment do? [Senator McAllister said](https://www.openaustralia.org.au/senate/?id=2019-02-14.22.1) that the amendment related to the definitions of 'systemic weakness' and 'systemic vulnerability' and explained that: > *... stakeholders were concerned that the protection in the bill which prohibits an agency from forcing a provider to implement any kind of systemic weakness or systemic vulnerability is inadequate because those terms are not defined.* > *The government sought to address that in their amendments to their own bill in December last year, but the government's amendments have been condemned as difficult to understand, ambiguous and significantly too narrow. ...* > *The amendments before us now would repeal the systemic weakness definitions that were introduced by the government and give clear legislative effect to the advice provided publicly by the Director-General of ASIO. Our amendments are supported by the main industry groups ...* > *The critical paragraph on sheet 8642 is to amend 317ZG(4) to include this phrase:* >> *(4) The reference in paragraph (1)(a) to implement or build a systemic weakness, or a systemic vulnerability, includes a reference to any act or thing that would or may create a material risk that otherwise secure information would or may in the future be collected, accessed, used, manipulated, disclosed or otherwise compromised by an unauthorised third party.* > *These changes seek to protect the information of innocent people ...* ### What does this bill do? The [bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id:legislation/billhome/s1178) was introduced to: * *speed up the mandated review of the operation, effectiveness and implications",
+   "stage": "In committee",
+   "ayes": 37,
+   "noes": 28,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Derryn Hinch's Justice Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 22,
+     "noes": 1
+    },
+    "Liberal": {
+     "ayes": 1,
+     "noes": 20
+    },
+    "Liberal Democratic Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "dated": 36,
+    "member": 20,
+    "earliest": 9
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2019-02-14/3"
+  }
+ ],
+ "speeches": [],
+ "acts": []
+}

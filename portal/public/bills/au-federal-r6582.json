@@ -1,0 +1,782 @@
+{
+ "key": "au-federal-r6582",
+ "title": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020",
+ "short_title": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-08-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Environment",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-08-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-10-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6582_ems_236ebde9-a654-43c5-86a7-5417954b4372%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6582%22",
+   "document_date": "2020-08-27",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-6596",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Stop Watson MP from speaking",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/22"
+  },
+  {
+   "key": "federal-representatives-6597",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Stop Griffith MP from speaking",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 76
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/23"
+  },
+  {
+   "key": "federal-representatives-6598",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 76
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/24"
+  },
+  {
+   "key": "federal-representatives-6599",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Don't let a vote happen",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 76
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/25"
+  },
+  {
+   "key": "federal-representatives-6600",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 35,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 32
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 76
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/26"
+  },
+  {
+   "key": "federal-representatives-6601",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Keep second reading motion unchanged",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/27"
+  },
+  {
+   "key": "federal-representatives-6602",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Agree with the bill's main idea",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/28"
+  },
+  {
+   "key": "federal-representatives-6603",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Speed things along",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/29"
+  },
+  {
+   "key": "federal-representatives-6604",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Second Reading - Suspend the usual rules to let third reading happen",
+   "stage": "Second reading",
+   "ayes": 42,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/30"
+  },
+  {
+   "key": "federal-representatives-6605",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Third Reading - Speed things along",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/31"
+  },
+  {
+   "key": "federal-representatives-6606",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "question": "Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 - Third Reading - Pass the bill",
+   "stage": "Third reading",
+   "ayes": 42,
+   "noes": 36,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "LNP": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 33
+    },
+    "Liberal": {
+     "ayes": 27,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 5,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2020-09-03/32"
+  },
+  {
+   "key": "federal-senate-6614",
+   "date": "2020-09-03",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2020-09-03.49.1) introduced by SA Senator [Sarah Hanson-Young](https://theyvoteforyou.org.au/people/senate/sa/sarah_hanson-young) (Greens), which means it failed. ### Motion text > *At the end of the motion, add:* > > *\"and, in respect of the [Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6582), the provisions of the bill be referred immediately to the Environment and Communications Legislation Committee for inquiry and report by 11 November 2020\".*",
+   "stage": "Committee motion",
+   "ayes": 25,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 4,
+     "noes": 0
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 24,
+    "member": 13,
+    "earliest": 13
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-09-03/6"
+  },
+  {
+   "key": "federal-senate-6646",
+   "date": "2020-10-08",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2020-10-08.48.1) introduced by ACT Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher) (Labor), which means it failed. ### Motion text > *At the end of the motion, add \"and, in respect of the [Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=r6582), the bill be referred immediately to the Environment and Communications Legislation Committee for inquiry and report by 11 November 2020\".*",
+   "stage": "Committee motion",
+   "ayes": 27,
+   "noes": 27,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "dated": 24,
+    "earliest": 18
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-10-08/6"
+  },
+  {
+   "key": "federal-senate-6721",
+   "date": "2020-11-12",
+   "house": "senate",
+   "question": "The same number of senators voted for and against the [amendment](https://www.openaustralia.org.au/senate/?gid=2020-11-12.35.1) moved by Senator [Katy Gallagher](https://theyvoteforyou.org.au/people/senate/act/katy_gallagher), which meant it failed. ### Amendment text > *\"but, in respect of the Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020, the Environment and Communications Legislation Committee report by 3 February 2021.\"* ### Original motion text > *That the [report](https://www.openaustralia.org.au/senate/?gid=2020-11-12.34.3) be adopted.*",
+   "stage": "Committee motion",
+   "ayes": 29,
+   "noes": 29,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 8,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 21
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 13,
+    "dated": 26,
+    "earliest": 19
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2020-11-12/5"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-394005",
+   "speaker": "Sussan Ley",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-08-27",
+   "stage_hint": null,
+   "brief": "The Morrison government introduced the first tranche of reforms to the Environment Protection and Biodiversity Conservation Act, moving to streamline environmental approvals by removing duplication with states and territories through a single-touch approval system agreed by national cabinet on 24 July 2020. The bill enables approval bilateral agreements with states and territories, following an independent review led by Professor Graeme Samuel, with his final recommendations due in October."
+  },
+  {
+   "slug": "speech-395013",
+   "speaker": "Terri Butler",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The speaker moved an amendment to decline the Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020, arguing it ignores the Samuel Review's recommendations, fails to protect the environment or create jobs, and cited a 510% blowout in approval times and 79% of approval decisions affected by error due to government funding cuts."
+  },
+  {
+   "slug": "speech-395017",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The opposition rejected the Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 as premature, arguing the Samuel review found the EPBC Act serves neither the environment nor industry, and that the government failed to make a coherent case for the bill. The speaker also noted a $34 million stewardship package announced in March 2019 has not yet commenced, with programs not starting until 2021."
+  },
+  {
+   "slug": "speech-395018",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's cuts to the environment department have caused a 510% increase in approval delays and that the proposed bill ignores the Samuel review's recommendations for national environmental standards, failing both jobs and the environment. Labor will not support the bill and will refer it to a Senate committee inquiry."
+  },
+  {
+   "slug": "speech-395019",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020, arguing it would weaken federal environmental protections by devolving approvals to states and ignoring key recommendations from Graeme Samuel’s independent review, including the establishment of national environmental standards. The speaker cited a 510% increase in average approval delays since 2014, 75% of decisions containing errors, and Australia’s highest mammal extinction rate, and called for a national environmental watchdog."
+  },
+  {
+   "slug": "speech-395020",
+   "speaker": "Josh Burns",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The Labor Party opposed the Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020, arguing it would weaken environmental protections, reduce transparency, and cede federal oversight to the states. The speaker criticised the government for ignoring the Samuel review’s recommendations, including establishing strong national environmental standards and an independent environmental protection agency, and noted that no coalition member spoke in support of the bill."
+  },
+  {
+   "slug": "speech-395021",
+   "speaker": "Adam Bandt",
+   "party": "Greens",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Morrison government's Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 would weaken federal environmental protections by handing approval powers to states, citing risks to wildlife and heritage sites like Juukan Gorge, and criticised the government for ignoring its own independent review's call for stronger national standards and an independent regulator."
+  },
+  {
+   "slug": "speech-395170",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The member moved to suspend standing orders to allow all members wishing to speak on the Environment Protection and Biodiversity Conservation Amendment (Streamlining Environmental Approvals) Bill 2020 to do so, arguing that the bill rehashes a failed Abbott-era proposal and contradicts the government-commissioned Samuel Review interim report."
+  }
+ ],
+ "acts": []
+}

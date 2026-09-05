@@ -1,0 +1,525 @@
+{
+ "key": "au-federal-r5533",
+ "title": "Migration Amendment (Charging for a Migration Outcome) Bill 2015",
+ "short_title": "Migration Amendment (Charging for a Migration Outcome) Bill 2015",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 44,
+ "introduced": "2015-09-16",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration and Border Protection",
+ "status": "passed",
+ "status_as_of": "2015-11-30",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-09-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-10",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-11",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-23",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2015-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-24",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2015-11-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2015-11-30",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5533_ems_ceda10d9-2987-49d0-ad9b-0e85e42cb9d5%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r5533_ems_eaf82b14-8467-4b20-a709-00e0e7281578%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r5533%22",
+   "document_date": "2015-09-16",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2015A00161",
+   "document_date": "2015-11-30",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2015-09-16",
+  "sentences": [
+   "The bill would make it illegal to give or receive a benefit in exchange for a migration outcome under certain skilled work visa programs.",
+   "It would create new criminal and civil penalties for sponsors, visa holders, and third parties involved in such 'payment for visas' arrangements, and give the minister a discretionary power to cancel visas of those who engage in this activity.",
+   "The maximum penalties are 2 years imprisonment or 360 penalty units for the criminal offence, and 240 penalty units for the civil penalties."
+  ],
+  "changes": [
+   "Creates a criminal offence for sponsors or third parties who ask for or receive a benefit in return for a sponsorship-related event.",
+   "Introduces civil penalty provisions for sponsors or third parties who ask for or receive a benefit, and for visa holders or third parties who offer or provide a benefit.",
+   "Adds a discretionary power to cancel a temporary or permanent visa if the holder engaged in payment for visas activity.",
+   "Extends liability to executive officers of corporations involved in such activity under certain conditions.",
+   "Applies the offence and penalties extraterritorially and clarifies their application to partnerships and unincorporated associations.",
+   "Allows existing inspector and investigation powers to be used for the new offence and penalties."
+  ],
+  "affected": "Sponsors, visa applicants and holders, and third parties involved in skilled work visa programs.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:52:29Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-senate-3990",
+   "date": "2015-11-24",
+   "house": "senate",
+   "question": "Kim Carr I would like to indicate to the committee that it is my intention to seek leave to move six separate blocks of amendments relating to the nature of visas, increased penalties, business numbers, whistleblower protections, reporting obligations, coercion and criminal offences and civil penalties in relation to visa holders. So I indicate that these are separate measures and I believe that we can vote on these as blocks. I seek leave, firstly, to move amendments (5) to (8), (10) to (18), (22), (23), (25), (27) to (30), (32) to (37), (39) to (44) and (47) to (55). Nigel Scullion Would it be possible for Senator Carr to give us an update on the amendments he intends to deal with? Kim Carr Yes, I will repeat that. They are amendments (5) to (8), (10) to (18), (22), (23), (25), (27) to (30), (32) to (37), (39) to (44) and (47) to (55). Leave granted. by leave—I move opposition amendments (5) to (8), (10) to (18), (22), (23), (25), (27) to (30), (32) to (37), (39) to (44) and (47) to (55): (5) Schedule 1, item 1, page 3 (line 11), omit \"sponsorship-related event\", substitute \"migration outcome-related event\". (6) Schedule 1, item 1 page 3 (lines 14 and 15), omit \"sponsorship-related event\", substitute \"migration outcome-related event\". (7) Schedule 1, item 1, page 3 (line 20), omit \"sponsorship-related event\", substitute \"migration outcome-related event\". (8) Schedule 1, item 1, page 3 (line 23), omit \"sponsorship-related event\", substitute \"migration outcome-related event\". (10) Schedule 1, item 3, page 3 (after line 29), after the definition of _benefit_ in subsection (4), insert: _ migration outcome_ _-related event_ has the meaning given by section 245AQ. (11) Schedule 1, item 3, page 3 (lines 30 and 31), omit the definition of sponsorship-related event in subsection (4). (12) Schedule 1, item 6, page 4 (line 8), omit \"sponsored visas\", substitute \"work visas\". (13) Schedule 1, item 6, page 4 (after line 24), after the definition of _executive officer_ in secti",
+   "stage": "In committee",
+   "ayes": 28,
+   "noes": 33,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 40,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-24/6"
+  },
+  {
+   "key": "federal-senate-3991",
+   "date": "2015-11-24",
+   "house": "senate",
+   "question": "Kim Carr I seek leave to move a second tranche of amendments—to increase penalties for sponsors—amendment nos (20), (21), (24), (31) and (38). Leave granted. I move: (20) Schedule 1, item 6, page 6 (line 12), omit \"2 years or 360 penalty units\", substitute \"4 years or 720 penalty units\". (21) Schedule 1, item 6, page 6 (line 16), omit \"240 penalty units\", substitute \"480 penalty units\". (24) Schedule 1, item 6, page 6 (line 29), omit \"240 penalty units\", substitute \"480 penalty units\". (31) Schedule 1, item 6, page 7 (line 21), omit \"360 penalty units\", substitute \"720 penalty units\". (38) Schedule 1, item 6, page 8 (line 20), omit \"240 penalty units\", substitute \"480 penalty units\". The current bill has a criminal offence of a maximum of two years in prison or a fine of $64,800 for individuals, or $324,000 for a corporate body, and civil offences with a maximum fine of $43,200 for individuals and $324,000 for corporate bodies. It is my view that this penalty regime is too lenient to be an effective deterrent. The evidence is that financial gains from committing offences against visa holders can be as much as $70,000 for an individual visa holder and up to $700,000 for a sponsor dealing with multiple visa holders. It may well be that people feel there is an advantage in terms of profiting from the exploitation of cheap labour under these circumstances. It clearly is not a humane approach for this parliament to take to allow such actions to continue. Clearly the government recognises this; that is why they have proposed changes to the 457 visa arrangements. However, the penalty regime remains far too low and will undermine the intent of this bill—by a simple measure: an employer that wants to exploit these people in this way will still be able to make very substantial profits out of it. So Labor's amendments provide for penalties set out in the bill to effectively be doubled. Nigel Scullion Before I address that particular amendment, I would like to thank all crossbe",
+   "stage": "In committee",
+   "ayes": 30,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 19,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 41,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-24/7"
+  },
+  {
+   "key": "federal-senate-3992",
+   "date": "2015-11-24",
+   "house": "senate",
+   "question": "Kim Carr The minister made a statement after the first division thanking the crossbenchers for their support and indicating that the minister would be writing a letter this afternoon advising those senators that there would be a review. My experience here suggests to me that it implies that some arrangement has been entered into. Is that the case? Fiona Nash We understand there has been agreement with the crossbench on this very sensible legislation. Kim Carr Is it the case that an arrangement has been made in that, in return for a review, the crossbenchers have agreed to vote for this bill unamended? Fiona Nash We have made an agreement that we will review the provisions at the 12-month mark, which is a sensible way forward. Kim Carr I would like to thank Senator Xenophon for his support on that last amendment, because, clearly, he was not party to that arrangement. With that being the case, it does alter the way in which we proceed here. It is a disappointment that these issues of such profound significance to so many people should be treated in this way. I am sure others will be able to speak for themselves about that question. But it does point to the question of whether I call for divisions on each of the tranches of amendments if they are not likely to affect the vote of the chamber. I would be interested to know if anyone has a view on that question. We may well be able to get further advice on that score. It would be very helpful if the crossbenchers, when entering these arrangements, did actually advise the chamber as well. And I will take this opportunity to seek leave to move the third tranche of amendments—amendments (1) and (2), which go to the issue of Australian business numbers. Leave granted. I move those amendments: (1) Title, page 1 (line 1), after \"Migration Act 1958\", insert \"and the A New Tax System (Australian Business Number) Act 1999\". (2) Schedule 1, page 3 (before line 3), before the heading specifying _Migration Act 1958_, insert: _A New",
+   "stage": "In committee",
+   "ayes": 29,
+   "noes": 32,
+   "outcome": "negative",
+   "party_splits": {
+    "Australian Motoring Enthusiast Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Country Liberal Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "DLP": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Family First": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 10,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 1
+    },
+    "JLN": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Liberal Democratic Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 3
+    },
+    "United Australia Party": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 15,
+    "dated": 40,
+    "earliest": 6
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2015-11-24/8"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-319064",
+   "speaker": "Peter Dutton",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-09-16",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Charging for a Migration Outcome) Bill 2015 makes it unlawful to ask for, receive, offer, or provide payment or other benefits for sponsorship-related events, implementing a key integrity recommendation of the independent review into the subclass 457 program. It introduces criminal penalties of up to two years imprisonment or fines of $64,800 for individuals and $324,000 for body corporates, civil penalties, and discretionary visa cancellation for 'payment for visas' conduct across temporary sponsored and skilled permanent employer-sponsored visas, including the 457."
+  },
+  {
+   "slug": "speech-322444",
+   "speaker": "Richard Marles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Charging for a Migration Outcome) Bill 2015, which makes it unlawful for employers to charge visa applicants for migration outcomes, citing exploitation revealed by the 7-Eleven scandal and Four Corners reports. The opposition announced seven amendments for the Senate, including extending the bill to student and working holiday visas, increasing penalties for sponsors, and protecting whistleblowers."
+  },
+  {
+   "slug": "speech-322445",
+   "speaker": "Karen McNamara",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Charging for a Migration Outcome) Bill 2015 was supported, introducing criminal and civil penalties—up to two years imprisonment or $64,800—for sponsors who charge for visa sponsorship, covering temporary and permanent work visas including the 457 visa. The speaker cited examples of exploitation, such as touts charging up to $5,000 per placement in Dobell and a student asked for $60,000 for sponsorship, and noted the establishment of a ministerial working group on protecting foreign workers."
+  },
+  {
+   "slug": "speech-322598",
+   "speaker": "Jane Prentice",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Charging for a Migration Outcome) Bill 2015, which makes it a criminal offence to seek or receive payment for visa sponsorship, introduces visa cancellation powers for such conduct, and responds to recommendation 10.7 of the 2014 Independent review into integrity in the subclass 457 program."
+  },
+  {
+   "slug": "speech-322599",
+   "speaker": "Laurie Ferguson",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Charging for a Migration Outcome) Bill 2015 makes it a criminal offence for sponsors or third parties to ask for or receive a benefit in relation to a sponsorship, with civil penalties defined broadly. The speaker argued the bill is overdue, citing widespread exploitation including 7-Eleven's franchisee structure, $50,000–$150,000 payments for false visa histories, and systemic fraud across 457, 187, student and working holiday visas, while calling for stronger enforcement against lawyers and migration agents."
+  },
+  {
+   "slug": "speech-322600",
+   "speaker": "Melissa Price",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued the Migration Amendment (Charging for a Migration Outcome) Bill 2015 would make it a criminal offence to demand or receive payment for visa sponsorship, with penalties of up to two years imprisonment or fines of nearly $65,000 for individuals and $324,000 for corporations. The speaker also praised the Dalwallinu Regional Repopulation Plan in the Durack electorate for increasing the town's population by 15 per cent."
+  },
+  {
+   "slug": "speech-322601",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Charging for a Migration Outcome) Bill 2015 makes it unlawful to charge for a migration outcome across several skilled work visa programs, with penalties for asking, receiving, offering or providing such payments. The speaker welcomed the bill as a first step but argued it should go further, citing widespread exploitation of temporary workers—including 6,000 complaints to the Fair Work Ombudsman, 80% of foreign-language ads offering below-legal wages, and 7-Eleven franchisees charging up to $70,000 for sponsorship—and called for stronger enforcement, union access, and additional integrity measures."
+  },
+  {
+   "slug": "speech-322603",
+   "speaker": "Graham Perrett",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Charging for a Migration Outcome) Bill 2015 makes it unlawful for sponsors to be paid by visa applicants for migration outcomes, with robust penalties. Labor will propose amendments to extend the bill to student and working holiday visas, protect coerced applicants from penalties, increase sponsor penalties, require employment contracts for certain visa holders, protect whistleblowers, mandate an annual ministerial report, and allow unions to prosecute Migration Act breaches."
+  },
+  {
+   "slug": "speech-322604",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Charging for a Migration Outcome) Bill 2015 does not go far enough and supported Labor’s seven amendments, including applying the provisions to all visa types, increasing penalties, requiring annual ministerial reports, and allowing unions to bring civil penalties. The speaker also cited figures of 106,000 457 visa holders, 160,000 working holiday visa holders, 300,000–400,000 student visa holders, and about 60,000 illegal stayers, claiming the visa system is being rorted and that the government only introduced the bill due to public backlash."
+  },
+  {
+   "slug": "speech-322605",
+   "speaker": "Brendan O'Connor",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Charging for a Migration Outcome) Bill 2015 is supported to criminalise payments for visa sponsorship, but Labor will seek amendments to expand it to all work-related visas, increase penalties for sponsors, and implement a training levy and tripartite advisory body."
+  },
+  {
+   "slug": "speech-322606",
+   "speaker": "Alannah MacTiernan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Charging for a Migration Outcome) Bill 2015 but argued it does not go far enough, warning that free trade agreements like KAFTA and ChAFTA allow jobs to be sold overseas without labour market testing, creating risks of indentured labour. They proposed amending the Migration Act to require registration in Australia for companies importing workers under contractual services arrangements, as current extraterritorial provisions would not reach foreign firms."
+  },
+  {
+   "slug": "speech-322607",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Charging for a Migration Outcome) Bill 2015 but argued it did not go far enough, proposing amendments to extend it to all work-related visas, increase penalties (noting criminal fines of $64,800 and civil fines of $43,200 were inadequate given potential windfalls of up to $70,000 per applicant and $700,000 for sponsors), protect coerced visa holders, prohibit ABNs for student and working holiday visa holders, and allow unions to bring civil penalty proceedings."
+  },
+  {
+   "slug": "speech-322608",
+   "speaker": "Joel Fitzgibbon",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The opposition welcomes the government's agreement to introduce sanctions for applicants who bribe sponsors for 457 visas, but argues further measures are needed to restore public confidence in the skilled migration system. The speaker also acknowledged his daughter Grace, who was in the gallery."
+  },
+  {
+   "slug": "speech-322612",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Charging for a Migration Outcome) Bill 2015 was supported,"
+  },
+  {
+   "slug": "speech-322613",
+   "speaker": "Ken Wyatt",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Charging for a Migration Outcome) Bill 2015 introduces criminal and civil penalties for demanding or receiving payment in return for visa sponsorship, targeting the 457, 186 and 187 visas. The bill implements a key recommendation from the Independent Review of Integrity in the Subclass 457 program to protect Australian workers and vulnerable migrants from exploitation."
+  },
+  {
+   "slug": "speech-322618",
+   "speaker": "Luke Simpkins",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2015-11-10",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Migration Amendment (Charging for a Migration Outcome) Bill strengthens immigration system integrity and national security, supporting measures like mandatory visa cancellations for noncitizens who fail the character test and preventing unlawful noncitizens from reapplying for visas after failed removal attempts. They endorsed the Turnbull Government’s policies, including boat turnbacks, offshore processing, and prioritising humanitarian intake for persecuted groups like Syrian Christians and Karen or Chin people from Burma."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Migration Amendment (Charging for a Migration Outcome) Act 2015",
+   "frl_uri": "https://www.legislation.gov.au/C2015A00161",
+   "assent_date": "2015-11-30"
+  }
+ ]
+}

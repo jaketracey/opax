@@ -1,0 +1,202 @@
+{
+ "key": "au-federal-r6878",
+ "title": "Military Rehabilitation and Compensation and Other Legislation Amendment (Incapacity Payments) Bill 2022",
+ "short_title": "Military Rehabilitation and Compensation and Other Legislation Amendment (Incapacity Payments) Bill 2022",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 47,
+ "introduced": "2022-07-27",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Veterans' Affairs",
+ "status": "passed",
+ "status_as_of": "2022-10-07",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-07-27",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-05",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2022-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-06",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2022-09-28",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2022-10-07",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6878_ems_8f444b8e-b8ef-4d2d-9d47-05665f68992a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6878%22",
+   "document_date": "2022-07-27",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2022A00041",
+   "document_date": "2022-10-07",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-420196",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-07-27",
+   "stage_hint": null,
+   "brief": "The Military Rehabilitation and Compensation and Other Legislation Amendment (Incapacity Payments) Bill 2022 restores incapacity payments to 100% of pre-injury earnings for eligible veterans undertaking approved full-time study under a rehabilitation plan, extending the pilot program to 30 June 2023 and providing back payments from 1 July 2022 for approximately 370 affected veterans."
+  },
+  {
+   "slug": "speech-421866",
+   "speaker": "Barnaby Joyce",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Military Rehabilitation and Compensation and other Legislation Amendment (Incapacity Payments) Bill 2022, which removes the reduction to 75% of education payments after 45 weeks for veterans, affecting around 600 people and backed by $7.1 million in the budget, with back pay to be provided."
+  },
+  {
+   "slug": "speech-421867",
+   "speaker": "Brian Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The bill extends incapacity payments for eligible veterans undertaking study to 30 June 2023, with back payments from 1 July 2022, affecting 370 veterans who were facing a reduction due to the previous government's failure to extend the pilot program."
+  },
+  {
+   "slug": "speech-421868",
+   "speaker": "James Stevens",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Military Rehabilitation and Compensation and Other Legislation Amendment (Incapacity Payments) Bill 2022, which extends a pilot program for incapacity payments to veterans that lapsed on 30 June, ensuring they are not financially disadvantaged while studying for new careers."
+  },
+  {
+   "slug": "speech-421869",
+   "speaker": "Rob Mitchell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The speaker argued for extending a four-year pilot program supporting eligible veterans into full-time study, and criticised the previous government for failing to introduce the legislation, causing uncertainty for 370 Australian veterans."
+  },
+  {
+   "slug": "speech-421874",
+   "speaker": "Shayne Kenneth Neumann",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The speaker argued that the Military Rehabilitation and Compensation and Other Legislation Amendment (Incapacity Payments) Bill 2022 should be passed urgently to extend a pilot program for one year, reinstating incapacity payments at 100% of pre-injury earnings for eligible veterans, and blamed the former coalition government for failing to pass the measure earlier, leaving 370 veterans out of pocket."
+  },
+  {
+   "slug": "speech-421875",
+   "speaker": "Gavin Pearce",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Military Rehabilitation and Compensation and Other Legislation Amendment (Incapacity Payments) Bill 2022, which allows defence veterans to receive full compensation while studying. He highlighted the importance of family involvement, training, and community hubs like the North West veterans' hub in Tasmania, funded by $7.5 million, and urged employers to hire veterans as valuable assets."
+  },
+  {
+   "slug": "speech-421876",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The speaker supported the Military Rehabilitation and Compensation and Other Legislation Amendment (Incapacity Payments) Bill 2022 to resume beneficial incapacity payments for veterans, and announced the RESTORE trial, which found that a two-week intensive PTSD therapy reduced dropout rates by up to 40% compared to the standard 10-week course. The speaker also criticised the previous government for a staffing cap that created a backlog of compensation claims for 417 veterans in a pilot program."
+  },
+  {
+   "slug": "speech-421877",
+   "speaker": "Matt Keogh",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2022-09-05",
+   "stage_hint": null,
+   "brief": "The bill restores incapacity payments to 100% of pre-injury earnings for eligible veterans undertaking approved study, backdating payments to cover reductions from 1 July that affected 370 veterans due to previous government inaction. The government also committed $24 million to a veterans' employment program and supports a new PTSD treatment through Open Arms."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Military Rehabilitation and Compensation and Other Legislation Amendment (Incapacity Payments) Act 2022",
+   "frl_uri": "https://www.legislation.gov.au/C2022A00041",
+   "assent_date": "2022-10-07"
+  }
+ ]
+}

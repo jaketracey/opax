@@ -1,0 +1,73 @@
+{
+ "key": "au-federal-s1213",
+ "title": "Constitution Alteration (Water Resources) 2019",
+ "short_title": "Constitution Alteration (Water Resources) 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "senate",
+ "sponsor": "PATRICK, Sen Rex",
+ "sponsor_party": "Centre Alliance",
+ "sponsor_person_id": "10903",
+ "portfolio": null,
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1213%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1213%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1213%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/s1213_ems_bc1248bb-ff8e-4c35-b2d7-d7ee4b5525c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/s1213%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 4,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "This bill would propose a constitutional amendment to let the Commonwealth Parliament make laws managing water resources that cross state borders.",
+   "The amendment would remove the need for state referrals of power and allow the Commonwealth to override state water laws, while requiring that any Commonwealth water law must not harm the environment overall.",
+   "The bill does not change sections 99 or 100 of the Constitution, which protect state rights to reasonable water use and prevent preference among states."
+  ],
+  "changes": [
+   "Give the Commonwealth Parliament unambiguous power to legislate on water resources extending beyond a single state.",
+   "Ensure that any Commonwealth water law must not have an overall detrimental effect on the environment.",
+   "Allow the Commonwealth to manage the Murray-Darling Basin and Great Artesian Basin without relying on state referrals of power."
+  ],
+  "affected": "The Commonwealth Parliament, the Murray-Darling Basin, the Great Artesian Basin, state and territory governments, and all Australians who rely on these water resources.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:21:01Z"
+ },
+ "divisions": [],
+ "speeches": [],
+ "acts": []
+}

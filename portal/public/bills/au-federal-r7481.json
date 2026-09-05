@@ -1,0 +1,179 @@
+{
+ "key": "au-federal-r7481",
+ "title": "Regulatory Reform Omnibus Bill 2026",
+ "short_title": "Regulatory Reform Omnibus Bill 2026",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 48,
+ "introduced": "2026-05-13",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Finance",
+ "status": "before_parliament",
+ "status_as_of": "2026-07-02",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2026-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-05-13",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-06-24",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "other",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "committee",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2026-07-02",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7481_ems_ad7270d0-4440-41ba-928f-613d8796e927%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7481_ems_5ed7aebf-e359-4451-a90d-893fe1518550%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_revised",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r7481_ems_0776036f-0053-4c35-9fde-db64a0cbc19a%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r7481%22",
+   "document_date": "2026-05-13",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-10547",
+   "date": "2026-07-01",
+   "house": "representatives",
+   "question": "Sharon Claydon The question is that the amendment be agreed to.",
+   "stage": "Bill",
+   "ayes": 9,
+   "noes": 68,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 9,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 65
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 2
+    }
+   },
+   "party_coverage": {
+    "dated": 77
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2026-07-01/15"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-1203843",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203844",
+   "speaker": "Tim Wilson",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2026-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1203925",
+   "speaker": "Julie-Ann Campbell",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2026-06-24",
+   "stage_hint": null,
+   "brief": null
+  },
+  {
+   "slug": "speech-1204564",
+   "speaker": "Allegra Spender",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2026-07-01",
+   "stage_hint": null,
+   "brief": null
+  }
+ ],
+ "acts": []
+}

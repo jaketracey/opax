@@ -1,0 +1,205 @@
+{
+ "key": "au-federal-r6543",
+ "title": "Fair Work Amendment (Improving Unpaid Parental Leave for Parents of Stillborn Babies and Other Measures) Bill 2020",
+ "short_title": "Fair Work Amendment (Improving Unpaid Parental Leave for Parents of Stillborn Babies and Other Measures) Bill 2020",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2020-09-03",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Industrial Relations",
+ "status": "passed",
+ "status_as_of": "2020-11-26",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-09-03",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-09",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-09",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "passed",
+   "date": "2020-11-12",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  },
+  {
+   "stage": "royal_assent",
+   "date": "2020-11-26",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6543_ems_c1c099df-7843-4456-82e5-509347b20a41%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6543%22",
+   "document_date": "2020-09-03",
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "frl_act",
+   "url": "https://www.legislation.gov.au/C2020A00105",
+   "document_date": "2020-11-26",
+   "licence": "CC BY 4.0"
+  }
+ ],
+ "summary": {
+  "version": 3,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "original",
+  "as_of": "2020-09-03",
+  "sentences": [
+   "The bill would give parents who experience stillbirth or the death of a child within 24 months the same unpaid parental leave rights as parents of live babies.",
+   "It would stop employers from forcing parents on leave back to work or cancelling planned leave after a stillbirth or infant death, and allow parents to take compassionate leave in those circumstances.",
+   "Parents of premature or hospitalised newborns could pause their unpaid parental leave while the baby is in hospital, and all parents could use up to 30 days of their 12-month leave entitlement flexibly within two years of the child's birth."
+  ],
+  "changes": [
+   "Gives parents of stillborn children the same unpaid parental leave entitlements as parents of live babies.",
+   "Removes an employer's power to recall a parent on leave or cancel planned leave after a stillbirth or infant death.",
+   "Allows employees on unpaid parental leave to take compassionate leave after a stillbirth or child's death.",
+   "Lets parents of premature or hospitalised babies agree with their employer to pause unpaid parental leave while the child is hospitalised.",
+   "Permits parents to take up to 30 days of their 12-month unpaid parental leave flexibly, including on single days, within two years of the child's birth or placement."
+  ],
+  "affected": "New parent employees who experience stillbirth, the death of a child within 24 months of life, premature birth, or birth-related hospitalisation of a newborn, and all parents using unpaid parental leave.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T01:15:17Z"
+ },
+ "divisions": [],
+ "speeches": [
+  {
+   "slug": "speech-394980",
+   "speaker": "Christian Porter",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2020-09-03",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Improving Unpaid Parental Leave for Parents of Stillborn Babies and Other Measures) Bill 2020 was moved, proposing that parents experiencing stillbirth or the death of a child in the first 24 months retain full unpaid parental leave without employer recall, that parents of hospitalised newborns can pause and resume leave, and that all parents can take up to 30 days of unpaid parental leave flexibly."
+  },
+  {
+   "slug": "speech-397950",
+   "speaker": "Tony Burke",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment Bill to equalise unpaid parental leave for parents of stillborn babies, noting six stillbirths occur daily in Australia and the rate is double for Aboriginal and Torres Strait Islander women. They argued the bill partially addresses the Senate committee’s recommendation but called for guaranteed paid parental leave, moving a second reading amendment to that effect."
+  },
+  {
+   "slug": "speech-397952",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The speaker supported the Fair Work Amendment Bill 2020, which guarantees 12 months of unpaid parental leave for parents of stillborn babies or infants who die within 24 months, removes employers' ability to compel early return to work, and allows flexible leave arrangements if a child is hospitalised after birth. The bill also aligns stillborn baby payments with infant death payments and follows the Select Committee on Stillbirth Research and Education's recommendation to establish a National Stillbirth Action and Implementation Plan."
+  },
+  {
+   "slug": "speech-397953",
+   "speaker": "Chris Bowen",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Improving Unpaid Parental Leave for Parents of Stillborn Babies and Other Measures) Bill 2020 was supported for recognising stillbirth as real grief equal to any death. A national stillbirth plan with a 20% reduction target was called for, noting six stillbirths occur daily in Australia, with higher rates among First Nations."
+  },
+  {
+   "slug": "speech-397955",
+   "speaker": "Matt Thistlethwaite",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Improving Unpaid Parental Leave for Parents of Stillborn Babies and Other Measures) Bill 2020 provides unpaid parental leave entitlements for families experiencing stillbirths, infant deaths and premature births, and equalises payments for second or subsequent stillbirths. The speaker noted that stillbirth rates have not changed in two decades, with six babies stillborn daily in Australia, and that the bill will help families recover and return to work productively."
+  },
+  {
+   "slug": "speech-397956",
+   "speaker": "Helen Haines",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The Fair Work Amendment (Improving Unpaid Parental Leave for Parents of Stillborn Babies and Other Measures) Bill 2020 would guarantee 12 months of unpaid parental leave for parents of stillborn babies, prevent employers from recalling parents to work early after the death of a child in the first 24 months, and allow parents of premature or hospitalised babies to pause and later resume unpaid parental leave."
+  },
+  {
+   "slug": "speech-397957",
+   "speaker": "Kevin Hogan",
+   "party": "Nationals",
+   "state": "federal",
+   "date": "2020-11-09",
+   "stage_hint": null,
+   "brief": "The government argued the Fair Work Amendment (Improving Unpaid Parental Leave for Parents of Stillborn Babies and Other Measures) Bill 2020 would ensure parents experiencing stillbirth or the death of a child in the first 24 months retain the same unpaid parental leave entitlements as if the child had lived, allow parents to pause unpaid parental leave if their baby is hospitalised after birth, and introduce flexibility to take up to 30 days of unpaid parental leave within two years of birth or adoption."
+  }
+ ],
+ "acts": [
+  {
+   "title": "Fair Work Amendment (Improving Unpaid Parental Leave for Parents of Stillborn Babies and Other Measures) Act 2020",
+   "frl_uri": "https://www.legislation.gov.au/C2020A00105",
+   "assent_date": "2020-11-26"
+  }
+ ]
+}

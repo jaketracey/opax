@@ -1,0 +1,357 @@
+{
+ "key": "au-federal-r6349",
+ "title": "Migration Amendment (Strengthening the Character Test) Bill 2019",
+ "short_title": "Migration Amendment (Strengthening the Character Test) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-07-04",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Immigration, Citizenship, Migrant Services and Multicultural Affairs",
+ "status": "lapsed",
+ "status_as_of": "2021-10-20",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-07-04",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-09-19",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-19",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2021-10-20",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6349_ems_6380119e-0502-4146-9ce4-029421d5ac61%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "em_supp",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6349_ems_f7b61248-e4c9-4034-a961-a891d5f5d2bb%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6349%22",
+   "document_date": "2019-07-04",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": {
+  "version": 1,
+  "basis": "em",
+  "attribution": "Written by a model from the explanatory memorandum; not the record",
+  "describes_version": "supplementary",
+  "as_of": "2019-07-04",
+  "sentences": [
+   "The bill would narrow the definition of a designated offence for the character test in migration law.",
+   "A conviction for common assault would not count as a designated offence unless it caused or substantially contributed to bodily or mental harm, or involved family violence.",
+   "The amendments would also align the definition of character concern in the Migration Act 1958 with the revised designated offence definition."
+  ],
+  "changes": [
+   "Refines the scope of what constitutes a designated offence.",
+   "Clarifies that common assault convictions are excluded from designated offences unless they meet specific harm or family violence conditions.",
+   "Aligns the definition of character concern with the designated offence definition."
+  ],
+  "affected": "People applying for visas or facing character assessments under the Migration Act 1958.",
+  "model": "deepseek/deepseek-v4-flash",
+  "generated_at": "2026-09-05T00:17:52Z"
+ },
+ "divisions": [
+  {
+   "key": "federal-representatives-5888",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "question": "Migration Amendment (Strengthening the Character Test) Bill 2019 - Second Reading - Refuse a second reading",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 75,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 22
+    },
+    "Labor": {
+     "ayes": 60,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 39
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 10
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-18/1"
+  },
+  {
+   "key": "federal-representatives-5889",
+   "date": "2019-09-18",
+   "house": "representatives",
+   "question": "Migration Amendment (Strengthening the Character Test) Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 75,
+   "noes": 63,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 22,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 39,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 10,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 137
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-09-18/2"
+  },
+  {
+   "key": "federal-senate-7458",
+   "date": "2021-10-20",
+   "house": "senate",
+   "question": "The same number of senators voted for and against a [motion](https://www.openaustralia.org.au/senate/?gid=2021-10-20.18.6) to agree with main idea of [the bill](https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation%2Fbillhome%2Fr6349%22), which means the motion failed. In parliamentary jargon, they declined to read the bill for a [second time](https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law-in-the-australian-parliament/). This means that the bill will no longer be considered and will not become law. ### What is the bill's main idea? According to the [bills digest](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd012): > *The purpose of the Migration Amendment (Strengthening the Character Test) Bill 2019 (the Bill) is to amend the Migration Act 1958 (Cth) (the Act) to specify that a person does not pass the character test—and may have their visa cancelled or visa application refused—if they have been convicted of a ‘designated offence’.* A 'designated offence' is [defined in proposed subsection 501(7AA)](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/bd/bd1920a/20bd012#_Toc14860870) as \"*an offence against a law in force in Australia or a foreign country, which:* * *involves one or more of a list of specified ‘physical elements’ and* * *is punishable by a maximum or fixed term of imprisonment of not less than two years.*\" ### *** Caution *** The voting data for this division is currently incorrect. It appears to have been flipped. The Coalition should be marked as voting \"Yes\" (it's their bill) with the Opposition etc. voting \"No\". See the [Hansard](https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansard_Display?bid=chamber/hansards/25180/&sid=0000) for the correct voting data.",
+   "stage": "Second reading",
+   "ayes": 25,
+   "noes": 25,
+   "outcome": "negative",
+   "party_splits": {
+    "Greens": {
+     "ayes": 6,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 2
+    },
+    "Labor": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 19
+    },
+    "Nationals": {
+     "ayes": 1,
+     "noes": 3
+    },
+    "One Nation": {
+     "ayes": 0,
+     "noes": 1
+    }
+   },
+   "party_coverage": {
+    "member": 12,
+    "earliest": 21,
+    "dated": 17
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/senate/2021-10-20/3"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-377417",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-07-04",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Strengthening the Character Test) Bill 2019 was moved to amend section 501 of the Migration Act, creating an objective ground for visa refusal or cancellation for non-citizens convicted of designated offences carrying a maximum sentence of at least two years, including violence, sexual offences, weapon offences, and protection order breaches."
+  },
+  {
+   "slug": "speech-381812",
+   "speaker": "Andrew Giles",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "Labor argued it will oppose the Migration Amendment (Strengthening the Character Test) Bill 2019, calling it unnecessary and ill-considered, and noted the bill is opposed by the New Zealand government, the Law Council of Australia, the Australian Human Rights Commission, and numerous other organisations, with no supporters outside the government."
+  },
+  {
+   "slug": "speech-381815",
+   "speaker": "Ted O'Brien",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Strengthening the Character Test) Bill 2019 is necessary to keep Australia safe by identifying and removing non-citizens who do not respect the country, and it will help mitigate terrorism risks."
+  },
+  {
+   "slug": "speech-381817",
+   "speaker": "Peter Khalil",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the Migration Amendment (Strengthening the Character Test) Bill 2019 is unnecessary because existing law already gives the minister broad powers to cancel visas, and the bill would harm Australia–New Zealand relations. Labor will oppose the bill unless the government adopts three amendments to avoid retrospective liability, exclude trivial offences from the character test, and review ministerial decisions on New Zealanders' visas; 16 of 17 submissions opposed the bill, with only one in support."
+  },
+  {
+   "slug": "speech-381819",
+   "speaker": "Julian Simmonds",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker supported the Migration Amendment (Strengthening the Character Test) Bill 2019, which adds a list of designated offences so that anyone convicted of these crimes in Australia or overseas automatically fails the character test, and criticised Labor for siding with the New Zealand government instead of prioritising Australian safety."
+  },
+  {
+   "slug": "speech-381826",
+   "speaker": "Anne Aly",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the Migration Amendment (Strengthening the Character Test) Bill 2019 is unnecessary because the minister already has broad discretion to cancel visas for serious criminals—4,700 visas have been cancelled since 2014—and criticised the bill as a political wedge that risks retroactive punishment, captures low-level offending, and damages Australia’s relationship with New Zealand."
+  },
+  {
+   "slug": "speech-381827",
+   "speaker": "Andrew Wallace",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speech argued that the Migration Amendment (Strengthening the Character Test) Bill 2019 should be passed to allow visa cancellation or refusal for non‑citizens convicted of specific serious offences (including violence, sexual offences, and weapon offences), regardless of sentence length. The speaker also criticised the Labor Party for opposing the bill, alleging that Labor would allow such offenders to remain in Australia."
+  },
+  {
+   "slug": "speech-381833",
+   "speaker": "Pat Conroy",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "Labor will oppose the Migration Amendment (Strengthening the Character Test) Bill 2019 unless the government removes its unintended consequences, arguing existing Migration Act powers are sufficient and the new \"designated offences\" definition ignores actual court sentences, risking deportation of low-level offenders. The bill could further strain relations with New Zealand and the Pacific, citing 1,600 New Zealand visa cancellations in four years, Jacinda Ardern's \"corrosive\" criticism, and only 203 Pacific Labour Scheme visas granted against 185,000 backpacker visas."
+  },
+  {
+   "slug": "speech-381834",
+   "speaker": "Steve Georganas",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The Labor member argued the Migration Amendment (Strengthening the Character Test) Bill is redundant because the minister already has broad powers under sections 501 and 116 of the Migration Act to cancel or refuse visas on character grounds, and the bill is a political tactic to demonise migrants. Labor will not support the bill in its current form, citing issues such as retrospective double jeopardy, and has proposed conditions the government must meet for its support."
+  },
+  {
+   "slug": "speech-381835",
+   "speaker": "Tony Zappia",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The speaker argued the Migration Amendment (Strengthening the Character Test) Bill 2019 would dangerously expand ministerial power by lowering the threshold for visa cancellations, removing accountability and appeal rights. They also claimed the government is using the bill to politically wedge Labor, while noting citizenship applications backlogged from 27,000 in 2013 to 221,000 by June 2019."
+  },
+  {
+   "slug": "speech-381837",
+   "speaker": "David Coleman",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-09-18",
+   "stage_hint": null,
+   "brief": "The Migration Amendment (Strengthening the Character Test) Bill 2019 would allow the government to cancel visas of non-citizens convicted of serious crimes—including violence, sexual offences, breaching protection orders, or unlawful weapon use—where the maximum sentence is two years or more, even if the actual sentence is under 12 months. The speaker argued the opposition's refusal to support the bill is extraordinary."
+  }
+ ],
+ "acts": []
+}

@@ -1,0 +1,286 @@
+{
+ "key": "au-federal-r6395",
+ "title": "Social Services Legislation Amendment (Drug Testing Trial) Bill 2019",
+ "short_title": "Social Services Legislation Amendment (Drug Testing Trial) Bill 2019",
+ "aliases": [],
+ "jurisdiction": "federal",
+ "parliament": 46,
+ "introduced": "2019-09-11",
+ "originating_house": "representatives",
+ "sponsor": null,
+ "sponsor_party": null,
+ "sponsor_person_id": null,
+ "portfolio": "Social Services",
+ "status": "lapsed",
+ "status_as_of": "2022-07-25",
+ "key_dates": [
+  {
+   "stage": "introduced",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-09-11",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-15",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-16",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "third_reading",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "introduced",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "second_reading",
+   "date": "2019-10-17",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  },
+  {
+   "stage": "other",
+   "date": "2022-07-25",
+   "house": "senate",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22"
+  }
+ ],
+ "sources": [
+  {
+   "kind": "em",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/ems/r6395_ems_1871e79c-6e2c-4685-a704-d456be73e0c6%22",
+   "document_date": null,
+   "licence": "CC BY-NC-ND 4.0"
+  },
+  {
+   "kind": "billhome",
+   "url": "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22legislation/billhome/r6395%22",
+   "document_date": "2019-09-11",
+   "licence": "CC BY-NC-ND 4.0"
+  }
+ ],
+ "summary": null,
+ "divisions": [
+  {
+   "key": "federal-representatives-5905",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Drug Testing Trial) Bill 2019 - Second Reading - Disagree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 63,
+   "noes": 70,
+   "outcome": "negative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Greens": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "Independent": {
+     "ayes": 2,
+     "noes": 1
+    },
+    "Katter's Australian Party": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "LNP": {
+     "ayes": 0,
+     "noes": 18
+    },
+    "Labor": {
+     "ayes": 59,
+     "noes": 0
+    },
+    "Liberal": {
+     "ayes": 0,
+     "noes": 41
+    },
+    "Nationals": {
+     "ayes": 0,
+     "noes": 9
+    }
+   },
+   "party_coverage": {
+    "dated": 133
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-17/1"
+  },
+  {
+   "key": "federal-representatives-5906",
+   "date": "2019-10-17",
+   "house": "representatives",
+   "question": "Social Services Legislation Amendment (Drug Testing Trial) Bill 2019 - Second Reading - Agree with bill's main idea",
+   "stage": "Second reading",
+   "ayes": 70,
+   "noes": 64,
+   "outcome": "affirmative",
+   "party_splits": {
+    "Centre Alliance": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Greens": {
+     "ayes": 0,
+     "noes": 1
+    },
+    "Independent": {
+     "ayes": 1,
+     "noes": 2
+    },
+    "Katter's Australian Party": {
+     "ayes": 1,
+     "noes": 0
+    },
+    "LNP": {
+     "ayes": 18,
+     "noes": 0
+    },
+    "Labor": {
+     "ayes": 0,
+     "noes": 60
+    },
+    "Liberal": {
+     "ayes": 41,
+     "noes": 0
+    },
+    "Nationals": {
+     "ayes": 9,
+     "noes": 0
+    }
+   },
+   "party_coverage": {
+    "dated": 134
+   },
+   "paired": 0,
+   "url": "https://theyvoteforyou.org.au/divisions/representatives/2019-10-17/2"
+  }
+ ],
+ "speeches": [
+  {
+   "slug": "speech-382758",
+   "speaker": "Bert van Manen",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "The member argued for the Drug Testing Trial Bill, stating jobseekers testing positive would not lose welfare payments but be placed on income management for 24 months with 80% of payments quarantined. The trial will run in Canterbury Bankstown, Mandurah, and Logan, with $10 million in additional treatment funding."
+  },
+  {
+   "slug": "speech-382759",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-15",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2019, arguing it lacks evidence, contradicts expert advice, and would waste scarce counselling resources on unwilling participants while 200,000–500,000 Australians annually cannot access addiction services."
+  },
+  {
+   "slug": "speech-382990",
+   "speaker": "Joanne Ryan",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The member opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2019, arguing it is uncosted—with gold-standard tests estimated at $550–$950 each—and would not create jobs for 1.9 million Australians. They cited existing program costs and low efficacy (jobactive $1.5bn/year, Work for the Dole $1.7bn/year, PaTH $840m/year), criticised welfare churn, and referenced St Vincent de Paul data showing repeated electricity disconnections in Werribee and Hoppers Crossing."
+  },
+  {
+   "slug": "speech-382991",
+   "speaker": "Andrew Hastie",
+   "party": "Liberal",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The member for Canning argued in support of the Social Services Legislation Amendment (Drug Testing Trial) Bill 2019, which will trial drug testing of welfare recipients in Mandurah (WA), Logan (Qld) and Canterbury-Bankstown (NSW), claiming the measure is not punitive but aims to help those with drug and alcohol addiction into employment, with 80% of payments quarantined after a first positive test and a $10 million treatment fund available for second-time positive testees."
+  },
+  {
+   "slug": "speech-382992",
+   "speaker": "Alicia Payne",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "Labor opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2019, which would subject 5,000 Newstart and youth allowance recipients in Canterbury-Bankstown, Mandurah and Logan to random drug tests for two years. The opposition argued the measure lacks evidence, citing a New Zealand trial with less than one per cent positive results, punishes without addressing addiction, and urged instead raising the Newstart rate to stimulate the economy, citing support from the Business Council and the RBA."
+  },
+  {
+   "slug": "speech-382995",
+   "speaker": "Julie Owens",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-16",
+   "stage_hint": null,
+   "brief": "The speaker argued the Drug Testing Trial Bill 2019 is a misguided attack on unemployed people, noting that expert submissions overwhelmingly opposed it while 200,000–500,000 Australians cannot access addiction services due to underfunding and 700,000 people are unemployed with 19 applicants per job. The trial would waste money on drug-testing 5,000 recipients in three locations, potentially pushing unprepared people into treatment and displacing those who genuinely seek help."
+  },
+  {
+   "slug": "speech-383064",
+   "speaker": "Chris Hayes",
+   "party": "Labor",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "Labor opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2019, arguing it lacks a mandate and evidence, would indiscriminately drug test 5,000 welfare recipients in three areas, and cited that 98% of submissions opposed the bill and only 22 of 8,000 tested positive in a similar New Zealand trial."
+  },
+  {
+   "slug": "speech-383065",
+   "speaker": "Andrew Wilkie",
+   "party": "Independent",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The speaker opposed the Drug Testing Trial Bill, arguing it ignores expert evidence from the Royal Australasian College of Physicians that drug testing welfare recipients is harmful and ineffective, and instead called for raising welfare payments like Newstart ($279 per week) and improving Centrelink services."
+  },
+  {
+   "slug": "speech-383066",
+   "speaker": "Rebekha Sharkie",
+   "party": "Centre Alliance",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "Centre Alliance opposed the Social Services Legislation Amendment (Drug Testing Trial) Bill 2019 for the third time, arguing it lacks published costings, citing US programs that cost around $2,650 per positive test and were largely ineffective, and calling the bill a distraction from the need to raise Newstart and address harms from robo-debts."
+  },
+  {
+   "slug": "speech-383068",
+   "speaker": "Karen Andrews",
+   "party": "LNP",
+   "state": "federal",
+   "date": "2019-10-17",
+   "stage_hint": null,
+   "brief": "The Social Services Legislation Amendment (Drug Testing Trial) Bill 2019 introduces a two‑year trial of random drug testing for 5,000 new Newstart and youth allowance recipients in Canterbury Bankstown, Logan, and Mandurah, with positive results leading to income management and, after a second positive test, compulsory treatment supported by an additional $10 million treatment fund."
+  }
+ ],
+ "acts": []
+}
