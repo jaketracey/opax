@@ -71,3 +71,12 @@ robots.txt. Every one of the 401 requested ids was there.
   weeks).
 * State: `wikidata_match.py` → re-apply the drop rules → `fetch_commons_portraits.py` →
   `recrop_commons_portraits.py`, then look at the sheets. Never ship a Commons batch unseen.
+
+## JPEG twins for share images
+
+`public/photos/jpg/<id>.jpg` is a JPEG copy of every portrait, written by
+`npm run og:portraits` in `portal/` (sharp, quality 86). The Worker reads them
+to draw the Open Graph card for a person or a speech (`docs/SEO.md`, "Share
+images"), because satori, which lays the card out, cannot decode WebP. Re-run
+the script after any portrait lands or changes; it skips files already newer
+than their source. The site itself still serves the WebP.

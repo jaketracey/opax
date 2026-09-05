@@ -2,3 +2,4 @@ node_modules/
 .dev.vars
 .wrangler/
 worker-configuration.d.ts
+.og-preview/

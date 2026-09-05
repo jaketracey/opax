@@ -9,8 +9,9 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    // API routes must reach the Worker even though assets exist.
-    "run_worker_first": ["/api/*"]
+    // API routes must reach the Worker even though assets exist; so must the
+    // share images, which are drawn on request (src/og-render.ts).
+    "run_worker_first": ["/api/*", "/og/*"]
   },
 
   "observability": {
@@ -53,6 +54,10 @@
     // Follow-up chips ride on the fast model but are still a model call.
     { "name": "FOLLOWUPS_LIMITER", "namespace_id": "1002", "simple": { "limit": 20, "period": 60 } },
     // /find is cheap but not free; 120/min is far above human use.
-    { "name": "SEARCH_LIMITER", "namespace_id": "1003", "simple": { "limit": 120, "period": 60 } }
+    { "name": "SEARCH_LIMITER", "namespace_id": "1003", "simple": { "limit": 120, "period": 60 } },
+    // Share images (/og/*.png) are rasterised in wasm on a cache MISS, a few
+    // hundred ms of CPU each. A crawler fetches one per shared link; only a
+    // script minting fresh ?q= URLs could ask for sixty in a minute.
+    { "name": "OG_LIMITER", "namespace_id": "1004", "simple": { "limit": 60, "period": 60 } }
   ]
 }

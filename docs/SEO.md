@@ -124,6 +124,48 @@ encyclopedia" and every report as "Reports · OPAX", which is exactly the
 problem this whole change exists to fix. Navigate away in the app and the
 view's own title takes over.
 
+## Share images
+
+Every page the route table names has its own Open Graph picture, drawn on
+request by the Worker. The URL is the page's canonical path under `/og` with
+`.png` on the end, so `/subject/person/Anthony%20Albanese` shares
+`/og/subject/person/Anthony%20Albanese.png?v=2`, `/reports/gambling` shares
+`/og/reports/gambling.png?v=2`, and `/ask?q=...` keeps its question. The head
+rewrite sets `og:image`, `og:image:alt` and `twitter:image` to it; a 404 page,
+and anything that cannot be drawn, shares the static home card
+(`public/og-default.png`), never a broken image.
+
+Three files:
+
+| File | Role |
+| --- | --- |
+| `portal/src/og.ts` | The card, pure: an element tree in the masthead's register (navy, the gold mark and pale stars as the lockup, Merriweather for the one line that names the page, the bronze rule). `fitTitle()` sizes the title to two lines (three for a question or a motion) from measured glyph advances, since satori wraps but never shrinks. `OG_VERSION` is folded into every image URL; bump it when the drawing changes, because crawlers cache by URL. |
+| `portal/src/og-render.ts` | satori (layout, via yoga wasm) then resvg (raster, wasm) to PNG, both instantiated once per isolate. |
+| `portal/og/build.mjs` | Build side: `npm run og:portraits` writes the JPEG twins of the portraits under `public/photos/jpg/` (satori cannot read WebP); `npm run og:default` writes `public/og-default.png` from the same tree; `npm run og:preview` renders one of every card kind for the eye. Needs Node 23.6 or newer (it imports `src/og.ts` directly). |
+
+What each card says comes from `buildMeta()`: every `PageMeta` carries a
+`card` (`CardSpec`), built beside the title and description so the picture
+and the page cannot disagree. A person's card names the portrait by id and
+the Worker reads the JPEG only when the image itself is requested; a Commons
+portrait carries its licence line under the picture, worded as the infobox
+words it. Party dots take the money map's swatches (`colour` on the party
+node), which were drawn for a dark ground.
+
+Serving (`serveOgImage()`): the path is run through `matchSeoRoute()` and
+`buildMeta()` like the page, the card is rasterised (a few hundred
+milliseconds of CPU), and the PNG is held in the edge cache for a day under
+`CACHE_EPOCH` and `OG_VERSION`. A cache MISS sits behind `OG_LIMITER`
+(60 a minute per IP): a crawler fetches one image per shared link, so only a
+script minting fresh `?q=` URLs could reach it. `?nocache=1` bypasses the read.
+The fonts are the static 400/600/700 cuts of Merriweather and Public Sans as
+woff under `public/fonts/og/` (satori reads woff, not the variable woff2 the
+site itself uses), fetched through the ASSETS binding and memoised per isolate.
+
+To check a card: `curl -o card.png 'localhost:8870/og/subject/person/Anthony%20Albanese.png'`
+and look at it; `x-opax-cache` says HIT or MISS, `x-opax-og` names the page
+it drew. The dry-run bundle is about 3.4 MB (1.2 MB gzipped), most of it the
+resvg wasm.
+
 ## sitemap.xml and robots.txt
 
 `robots.txt` allows everything except `/api/` and points at the sitemap.

@@ -13,6 +13,9 @@
  *  - exclude da-* fields from citations (enrichment output must not cite itself)
  */
 
+import { OG_FONT_FILES, OG_VERSION, homeCard, type OgCard } from './og'
+import { renderOgPng, type OgFont } from './og-render'
+
 interface FindParagraph {
   score: number
   score_type: string
@@ -1940,6 +1943,22 @@ async function apiMatrix(env: Env): Promise<Response> {
 
 const SITE_ORIGIN = 'https://opax.com.au'
 const OG_IMAGE = `${SITE_ORIGIN}/og-default.png`
+const OG_IMAGE_ALT = 'OPAX: ask what your politicians actually said'
+/**
+ * The share image for a page is its canonical URL under /og with .png on the
+ * end, so /subject/person/Anthony%20Albanese shares
+ * /og/subject/person/Anthony%20Albanese.png?v=2, and /ask?q=... keeps its
+ * question. The version is the drawing's (src/og.ts), not the data's: a
+ * crawler caches by URL, so a redesign has to move.
+ */
+function ogImageFor(canonical: string): string {
+  const u = new URL(canonical)
+  const out = new URL(`${SITE_ORIGIN}/og${u.pathname}.png`)
+  const q = u.searchParams.get('q')
+  if (q) out.searchParams.set('q', q)
+  out.searchParams.set('v', OG_VERSION)
+  return out.toString()
+}
 const SITE_TITLE = 'OPAX: ask what Australian politicians actually said'
 const SITE_DESCRIPTION =
   'Ask questions of half a million Australian parliamentary speeches and see who funds the people doing the talking. Every answer cited to the official record.'
@@ -2045,6 +2064,14 @@ type SeoRoute =
   | { kind: 'subject'; dir: DirectoryKind; name: string }
   | { kind: 'doc'; slug: string }
 
+/**
+ * What the route's share image says (src/og.ts draws it). The portrait is
+ * named here and read only when the image itself is requested, so the HTML
+ * head never pays for the JPEG. Absent, or on a 404, the page shares the
+ * static home card.
+ */
+interface CardSpec extends Omit<OgCard, 'portrait'> { portraitId?: string | null }
+
 interface PageMeta {
   title: string
   description: string
@@ -2053,6 +2080,7 @@ interface PageMeta {
   status: number
   jsonLd: Record<string, unknown> | null
   prerender: string | null
+  card?: CardSpec | null
 }
 
 // How long a /subject/<dir>/<name> segment may be. A person, a party or a donor
@@ -2130,6 +2158,8 @@ interface MoneyNode {
   count: number
   firstYear: number
   lastYear: number
+  /** The money map's swatch for a party; drawn as the dot on its share card. */
+  colour?: string
 }
 interface MoneyEntry extends MoneyNode { sourceShort: string; generated: string }
 interface MoneyData { generated: string; donors: Map<string, MoneyEntry>; parties: Map<string, MoneyEntry> }
@@ -2322,6 +2352,40 @@ function loadReports(env: Env): Promise<ReportsData> {
   return reportsMemo
 }
 
+// Portraits, as app.js resolves them: photos/people.json maps a lower-cased
+// full name to a file id (an APH/OpenAustralia person id, or wd-<QID> for a
+// Wikimedia Commons file, whose licence line lives in photos/credits.json).
+type PhotoMap = Record<string, string>
+interface PhotoCredit { artist?: string; credit?: string; licence?: string }
+let photosMemo: Promise<PhotoMap> | null = null
+function loadPhotos(env: Env): Promise<PhotoMap> {
+  photosMemo ??= assetJson<PhotoMap>(env, '/photos/people.json').catch((err) => {
+    photosMemo = null
+    throw err
+  })
+  return photosMemo
+}
+let creditsMemo: Promise<Record<string, PhotoCredit>> | null = null
+function loadCredits(env: Env): Promise<Record<string, PhotoCredit>> {
+  creditsMemo ??= assetJson<Record<string, PhotoCredit>>(env, '/photos/credits.json').catch((err) => {
+    creditsMemo = null
+    throw err
+  })
+  return creditsMemo
+}
+const photoIdFor = (photos: PhotoMap | null, name: string): string | null =>
+  photos?.[name.trim().toLowerCase()] ?? null
+/** The licence condition on a Commons portrait, worded as the infobox words it. */
+async function creditLine(env: Env, id: string | null): Promise<string | null> {
+  if (!id || !id.startsWith('wd-')) return null
+  const c = (await loadCredits(env).catch(() => null))?.[id]
+  if (!c) return null
+  const who = c.artist || c.credit || 'author not recorded'
+  return `Photo: ${who}${c.licence ? `, ${c.licence}` : ''}, via Wikimedia Commons`
+}
+const partyColour = (moneyData: MoneyData | null, party: string | null | undefined): string | null =>
+  party ? moneyData?.parties.get(foldName(party))?.colour ?? null : null
+
 // --- text helpers ------------------------------------------------------------
 
 const escHtml = (s: string): string =>
@@ -2411,6 +2475,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           title: clip(`${q} · OPAX`, 90),
           description: clip(`"${q}": an answer from the Australian parliamentary record, cited to the speeches it draws on, with the money behind the speakers.`),
           canonical,
+          card: { kicker: 'Ask', italic: true, title: `“${clip(q, 160)}”`, lines: ['An answer from the parliamentary record, cited to the speeches it draws on, with the money behind the speakers.'] },
         })
       }
       if (route.page === 'search' && q) {
@@ -2418,6 +2483,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           title: clip(`Search: ${q} · OPAX`, 90),
           description: clip(`Speeches matching "${q}" in the Australian parliamentary record, with speaker, party, date and a link to the official source for each.`),
           canonical,
+          card: { kicker: 'Search the record', italic: true, title: `“${clip(q, 160)}”`, lines: ['Speeches matching this query, with speaker, party, date and a link to the official source for each.'] },
         })
       }
       return base({
@@ -2425,6 +2491,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         description: page.description,
         canonical,
         jsonLd: { '@context': 'https://schema.org', '@type': 'WebPage', name: page.title, description: page.description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
+        // /ask without a question is the front door; it shares the home card.
+        card: route.page === 'ask' ? homeCard() : { kicker: 'OPAX', title: page.title.replace(/ · OPAX$/, ''), lines: [page.description] },
       })
     }
 
@@ -2439,6 +2507,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         description,
         canonical,
         ogType: 'article',
+        card: { kicker: 'Report', title: r.title, lines: [r.blurb, 'A standing OPAX investigation, every claim cited.'] },
         jsonLd: {
           '@context': 'https://schema.org',
           '@type': 'Article',
@@ -2446,7 +2515,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           description: r.blurb,
           url: canonical,
           mainEntityOfPage: canonical,
-          image: OG_IMAGE,
+          image: ogImageFor(canonical),
           ...(r.updated ? { dateModified: r.updated } : {}),
           author: publisher,
           publisher,
@@ -2478,6 +2547,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         description,
         canonical,
         jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${label} · OPAX`, description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
+        card: { kicker: 'Directory', title: label, lines: [description] },
       })
     }
 
@@ -2487,6 +2557,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         title: 'Topics A-Z · OPAX',
         description,
         jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Topics A-Z · OPAX', description, url: canonicalFor(url, false), isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
+        card: { kicker: 'Topics', title: 'Topics A-Z', lines: [description] },
       })
     }
 
@@ -2505,6 +2576,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         canonical,
         jsonLd: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: `${name} in the parliamentary record`, about: name, description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OPAX', url: SITE_ORIGIN } },
         prerender: prerenderBlock(name, `Speeches on ${lower} in the Australian parliamentary record, by party and by year, with the newest labelled speeches and a link to the official source for each.`, 'Topic'),
+        card: { kicker: 'Topic', title: name, lines: [`Parliament on ${lower}: every speech labelled ${lower} in the record, by party and by year.`] },
       })
     }
 
@@ -2519,16 +2591,26 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
 }
 
 async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
-  const people = await loadPeople(env).catch(() => null)
+  const [people, photos, moneyData] = await Promise.all([
+    loadPeople(env).catch(() => null),
+    loadPhotos(env).catch(() => null),
+    loadMoney(env).catch(() => null),
+  ])
   const p = people?.byName.get(name) ?? people?.byFold.get(foldName(name)) ?? null
   const display = p?.name ?? name
   const canonical = `${SITE_ORIGIN}/subject/person/${encodeURIComponent(display)}`
   const title = `${display} · OPAX`
+  const portraitId = photoIdFor(photos, display)
+  const credit = await creditLine(env, portraitId)
   if (!p) {
     // Below the 5-speech floor of parliamentarians.json, or a name the record
     // spells differently. The app still tries the live index, so no 404 here.
     const description = clip(`${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`)
-    return { title, description, canonical, ogType: 'profile', status: 200, jsonLd: null, prerender: prerenderBlock(display, description, 'Parliamentarian') }
+    return {
+      title, description, canonical, ogType: 'profile', status: 200, jsonLd: null,
+      prerender: prerenderBlock(display, description, 'Parliamentarian'),
+      card: { kicker: 'Parliamentarian', title: display, lines: ['In the OPAX record of Australian parliamentary speeches and disclosed political donations.'], portraitId, credit },
+    }
   }
   const where = p.chambers.length === 1 && CHAMBER_NAMES[p.chambers[0]]
     ? `${p.states.length === 1 && p.states[0] !== 'federal' ? `${STATE_NAMES[p.states[0]]?.replace(' parliament', '') ?? p.states[0]} ` : ''}${CHAMBER_NAMES[p.chambers[0]]}`
@@ -2554,6 +2636,14 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       ...(federal ? { sameAs: [`https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${encodeURIComponent(display)}`] } : {}),
     },
     prerender: prerenderBlock(display, `${facts} ${tail}`, 'Parliamentarian'),
+    card: {
+      kicker: 'Parliamentarian',
+      title: display,
+      lines: [[p.party, where].filter(Boolean).join(' · '), `${num(p.speeches)} speeches on the record, ${years(p.first, p.last)}`],
+      dot: partyColour(moneyData, p.party),
+      portraitId,
+      credit,
+    },
   }
 }
 
@@ -2566,6 +2656,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let facts: string
   let tail = ''
   let ldType = 'Organization'
+  let card: CardSpec
   if (dir === 'party') {
     const members = people?.people.filter((p) => p.party && foldName(p.party) === foldName(display)) ?? []
     const speeches = members.reduce((s, p) => s + p.speeches, 0)
@@ -2578,13 +2669,25 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     } else {
       facts = `${display} in the OPAX record of Australian parliamentary speeches and disclosed political donations.`
     }
+    card = {
+      kicker: 'Political party',
+      title: display,
+      lines: parts.length ? parts : ['In the OPAX record of Australian parliamentary speeches and disclosed political donations.'],
+      dot: node?.colour ?? null,
+    }
   } else if (node) {
     ldType = node.industry === 'individual' ? 'Person' : 'Organization'
     const what = node.industry === 'individual' ? 'individual donor' : `${industryLabel(node.industry)} donor`
     facts = `${display}: disclosed political ${what}, ${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort}).`
     tail = 'Which parties it funded.'
+    card = {
+      kicker: `Donor · ${industryLabel(node.industry)}`,
+      title: display,
+      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`, 'Which parties it funded, year by year.'],
+    }
   } else {
     facts = `${display}: not among the top disclosed donors in the OPAX money data. Search the parliamentary record for mentions.`
+    card = { kicker: 'Donor', title: display, lines: ['Not among the top disclosed donors in the OPAX money data. Search the parliamentary record for mentions.'] }
   }
   const sentence = tail ? `${facts} ${tail}` : facts
   const description = withTail(facts, tail)
@@ -2596,6 +2699,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: display, url: canonical, description },
     prerender: prerenderBlock(display, sentence, dir === 'party' ? 'Political party' : 'Donor'),
+    card,
   }
 }
 
@@ -2619,7 +2723,11 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
   if (!c) {
     if (!data) {
       const description = clip(`${display} in the OPAX record of AEC registered campaigners, third parties and associated entities.`)
-      return { title, description, canonical, ogType: 'profile', status: 200, jsonLd: null, prerender: prerenderBlock(display, description, 'Campaigners & third parties') }
+      return {
+        title, description, canonical, ogType: 'profile', status: 200, jsonLd: null,
+        prerender: prerenderBlock(display, description, 'Campaigners & third parties'),
+        card: { kicker: 'Campaigners & third parties', title: display, lines: ['In the OPAX record of AEC registered campaigners, third parties and associated entities.'] },
+      }
     }
     return {
       title: 'Campaigner not found · OPAX',
@@ -2660,6 +2768,11 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
       ...(c.abn ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: c.abn } } : {}),
     },
     prerender: prerenderBlock(display, `${facts} ${tail}`, c.kindLabel),
+    card: {
+      kicker: c.kindLabel,
+      title: display,
+      lines: [`On the AEC register${linked}${parts[0] ? `; ${parts[0]}` : ''}`, parts[1] ?? tail],
+    },
   }
 }
 
@@ -2697,6 +2810,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   }
   const date = typeof r.metadata.date === 'string' ? r.metadata.date : null
   const chamber = CHAMBER_NAMES[r.labels.chamber] ?? r.labels.chamber
+  const when = date ? ` · ${longDate(date)}` : ''
   if (r.labels.kind === 'division' || DIVISION_SLUG_RE.test(slug)) {
     const ayes = r.metadata.ayes_count, noes = r.metadata.noes_count
     const bill = typeof r.metadata.bill_ref === 'string' ? r.metadata.bill_ref : ''
@@ -2705,16 +2819,31 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       `${chamber ?? 'Parliamentary'} division${date ? `, ${longDate(date)}` : ''}${bill ? `: ${bill}` : ''}. ` +
       `${outcome}${typeof ayes === 'number' && typeof noes === 'number' ? ` ${ayes} votes to ${noes}` : ''}. Who voted which way, on OPAX.`,
     )
+    const tally = typeof ayes === 'number' && typeof noes === 'number' ? `, ${ayes} votes to ${noes}` : ''
+    // The KB titles a division "Senate division, 13 September 2023: <motion>";
+    // the card's kicker already says where and when, so it carries the motion.
+    const dm = /^([A-Za-z ]+?) division, ([^:]+): (.+)$/.exec(r.title)
+    const motion = dm ? dm[3] : r.title
+    const divisionWhen = date ? longDate(date) : dm?.[2] ?? ''
     return {
       ...generic,
       // Division titles run long; trim the motion, never the masthead.
       title: `${clip(r.title, 90)} · OPAX`,
       description,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: r.title, description, url: canonical, ...(date ? { datePublished: date } : {}), publisher },
+      card: {
+        kicker: `Division${chamber ? ` · ${chamber}` : dm ? ` · ${dm[1]}` : ''}${divisionWhen ? ` · ${divisionWhen}` : ''}`,
+        italic: true,
+        title: motion,
+        lines: [`${outcome || 'Division'}${tally}. Who voted which way.`],
+      },
     }
   }
   const speaker = r.speaker ?? 'Unknown speaker'
   const who = [r.labels.party, chamber].filter(Boolean).join(', ')
+  const [photos, moneyData] = await Promise.all([loadPhotos(env).catch(() => null), loadMoney(env).catch(() => null)])
+  const portraitId = r.speaker ? photoIdFor(photos, r.speaker) : null
+  const recordOf = `the official ${r.labels.state === 'federal' ? 'federal' : (r.labels.state ?? '').toUpperCase()} parliamentary record`
   const words = typeof r.metadata.word_count === 'number' ? `${num(r.metadata.word_count)} words` : 'a speech'
   const description = clip(
     r.summary?.trim() ||
@@ -2733,6 +2862,16 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
       ...(date ? { datePublished: date } : {}),
       ...(r.speaker ? { author: { '@type': 'Person', name: r.speaker, url: `${SITE_ORIGIN}/subject/person/${encodeURIComponent(r.speaker)}` } } : {}),
       publisher,
+    },
+    card: {
+      kicker: `From the record${when}`,
+      title: speaker,
+      // The KB's title for a speech is "speaker, date", which the card already
+      // says: the second line is the summary when the record has one, else the length.
+      lines: [[r.labels.party, chamber].filter(Boolean).join(' · '), r.summary?.trim() || `${words[0].toUpperCase()}${words.slice(1)} from ${recordOf}.`],
+      dot: partyColour(moneyData, r.labels.party),
+      portraitId,
+      credit: await creditLine(env, portraitId),
     },
   }
 }
@@ -2756,6 +2895,10 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   if (!shell.ok) return shell
   // JSON-LD sits in a <script>: keep "</script>" from ever appearing in it.
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
+  // The share image is drawn per route (see "Share images" below); a page
+  // with nothing to draw, or nothing to find, shares the home card.
+  const image = meta.card && meta.status !== 404 ? ogImageFor(meta.canonical) : OG_IMAGE
+  const imageAlt = meta.card && meta.status !== 404 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
   const rewriter = new HTMLRewriter()
     .on('title', new SetText(meta.title))
     .on('meta[name="description"]', new SetAttr('content', meta.description))
@@ -2764,8 +2907,11 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
     .on('meta[property="og:description"]', new SetAttr('content', meta.description))
     .on('meta[property="og:url"]', new SetAttr('content', meta.canonical))
     .on('meta[property="og:type"]', new SetAttr('content', meta.ogType))
+    .on('meta[property="og:image"]', new SetAttr('content', image))
+    .on('meta[property="og:image:alt"]', new SetAttr('content', imageAlt))
     .on('meta[name="twitter:title"]', new SetAttr('content', meta.title))
     .on('meta[name="twitter:description"]', new SetAttr('content', meta.description))
+    .on('meta[name="twitter:image"]', new SetAttr('content', image))
     .on('script#ld-page', {
       element(el) {
         if (ld) el.setInnerContent(ld, { html: true })
@@ -2787,6 +2933,103 @@ async function serveSeoPage(route: SeoRoute, url: URL, request: Request, env: En
   headers.set('content-type', 'text/html; charset=utf-8')
   headers.set('x-robots-tag', meta.status === 404 ? 'noindex' : 'all')
   return new Response(request.method === 'HEAD' ? null : out.body, { status: meta.status, headers })
+}
+
+// --- share images --------------------------------------------------------------
+//
+// GET /og/<page path>.png[?q=...][&v=N] draws the card for that page: the path
+// is run through the same route table and buildMeta() as the HTML head, so the
+// picture and the page can never disagree. Rasterised in wasm (src/og-render.ts),
+// so a MISS costs a few hundred milliseconds of CPU; the result is held in the
+// edge cache for a day under CACHE_EPOCH and OG_VERSION, and a limiter stands in
+// front of the MISS path. Whatever cannot be drawn (unknown page, KB down, a
+// render error) is answered with the static home card, never an error: a link
+// preview with no picture is the one outcome to avoid.
+
+const OG_CACHE_TTL = 86400
+
+let ogFontsMemo: Promise<OgFont[]> | null = null
+function loadOgFonts(env: Env): Promise<OgFont[]> {
+  ogFontsMemo ??= Promise.all(
+    OG_FONT_FILES.map(async (f) => {
+      const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/fonts/og/${f.file}`))
+      if (!res.ok) throw new Error(`font ${f.file} ${res.status}`)
+      return { name: f.name, weight: f.weight, style: f.style, data: await res.arrayBuffer() }
+    }),
+  ).catch((err) => {
+    ogFontsMemo = null
+    throw err
+  })
+  return ogFontsMemo
+}
+
+function base64(bytes: Uint8Array): string {
+  let s = ''
+  for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
+  return btoa(s)
+}
+
+/** The card with its portrait read in: the JPEG twin under /photos/jpg/. */
+async function resolveCard(spec: CardSpec, env: Env): Promise<OgCard> {
+  const { portraitId, ...card } = spec
+  let portrait: string | null = null
+  if (portraitId && /^[\w-]+$/.test(portraitId)) {
+    const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/photos/jpg/${portraitId}.jpg`)).catch(() => null)
+    if (res?.ok) portrait = `data:image/jpeg;base64,${base64(new Uint8Array(await res.arrayBuffer()))}`
+  }
+  return { ...card, portrait, credit: portrait ? card.credit : null }
+}
+
+async function ogFallback(env: Env, request: Request): Promise<Response> {
+  const res = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/og-default.png`))
+  const out = new Response(request.method === 'HEAD' ? null : res.body, res)
+  out.headers.set('cache-control', 'public, max-age=300')
+  out.headers.set('x-opax-cache', 'BYPASS')
+  return out
+}
+
+async function serveOgImage(url: URL, request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const m = /^\/og(\/[^?]*)\.png$/.exec(url.pathname)
+  if (!m) return ogFallback(env, request)
+  const pagePath = m[1].replace(/\/+$/, '') || '/home'
+  const q = url.searchParams.get('q')?.trim() ?? ''
+  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/${OG_VERSION}${pagePath}${q ? `?q=${encodeURIComponent(q)}` : ''}`)
+  if (!cacheBypass(request, url)) {
+    const hit = await caches.default.match(cacheKey)
+    if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')
+  }
+  const limited = await rateLimited(env.OG_LIMITER, request)
+  if (limited) return limited
+
+  let spec: CardSpec | null = null
+  try {
+    if (pagePath === '/home') {
+      spec = homeCard()
+    } else {
+      const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
+      if (q) pageUrl.searchParams.set('q', q)
+      const route = matchSeoRoute(pageUrl)
+      if (route) {
+        const meta = await buildMeta(route, pageUrl, request, env, ctx)
+        if (meta.status !== 404) spec = meta.card ?? null
+      }
+    }
+    if (!spec) return ogFallback(env, request)
+    const [card, fonts] = await Promise.all([resolveCard(spec, env), loadOgFonts(env)])
+    const png = await renderOgPng(card, fonts)
+    const res = new Response(png, {
+      headers: {
+        'content-type': 'image/png',
+        'content-length': String(png.byteLength),
+        'x-opax-og': pagePath,
+      },
+    })
+    cacheStore(ctx, cacheKey, res, OG_CACHE_TTL)
+    return withCacheStatus(request.method === 'HEAD' ? new Response(null, res) : res, 'MISS')
+  } catch (err) {
+    console.error(JSON.stringify({ level: 'error', path: url.pathname, message: `og render failed: ${String(err)}` }))
+    return ogFallback(env, request)
+  }
 }
 
 function robotsTxt(): Response {
@@ -3109,6 +3352,7 @@ async function route(
       // Real paths for the hash-routed app (see the SEO section): only paths
       // no asset answers reach here, so index.html itself is never rewritten.
       if (request.method === 'GET' || request.method === 'HEAD') {
+        if (url.pathname.startsWith('/og/')) return await serveOgImage(url, request, env, ctx)
         if (url.pathname === '/sitemap.xml') return await sitemapXml(env)
         if (url.pathname === '/robots.txt') return robotsTxt()
         const seoRoute = matchSeoRoute(url)

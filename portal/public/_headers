@@ -37,6 +37,10 @@
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 /photos/*.webp
   Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+# JPEG twins of the portraits, read by the Worker to draw share images
+# (satori cannot decode WebP). Written by `node og/build.mjs portraits`.
+/photos/jpg/*.jpg
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
 /favicon.svg
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800

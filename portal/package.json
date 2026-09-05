@@ -6,6 +6,9 @@
     "dev": "wrangler dev",
     "stamp": "node ../scripts/stamp_assets.mjs",
     "build:graph": "node graph/build.mjs",
+    "og:portraits": "node og/build.mjs portraits",
+    "og:default": "node og/build.mjs default",
+    "og:preview": "node og/build.mjs preview",
     "deploy": "node ../scripts/stamp_assets.mjs && wrangler deploy",
     "types": "wrangler types",
     "check": "wrangler types && tsc --noEmit && node ../scripts/stamp_assets.mjs --check"
@@ -13,8 +16,14 @@
   "devDependencies": {
     "@types/three": "^0.185.4",
     "esbuild": "^0.28.2",
+    "sharp": "^0.35.4",
     "three": "^0.185.1",
     "typescript": "^5.9.0",
     "wrangler": "^4.0.0"
+  },
+  "dependencies": {
+    "@resvg/resvg-wasm": "^2.6.2",
+    "satori": "^0.12.2",
+    "yoga-wasm-web": "^0.3.3"
   }
 }
