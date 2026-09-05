@@ -384,7 +384,6 @@ const CSS = `
 .tm-root {
   font-family: var(--sans, 'Public Sans', system-ui, sans-serif);
   color: var(--ink, #23271F);
-  max-width: 62rem;
   margin: 0 auto;
   padding: 0.25rem 0 1.5rem;
 }
