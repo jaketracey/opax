@@ -7665,11 +7665,29 @@ function refreshSearchPassageFolds() {
     text.classList.add("is-collapsed");
     btn.hidden = text.scrollHeight <= text.clientHeight + 2;
     if (btn.hidden) text.classList.remove("is-collapsed");
-    btn.onclick = () => {
+    btn.onclick = async () => {
       const expanded = btn.getAttribute("aria-expanded") !== "true";
       text.classList.toggle("is-collapsed", !expanded);
       btn.setAttribute("aria-expanded", String(expanded));
       btn.textContent = expanded ? "Show less" : "Read more";
+      // The retrieved passage is a few sentences; the first opening swaps in
+      // the speech itself, so reading on means reading the record.
+      const slug = text.closest("li")?.querySelector(".result-title")?.getAttribute("href")?.replace(/^\/doc\//, "");
+      if (!expanded || text.dataset.full || !slug || text.classList.contains("search-result-brief")) return;
+      text.dataset.full = "loading";
+      try {
+        const doc = await api(`/api/resource/${slug}`);
+        const full = String(doc?.text || "").trim();
+        if (full.length > text.textContent.length && btn.getAttribute("aria-expanded") === "true") {
+          const tag = text.querySelector(".search-passage-tag")?.outerHTML || "";
+          text.innerHTML = `${tag}${esc(full).replace(/\n{2,}/g, "</p><p class=\"search-result-text\">").replace(/\n/g, "<br>")}`;
+          text.dataset.full = "yes";
+        } else {
+          text.dataset.full = "same";
+        }
+      } catch {
+        text.dataset.full = "";
+      }
     };
   }
 }
