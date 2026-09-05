@@ -2553,7 +2553,7 @@ export class KnowledgeMapEngine {
     this.updateEdgeMeshes()
     this.updateRings()
     this.renderer.render(this.scene, this.camera)
-    this.projectLabels()
+    this.projectLabels(now)
     if (simWarm || this.tween || lodActive) this.renderDirty = true
   }
 
@@ -3071,7 +3071,56 @@ export class KnowledgeMapEngine {
    * Every label is also kept off the face of a nearer readable sphere (node
    * or hub), so a name never reads as the caption of the wrong mark.
    */
-  private projectLabels() {
+  /**
+   * Labels ease in and out rather than blinking. Each element carries an alpha
+   * that chases 1 while a projection pass wants it and 0 once the pass stops
+   * asking; the element is hidden only when the alpha has drained, and a name
+   * on its way out keeps its last place. Every show path calls wantLabel and
+   * every hide path is simply silence, so the pass reads as before.
+   */
+  private labelFades = new Map<HTMLElement, { alpha: number; opacity: number; wanted: boolean }>()
+  private labelTick = 0
+
+  private wantLabel(el: HTMLElement, transform: string, opacity: number) {
+    let fade = this.labelFades.get(el)
+    if (!fade) {
+      fade = { alpha: 0, opacity, wanted: true }
+      this.labelFades.set(el, fade)
+    }
+    fade.wanted = true
+    fade.opacity = opacity
+    el.style.transform = transform
+  }
+
+  /** After a projection pass: ease every label toward its wanted state. Returns true while any is mid-fade. */
+  private settleLabels(now: number): boolean {
+    const dt = this.labelTick ? Math.min(64, now - this.labelTick) : 16
+    this.labelTick = now
+    // In a touch faster than out, so a name arriving reads as decisive and one
+    // leaving lingers only long enough not to blink.
+    const rateIn = this.reduced ? 1 : 1 - Math.exp(-dt / 90)
+    const rateOut = this.reduced ? 1 : 1 - Math.exp(-dt / 140)
+    let moving = false
+    for (const [el, fade] of this.labelFades) {
+      const target = fade.wanted ? 1 : 0
+      fade.wanted = false
+      const prev = fade.alpha
+      fade.alpha += (target - fade.alpha) * (target ? rateIn : rateOut)
+      if (target === 1 && fade.alpha > 0.985) fade.alpha = 1
+      if (target === 0 && fade.alpha < 0.02) fade.alpha = 0
+      if (fade.alpha === 0) {
+        el.style.display = 'none'
+        this.labelFades.delete(el)
+        continue
+      }
+      if (prev === 0 || el.style.display === 'none') el.style.display = 'block' // a rebuild may have hidden it directly
+      el.style.opacity = (fade.alpha * fade.opacity).toFixed(2)
+      if (fade.alpha !== target) moving = true
+    }
+    return moving
+  }
+
+  private projectLabels(now: number) {
     const cam = this.camera
     const halfTan = Math.tan(THREE.MathUtils.degToRad(FOV / 2))
     const focus = this.focusKey()
@@ -3105,12 +3154,8 @@ export class KnowledgeMapEngine {
 
     const isEmphasised = (id: string) =>
       id === focus || id === this.hoveredId || id === pathFrom || (this.pathNodeIds?.has(id) ?? false)
-    const show = (visual: NodeVisual, sx: number, y: number, opacity: number) => {
-      const label = visual.label
-      label.style.display = 'block'
-      label.style.transform = `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${y.toFixed(1)}px)`
-      label.style.opacity = opacity.toFixed(2)
-    }
+    const show = (visual: NodeVisual, sx: number, y: number, opacity: number) =>
+      this.wantLabel(visual.label, `translate(-50%, -100%) translate(${sx.toFixed(1)}px, ${y.toFixed(1)}px)`, opacity)
 
     // 1. The emphasised few - the selection and its path are always named,
     // and everything after them, captions included, keeps clear of them.
@@ -3122,7 +3167,6 @@ export class KnowledgeMapEngine {
       if (!isEmphasised(id)) continue
       const label = visual.label
       if (!disc.ok) {
-        label.style.display = 'none'
         continue
       }
       const { sx, sy, screenR } = disc
@@ -3141,13 +3185,11 @@ export class KnowledgeMapEngine {
       const lod = hub ? hub.lod : 0
       this.labelVec.copy(territory.centre).project(cam)
       if (this.labelVec.z > 1 || this.labelVec.z < -1) {
-        caption.style.display = 'none'
         continue
       }
       const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
       const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
       if (sx < -60 || sx > this.width + 60 || sy < -40 || sy > this.height + 40) {
-        caption.style.display = 'none'
         continue
       }
       const camDist = territory.centre.distanceTo(cam.position)
@@ -3165,20 +3207,19 @@ export class KnowledgeMapEngine {
           territory.captionShort, isHub ? territory.captionShortHubW : territory.captionShortW, sx, sy, screenR,
         )
       ) {
-        caption.style.display = 'none'
         continue
       }
       if (caption.textContent !== this.capText) caption.textContent = this.capText
-      caption.style.display = 'block'
-      caption.style.transform = `translate(-50%, -100%) translate(${this.capX.toFixed(1)}px, ${
-        this.capBaseline.toFixed(1)
-      }px)`
       // A folded cluster's caption is its name: it dims with the hub, never
       // to the whisper an open territory's caption drops to under focus.
       const opacity = isHub
         ? 0.95 * (0.35 + 0.65 * (hub ? hub.opacity.current : 1))
         : focus ? 0.3 : 0.9
-      caption.style.opacity = opacity.toFixed(2)
+      this.wantLabel(
+        caption,
+        `translate(-50%, -100%) translate(${this.capX.toFixed(1)}px, ${this.capBaseline.toFixed(1)}px)`,
+        opacity,
+      )
       if (isHub) caption.setAttribute('data-hub', '')
       else caption.removeAttribute('data-hub')
     }
@@ -3204,7 +3245,6 @@ export class KnowledgeMapEngine {
         (focus !== null && !inNeighbourhood) ||
         (!inNeighbourhood && kept >= budget)
       ) {
-        label.style.display = 'none'
         continue
       }
       const { sx, sy, camDist, screenR } = disc
@@ -3217,7 +3257,6 @@ export class KnowledgeMapEngine {
         sy - screenR - 23 < this.insets.top + PLATE_INSET ||
         sy - screenR - 3 > this.height - this.insets.bottom - PLATE_INSET
       ) {
-        label.style.display = 'none'
         continue
       }
       // The label's anchor must not sit on the face of a nearer, clearly
@@ -3237,11 +3276,9 @@ export class KnowledgeMapEngine {
         }
       }
       if (covered) {
-        label.style.display = 'none'
         continue
       }
       if (!this.placeBox(sx - half, sy - screenR - 23, sx + half, sy - screenR - 3)) {
-        label.style.display = 'none'
         continue
       }
       let fadeIn = 1
@@ -3261,6 +3298,7 @@ export class KnowledgeMapEngine {
     }
     this.positionPopup()
     this.projectEdgeLabels()
+    if (this.settleLabels(now)) this.renderDirty = true
   }
 
   /** Relation labels ride emphasised edges only, like the 2D map's textPath. */
@@ -3272,10 +3310,7 @@ export class KnowledgeMapEngine {
   private projectEdgeLabel(visual: EdgeVisual) {
     const show = visual.emphasised && Boolean(visual.edge.label) &&
       this.view.dist < this.fitDist * 1.15 && this.edgeFold(visual) > 0.5
-    if (!show) {
-      if (visual.label) visual.label.style.display = 'none'
-      return
-    }
+    if (!show) return
     if (!visual.label) {
       const el = document.createElement('div')
       el.className = 'rp-map3d-edge-label'
@@ -3292,23 +3327,14 @@ export class KnowledgeMapEngine {
       }
     }
     this.labelVec.copy(visual.from.pos).add(visual.to.pos).multiplyScalar(0.5).project(this.camera)
-    if (this.labelVec.z > 1 || this.labelVec.z < -1) {
-      visual.label.style.display = 'none'
-      return
-    }
+    if (this.labelVec.z > 1 || this.labelVec.z < -1) return
     const sx = (this.labelVec.x * 0.5 + 0.5) * this.width
     const sy = (-this.labelVec.y * 0.5 + 0.5) * this.height
     // Relation labels give way to node labels: an amount riding an edge
     // that mushes into a donor's name reads as neither.
     const half = visual.labelW / 2 + 3
-    if (!this.placeBox(sx - half, sy - 25, sx + half, sy - 3)) {
-      visual.label.style.display = 'none'
-      return
-    }
-    visual.label.style.display = 'block'
-    visual.label.style.transform = `translate(-50%, -140%) translate(${sx.toFixed(1)}px, ${
-      sy.toFixed(1)
-    }px)`
+    if (!this.placeBox(sx - half, sy - 25, sx + half, sy - 3)) return
+    this.wantLabel(visual.label, `translate(-50%, -140%) translate(${sx.toFixed(1)}px, ${sy.toFixed(1)}px)`, 1)
   }
 
   // -------------------------------------------------------------------
