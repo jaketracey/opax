@@ -3,7 +3,7 @@
  "title": "Housing",
  "blurb": "Decades of affordability promises, negative gearing fights and supply debates.",
  "version": 2,
- "generated_at": "2026-09-05T00:19:16+00:00",
+ "generated_at": "2026-09-05T00:26:11+00:00",
  "corpus_resources": 609635,
  "stats": {
   "speech_count": 210854,
@@ -1022,7 +1022,7 @@
   }
  ],
  "lede": {
-  "text": "Senator Bragg argued the government will never solve the housing crisis until it understands what is holding back supply, claiming its own budget papers confirm the tax changes will decrease supply. Government speakers defended the $32 billion Homes for Australia plan as focused on supply, the key for homeowners, renters and those in social and affordable housing. In NSW, The Greens' Sue Higginson opposed the Planning System Reforms Bill 2025 as centralising power and creating significant corruption risk, while Minister Paul Scully reported an almost universally positive response to its passage.",
+  "text": "Senator Andrew Bragg told the Senate the government's own budget papers confirm its housing tax changes will decrease supply, arguing the proposition facing Australians is one of a lack of housing supply. Minister Paul Scully reported an \"almost universally positive response\" to the passage of the Environmental Planning and Assessment Amendment (Planning System Reforms) Bill 2025, with the Opposition welcoming it and conceding the reform should have been done years ago. Senator Barbara Pocock told a Treasury estimates hearing that social housing is at record lows and the public housing waitlist at record highs, with around 190,000 households waiting, arguing the government's plan to support at most 55,000 households does not match the scale of demand.",
   "sources": [
    {
     "slug": "speech-1203672",
@@ -1033,20 +1033,20 @@
     "date": "2026-06-22"
    },
    {
-    "slug": "speech-1299259",
-    "title": "Jason Li \u2014 Housing Supply \u2014 2025-10-21",
-    "speaker": "Jason Li",
+    "slug": "speech-1301465",
+    "title": "Kylie Wilkinson \u2014 Planning Policy \u2014 2025-11-13",
+    "speaker": "Kylie Wilkinson",
     "party": null,
     "state": "nsw",
-    "date": "2025-10-21"
+    "date": "2025-11-13"
    },
    {
-    "slug": "speech-1288100",
-    "title": "Sue Higginson \u2014 Environmental Planning and Assessment Amendment Bill 2025 \u2014 2025-03-27",
-    "speaker": "Sue Higginson",
+    "slug": "speech-905087",
+    "title": "Barbara Pocock \u2014 Economics Legislation Committee - Economics Legislation Committee 12/02/2026 Estimates TREASURY PORTFOLIO Housing Australia \u2014 2026-02-12",
+    "speaker": "Barbara Pocock",
     "party": null,
-    "state": "nsw",
-    "date": "2025-03-27"
+    "state": "federal",
+    "date": "2026-02-12"
    }
   ]
  },

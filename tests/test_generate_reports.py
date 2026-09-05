@@ -6,10 +6,12 @@ from scripts.generate_reports import (
     compose_stat_label,
     debate_question,
     dedupe_subjects,
+    holds_the_quotes,
     is_procedural_debate,
     is_topic_echo,
     period_question,
     settle_jurisdiction,
+    settle_lede_ref,
     stat_support,
     voices,
     window_questions,
@@ -365,3 +367,58 @@ class JurisdictionTests(unittest.TestCase):
         self.assertEqual(
             settle_jurisdiction({"jurisdiction": "Australia"}, {"state": "federal"}, "x"),
             "Australia")
+
+
+class LedeCitationTests(unittest.TestCase):
+    srcs = {
+        1: {"slug": "speech-1", "speaker": "Andrew Bragg"},
+        2: {"slug": "speech-2", "speaker": "Jason Li"},
+        3: {"slug": "speech-3", "speaker": "Sue Higginson"},
+    }
+
+    def test_a_sentence_is_moved_to_the_speaker_it_names(self):
+        self.assertEqual(
+            settle_lede_ref("Senator Bragg argued the government will never solve it.",
+                            2, self.srcs), 1)
+
+    def test_a_correct_citation_is_left_alone(self):
+        self.assertEqual(
+            settle_lede_ref("Sue Higginson opposed the bill.", 3, self.srcs), 3)
+
+    def test_a_sentence_naming_nobody_keeps_its_citation(self):
+        self.assertEqual(
+            settle_lede_ref("Government speakers defended the plan.", 2, self.srcs), 2)
+
+    def test_a_sentence_naming_two_speakers_at_once_is_dropped(self):
+        self.assertIsNone(
+            settle_lede_ref("Bragg and Higginson disagreed.", 2, self.srcs))
+
+
+class LedeQuoteTests(unittest.TestCase):
+    class FakeKb:
+        bodies = {
+            "speech-1": "the government's own tax changes will decrease supply over the decade",
+            "speech-2": "we are talking to builders, developers and tradespeople every day",
+        }
+
+        def get_resource_by_slug(self, slug, **params):
+            return {"data": {"texts": {"body": {"value": {"body": self.bodies.get(slug, "")}}}}}
+
+    def test_a_quotation_in_the_cited_record_passes(self):
+        self.assertTrue(holds_the_quotes(
+            self.FakeKb(), 'Bragg said the changes "will decrease supply" this decade.',
+            "speech-1", {}))
+
+    def test_a_quotation_from_another_speech_fails(self):
+        self.assertFalse(holds_the_quotes(
+            self.FakeKb(), 'Bragg said the changes "will decrease supply" this decade.',
+            "speech-2", {}))
+
+    def test_curly_quotes_and_loose_spacing_still_match(self):
+        self.assertTrue(holds_the_quotes(
+            self.FakeKb(), 'Bragg named “builders,  developers and tradespeople”.',
+            "speech-2", {}))
+
+    def test_a_sentence_with_no_quotation_is_never_dropped(self):
+        self.assertTrue(holds_the_quotes(
+            self.FakeKb(), "Bragg criticised the government.", "speech-2", {}))

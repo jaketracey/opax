@@ -854,7 +854,78 @@ LEDE_SCHEMA = {
 }
 
 
-def gen_lede(title: str, sections: list[dict]) -> dict:
+_QUOTED = re.compile(r"[\u201c\"']([^\u201c\u201d\"']{12,240})[\u201d\"']")
+
+
+def _plain(text: str) -> str:
+    """Fold to letters, digits and single spaces, so a curly quote or an OCR
+    double space cannot fail a match that a reader would call identical."""
+    return re.sub(r"[^a-z0-9 ]+", " ", re.sub(r"\s+", " ", str(text or "").casefold())).strip()
+
+
+def raw_source_text(kb: KbClient, slug: str, cache: dict) -> str:
+    """The speech behind a source, as it reads, fetched once. Free."""
+    if slug in cache:
+        return cache[slug]
+    body = ""
+    try:
+        resource = kb.get_resource_by_slug(slug, show="basic&show=values")
+        for name, field in (((resource.get("data") or {}).get("texts")) or {}).items():
+            if name.startswith("da-"):        # the generated summary, not the record
+                continue
+            body += " " + ((field.get("value") or {}).get("body") or "")
+    except AragError:
+        body = ""
+    cache[slug] = re.sub(r"\s+", " ", body).strip()
+    return cache[slug]
+
+
+def source_text(kb: KbClient, slug: str, cache: dict) -> str:
+    """The whole speech behind a source, folded for matching. Free."""
+    if slug not in cache:
+        cache[slug] = _plain(raw_source_text(kb, slug, {}))
+    return cache[slug]
+
+
+def holds_the_quotes(kb: KbClient, sentence: str, slug: str, cache: dict) -> bool:
+    """True when every phrase the sentence puts in quotation marks is in this record."""
+    quotes = [q for q in _QUOTED.findall(sentence) if len(q.split()) >= 3]
+    if not quotes:
+        return True
+    body = source_text(kb, slug, cache)
+    if not body:
+        return True                      # cannot check: do not punish the sentence
+    return all(_plain(q) in body for q in quotes)
+
+
+def settle_lede_ref(sentence: str, ref: int, srcs: dict) -> int | None:
+    """The source a lede sentence should cite, or None when it can cite none.
+
+    The lede is written from the findings and shown only the sources' titles,
+    so its source_ref is the model's guess. A sentence that names a speaker can
+    be checked: if the record it cites belongs to someone else, and exactly one
+    source in the list is that speaker's, the citation moves there. A sentence
+    that names a speaker no source carries is dropped rather than shipped
+    against a record that does not hold it."""
+    named = {
+        number for number, source in srcs.items()
+        if source.get("speaker") and _names_speaker(sentence, str(source["speaker"]))
+    }
+    if not named or ref in named:
+        return ref
+    return named.pop() if len(named) == 1 else None
+
+
+def _names_speaker(sentence: str, speaker: str) -> bool:
+    """True when the sentence names this speaker, by surname or in full."""
+    parts = [p for p in re.split(r"\s+", speaker.strip()) if len(p) > 2]
+    if not parts:
+        return False
+    surname = parts[-1]
+    return bool(re.search(rf"\b{re.escape(surname)}\b", sentence))
+
+
+def gen_lede(kb: KbClient, title: str, sections: list[dict]) -> dict:
     """Three cited sentences over the `now` answers.
 
     The numbered sources are the sections' own CITED sources, so the lede's
@@ -863,6 +934,7 @@ def gen_lede(title: str, sections: list[dict]) -> dict:
     srcs: dict[int, dict] = {}
     lines: list[str] = []
     index: dict[str, int] = {}
+    bodies: dict[str, str] = {}
     for section in sections:
         for source in section.get("sources") or []:
             if not source.get("cited") or source["slug"] in index:
@@ -872,7 +944,14 @@ def gen_lede(title: str, sections: list[dict]) -> dict:
             srcs[n] = source
             who = " · ".join(x for x in [source.get("speaker"), source.get("party"),
                                          str(source.get("date") or "")[:10]] if x)
-            lines.append(f"[{n}] {source.get('title')}{f' ({who})' if who else ''}")
+            # The words, not just the title. Shown only titles, the model has to
+            # guess which record carries a quotation, and it guesses wrong: it
+            # put a federal minister's "$32 billion Homes for Australia plan"
+            # against a New South Wales member's question about planning.
+            # Reading the record is free.
+            body = raw_source_text(kb, source["slug"], bodies)[:1200]
+            lines.append(f"[{n}] {source.get('title')}{f' ({who})' if who else ''}"
+                         + (f" — {body}" if body else ""))
     if not srcs:
         return {}
     findings = "\n\n".join(
@@ -882,12 +961,16 @@ def gen_lede(title: str, sections: list[dict]) -> dict:
         "what parliament is arguing over NOW. Below are the report's own findings and the "
         "numbered sources they were built from. Write the three sentences from the findings, "
         "and give each the number of the source that evidences it. Be specific: name the bills, "
-        "the parliaments, the speakers and the figures the findings name. Do not describe the "
+        "the parliaments, the speakers and the figures the findings name. EVERY sentence must "
+        "name the member or minister whose words it carries, and its source_ref must be that "
+        "member's own record in the list below — a sentence about what a federal minister said "
+        "cannot cite a state member's question. Do not describe the "
         "report, the sources or the record itself."
         f"\n\n{findings}\n\nSOURCES:\n" + "\n".join(lines)
     )
     sentences = (openrouter_tool_call(LEDE_SCHEMA, query)).get("sentences") or []
     ASKS["lede"] += 1
+    folded: dict[str, str] = {}
     text: list[str] = []
     used: list[dict] = []
     for sentence in sentences:
@@ -895,6 +978,26 @@ def gen_lede(title: str, sections: list[dict]) -> dict:
         body = re.sub(r"\s+", " ", str(sentence.get("text") or "")).strip()
         if ref not in srcs or not body:
             continue
+        ref = settle_lede_ref(body, ref, srcs)
+        if ref is None:
+            print(f"  lede: dropped a sentence whose citation named the wrong speaker: "
+                  f"{body[:60]}...", file=sys.stderr)
+            continue
+        # A speaker says the same thing in more than one speech, and the lede is
+        # written from the findings rather than from the passages: the sentence
+        # can land on the right member and the wrong speech. The quotation marks
+        # are the checkable part, so they are checked against the record itself.
+        if not holds_the_quotes(kb, body, srcs[ref]["slug"], folded):
+            # The speaker was settled first, so a move here is a move between
+            # that member's speeches — or, failing that, to whichever record in
+            # the report's own citations actually holds the words.
+            elsewhere = [n for n, source in srcs.items()
+                         if n != ref and holds_the_quotes(kb, body, source["slug"], folded)]
+            if len(elsewhere) != 1:
+                print(f"  lede: dropped a sentence whose quotation is in no cited record: "
+                      f"{body[:60]}...", file=sys.stderr)
+                continue
+            ref = elsewhere[0]
         text.append(body)
         source = srcs[ref]
         if source["slug"] not in {u["slug"] for u in used}:
@@ -1946,7 +2049,7 @@ def main() -> None:
                       f"all {len(report['voices']['all'])}")
             elif args.only == "lede":
                 sections = (report.get("now") or {}).get("sections") or []
-                report["lede"] = gen_lede(cfg["title"], sections)
+                report["lede"] = gen_lede(kb, cfg["title"], sections)
                 print(f"[{slug}] lede: {len((report['lede'] or {}).get('text') or '')} chars")
             elif args.only == "now" and args.redo:
                 # One bad answer in eight should cost one ask, not eight. The
@@ -2055,7 +2158,7 @@ def main() -> None:
         checkpoint(positions=positions)
 
         try:
-            lede = gen_lede(cfg["title"], report["now"]["sections"])
+            lede = gen_lede(kb, cfg["title"], report["now"]["sections"])
         except AragError as error:
             print(f"  lede FAILED ({error.status})", file=sys.stderr)
             lede = prior.get("lede") or {}
