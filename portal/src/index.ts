@@ -2010,6 +2010,11 @@ const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
 const STATIC_PAGES: Record<string, { title: string; description: string; query?: boolean }> = {
   ask: { title: SITE_TITLE, description: SITE_DESCRIPTION, query: true },
+  bills: {
+    title: 'Bills · OPAX',
+    description: 'Every bill before the federal parliament since 2013: what it changes, who sponsored it, how the parties divided, and the speeches that argued it, with machine-written summaries marked as such.',
+    query: true,
+  },
   search: {
     title: 'Search the record · OPAX',
     description: 'Search half a million Australian parliamentary speeches by keyword, speaker, party, state, topic and year. Every result links to the official record.',
