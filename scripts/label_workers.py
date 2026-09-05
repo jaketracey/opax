@@ -51,7 +51,7 @@ STOP_FILE = DEFAULT_DB.with_name("labels_stop")
 STALE_CLAIM_S = 45 * 60
 MAX_LABELS = 4
 TEXT_HEAD, TEXT_TAIL = 1800, 400
-PACE_S = 1.0           # seconds between a worker's requests: the box answers about 25 requests a second for the whole fleet before it starts refusing with 429s
+PACE_S = 1.5           # seconds between a worker's requests: the box sustains about 30,000 label writes an hour for the whole fleet; faster only earns 429s
 POOL = 2               # parallel requests per worker
 
 
