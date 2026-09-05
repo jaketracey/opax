@@ -107,7 +107,7 @@ def db(path: Path = DEFAULT_DB) -> sqlite3.Connection:
     con.execute("PRAGMA journal_mode=WAL")
     con.execute("""CREATE TABLE IF NOT EXISTS queue (
         rid TEXT PRIMARY KEY, status TEXT NOT NULL DEFAULT 'pending', worker TEXT,
-        claimed_at REAL, done_at REAL, slug TEXT, existing TEXT, labels TEXT, error TEXT)""")
+        claimed_at REAL, done_at REAL, slug TEXT, existing TEXT, labels TEXT, error TEXT, force INTEGER NOT NULL DEFAULT 0)""")
     con.execute("CREATE INDEX IF NOT EXISTS queue_status ON queue(status)")
     con.execute("""CREATE TABLE IF NOT EXISTS log (
         ts REAL, worker TEXT, rid TEXT, slug TEXT, labels TEXT)""")
@@ -159,6 +159,14 @@ def cmd_next(a: argparse.Namespace) -> None:
         return
     con = db()
     now = time.time()
+    # Reading forty speeches takes a person or a model well over half a minute;
+    # a worker that has landed more than 700 in ten minutes is running a script
+    # over the text instead of reading it, and gets nothing more.
+    recent = con.execute("SELECT COUNT(*) FROM log WHERE worker=? AND ts > ?", (a.worker, now - 600)).fetchone()[0]
+    if recent > 700:
+        Path(a.out).write_text("[]")
+        print("STOP: this worker has submitted more than 700 speeches in ten minutes, which no reader can do; scripted labels are not accepted.")
+        return
     with con:
         con.execute("UPDATE queue SET status='pending', worker=NULL, claimed_at=NULL WHERE status='claimed' AND claimed_at < ?",
                     (now - STALE_CLAIM_S,))
@@ -182,7 +190,8 @@ def cmd_next(a: argparse.Namespace) -> None:
     with con:
         for rid, err in errors:
             con.execute("UPDATE queue SET status='error', error=?, worker=? WHERE rid=?", (err, a.worker, rid))
-        already = [it for it in items if it["_has_topic"]]
+        forced = {r[0] for r in con.execute("SELECT rid FROM queue WHERE force=1 AND rid IN (%s)" % ",".join("?" * len(rids)), rids)}
+        already = [it for it in items if it["_has_topic"] and it["rid"] not in forced]  # a forced row is relabelled even though the box holds a topic for it
         for it in already:  # the platform got there first: nothing to do
             con.execute("UPDATE queue SET status='done', done_at=?, slug=?, labels='[]', error='already-labelled' WHERE rid=?",
                         (time.time(), it["slug"], it["rid"]))
