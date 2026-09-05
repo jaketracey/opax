@@ -16,7 +16,7 @@ export const OG_HEIGHT = 630
 
 /** Bump when the drawing changes: it is folded into every og:image URL so the
  *  social crawlers (which cache by URL, some for weeks) fetch the new card. */
-export const OG_VERSION = '2'
+export const OG_VERSION = '3'
 
 /** The faces the card sets, as served from /fonts/og/ (static instances of the
  *  same two OFL families the site self-hosts; satori cannot read a variable
@@ -265,9 +265,8 @@ export function cardTree(card: OgCard): El {
 
   const footer = h(
     'div',
-    { style: { display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: `0 ${PAD}px 30px ${PAD}px` } },
+    { style: { display: 'flex', padding: `0 ${PAD}px 30px ${PAD}px` } },
     h('div', { style: { fontFamily: SANS, fontSize: 20, fontWeight: 700, letterSpacing: '0.16em', color: BRONZE_BRIGHT } }, 'OPAX.COM.AU'),
-    h('div', { style: { fontFamily: SANS, fontSize: 20, color: SOFT, opacity: 0.9 } }, 'Every answer cited to the record.'),
   )
 
   const bottomRule = h('div', { style: { height: 6, background: BRONZE } })
